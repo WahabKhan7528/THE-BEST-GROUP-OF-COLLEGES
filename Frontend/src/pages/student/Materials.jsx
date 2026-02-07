@@ -1,5 +1,7 @@
 import { useStudentContext } from "../../context/StudentContext";
 import MaterialCard from "../../components/student/MaterialCard";
+import { FolderOpen, Search, Filter } from "lucide-react";
+import { motion } from "framer-motion";
 
 // Mock subjects and materials data by campus
 const subjectsByCampus = {
@@ -149,42 +151,56 @@ const Materials = () => {
   const subjects = subjectsByCampus[campus] || [];
 
   return (
-    <div className="space-y-6">
-      <div className="bg-white border rounded-2xl shadow-sm p-5">
-        <div className="flex items-center justify-between">
+    <div className="space-y-8">
+      <div className="bg-white/70 backdrop-blur-xl border border-white/40 rounded-3xl shadow-xl p-8 relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-8 opacity-5">
+          <FolderOpen size={150} />
+        </div>
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <p className="text-sm text-gray-500">Course Material</p>
-            <h1 className="text-2xl font-semibold text-gray-900">
-              Subject folders
+            <div className="flex items-center gap-3 mb-2">
+              <span className="px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide">
+                Student Portal
+              </span>
+              <span className="px-3 py-1 rounded-full bg-purple-50 border border-purple-100 text-purple-700 text-xs font-semibold uppercase tracking-wide">
+                {campusNames[campus]}
+              </span>
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">
+              Course Material
             </h1>
-            <p className="text-sm text-blue-600 mt-2">
-              📍 {campusNames[campus]}
+            <p className="text-gray-500 mt-2 max-w-xl">
+              Access lecture slides, videos, notes, and other learning resources for your enrolled courses.
             </p>
           </div>
-          <button className="px-4 py-2 bg-purple-700 text-white rounded-lg text-sm font-semibold hover:bg-purple-800">
-            Upload (mock)
-          </button>
         </div>
       </div>
 
       {subjects.length > 0 ? (
-        <div className="space-y-6">
-          {subjects.map((subject) => (
-            <section key={subject.code} className="space-y-4">
-              <div className="flex items-center justify-between">
+        <div className="space-y-8">
+          {subjects.map((subject, index) => (
+            <motion.section
+              key={subject.code}
+              className="space-y-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+            >
+              <div className="flex items-center justify-between px-2">
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900">
+                  <h2 className="text-xl font-bold text-gray-900">
                     {subject.name}
                   </h2>
-                  <p className="text-sm text-gray-500">
-                    {subject.code} • PDFs, videos, images, notes
-                  </p>
+                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <span className="font-medium px-2 py-0.5 bg-gray-100 rounded text-gray-600">{subject.code}</span>
+                    <span>• PDFs, videos, images, notes</span>
+                  </div>
                 </div>
-                <span className="text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-700">
+                <span className="text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">
                   {subject.materials.length} items
                 </span>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 {subject.materials.map((item) => (
                   <MaterialCard
                     key={item.name}
@@ -195,13 +211,17 @@ const Materials = () => {
                   />
                 ))}
               </div>
-            </section>
+            </motion.section>
           ))}
         </div>
       ) : (
-        <div className="bg-white border rounded-2xl shadow-sm p-8 text-center">
-          <p className="text-gray-600 text-lg">
-            No materials available for {campusNames[campus]} yet.
+        <div className="bg-white/60 backdrop-blur-sm border border-dashed border-gray-300 rounded-3xl p-12 text-center">
+          <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <FolderOpen size={30} className="text-gray-400" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900">No materials found</h3>
+          <p className="text-gray-500 mt-2 max-w-sm mx-auto">
+            No course materials are currently available for {campusNames[campus]}. Please check back later or contact your instructor.
           </p>
         </div>
       )}

@@ -26,97 +26,108 @@ const MaterialUploadForm = ({ onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white border rounded-2xl p-6 shadow-sm space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <label className="text-sm text-gray-700 space-y-1">
-          Class / Section
+    <form onSubmit={handleSubmit} className="bg-white/60 backdrop-blur-md border border-white/40 rounded-3xl p-8 shadow-lg space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <label className="block space-y-2">
+          <span className="text-sm font-medium text-gray-700">Class / Section</span>
           <input
             type="text"
             value={form.classSection}
             onChange={(e) => handleChange('classSection', e.target.value)}
             placeholder="e.g., BSCS - Section A"
-            className="w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all outline-none"
           />
         </label>
-        <label className="text-sm text-gray-700 space-y-1">
-          Subject
+        <label className="block space-y-2">
+          <span className="text-sm font-medium text-gray-700">Subject</span>
           <input
             type="text"
             value={form.subject}
             onChange={(e) => handleChange('subject', e.target.value)}
             placeholder="e.g., Operating Systems"
-            className="w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all outline-none"
           />
         </label>
       </div>
 
-      <label className="text-sm text-gray-700 space-y-1 block">
-        Material title
+      <label className="block space-y-2">
+        <span className="text-sm font-medium text-gray-700">Material title</span>
         <input
           type="text"
           value={form.title}
           onChange={(e) => handleChange('title', e.target.value)}
           placeholder="Lecture 07 - CPU Scheduling"
-          className="w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+          className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all outline-none"
         />
       </label>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <label className="text-sm text-gray-700 space-y-1">
-          Type
-          <select
-            value={form.type}
-            onChange={(e) => handleChange('type', e.target.value)}
-            className="w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
-          >
-            <option>PDF</option>
-            <option>Slides</option>
-            <option>Notes</option>
-            <option>Image</option>
-            <option>Video</option>
-          </select>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <label className="block space-y-2">
+          <span className="text-sm font-medium text-gray-700">Type</span>
+          <div className="relative">
+            <select
+              value={form.type}
+              onChange={(e) => handleChange('type', e.target.value)}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all outline-none appearance-none cursor-pointer"
+            >
+              <option>PDF</option>
+              <option>Slides</option>
+              <option>Notes</option>
+              <option>Image</option>
+              <option>Video</option>
+            </select>
+          </div>
         </label>
-        <label className="text-sm text-gray-700 space-y-1 md:col-span-2">
-          Link (YouTube / Drive)
+        <label className="block space-y-2 md:col-span-2">
+          <span className="text-sm font-medium text-gray-700">Link (YouTube / Drive)</span>
           <input
             type="url"
             value={form.link}
             onChange={(e) => handleChange('link', e.target.value)}
             placeholder="https://..."
-            className="w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all outline-none"
           />
         </label>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <label className="text-sm text-gray-700 space-y-1">
-          Upload file
-          <input
-            type="file"
-            onChange={handleFileChange}
-            className="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-purple-500 focus:ring-purple-500"
-          />
-          {form.fileName && (
-            <span className="text-xs text-gray-500">Selected: {form.fileName}</span>
-          )}
-        </label>
-        <label className="text-sm text-gray-700 space-y-1">
-          Upload date
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <span className="text-sm font-medium text-gray-700">Upload file</span>
+          <div className="relative">
+            <input
+              type="file"
+              onChange={handleFileChange}
+              className="hidden"
+              id="file-upload"
+            />
+            <label
+              htmlFor="file-upload"
+              className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl border border-dashed border-gray-300 bg-white/30 hover:bg-purple-50 hover:border-purple-300 cursor-pointer transition-all"
+            >
+              <Upload size={18} className="text-gray-400" />
+              <span className="text-sm text-gray-600 truncate">
+                {form.fileName || "Choose file..."}
+              </span>
+            </label>
+          </div>
+        </div>
+        <label className="block space-y-2">
+          <span className="text-sm font-medium text-gray-700">Upload date</span>
           <input
             type="date"
             value={form.uploadDate || ''}
             onChange={(e) => handleChange('uploadDate', e.target.value)}
-            className="w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all outline-none"
           />
         </label>
       </div>
 
-      <div className="flex justify-end">
+      <div className="flex justify-end pt-4 border-t border-gray-200/50">
         <button
           type="submit"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-700 text-white text-sm font-semibold hover:bg-purple-800"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold shadow-lg shadow-purple-500/30 hover:shadow-purple-500/40 hover:-translate-y-0.5 transition-all duration-200"
         >
-          <Upload size={16} />
+          <Upload size={18} />
           Upload Material
         </button>
       </div>

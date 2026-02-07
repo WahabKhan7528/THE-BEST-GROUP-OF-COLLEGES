@@ -2,58 +2,86 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useAdminContext } from "../../../context/AdminContext";
 import Table from "../../../components/admin/Table";
+import {
+  Plus,
+  Search,
+  Filter,
+  BookOpen,
+  Users,
+  GraduationCap,
+  Building2,
+  MoreVertical,
+  Pencil,
+  Trash2
+} from "lucide-react";
+import { motion } from "framer-motion";
 
 const ClassesList = () => {
   const { campuses, isSuperAdmin, currentAdmin } = useAdminContext();
   const [selectedCampus, setSelectedCampus] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Mock data with campus allocation (Classes are campus-specific)
   const mockData = [
     {
       id: "c1",
       name: "BSCS - 3rd Semester",
-      sections: "A, B",
-      subjects: "OS, DBMS, DSA",
+      sections: ["A", "B"],
+      subjects: ["OS", "DBMS", "DSA"],
       faculty: "Ahmed, Sara",
       campus: "main",
+      students: 120
     },
     {
       id: "c2",
       name: "BSIT - 2nd Semester",
-      sections: "A",
-      subjects: "Programming, Discrete Math",
+      sections: ["A"],
+      subjects: ["Programming", "Discrete Math"],
       faculty: "Bilal",
       campus: "main",
+      students: 45
     },
     {
       id: "c3",
       name: "LLB - 1st Semester",
-      sections: "A, B",
-      subjects: "Constitutional Law, Intro to Law",
+      sections: ["A", "B"],
+      subjects: ["Constitutional Law", "Intro to Law"],
       faculty: "Fatima",
       campus: "law",
+      students: 80
     },
     {
       id: "c4",
       name: "BBA - 4th Semester",
-      sections: "A",
-      subjects: "Marketing, Finance",
+      sections: ["A"],
+      subjects: ["Marketing", "Finance"],
       faculty: "Hassan",
       campus: "hala",
+      students: 35
     },
   ];
 
-  // Filter data based on user role and selected campus
+  // Filter data based on user role, selected campus, and search query
   let filteredData = mockData;
 
-  // If Sub-Admin, only show classes from their allocated campuses
+  // 1. Filter by Role & Campus
   if (!isSuperAdmin) {
     filteredData = filteredData.filter((cls) =>
       currentAdmin?.allocatedCampuses?.includes(cls.campus),
     );
   } else if (selectedCampus) {
-    // If Super Admin selected a campus, filter to that campus
     filteredData = filteredData.filter((cls) => cls.campus === selectedCampus);
+  }
+
+  // 2. Filter by Search Query
+  if (searchQuery) {
+    const query = searchQuery.toLowerCase();
+    filteredData = filteredData.filter(
+      (cls) =>
+        cls.name.toLowerCase().includes(query) ||
+        cls.faculty.toLowerCase().includes(query) ||
+        cls.subjects.some(sub => sub.toLowerCase().includes(query))
+    );
   }
 
   const getCampusName = (campusId) => {
@@ -61,83 +89,165 @@ const ClassesList = () => {
   };
 
   const columns = [
-    { key: "name", label: "Class" },
-    { key: "sections", label: "Sections" },
-    { key: "subjects", label: "Subjects" },
-    { key: "faculty", label: "Assigned Faculty" },
+    {
+      key: "name",
+      label: "Class Info",
+      render: (row) => (
+        <div className="flex flex-col">
+          <span className="font-semibold text-gray-900">{row.name}</span>
+          <span className="text-xs text-gray-500 flex items-center gap-1">
+            <Users className="w-3 h-3" /> {row.students} Students
+          </span>
+        </div>
+      )
+    },
+    {
+      key: "sections",
+      label: "Sections",
+      render: (row) => (
+        <div className="flex gap-1 flex-wrap">
+          {row.sections.map((sec, idx) => (
+            <span key={idx} className="bg-purple-50 text-purple-700 px-2 py-0.5 rounded text-xs font-medium border border-purple-100">
+              {sec}
+            </span>
+          ))}
+        </div>
+      )
+    },
+    {
+      key: "subjects",
+      label: "Subjects",
+      render: (row) => (
+        <div className="flex flex-wrap gap-1 max-w-[200px]">
+          {row.subjects.slice(0, 2).map((sub, idx) => (
+            <span key={idx} className="bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-xs font-medium border border-blue-100">
+              {sub}
+            </span>
+          ))}
+          {row.subjects.length > 2 && (
+            <span className="text-xs text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded">+{row.subjects.length - 2} more</span>
+          )}
+        </div>
+      )
+    },
+    {
+      key: "faculty",
+      label: "Faculty Lead",
+      render: (row) => (
+        <div className="flex items-center gap-2">
+          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold">
+            {row.faculty.charAt(0)}
+          </div>
+          <span className="text-sm text-gray-700">{row.faculty}</span>
+        </div>
+      )
+    },
     {
       key: "campus",
       label: "Campus",
       render: (row) => (
-        <span className="text-sm font-medium">{getCampusName(row.campus)}</span>
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">
+          <Building2 className="w-3 h-3" />
+          {getCampusName(row.campus)}
+        </span>
       ),
     },
   ];
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <p className="text-sm text-gray-500">Class Management</p>
-          <h1 className="text-2xl font-semibold text-gray-900">
-            Classes & sections
+          <h1 className="text-2xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600">
+            Classes Management
           </h1>
+          <p className="text-sm text-gray-500 mt-1">
+            Manage academic classes, sections, and subject allocations
+          </p>
         </div>
         <Link
           to="/admin/classes/create"
-          className="px-4 py-2 bg-purple-700 text-white rounded-lg text-sm font-semibold hover:bg-purple-800"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl text-sm font-semibold hover:from-purple-700 hover:to-indigo-700 shadow-sm transition-all duration-200"
         >
-          Create Class
+          <Plus className="w-4 h-4" />
+          Create New Class
         </Link>
       </div>
 
-      {/* Campus Filter (Super Admin only) */}
-      {isSuperAdmin && (
-        <div className="bg-white rounded-lg border p-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Filter by Campus
-          </label>
-          <select
-            value={selectedCampus}
-            onChange={(e) => setSelectedCampus(e.target.value)}
-            className="w-full md:w-64 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-          >
-            <option value="">All Campuses</option>
-            {campuses.map((campus) => (
-              <option key={campus.id} value={campus.id}>
-                {campus.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
+      {/* Filters Section */}
+      <div className="bg-white/80 backdrop-blur-xl border border-white/20 p-4 rounded-2xl shadow-sm space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Search Input */}
+          <div className="relative col-span-1 lg:col-span-2">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <input
+              type="text"
+              placeholder="Search classes, subjects, or faculty..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm"
+            />
+          </div>
 
+          {/* Campus Filter (Super Admin) */}
+          {isSuperAdmin && (
+            <div className="relative">
+              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <select
+                value={selectedCampus}
+                onChange={(e) => setSelectedCampus(e.target.value)}
+                className="w-full pl-10 pr-8 py-2 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm appearance-none cursor-pointer"
+              >
+                <option value="">All Campuses</option>
+                {campuses.map((campus) => (
+                  <option key={campus.id} value={campus.id}>
+                    {campus.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Table Section */}
       {filteredData.length > 0 ? (
         <Table
           columns={columns}
           data={filteredData}
-          actions={(row) => (
-            <div className="flex items-center gap-2 text-sm">
-              <Link
-                to={`/admin/classes/edit/${row.id}`}
-                className="text-purple-700 font-semibold hover:text-purple-800"
-              >
-                Edit
-              </Link>
-              <button className="text-rose-600 hover:text-rose-700">
-                Delete
-              </button>
-            </div>
-          )}
+          actions={(row) => [
+            {
+              label: "Edit",
+              onClick: () => console.log("Edit", row.id),
+              className: "text-blue-600 hover:bg-blue-50",
+            },
+            {
+              label: "Delete",
+              onClick: () => console.log("Delete", row.id),
+              className: "text-rose-600 hover:bg-rose-50",
+            },
+          ]}
         />
       ) : (
-        <div className="bg-white p-8 rounded-lg text-center">
-          <p className="text-gray-600">
-            No classes found.{" "}
-            {isSuperAdmin && selectedCampus
-              ? `Create the first one for the selected campus!`
-              : `Create the first one!`}
+        <div className="flex flex-col items-center justify-center py-12 bg-white/50 backdrop-blur-sm rounded-2xl border border-dashed border-gray-300">
+          <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+            <BookOpen className="w-8 h-8 text-gray-400" />
+          </div>
+          <h3 className="text-lg font-medium text-gray-900">No classes found</h3>
+          <p className="text-gray-500 text-sm mt-1 mb-4 max-w-sm text-center">
+            {searchQuery || selectedCampus
+              ? "Try adjusting your search or filters to find what you're looking for."
+              : "Get started by creating a new class for your academic schedule."}
           </p>
+          {(searchQuery || selectedCampus) && (
+            <button
+              onClick={() => { setSearchQuery(""); setSelectedCampus(""); }}
+              className="text-purple-600 text-sm font-medium hover:text-purple-700 hover:underline"
+            >
+              Clear all filters
+            </button>
+          )}
         </div>
       )}
     </div>
@@ -145,3 +255,4 @@ const ClassesList = () => {
 };
 
 export default ClassesList;
+

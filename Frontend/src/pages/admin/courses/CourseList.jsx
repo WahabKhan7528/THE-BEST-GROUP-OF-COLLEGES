@@ -2,10 +2,23 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useAdminContext } from "../../../context/AdminContext";
 import Table from "../../../components/admin/Table";
+import {
+  Plus,
+  Search,
+  BookOpen,
+  Clock,
+  GraduationCap,
+  DollarSign,
+  Building2,
+  Pencil,
+  Trash2,
+  MoreVertical
+} from "lucide-react";
 
 const CourseList = () => {
   const { campuses, isSuperAdmin, currentAdmin } = useAdminContext();
   const [selectedCampus, setSelectedCampus] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Mock data with campuses where course is offered (Courses are global but assigned to campuses)
   const mockData = [
@@ -14,7 +27,8 @@ const CourseList = () => {
       title: "BS Computer Science",
       duration: "4 years",
       eligibility: "Intermediate",
-      fee: "$1200/semester",
+      fee: "$1200",
+      type: "semester",
       offeredAt: ["main", "law"],
     },
     {
@@ -22,15 +36,17 @@ const CourseList = () => {
       title: "BS Information Technology",
       duration: "4 years",
       eligibility: "Intermediate",
-      fee: "$1100/semester",
+      fee: "$1100",
+      type: "semester",
       offeredAt: ["main"],
     },
     {
       id: "c103",
       title: "Bachelor of Law (LLB)",
-      duration: "3 years",
+      duration: "5 years",
       eligibility: "Intermediate",
-      fee: "$900/semester",
+      fee: "$900",
+      type: "semester",
       offeredAt: ["law"],
     },
     {
@@ -38,13 +54,21 @@ const CourseList = () => {
       title: "Bachelor of Business Admin",
       duration: "4 years",
       eligibility: "Intermediate",
-      fee: "$800/semester",
+      fee: "$800",
+      type: "semester",
       offeredAt: ["hala"],
     },
   ];
 
   // Filter data based on user and selected campus
   let filteredData = mockData;
+
+  // Search Filter
+  if (searchQuery) {
+    filteredData = filteredData.filter(course =>
+      course.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }
 
   // If Sub-Admin, only show courses offered at their allocated campuses
   if (!isSuperAdmin) {
@@ -61,90 +85,165 @@ const CourseList = () => {
   }
 
   const getCampusesDisplay = (campusIds) => {
-    return campusIds
-      .map((cId) => campuses.find((c) => c.id === cId)?.code || cId)
-      .join(", ");
+    return campusIds.map((cId) => {
+      const campus = campuses.find((c) => c.id === cId);
+      return (
+        <span
+          key={cId}
+          className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200"
+        >
+          {campus?.code || cId}
+        </span>
+      );
+    });
   };
 
   const columns = [
-    { key: "title", label: "Course" },
-    { key: "duration", label: "Duration" },
-    { key: "eligibility", label: "Eligibility" },
-    { key: "fee", label: "Fee" },
+    {
+      key: "title",
+      label: "Course Details",
+      render: (row) => (
+        <div className="flex items-start gap-3">
+          <div className="p-2 bg-purple-50 text-purple-600 rounded-lg">
+            <BookOpen className="w-5 h-5" />
+          </div>
+          <div>
+            <span className="font-semibold text-gray-900 line-clamp-1">{row.title}</span>
+            <div className="flex items-center gap-2 mt-0.5 text-xs text-gray-500">
+              <span className="bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded text-[10px] font-medium uppercase tracking-wide">
+                Undergraduate
+              </span>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      key: "duration",
+      label: "Duration & Fee",
+      render: (row) => (
+        <div className="space-y-1">
+          <div className="flex items-center gap-1.5 text-sm text-gray-700 font-medium">
+            <Clock className="w-3.5 h-3.5 text-gray-400" />
+            {row.duration}
+          </div>
+          <div className="flex items-center gap-1.5 text-xs text-gray-500">
+            <DollarSign className="w-3.5 h-3.5 text-gray-400" />
+            {row.fee}/{row.type}
+          </div>
+        </div>
+      )
+    },
+    {
+      key: "eligibility",
+      label: "Eligibility",
+      render: (row) => (
+        <div className="flex items-center gap-2">
+          <GraduationCap className="w-4 h-4 text-gray-400" />
+          <span className="text-sm text-gray-600">{row.eligibility}</span>
+        </div>
+      )
+    },
     {
       key: "offeredAt",
-      label: "Offered at Campuses",
+      label: "Campuses",
       render: (row) => (
-        <span className="text-sm font-medium">
+        <div className="flex flex-wrap gap-1.5 max-w-[200px]">
           {getCampusesDisplay(row.offeredAt)}
-        </span>
+        </div>
       ),
     },
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-8">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <p className="text-sm text-gray-500">Courses (Public Site)</p>
-          <h1 className="text-2xl font-semibold text-gray-900">
-            Manage course list
+          <h1 className="text-2xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600">
+            Course Management
           </h1>
+          <p className="text-sm text-gray-500 mt-1">
+            Manage degree programs, short courses, and academic offerings
+          </p>
         </div>
         <Link
           to="/admin/courses/create"
-          className="px-4 py-2 bg-purple-700 text-white rounded-lg text-sm font-semibold hover:bg-purple-800"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl text-sm font-semibold hover:from-purple-700 hover:to-indigo-700 shadow-lg shadow-purple-500/20 transition-all duration-200 transform hover:-translate-y-0.5"
         >
-          Add Course
+          <Plus className="w-4 h-4" />
+          Add New Course
         </Link>
       </div>
 
-      {/* Campus Filter (Super Admin only) */}
-      {isSuperAdmin && (
-        <div className="bg-white rounded-lg border p-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Filter by Campus
-          </label>
-          <select
-            value={selectedCampus}
-            onChange={(e) => setSelectedCampus(e.target.value)}
-            className="w-full md:w-64 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-          >
-            <option value="">All Campuses</option>
-            {campuses.map((campus) => (
-              <option key={campus.id} value={campus.id}>
-                {campus.name}
-              </option>
-            ))}
-          </select>
+      {/* Filters & Actions */}
+      <div className="bg-white/80 backdrop-blur-xl border border-white/20 p-4 rounded-2xl shadow-sm flex flex-col md:flex-row gap-4 justify-between">
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <input
+            type="text"
+            placeholder="Search courses by name..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm"
+          />
         </div>
-      )}
 
-      {filteredData.length > 0 ? (
-        <Table
-          columns={columns}
-          data={filteredData}
-          actions={(row) => (
-            <div className="flex items-center gap-2 text-sm">
-              <Link
-                to={`/admin/courses/edit/${row.id}`}
-                className="text-purple-700 font-semibold hover:text-purple-800"
-              >
-                Edit
-              </Link>
-              <button className="text-rose-600 hover:text-rose-700">
-                Delete
-              </button>
+        {isSuperAdmin && (
+          <div className="flex items-center gap-2">
+            <Building2 className="w-4 h-4 text-gray-400" />
+            <select
+              value={selectedCampus}
+              onChange={(e) => setSelectedCampus(e.target.value)}
+              className="px-3 py-2 bg-gray-50/50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"
+            >
+              <option value="">All Campuses</option>
+              {campuses.map((campus) => (
+                <option key={campus.id} value={campus.id}>
+                  {campus.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+      </div>
+
+      {/* Table Section */}
+      <div className="bg-white/80 backdrop-blur-xl border border-white/20 rounded-2xl shadow-sm overflow-hidden">
+        {filteredData.length > 0 ? (
+          <Table
+            columns={columns}
+            data={filteredData}
+            actions={(row) => (
+              <div className="flex items-center justify-end gap-2">
+                <Link
+                  to={`/admin/courses/edit/${row.id}`}
+                  className="p-1.5 text-gray-500 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
+                  title="Edit"
+                >
+                  <Pencil className="w-4 h-4" />
+                </Link>
+                <button
+                  className="p-1.5 text-gray-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                  title="Delete"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+          />
+        ) : (
+          <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+            <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+              <BookOpen className="w-8 h-8 text-gray-300" />
             </div>
-          )}
-        />
-      ) : (
-        <div className="bg-white p-8 rounded-lg text-center">
-          <p className="text-gray-600">
-            No courses found. Create the first one!
-          </p>
-        </div>
-      )}
+            <h3 className="text-lg font-medium text-gray-900">No courses found</h3>
+            <p className="text-gray-500 max-w-sm mt-1">
+              There are no courses matching your search criteria. Try adjusting your filters or add a new course.
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

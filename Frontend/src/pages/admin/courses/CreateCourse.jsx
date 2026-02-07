@@ -1,14 +1,26 @@
 import { useState } from "react";
 import { useAdminContext } from "../../../context/AdminContext";
-import FormInput from "../../../components/admin/FormInput";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  ArrowLeft,
+  BookOpen,
+  Clock,
+  GraduationCap,
+  DollarSign,
+  FileText,
+  Building2,
+  CheckCircle2
+} from "lucide-react";
 
 const CreateCourse = () => {
+  const navigate = useNavigate();
   const { campuses } = useAdminContext();
   const [form, setForm] = useState({
     title: "",
     duration: "",
     eligibility: "",
     fee: "",
+    type: "semester",
     description: "",
     offeredAt: [],
   });
@@ -29,107 +41,181 @@ const CreateCourse = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (selectedCampuses.length === 0) {
-      alert(
-        "Please select at least one campus where this course will be offered",
-      );
+      alert("Please select at least one campus where this course will be offered");
       return;
     }
-    const campusNames = selectedCampuses
-      .map((cId) => campuses.find((c) => c.id === cId)?.name)
-      .join(", ");
-    alert(`Course created and offered at: ${campusNames} (mock)`);
+    // const campusNames = selectedCampuses
+    //   .map((cId) => campuses.find((c) => c.id === cId)?.name)
+    //   .join(", ");
+    // alert(`Course created and offered at: ${campusNames} (mock)`);
+    navigate("/admin/courses");
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <p className="text-sm text-gray-500">Courses (Public Site)</p>
-        <h1 className="text-2xl font-semibold text-gray-900">Create course</h1>
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* Header */}
+      <div className="flex items-center gap-4">
+        <Link
+          to="/admin/courses"
+          className="p-2 hover:bg-white/50 rounded-full transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5 text-gray-600" />
+        </Link>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Add New Course</h1>
+          <p className="text-sm text-gray-500">Create a new academic program or course</p>
+        </div>
       </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white border rounded-2xl shadow-sm p-6 space-y-4"
-      >
-        <FormInput
-          label="Course title"
-          value={form.title}
-          onChange={(v) => handleChange("title", v)}
-          required
-        />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <FormInput
-            label="Duration"
-            value={form.duration}
-            onChange={(v) => handleChange("duration", v)}
-            placeholder="4 years"
-          />
-          <FormInput
-            label="Eligibility"
-            value={form.eligibility}
-            onChange={(v) => handleChange("eligibility", v)}
-            placeholder="Intermediate"
-          />
-          <FormInput
-            label="Fee information"
-            value={form.fee}
-            onChange={(v) => handleChange("fee", v)}
-            placeholder="$1200/semester"
-          />
-        </div>
-        <label className="text-sm text-gray-700 space-y-1 block">
-          Description
-          <textarea
-            value={form.description}
-            onChange={(e) => handleChange("description", e.target.value)}
-            rows={4}
-            className="w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
-          />
-        </label>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Basic Info Section */}
+        <section className="bg-white/80 backdrop-blur-xl border border-white/20 p-6 rounded-2xl shadow-sm space-y-6">
+          <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2 border-b border-gray-100 pb-3">
+            <BookOpen className="w-5 h-5 text-purple-600" />
+            Course Information
+          </h2>
 
-        {/* Offered at Campuses */}
-        <div className="border-t pt-4 mt-4">
-          <h3 className="text-sm font-semibold text-gray-700 mb-3">
-            Offered at Campuses <span className="text-red-500">*</span>
-          </h3>
-          <div className="space-y-2">
-            {campuses.map((campus) => (
-              <label
-                key={campus.id}
-                className="flex items-center p-2 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer"
-              >
-                <input
-                  type="checkbox"
-                  checked={selectedCampuses.includes(campus.id)}
-                  onChange={() => handleCampusToggle(campus.id)}
-                  className="w-4 h-4 text-blue-600 rounded"
-                />
-                <span className="ml-3 font-medium text-gray-800">
-                  {campus.name}
-                </span>
-                <span className="text-sm text-gray-500 ml-auto">
-                  ({campus.code})
-                </span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Course Title <span className="text-red-500">*</span></label>
+              <input
+                type="text"
+                value={form.title}
+                onChange={(e) => handleChange("title", e.target.value)}
+                placeholder="e.g. BS Computer Science"
+                className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5 flex items-center gap-2">
+                <Clock className="w-4 h-4 text-gray-400" />
+                Duration
               </label>
-            ))}
-          </div>
-          <p className="text-xs text-gray-500 mt-2">
-            This course will be listed for selected campuses on the public site
-          </p>
-        </div>
+              <input
+                type="text"
+                value={form.duration}
+                onChange={(e) => handleChange("duration", e.target.value)}
+                placeholder="e.g. 4 Years"
+                className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"
+              />
+            </div>
 
-        <div className="flex justify-end gap-4">
-          <button
-            type="button"
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg text-sm font-semibold hover:bg-gray-400"
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5 flex items-center gap-2">
+                <GraduationCap className="w-4 h-4 text-gray-400" />
+                Eligibility
+              </label>
+              <input
+                type="text"
+                value={form.eligibility}
+                onChange={(e) => handleChange("eligibility", e.target.value)}
+                placeholder="e.g. Intermediate or A-Level"
+                className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5 flex items-center gap-2">
+                <DollarSign className="w-4 h-4 text-gray-400" />
+                Fee Amount
+              </label>
+              <input
+                type="text"
+                value={form.fee}
+                onChange={(e) => handleChange("fee", e.target.value)}
+                placeholder="e.g. $1200"
+                className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5 flex items-center gap-2">
+                <FileText className="w-4 h-4 text-gray-400" />
+                Fee Period
+              </label>
+              <select
+                value={form.type}
+                onChange={(e) => handleChange("type", e.target.value)}
+                className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all appearance-none"
+              >
+                <option value="semester">Per Semester</option>
+                <option value="year">Per Year</option>
+                <option value="course">Full Course</option>
+              </select>
+            </div>
+
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Description</label>
+              <textarea
+                value={form.description}
+                onChange={(e) => handleChange("description", e.target.value)}
+                rows={4}
+                className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all resize-none"
+                placeholder="Enter a brief description of the course..."
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Campus Availability */}
+        <section className="bg-white/80 backdrop-blur-xl border border-white/20 p-6 rounded-2xl shadow-sm space-y-4">
+          <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2 border-b border-gray-100 pb-3">
+            <Building2 className="w-5 h-5 text-indigo-600" />
+            Campus Availability <span className="text-red-500 text-sm ml-1">*</span>
+          </h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {campuses.map((campus) => {
+              const isSelected = selectedCampuses.includes(campus.id);
+              return (
+                <div
+                  key={campus.id}
+                  onClick={() => handleCampusToggle(campus.id)}
+                  className={`
+                      relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 flex items-start gap-3
+                      ${isSelected
+                      ? 'border-indigo-600 bg-indigo-50 shadow-sm'
+                      : 'border-gray-100 bg-white hover:border-indigo-200 hover:bg-gray-50'
+                    }
+                    `}
+                >
+                  <div className={`p-2 rounded-lg ${isSelected ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-100 text-gray-400'}`}>
+                    <Building2 className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className={`font-semibold text-sm ${isSelected ? 'text-indigo-900' : 'text-gray-900'}`}>
+                      {campus.name}
+                    </h3>
+                    <p className="text-xs text-gray-500">{campus.code}</p>
+                  </div>
+                  {isSelected && (
+                    <CheckCircle2 className="absolute top-3 right-3 w-5 h-5 text-indigo-600" />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          <p className="text-xs text-gray-500 flex items-center gap-1.5 mt-2">
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            Select the campuses where this course will be offered.
+          </p>
+        </section>
+
+        {/* Action Buttons */}
+        <div className="flex justify-end gap-3 pt-4">
+          <Link
+            to="/admin/courses"
+            className="px-6 py-2.5 bg-white border border-gray-200 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition-colors"
           >
             Cancel
-          </button>
+          </Link>
           <button
             type="submit"
-            className="px-4 py-2 bg-purple-700 text-white rounded-lg text-sm font-semibold hover:bg-purple-800"
+            className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-indigo-700 shadow-lg shadow-purple-500/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0"
           >
-            Save course
+            Create Course
           </button>
         </div>
       </form>

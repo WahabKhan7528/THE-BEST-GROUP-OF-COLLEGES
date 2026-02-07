@@ -1,5 +1,7 @@
 import { useStudentContext } from "../../context/StudentContext";
 import AssignmentCard from "../../components/student/AssignmentCard";
+import { ClipboardList, CheckCircle, Clock } from "lucide-react";
+import { motion } from "framer-motion";
 
 // Mock assignments data by campus
 const assignmentsByCampus = {
@@ -78,35 +80,65 @@ const Assignments = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white border rounded-2xl shadow-sm p-5">
-        <div className="flex items-center justify-between">
+      <div className="bg-white/70 backdrop-blur-xl border border-white/40 rounded-3xl shadow-xl p-8 relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-8 opacity-5">
+          <ClipboardList size={150} />
+        </div>
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <p className="text-sm text-gray-500">Assignments</p>
-            <h1 className="text-2xl font-semibold text-gray-900">
-              Submit coursework
+            <div className="flex items-center gap-3 mb-2">
+              <span className="px-3 py-1 rounded-full bg-purple-50 border border-purple-100 text-purple-700 text-xs font-semibold uppercase tracking-wide">
+                Student Portal
+              </span>
+              <span className="px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide">
+                {campusNames[campus]}
+              </span>
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">
+              Assignments
             </h1>
-            <p className="text-sm text-blue-600 mt-2">
-              📍 {campusNames[campus]}
+            <p className="text-gray-500 mt-2 max-w-xl">
+              Manage your coursework, track deadlines, and submit your assignments on time.
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-700">
-              {assignments.length} total
-            </span>
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <p className="text-sm text-gray-500 font-medium">Pending Tasks</p>
+              <p className="text-2xl font-bold text-gray-900">{assignments.filter(a => a.status === 'Pending').length}</p>
+            </div>
+            <div className="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center">
+              <Clock size={24} />
+            </div>
           </div>
         </div>
       </div>
 
       {assignments.length > 0 ? (
-        <div className="space-y-4">
-          {assignments.map((assignment) => (
-            <AssignmentCard key={assignment.title} assignment={assignment} />
+        <motion.div
+          className="space-y-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {assignments.map((assignment, index) => (
+            <motion.div
+              key={assignment.title}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+            >
+              <AssignmentCard assignment={assignment} />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       ) : (
-        <div className="bg-white border rounded-2xl shadow-sm p-8 text-center">
-          <p className="text-gray-600 text-lg">
-            No assignments for {campusNames[campus]} at this time.
+        <div className="bg-white/60 backdrop-blur-sm border border-dashed border-gray-300 rounded-3xl p-12 text-center">
+          <div className="w-16 h-16 bg-purple-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <CheckCircle size={30} className="text-purple-400" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900">All caught up!</h3>
+          <p className="text-gray-500 mt-2 max-w-sm mx-auto">
+            No pending assignments for {campusNames[campus]} at this time.
           </p>
         </div>
       )}

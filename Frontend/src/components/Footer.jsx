@@ -17,7 +17,7 @@ const Footer = () => {
     <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
-        <div className="py-16">
+        <div className="py-12 md:py-16">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mb-12">
             {/* About Section */}
             <div className="col-span-1 md:col-span-1">
@@ -201,13 +201,13 @@ const Footer = () => {
 
         {/* Bottom Footer */}
         <div className="py-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-            <div>
-              <p className="text-gray-400 text-xs">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="order-2 md:order-1">
+              <p className="text-gray-400 text-xs text-center md:text-left">
                 © {currentYear} Best Group of Colleges. All rights reserved.
               </p>
             </div>
-            <div className="flex justify-center gap-6">
+            <div className="flex justify-center gap-6 order-1 md:order-2">
               <a
                 href="#"
                 className="text-gray-400 hover:text-white text-xs transition"
@@ -227,7 +227,7 @@ const Footer = () => {
                 Disclaimer
               </a>
             </div>
-            <div className="text-right">
+            <div className="order-3 text-center md:text-right">
               <p className="text-gray-400 text-xs">
                 Designed by Nexyvora for The Best Group of Colleges
               </p>

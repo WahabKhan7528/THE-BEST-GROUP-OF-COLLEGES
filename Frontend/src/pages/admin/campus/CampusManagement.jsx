@@ -2,7 +2,16 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminContext } from "../../../context/AdminContext";
 import Table from "../../../components/admin/Table";
-import Button from "../../../components/ui/Button";
+import {
+  Plus,
+  Search,
+  MapPin,
+  Building2,
+  ShieldCheck,
+  Edit3,
+  Trash2,
+  School
+} from "lucide-react";
 
 const CampusManagement = () => {
   const navigate = useNavigate();
@@ -11,11 +20,16 @@ const CampusManagement = () => {
 
   if (!isSuperAdmin) {
     return (
-      <div className="p-8 bg-red-50 border border-red-200 rounded-lg">
-        <h2 className="text-xl font-semibold text-red-800">Access Denied</h2>
-        <p className="text-red-600">
-          Only Super Admins can access Campus Management.
-        </p>
+      <div className="p-8 bg-red-50/50 backdrop-blur-sm border border-red-200 rounded-2xl flex items-center gap-4">
+        <div className="p-3 bg-red-100 rounded-xl text-red-600">
+          <ShieldCheck size={24} />
+        </div>
+        <div>
+          <h2 className="text-xl font-bold text-red-900">Access Denied</h2>
+          <p className="text-red-700 mt-1">
+            Only Super Admins can access Campus Management.
+          </p>
+        </div>
       </div>
     );
   }
@@ -28,9 +42,9 @@ const CampusManagement = () => {
   );
 
   const columns = [
-    { key: "name", label: "Campus Name", width: "25%" },
-    { key: "code", label: "Code", width: "15%" },
-    { key: "location", label: "Location", width: "25%" },
+    { key: "name", label: "Campus Name" },
+    { key: "code", label: "Code" },
+    { key: "location", label: "Location" },
   ];
 
   const handleEdit = (campus) => {
@@ -49,46 +63,90 @@ const CampusManagement = () => {
 
   const actionButtons = (row) => [
     {
-      label: "Manage Admins",
+      label: <span className="flex items-center gap-1"><ShieldCheck size={14} /> Admins</span>,
       onClick: () => handleManageAdmins(row),
-      className: "text-blue-600 hover:text-blue-800",
+      className: "text-blue-600 hover:text-blue-700 font-medium bg-blue-50 border border-blue-100",
     },
     {
-      label: "Edit",
+      label: <Edit3 size={16} />,
       onClick: () => handleEdit(row),
-      className: "text-green-600 hover:text-green-800",
+      className: "text-amber-600 hover:text-amber-700 bg-amber-50 border border-amber-100",
     },
     {
-      label: "Delete",
+      label: <Trash2 size={16} />,
       onClick: () => {
         if (window.confirm(`Delete campus "${row.name}"?`)) {
           alert("Delete functionality will be connected to backend");
         }
       },
-      className: "text-red-600 hover:text-red-800",
+      className: "text-red-600 hover:text-red-700 bg-red-50 border border-red-100",
     },
   ];
 
   return (
-    <div className="bg-white p-8 rounded-lg shadow-md">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Campus Management</h1>
-        <Button
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Campus Management</h1>
+          <p className="text-gray-500 mt-2 flex items-center gap-2">
+            Manage your educational centers and administrative allocation
+          </p>
+        </div>
+
+        <button
           onClick={handleAddCampus}
-          className="bg-blue-600 hover:bg-blue-700"
+          className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/30 hover:shadow-blue-500/40 transform hover:-translate-y-0.5 transition-all duration-200"
         >
-          + Add Campus
-        </Button>
+          <Plus size={20} />
+          Add New Campus
+        </button>
+      </div>
+
+      {/* Stats Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white/60 backdrop-blur-md border border-white/60 rounded-2xl p-6 shadow-sm flex items-center gap-5">
+          <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
+            <School size={28} />
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-500">Total Campuses</p>
+            <p className="text-3xl font-bold text-gray-900">{campuses.length}</p>
+          </div>
+        </div>
+
+        <div className="bg-white/60 backdrop-blur-md border border-white/60 rounded-2xl p-6 shadow-sm flex items-center gap-5">
+          <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-fuchsia-500 flex items-center justify-center text-white shadow-lg shadow-purple-500/30">
+            <Building2 size={28} />
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-500">Active Departments</p>
+            <p className="text-3xl font-bold text-gray-900">12</p>
+          </div>
+        </div>
+
+        <div className="bg-white/60 backdrop-blur-md border border-white/60 rounded-2xl p-6 shadow-sm flex items-center gap-5">
+          <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white shadow-lg shadow-emerald-500/30">
+            <MapPin size={28} />
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-500">Total Locations</p>
+            <p className="text-3xl font-bold text-gray-900">{campuses.length}</p>
+          </div>
+        </div>
       </div>
 
       {/* Search Bar */}
-      <div className="mb-6">
+      <div className="relative">
+        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          <Search className="h-5 w-5 text-gray-400" />
+        </div>
         <input
           type="text"
           placeholder="Search campuses by name, code, or location..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm text-gray-700"
         />
       </div>
 
@@ -100,22 +158,12 @@ const CampusManagement = () => {
           actionButtons={actionButtons}
         />
       ) : (
-        <div className="text-center py-8">
-          <p className="text-gray-600">
-            No campuses found. Create the first one!
-          </p>
+        <div className="text-center py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+          <School className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+          <h3 className="text-lg font-medium text-gray-900">No campuses found</h3>
+          <p className="text-gray-500">Try adjusting your search or add a new campus.</p>
         </div>
       )}
-
-      {/* Summary Stats */}
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-          <h3 className="text-sm font-semibold text-blue-800">
-            Total Campuses
-          </h3>
-          <p className="text-2xl font-bold text-blue-600">{campuses.length}</p>
-        </div>
-      </div>
     </div>
   );
 };

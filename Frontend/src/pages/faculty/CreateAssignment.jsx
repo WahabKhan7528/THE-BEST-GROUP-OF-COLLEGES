@@ -1,7 +1,10 @@
 import { useState } from 'react';
-import { Calendar, Upload } from 'lucide-react';
+import { Calendar, Upload, FileText, ArrowLeft, Check } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const CreateAssignment = () => {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     classSection: '',
     subject: '',
@@ -25,110 +28,137 @@ const CreateAssignment = () => {
     e.preventDefault();
     // mock submit
     alert('Assignment created (mock)');
+    navigate('/faculty/assignments');
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <motion.div
+      className="max-w-4xl mx-auto space-y-6"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+    >
+      <div className="flex items-center gap-4">
+        <Link
+          to="/faculty/assignments"
+          className="p-2.5 rounded-xl bg-white/50 hover:bg-white text-gray-500 hover:text-gray-900 border border-transparent hover:border-gray-200 transition-all duration-200"
+        >
+          <ArrowLeft size={20} />
+        </Link>
         <div>
-          <p className="text-sm text-gray-500">Assignments</p>
-          <h1 className="text-2xl font-semibold text-gray-900">Create new assignment</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Create New Assignment</h1>
+          <p className="text-sm text-gray-500">Publish a new assignment for your students</p>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white border rounded-2xl shadow-sm p-6 space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <label className="text-sm text-gray-700 space-y-1">
-            Class / Section
+      <form onSubmit={handleSubmit} className="bg-white/70 backdrop-blur-xl border border-white/50 rounded-3xl shadow-xl p-8 space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-gray-700">Class / Section</label>
             <input
               type="text"
               value={form.classSection}
               onChange={(e) => handleChange('classSection', e.target.value)}
-              placeholder="BSCS - A"
-              className="w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+              placeholder="e.g. BSCS - A"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all outline-none"
+              required
             />
-          </label>
-          <label className="text-sm text-gray-700 space-y-1">
-            Subject
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-gray-700">Subject</label>
             <input
               type="text"
               value={form.subject}
               onChange={(e) => handleChange('subject', e.target.value)}
-              placeholder="Operating Systems"
-              className="w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+              placeholder="e.g. Operating Systems"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all outline-none"
+              required
             />
-          </label>
+          </div>
         </div>
 
-        <label className="text-sm text-gray-700 space-y-1 block">
-          Title
+        <div className="space-y-2">
+          <label className="text-sm font-semibold text-gray-700">Assignment Title</label>
           <input
             type="text"
             value={form.title}
             onChange={(e) => handleChange('title', e.target.value)}
-            placeholder="CPU Scheduling Report"
-            className="w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+            placeholder="e.g. CPU Scheduling Algorithm Report"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all outline-none"
+            required
           />
-        </label>
+        </div>
 
-        <label className="text-sm text-gray-700 space-y-1 block">
-          Description
+        <div className="space-y-2">
+          <label className="text-sm font-semibold text-gray-700">Description & Instructions</label>
           <textarea
             value={form.description}
             onChange={(e) => handleChange('description', e.target.value)}
-            rows={4}
-            placeholder="Describe the assignment, expectations, and submission format."
-            className="w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+            rows={6}
+            placeholder="Detailed instructions for the assignment..."
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all outline-none resize-none"
           />
-        </label>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <label className="text-sm text-gray-700 space-y-1">
-            Due date
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-gray-700">Due Date</label>
             <div className="relative">
               <input
                 type="date"
                 value={form.dueDate}
                 onChange={(e) => handleChange('dueDate', e.target.value)}
-                className="w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 pr-10"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all outline-none"
+                required
               />
-              <Calendar size={16} className="absolute right-3 top-3 text-gray-400" />
+              <Calendar size={18} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
             </div>
-          </label>
-          <label className="text-sm text-gray-700 space-y-1">
-            Maximum marks
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-gray-700">Maximum Marks</label>
             <input
               type="number"
               value={form.maxMarks}
               onChange={(e) => handleChange('maxMarks', e.target.value)}
               placeholder="20"
-              className="w-full rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all outline-none"
+              required
             />
-          </label>
-          <label className="text-sm text-gray-700 space-y-1">
-            Attachment (optional)
-            <input
-              type="file"
-              onChange={handleFile}
-              className="w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-purple-500 focus:ring-purple-500"
-            />
-            {form.attachmentName && (
-              <span className="text-xs text-gray-500">Selected: {form.attachmentName}</span>
-            )}
-          </label>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-semibold text-gray-700">Attachment (Optional)</label>
+            <div className="relative group">
+              <input
+                type="file"
+                onChange={handleFile}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+              />
+              <div className="w-full px-4 py-3 rounded-xl border border-dashed border-gray-300 bg-white/30 text-gray-500 group-hover:bg-purple-50 group-hover:border-purple-300 group-hover:text-purple-600 transition-all flex items-center gap-2 truncate">
+                <FileText size={18} />
+                <span className="truncate">{form.attachmentName || "Choose file..."}</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="flex justify-end">
+        <div className="pt-6 border-t border-gray-100 flex items-center justify-end gap-3">
+          <Link
+            to="/faculty/assignments"
+            className="px-6 py-2.5 rounded-xl border border-gray-200 text-gray-600 font-semibold hover:bg-gray-50 transition-colors"
+          >
+            Cancel
+          </Link>
           <button
             type="submit"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-700 text-white text-sm font-semibold hover:bg-purple-800"
+            className="flex items-center gap-2 px-8 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl font-semibold shadow-lg shadow-purple-500/30 hover:shadow-purple-500/40 hover:-translate-y-0.5 transition-all duration-200"
           >
-            <Upload size={16} />
+            <Check size={18} />
             Publish Assignment
           </button>
         </div>
       </form>
-    </div>
+    </motion.div>
   );
 };
 

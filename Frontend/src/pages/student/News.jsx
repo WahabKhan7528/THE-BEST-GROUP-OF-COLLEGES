@@ -1,5 +1,7 @@
 import { useStudentContext } from "../../context/StudentContext";
 import AnnouncementCard from "../../components/student/AnnouncementCard";
+import { Megaphone, Search, Filter } from "lucide-react";
+import { motion } from "framer-motion";
 
 // Mock announcements/news data by campus
 const announcementsByCampus = {
@@ -66,27 +68,54 @@ const News = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white border rounded-2xl shadow-sm p-5">
-        <p className="text-sm text-gray-500">News & Events</p>
-        <h1 className="text-2xl font-semibold text-gray-900">
-          Announcements from Admin
-        </h1>
-        <p className="text-sm text-blue-600 mt-2">📍 {campusNames[campus]}</p>
+      <div className="bg-white/70 backdrop-blur-xl border border-white/40 rounded-3xl shadow-xl p-8 relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-8 opacity-5">
+          <Megaphone size={150} />
+        </div>
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-2">
+            <span className="px-3 py-1 rounded-full bg-amber-50 border border-amber-100 text-amber-700 text-xs font-semibold uppercase tracking-wide">
+              Student Portal
+            </span>
+            <span className="px-3 py-1 rounded-full bg-purple-50 border border-purple-100 text-purple-700 text-xs font-semibold uppercase tracking-wide">
+              {campusNames[campus]}
+            </span>
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">
+            News & Events
+          </h1>
+          <p className="text-gray-500 mt-2 max-w-xl">
+            Stay updated with the latest announcements, events, and important notices from the administration.
+          </p>
+        </div>
       </div>
 
       {announcements.length > 0 ? (
-        <div className="space-y-4">
-          {announcements.map((announcement) => (
-            <AnnouncementCard
+        <motion.div
+          className="space-y-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {announcements.map((announcement, index) => (
+            <motion.div
               key={announcement.title}
-              announcement={announcement}
-            />
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+            >
+              <AnnouncementCard announcement={announcement} />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       ) : (
-        <div className="bg-white border rounded-2xl shadow-sm p-8 text-center">
-          <p className="text-gray-600 text-lg">
-            No announcements for {campusNames[campus]} yet.
+        <div className="bg-white/60 backdrop-blur-sm border border-dashed border-gray-300 rounded-3xl p-12 text-center">
+          <div className="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Megaphone size={30} className="text-amber-400" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900">No announcements found</h3>
+          <p className="text-gray-500 mt-2 max-w-sm mx-auto">
+            There are no new announcements for {campusNames[campus]} at this time.
           </p>
         </div>
       )}

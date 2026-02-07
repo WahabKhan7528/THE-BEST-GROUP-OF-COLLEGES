@@ -6,18 +6,36 @@ const Card = ({
   hover = false,
   shadow = 'md',
   padding = true,
+  variant = 'default',
+  gradient = false,
   ...props
 }) => {
+  const shadowClasses = {
+    none: '',
+    sm: 'shadow-sm',
+    md: 'shadow-md',
+    lg: 'shadow-lg',
+    xl: 'shadow-xl',
+  };
+
+  const variantClasses = {
+    default: gradient ? '' : 'bg-white border border-gray-100', // Allow gradient to take precedence
+    glass: 'bg-white/70 backdrop-blur-md border border-white/20',
+    elevated: 'bg-white border-0',
+    outline: 'bg-transparent border-2 border-gray-200',
+  };
+
   return (
     <div
       className={clsx(
-        'bg-white rounded-lg overflow-hidden',
+        'rounded-2xl overflow-hidden',
+        'transition-all duration-300 ease-out',
+        variantClasses[variant],
+        shadowClasses[shadow],
         {
-          'hover:shadow-lg transition-shadow duration-300': hover,
+          'hover:shadow-xl hover:-translate-y-1 hover:border-primary-100 cursor-pointer': hover,
           'p-6': padding,
-          'shadow-sm': shadow === 'sm',
-          'shadow-md': shadow === 'md',
-          'shadow-lg': shadow === 'lg',
+          'bg-gradient-to-br from-white via-white to-primary-50/30': gradient,
         },
         className
       )}
@@ -28,35 +46,44 @@ const Card = ({
   );
 };
 
-Card.Header = function CardHeader({ children, className, ...props }) {
-  return (
-    <div className={clsx('border-b border-gray-200 pb-4 mb-4', className)} {...props}>
-      {children}
-    </div>
-  );
-};
+// ... existing subcomponents ...
 
-Card.Title = function CardTitle({ children, className, ...props }) {
+Card.Image = function CardImage({ src, alt, className, overlay = false, bleed = true, ...props }) {
   return (
-    <h3 className={clsx('text-lg font-bold', className)} {...props}>
-      {children}
-    </h3>
+    <div className={clsx("relative overflow-hidden mb-6", {
+      "-mx-6 -mt-6": bleed,
+      "rounded-t-2xl": !bleed
+    })}>
+      <img
+        src={src}
+        alt={alt}
+        className={clsx(
+          'w-full h-48 object-cover',
+          'transition-transform duration-500 hover:scale-105',
+          className
+        )}
+        {...props}
+      />
+      {overlay && (
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+      )}
+    </div>
   );
 };
 
 Card.Body = function CardBody({ children, className, ...props }) {
   return (
-    <div className={clsx('', className)} {...props}>
+    <div className={clsx(className)} {...props}>
       {children}
     </div>
   );
 };
 
-Card.Footer = function CardFooter({ children, className, ...props }) {
+Card.Title = function CardTitle({ children, className, as: Component = "h3", ...props }) {
   return (
-    <div className={clsx('border-t border-gray-200 pt-4 mt-4', className)} {...props}>
+    <Component className={clsx("text-xl font-bold text-gray-900", className)} {...props}>
       {children}
-    </div>
+    </Component>
   );
 };
 

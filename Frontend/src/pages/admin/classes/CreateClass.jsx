@@ -1,9 +1,21 @@
 import { useState } from "react";
 import { useAdminContext } from "../../../context/AdminContext";
-import FormInput from "../../../components/admin/FormInput";
+import { useNavigate, Link } from "react-router-dom";
+import {
+  Building2,
+  BookOpen,
+  Users,
+  GraduationCap,
+  Layers,
+  ArrowLeft,
+  CheckCircle2
+} from "lucide-react";
+import { motion } from "framer-motion";
 
 const CreateClass = () => {
   const { campuses, currentAdmin, isSuperAdmin } = useAdminContext();
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     name: "",
     sections: "",
@@ -23,7 +35,8 @@ const CreateClass = () => {
       return;
     }
     const campusName = campuses.find((c) => c.id === form.campus)?.name;
-    alert(`Class created for ${campusName} (mock)`);
+    // alert(`Class created for ${campusName} (mock)`);
+    navigate("/admin/classes");
   };
 
   const getCampusLabel = () => {
@@ -34,85 +47,173 @@ const CreateClass = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <p className="text-sm text-gray-500">Class Management</p>
-        <h1 className="text-2xl font-semibold text-gray-900">Create class</h1>
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* Header */}
+      <div className="flex items-center gap-4">
+        <Link
+          to="/admin/classes"
+          className="p-2 hover:bg-white/50 rounded-full transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5 text-gray-600" />
+        </Link>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Create New Class</h1>
+          <p className="text-sm text-gray-500">Add a new class and assign subjects and faculty</p>
+        </div>
       </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white border rounded-2xl shadow-sm p-6 space-y-4"
-      >
-        {/* Campus Selection */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Campus <span className="text-red-500">*</span>
-          </label>
-          {isSuperAdmin ? (
-            <select
-              value={form.campus}
-              onChange={(e) => handleChange("campus", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-              required
-            >
-              <option value="">Select a campus</option>
-              {campuses.map((campus) => (
-                <option key={campus.id} value={campus.id}>
-                  {campus.name}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <div className="px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-700">
-              {getCampusLabel()}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Campus Selection Section */}
+        <section className="bg-white/80 backdrop-blur-xl border border-white/20 p-6 rounded-2xl shadow-sm space-y-4">
+          <div className="flex items-center gap-2 mb-2">
+            <Building2 className="w-5 h-5 text-purple-600" />
+            <h2 className="text-lg font-semibold text-gray-800">Campus Allocation</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="col-span-1 md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Select Campus <span className="text-red-500">*</span>
+              </label>
+
+              {isSuperAdmin ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                  {campuses.map((campus) => (
+                    <label
+                      key={campus.id}
+                      className={`
+                        relative flex flex-col items-center justify-center p-4 rounded-xl border-2 cursor-pointer transition-all duration-200
+                        ${form.campus === campus.id
+                          ? 'border-purple-600 bg-purple-50'
+                          : 'border-gray-100 bg-white hover:border-purple-200 hover:bg-gray-50'
+                        }
+                      `}
+                    >
+                      <input
+                        type="radio"
+                        name="campus"
+                        value={campus.id}
+                        checked={form.campus === campus.id}
+                        onChange={(e) => handleChange("campus", e.target.value)}
+                        className="sr-only"
+                      />
+                      <Building2 className={`w-6 h-6 mb-2 ${form.campus === campus.id ? 'text-purple-600' : 'text-gray-400'}`} />
+                      <span className={`text-sm font-medium text-center ${form.campus === campus.id ? 'text-purple-700' : 'text-gray-600'}`}>
+                        {campus.name}
+                      </span>
+                      {form.campus === campus.id && (
+                        <div className="absolute top-2 right-2 text-purple-600">
+                          <CheckCircle2 className="w-4 h-4" />
+                        </div>
+                      )}
+                    </label>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex items-center gap-3 p-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-700">
+                  <Building2 className="w-5 h-5 text-gray-400" />
+                  <span className="font-medium">{getCampusLabel()}</span>
+                  <span className="ml-auto text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">Automated Selection</span>
+                </div>
+              )}
+              <p className="text-xs text-gray-500 mt-2 ml-1">
+                The class will be created specifically for this campus environment.
+              </p>
             </div>
-          )}
-          <p className="text-xs text-gray-500 mt-1">
-            This class will be campus-specific
-          </p>
-        </div>
+          </div>
+        </section>
 
-        <FormInput
-          label="Class name"
-          value={form.name}
-          onChange={(v) => handleChange("name", v)}
-          placeholder="BSCS - 3rd Semester"
-          required
-        />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormInput
-            label="Sections"
-            value={form.sections}
-            onChange={(v) => handleChange("sections", v)}
-            placeholder="A, B, C"
-          />
-          <FormInput
-            label="Subjects"
-            value={form.subjects}
-            onChange={(v) => handleChange("subjects", v)}
-            placeholder="OS, DBMS, DSA"
-          />
-        </div>
-        <FormInput
-          label="Assign faculty"
-          value={form.faculty}
-          onChange={(v) => handleChange("faculty", v)}
-          placeholder="Prof. Ahmed Raza"
-        />
+        {/* Class Details Section */}
+        <section className="bg-white/80 backdrop-blur-xl border border-white/20 p-6 rounded-2xl shadow-sm space-y-6">
+          <div className="flex items-center gap-2 mb-2">
+            <GraduationCap className="w-5 h-5 text-indigo-600" />
+            <h2 className="text-lg font-semibold text-gray-800">Academic Details</h2>
+          </div>
 
-        <div className="flex justify-end gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="col-span-1 md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Class Name <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <BookOpen className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  value={form.name}
+                  onChange={(e) => handleChange("name", e.target.value)}
+                  placeholder="e.g. BSCS - 3rd Semester"
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Sections
+              </label>
+              <div className="relative">
+                <Layers className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  value={form.sections}
+                  onChange={(e) => handleChange("sections", e.target.value)}
+                  placeholder="e.g. A, B, C (Comma separated)"
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"
+                />
+              </div>
+              <p className="text-xs text-gray-500 mt-1.5 ml-1">Separate multiple sections with commas</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Assign Faculty Lead
+              </label>
+              <div className="relative">
+                <Users className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  value={form.faculty}
+                  onChange={(e) => handleChange("faculty", e.target.value)}
+                  placeholder="e.g. Prof. Ahmed Raza"
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"
+                />
+              </div>
+            </div>
+
+            <div className="col-span-1 md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Subjects
+              </label>
+              <div className="relative">
+                <BookOpen className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
+                <textarea
+                  value={form.subjects}
+                  onChange={(e) => handleChange("subjects", e.target.value)}
+                  placeholder="e.g. Operating Systems, Data Structures, Linear Algebra..."
+                  rows="3"
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all resize-none"
+                />
+              </div>
+              <p className="text-xs text-gray-500 mt-1.5 ml-1">List the subjects offered to this class</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Action Buttons */}
+        <div className="flex items-center justify-end gap-4 pt-4">
           <button
             type="button"
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg text-sm font-semibold hover:bg-gray-400"
+            onClick={() => navigate("/admin/classes")}
+            className="px-6 py-2.5 text-gray-700 font-medium hover:bg-gray-100 rounded-xl transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="px-4 py-2 bg-purple-700 text-white rounded-lg text-sm font-semibold hover:bg-purple-800"
+            className="px-8 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-indigo-700 shadow-lg shadow-purple-500/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0"
           >
-            Save class
+            Create Class
           </button>
         </div>
       </form>
@@ -121,3 +222,4 @@ const CreateClass = () => {
 };
 
 export default CreateClass;
+

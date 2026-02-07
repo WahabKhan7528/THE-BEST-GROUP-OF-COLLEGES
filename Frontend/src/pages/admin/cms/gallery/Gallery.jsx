@@ -1,40 +1,140 @@
 import { Link } from 'react-router-dom';
+import {
+  Plus,
+  Image as ImageIcon,
+  Trash2,
+  ExternalLink,
+  Search,
+  Filter,
+  Calendar
+} from 'lucide-react';
+import { useState } from 'react';
 
 const images = [
-  { id: 'g1', title: 'Campus lawn', date: 'Sept 5, 2025' },
-  { id: 'g2', title: 'Computer lab', date: 'Sept 2, 2025' },
-  { id: 'g3', title: 'Library hall', date: 'Aug 30, 2025' },
+  { id: 'g1', title: 'Campus lawn', date: 'Sept 5, 2025', album: 'Campus Life', url: 'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&q=80&w=1000' },
+  { id: 'g2', title: 'Computer lab', date: 'Sept 2, 2025', album: 'Facilities', url: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=1000' },
+  { id: 'g3', title: 'Library hall', date: 'Aug 30, 2025', album: 'Facilities', url: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&q=80&w=1000' },
+  { id: 'g4', title: 'Annual Sports Day', date: 'Aug 25, 2025', album: 'Events', url: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&q=80&w=1000' },
+  { id: 'g5', title: 'Convocation Ceremony', date: 'Aug 20, 2025', album: 'Events', url: 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&q=80&w=1000' },
+  { id: 'g6', title: 'Science Exhibition', date: 'Aug 15, 2025', album: 'Academic', url: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&q=80&w=1000' },
 ];
 
 const Gallery = () => {
+  const [activeFilter, setActiveFilter] = useState("All");
+  const albums = ["All", ...new Set(images.map(img => img.album))];
+
+  const filteredImages = activeFilter === "All"
+    ? images
+    : images.filter(img => img.album === activeFilter);
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-8">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <p className="text-sm text-gray-500">CMS • Gallery</p>
-          <h1 className="text-2xl font-semibold text-gray-900">Manage gallery</h1>
+          <h1 className="text-2xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600">
+            Media Gallery
+          </h1>
+          <p className="text-sm text-gray-500 mt-1">
+            Manage your campus photos, event highlights, and media assets
+          </p>
         </div>
         <Link
           to="/admin/cms/gallery/upload"
-          className="px-4 py-2 bg-purple-700 text-white rounded-lg text-sm font-semibold hover:bg-purple-800"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl text-sm font-semibold hover:from-purple-700 hover:to-indigo-700 shadow-lg shadow-purple-500/20 transition-all duration-200 transform hover:-translate-y-0.5"
         >
+          <Plus className="w-4 h-4" />
           Upload Image
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {images.map((img) => (
-          <div key={img.id} className="bg-white border rounded-2xl shadow-sm p-4 space-y-2">
-            <div className="aspect-video bg-gray-100 rounded-lg" />
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-semibold text-gray-900">{img.title}</p>
-                <p className="text-xs text-gray-500">{img.date}</p>
+      {/* Filters & Search */}
+      <div className="bg-white/80 backdrop-blur-xl border border-white/20 p-4 rounded-2xl shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+        <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 no-scrollbar">
+          {albums.map((album) => (
+            <button
+              key={album}
+              onClick={() => setActiveFilter(album)}
+              className={`
+                px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200
+                ${activeFilter === album
+                  ? "bg-purple-50 text-purple-700 shadow-sm"
+                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                }
+              `}
+            >
+              {album}
+            </button>
+          ))}
+        </div>
+
+        <div className="relative w-full md:w-64">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <input
+            type="text"
+            placeholder="Search images..."
+            className="w-full pl-10 pr-4 py-2 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm"
+          />
+        </div>
+      </div>
+
+      {/* Gallery Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {filteredImages.map((img) => (
+          <div
+            key={img.id}
+            className="group relative bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden"
+          >
+            {/* Image Container */}
+            <div className="aspect-[4/3] bg-gray-100 relative overflow-hidden">
+              <img
+                src={img.url}
+                alt={img.title}
+                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+              {/* Overlay Actions */}
+              <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
+                <button className="p-2 bg-white/90 backdrop-blur-sm rounded-full text-gray-700 hover:text-purple-600 hover:bg-white transition-colors shadow-sm">
+                  <ExternalLink className="w-4 h-4" />
+                </button>
+                <button className="p-2 bg-white/90 backdrop-blur-sm rounded-full text-gray-700 hover:text-rose-600 hover:bg-white transition-colors shadow-sm">
+                  <Trash2 className="w-4 h-4" />
+                </button>
               </div>
-              <button className="text-rose-600 text-sm font-semibold hover:text-rose-700">Delete</button>
+
+              {/* Album Badge */}
+              <div className="absolute top-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <span className="px-2.5 py-1 bg-black/50 backdrop-blur-md text-white text-xs font-medium rounded-lg border border-white/20">
+                  {img.album}
+                </span>
+              </div>
+            </div>
+
+            {/* Info */}
+            <div className="p-4">
+              <h3 className="font-semibold text-gray-900 truncate group-hover:text-purple-600 transition-colors">
+                {img.title}
+              </h3>
+              <div className="flex items-center gap-2 mt-1 text-xs text-gray-500">
+                <Calendar className="w-3 h-3" />
+                <span>{img.date}</span>
+              </div>
             </div>
           </div>
         ))}
+
+        {/* Upload Placeholder (Empty State or just visual cue) */}
+        <Link
+          to="/admin/cms/gallery/upload"
+          className="flex flex-col items-center justify-center aspect-[4/3] border-2 border-dashed border-gray-200 rounded-2xl hover:border-purple-300 hover:bg-purple-50/50 transition-all duration-200 group cursor-pointer"
+        >
+          <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+            <Plus className="w-6 h-6 text-gray-400 group-hover:text-purple-600" />
+          </div>
+          <span className="mt-3 text-sm font-medium text-gray-500 group-hover:text-purple-600">Add New Image</span>
+        </Link>
       </div>
     </div>
   );

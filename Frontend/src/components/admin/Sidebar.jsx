@@ -1,24 +1,30 @@
 import { NavLink } from "react-router-dom";
+import { LogOut } from "lucide-react";
 
 const Sidebar = ({ items, onClose }) => {
   return (
-    <aside className="h-full w-72 bg-white border-r shadow-sm">
-      <div className="flex items-center justify-between px-6 h-16 border-b">
+    <aside className="h-full w-72 bg-white/80 backdrop-blur-xl border-r border-white/20 shadow-xl flex flex-col">
+      {/* Sidebar Header */}
+      <div className="flex items-center justify-between px-6 h-20 border-b border-gray-100/50">
         <div>
-          <p className="text-xs text-gray-500">Admin Panel</p>
-          <p className="text-lg font-semibold text-purple-700">Best Colleges</p>
+          <p className="text-xs font-semibold text-purple-600 uppercase tracking-wider mb-0.5">Admin Portal</p>
+          <p className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-700 to-indigo-700">
+            Best Colleges
+          </p>
         </div>
         <button
-          className="p-2 rounded-lg hover:bg-gray-100 lg:hidden"
+          className="p-2 rounded-xl hover:bg-gray-100/50 text-gray-500 hover:text-gray-700 lg:hidden transition-colors"
           onClick={onClose}
           aria-label="Close sidebar"
         >
           ✕
         </button>
       </div>
-      <div className="px-4 py-6 space-y-2">
-        <p className="px-2 text-xs uppercase tracking-wide text-gray-500">
-          Navigation
+
+      {/* Navigation Items */}
+      <div className="flex-1 px-4 py-6 overflow-y-auto space-y-1">
+        <p className="px-4 text-xs font-semibold uppercase tracking-wider text-gray-400 mb-4">
+          Main Menu
         </p>
         {items.map((item) => {
           const Icon = item.icon;
@@ -26,20 +32,34 @@ const Sidebar = ({ items, onClose }) => {
             <NavLink
               key={item.to}
               to={item.to}
-              onClick={() => onClose()}
+              onClick={() => onClose && onClose()}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                  isActive
-                    ? "bg-purple-50 text-purple-700 font-semibold"
-                    : "text-gray-700 hover:bg-gray-100"
+                `group flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 ${isActive
+                  ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-500/25 translate-x-1"
+                  : "text-gray-600 hover:bg-purple-50 hover:text-purple-700 hover:translate-x-1"
                 }`
               }
             >
-              {Icon && <Icon size={18} />}
-              <span className="text-sm">{item.label}</span>
+              {Icon && (
+                <Icon
+                  size={20}
+                  className={({ isActive }) =>
+                    `transition-colors ${isActive ? "text-white" : "text-gray-400 group-hover:text-purple-600"}`
+                  }
+                />
+              )}
+              <span className="text-sm font-medium">{item.label}</span>
             </NavLink>
           );
         })}
+      </div>
+
+      {/* Sidebar Footer */}
+      <div className="p-4 border-t border-gray-100/50 bg-gray-50/50">
+        <button className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-xl transition-colors">
+          <LogOut size={18} />
+          <span>Sign Out</span>
+        </button>
       </div>
     </aside>
   );

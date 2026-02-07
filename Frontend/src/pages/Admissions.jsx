@@ -1,37 +1,61 @@
-import { CheckCircle, AlertCircle } from "lucide-react";
+import {
+  CheckCircle,
+  AlertCircle,
+  FileText,
+  ClipboardCheck,
+  GraduationCap,
+  Send,
+  Phone,
+  Mail,
+  Calendar,
+  Award,
+  Users,
+  BookOpen,
+  ArrowRight,
+} from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import Hero from "../components/ui/Hero";
+import Section from "../components/ui/Section";
+import Card from "../components/ui/Card";
+import Badge from "../components/ui/Badge";
+import Button from "../components/ui/Button";
+import { useRef, useState } from "react";
+import emailjs from "@emailjs/browser";
+
 
 const Admissions = () => {
+  const navigate = useNavigate();
   const admissionSteps = [
     {
       title: "Choose Your Program",
-      description:
-        "Browse through our offered programs and select the one that aligns with your career goals.",
+      description: "Browse through our offered programs and select the one that aligns with your career goals.",
+      icon: BookOpen,
     },
     {
       title: "Check Eligibility",
-      description:
-        "Review the admission requirements and ensure you meet the criteria for your chosen program.",
+      description: "Review the admission requirements and ensure you meet the criteria for your chosen program.",
+      icon: ClipboardCheck,
     },
     {
       title: "Submit Application",
-      description:
-        "Fill out the online application form and submit all required documents.",
+      description: "Fill out the online application form and submit all required documents.",
+      icon: FileText,
     },
     {
       title: "Entrance Test",
-      description:
-        "Take the entrance test for your selected program (if applicable).",
+      description: "Take the entrance test for your selected program (if applicable).",
+      icon: Award,
     },
     {
       title: "Interview",
-      description:
-        "Attend an interview with the admission committee (for selected programs).",
+      description: "Attend an interview with the admission committee (for selected programs).",
+      icon: Users,
     },
     {
       title: "Admission Decision",
-      description:
-        "Receive your admission decision and further instructions if accepted.",
+      description: "Receive your admission decision and further instructions if accepted.",
+      icon: GraduationCap,
     },
   ];
 
@@ -40,7 +64,7 @@ const Admissions = () => {
       "Completed application form",
       "Academic transcripts",
       "CNIC/B-Form copy",
-      "Passport size photographs",
+      "Passport size photographs (4)",
       "Character certificate",
       "Migration certificate (if applicable)",
     ],
@@ -53,170 +77,400 @@ const Admissions = () => {
     ],
   };
 
+  const programs = [
+    { value: "llb", label: "Bachelor of Laws (LLB)", campus: "Law Campus" },
+    { value: "llm", label: "Master of Laws (LLM)", campus: "Law Campus" },
+    { value: "bs", label: "Bachelor of Science (BS)", campus: "Main Campus" },
+    { value: "ba", label: "Bachelor of Arts (BA)", campus: "Main Campus" },
+    { value: "ma", label: "Master of Arts (MA)", campus: "Main Campus" },
+    { value: "fsc-pre-med", label: "FSc (Pre-Medical)", campus: "Hala Campus" },
+    { value: "fsc-pre-eng", label: "FSc (Pre-Engineering)", campus: "Hala Campus" },
+    { value: "ics", label: "ICS (Computer Science)", campus: "Hala Campus" },
+    { value: "fa", label: "FA (Arts)", campus: "Hala Campus" },
+  ];
+
+  const importantDates = [
+    { event: "Applications Open", date: "January 15, 2025" },
+    { event: "Application Deadline", date: "March 31, 2025" },
+    { event: "Entrance Test", date: "April 15, 2025" },
+    { event: "Results Announcement", date: "April 30, 2025" },
+    { event: "Classes Begin", date: "August 1, 2025" },
+  ];
+
+  const formRef = useRef();
+  const [loading, setLoading] = useState(false);
+
+  const handleApplicationSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      await emailjs.sendForm(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_APPLICATION_TEMPLATE,
+        formRef.current,
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      );
+
+      alert("Application submitted successfully 🎓");
+      e.target.reset();
+    } catch (error) {
+      console.error(error);
+      alert("Application submission failed ❌");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="bg-blue-600 text-white py-20 pt-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold mb-6">Admissions Open 2025</h1>
-            <p className="text-xl max-w-3xl mx-auto">
-              Take the first step towards your future. Join Pakistan's leading
-              educational institution.
-            </p>
-          </div>
+      <Hero
+        title="Admissions Open 2025"
+        description="Take the first step towards your future. Join Pakistan's leading educational institution and shape your tomorrow."
+        image="https://placehold.co/1920x800?text=Admissions"
+        centered
+      />
+
+      {/* Quick Stats */}
+      <Section
+        className="bg-gradient-to-r from-primary-700 via-primary-600 to-accent-600 -mt-16 relative z-20"
+        spacing="default"
+      >
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white">
+          {[
+            { value: "50+", label: "Programs" },
+            { value: "3", label: "Campuses" },
+            { value: "95%", label: "Placement Rate" },
+            { value: "5000+", label: "Students" },
+          ].map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+            >
+              <div className="text-4xl md:text-5xl font-bold mb-2">{stat.value}</div>
+              <div className="text-white/80 text-sm">{stat.label}</div>
+            </motion.div>
+          ))}
         </div>
-      </section>
+      </Section>
 
       {/* Admission Process */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">
-            Admission Process
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {admissionSteps.map((step, index) => (
-              <motion.div
-                key={step.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="bg-gray-50 rounded-lg p-6 relative"
-              >
-                <div className="absolute -top-4 left-6 bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">
-                  {index + 1}
-                </div>
-                <h3 className="text-xl font-bold mb-3 mt-2">{step.title}</h3>
-                <p className="text-gray-600">{step.description}</p>
-              </motion.div>
-            ))}
-          </div>
+      <Section background="white" spacing="large">
+        <Section.Header
+          title="Admission Process"
+          description="Follow these simple steps to begin your educational journey with us"
+          badge="How to Apply"
+        />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {admissionSteps.map((step, index) => (
+            <motion.div
+              key={step.title}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true }}
+            >
+              <Card hover className="h-full relative overflow-hidden">
+                {/* Step Number */}
+                <div className="absolute -top-3 -right-3 w-16 h-16 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-end justify-start pb-4 pl-4 opacity-10" />
+                <Card.Body>
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                        {index + 1}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <h3 className="text-lg font-bold text-gray-900">{step.title}</h3>
+                      </div>
+                      <p className="text-gray-600 text-sm leading-relaxed">{step.description}</p>
+                    </div>
+                  </div>
+                </Card.Body>
+              </Card>
+            </motion.div>
+          ))}
         </div>
-      </section>
+      </Section>
+
+      {/* Important Dates */}
+      <Section background="gray" spacing="large">
+        <Section.Header
+          title="Important Dates"
+          description="Mark your calendar with these key admission dates"
+          badge="Timeline"
+        />
+        <div className="max-w-4xl mx-auto">
+          <Card className="overflow-hidden">
+            <div className="divide-y divide-gray-100">
+              {importantDates.map((item, index) => (
+                <motion.div
+                  key={item.event}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className="flex flex-col sm:flex-row sm:items-center justify-between p-4 hover:bg-gray-50 transition-colors gap-3 sm:gap-4"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center">
+                      <Calendar className="w-5 h-5 text-primary-600" />
+                    </div>
+                    <span className="font-medium text-gray-900">{item.event}</span>
+                  </div>
+                  <Badge variant="primary">{item.date}</Badge>
+                </motion.div>
+              ))}
+            </div>
+          </Card>
+        </div>
+      </Section>
 
       {/* Requirements Section */}
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">
-            Admission Requirements
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Required Documents */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="bg-white rounded-lg p-8 shadow-sm"
-            >
-              <h3 className="text-2xl font-bold mb-6 flex items-center">
-                <CheckCircle className="h-6 w-6 text-green-500 mr-2" />
-                Required Documents
-              </h3>
-              <ul className="space-y-3">
-                {requirements.documents.map((doc) => (
-                  <li key={doc} className="flex items-center text-gray-600">
-                    <span className="h-2 w-2 bg-green-500 rounded-full mr-3"></span>
-                    {doc}
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
+      <Section background="white" spacing="large">
+        <Section.Header
+          title="Admission Requirements"
+          description="Ensure you have all the necessary documents and meet the eligibility criteria"
+          badge="Requirements"
+        />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Required Documents */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <Card hover className="h-full">
+              <Card.Body>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center">
+                    <FileText className="h-6 w-6 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900">Required Documents</h3>
+                    <p className="text-sm text-gray-500">What you need to submit</p>
+                  </div>
+                </div>
+                <ul className="space-y-3">
+                  {requirements.documents.map((doc) => (
+                    <li key={doc} className="flex items-center gap-3 text-gray-600">
+                      <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                      <span>{doc}</span>
+                    </li>
+                  ))}
+                </ul>
+              </Card.Body>
+            </Card>
+          </motion.div>
 
-            {/* Eligibility Criteria */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              viewport={{ once: true }}
-              className="bg-white rounded-lg p-8 shadow-sm"
-            >
-              <h3 className="text-2xl font-bold mb-6 flex items-center">
-                <AlertCircle className="h-6 w-6 text-blue-500 mr-2" />
-                Eligibility Criteria
-              </h3>
-              <ul className="space-y-3">
-                {requirements.eligibility.map((criterion) => (
-                  <li
-                    key={criterion}
-                    className="flex items-center text-gray-600"
-                  >
-                    <span className="h-2 w-2 bg-blue-500 rounded-full mr-3"></span>
-                    {criterion}
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-          </div>
+          {/* Eligibility Criteria */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <Card hover className="h-full">
+              <Card.Body>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-100 to-primary-100 flex items-center justify-center">
+                    <ClipboardCheck className="h-6 w-6 text-primary-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900">Eligibility Criteria</h3>
+                    <p className="text-sm text-gray-500">Requirements you must meet</p>
+                  </div>
+                </div>
+                <ul className="space-y-3">
+                  {requirements.eligibility.map((criterion) => (
+                    <li key={criterion} className="flex items-center gap-3 text-gray-600">
+                      <AlertCircle className="h-5 w-5 text-primary-500 flex-shrink-0" />
+                      <span>{criterion}</span>
+                    </li>
+                  ))}
+                </ul>
+              </Card.Body>
+            </Card>
+          </motion.div>
         </div>
-      </section>
+      </Section>
 
       {/* Application Form */}
-      <section className="py-16 bg-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">Apply Now</h2>
-          <form className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="Enter your full name"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="Enter your email"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Program
-              </label>
-              <select className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                <option value="">Select a program</option>
-                <option value="llb">Bachelor of Laws (LLB)</option>
-                <option value="llm">Master of Laws (LLM)</option>
-                <option value="bs">Bachelor of Science (BS)</option>
-                <option value="ba">Bachelor of Arts (BA)</option>
-                <option value="fsc">FSc (Pre-Medical/Engineering)</option>
-                <option value="ics">ICS (Computer Science)</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Message
-              </label>
-              <textarea
-                rows="4"
-                className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                placeholder="Any additional information..."
-              ></textarea>
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition duration-300"
+      <Section background="gradient" spacing="large">
+        <Section.Header
+          title="Apply Now"
+          description="Fill out the form below to start your application"
+          badge="Application Form"
+        />
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <Card className="max-w-3xl mx-auto" shadow="xl">
+            <Card.Body className="p-8">
+              <form
+                ref={formRef}
+                onSubmit={handleApplicationSubmit}
+                className="space-y-6"
               >
-                Submit Application
-              </button>
-            </div>
-          </form>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Full Name *
+                    </label>
+                    <input
+                      name="fullname"
+                      type="text"
+                      required
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
+                      placeholder="Enter your full name"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Email Address *
+                    </label>
+                    <input
+                      name="email"
+                      type="email"
+                      required
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
+                      placeholder="Enter your email"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Phone Number *
+                    </label>
+                    <input
+                      name="phone"
+                      type="tel"
+                      required
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
+                      placeholder="+92 300 1234567"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      CNIC Number
+                    </label>
+                    <input
+                      name="cnic"
+                      type="text"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
+                      placeholder="12345-1234567-1"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Select Program *
+                  </label>
+                  <select
+                    name="program"
+                    required
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
+                  >
+                    <option value="">Choose a program</option>
+                    {programs.map((program) => (
+                      <option key={program.value} value={program.value}>
+                        {program.label} - {program.campus}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Previous Education
+                  </label>
+                  <input
+                    name="previous_education"
+                    type="text"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
+                    placeholder="e.g., Matric with 85% marks"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Additional Message
+                  </label>
+                  <textarea
+                    name="message"
+                    rows="4"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition resize-none bg-gray-50 hover:bg-white"
+                    placeholder="Any additional information you'd like to share..."
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full"
+                  size="lg"
+                  variant="gradient"
+                  icon={Send}
+                  iconPosition="right"
+                  disabled={loading}
+                >
+                  {loading ? "Submitting..." : "Submit Application"}
+                </Button>
+
+
+                <p className="text-center text-sm text-gray-500">
+                  By submitting this form, you agree to our terms and conditions.
+                </p>
+              </form>
+            </Card.Body>
+          </Card>
+        </motion.div>
+      </Section>
+
+      {/* Contact CTA */}
+      <Section background="white" spacing="large">
+        <div className="text-center max-w-3xl mx-auto">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-gray-900">
+            Need Help with Your Application?
+          </h2>
+          <p className="text-gray-600 mb-8">
+            Our admissions team is here to assist you. Feel free to reach out with any questions.
+          </p>
+          <div className="flex flex-wrap justify-center gap-6 mb-8">
+            <a href="tel:+92511234567" className="flex items-center gap-2 text-gray-600 hover:text-primary-600 transition-colors">
+              <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
+                <Phone className="w-5 h-5 text-primary-600" />
+              </div>
+              <span>+92 51 1234 567</span>
+            </a>
+            <a href="mailto:admissions@bestcolleges.edu.pk" className="flex items-center gap-2 text-gray-600 hover:text-primary-600 transition-colors">
+              <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
+                <Mail className="w-5 h-5 text-primary-600" />
+              </div>
+              <span>admissions@bestcolleges.edu.pk</span>
+            </a>
+          </div>
+          <Button
+            variant="outline"
+            icon={ArrowRight}
+            iconPosition="right"
+            onClick={() => navigate('/contact')}
+          >
+            Visit Contact Page
+          </Button>
         </div>
-      </section>
+      </Section>
     </div>
   );
 };

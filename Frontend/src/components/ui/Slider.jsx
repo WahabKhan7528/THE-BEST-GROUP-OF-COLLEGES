@@ -40,26 +40,24 @@ const Slider = ({ children }) => {
       >
         {children}
       </div>
-      
+
       {showControls && (
         <>
           <button
             onClick={() => scroll('left')}
-            className={`absolute left-0 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow-lg rounded-full p-2 transition-opacity duration-200 ${
-              scrollPosition <= 0 ? 'opacity-0' : 'opacity-100'
-            }`}
+            className={`absolute left-0 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow-lg rounded-full p-2 transition-opacity duration-200 ${scrollPosition <= 0 ? 'opacity-0' : 'opacity-100'
+              }`}
             disabled={scrollPosition <= 0}
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
           <button
             onClick={() => scroll('right')}
-            className={`absolute right-0 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow-lg rounded-full p-2 transition-opacity duration-200 ${
-              containerRef.current &&
-              scrollPosition >= containerRef.current.scrollWidth - containerRef.current.clientWidth
+            className={`absolute right-0 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow-lg rounded-full p-2 transition-opacity duration-200 ${containerRef.current &&
+                scrollPosition >= containerRef.current.scrollWidth - containerRef.current.clientWidth
                 ? 'opacity-0'
                 : 'opacity-100'
-            }`}
+              }`}
             disabled={
               containerRef.current &&
               scrollPosition >= containerRef.current.scrollWidth - containerRef.current.clientWidth

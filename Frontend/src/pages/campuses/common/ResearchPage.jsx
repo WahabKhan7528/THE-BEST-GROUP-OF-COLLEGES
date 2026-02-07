@@ -1,172 +1,174 @@
+import Hero from "../../../components/ui/Hero";
 import Section from "../../../components/ui/Section";
 import Card from "../../../components/ui/Card";
 import Badge from "../../../components/ui/Badge";
-import { Microscope, BookOpen, Users, Award } from "lucide-react";
-import Slider from "../../../components/ui/Slider";
+import Button from "../../../components/ui/Button";
+import { Microscope, BookOpen, Users, Award, FlaskConical, Database, Atom, Globe } from "lucide-react";
 import { motion } from "framer-motion";
 
 const ResearchPage = () => {
   const researchAreas = [
     {
-      title: "Computer Science",
+      title: "Science & Technology",
+      icon: Atom,
       projects: [
         {
           name: "Artificial Intelligence in Healthcare",
-          description: "Developing AI solutions for early disease detection",
+          description: "Leveraging machine learning algorithms for early detection of chronic diseases and personalized treatment plans.",
           researchers: 5,
           publications: 12,
+          status: "Ongoing"
         },
         {
-          name: "Cybersecurity Systems",
-          description: "Advanced security protocols for digital infrastructure",
+          name: "Sustainable Energy Solutions",
+          description: "Developing cost-effective solar cells and energy storage systems for rural electrification.",
           researchers: 3,
           publications: 8,
+          status: "Funded"
         },
       ],
     },
     {
-      title: "Medical Research",
+      title: "Social Sciences",
+      icon: Globe,
       projects: [
         {
-          name: "Cancer Research",
-          description: "Innovative approaches to cancer treatment",
-          researchers: 8,
-          publications: 15,
-        },
-        {
-          name: "Drug Development",
-          description: "New drug development for chronic diseases",
-          researchers: 6,
-          publications: 10,
-        },
-      ],
-    },
-    {
-      title: "Legal Studies",
-      projects: [
-        {
-          name: "Constitutional Law Analysis",
-          description: "Study of constitutional amendments and their impacts",
+          name: "Urban Development & Policy",
+          description: "Analyzing the impact of rapid urbanization on social infrastructure and community well-being.",
           researchers: 4,
           publications: 7,
+          status: "Completed"
         },
         {
-          name: "Human Rights Law",
-          description: "Research on human rights protection mechanisms",
-          researchers: 3,
-          publications: 5,
+          name: "Digital Literacy Initiative",
+          description: "Assessing the gap in digital skills among rural populations and proposing educational interventions.",
+          researchers: 6,
+          publications: 10,
+          status: "Ongoing"
         },
       ],
     },
   ];
 
-  const researchFacilities = [
+  const facilities = [
     {
-      name: "Advanced Computing Lab",
-      equipment: [
-        "High-Performance Computers",
-        "GPU Clusters",
-        "AI Development Tools",
-      ],
+      name: "Genomics Lab",
+      description: "Equipped with next-generation sequencing tools.",
+      icon: Microscope,
+      items: ["DNA Sequencer", "PCR Machines"]
     },
     {
-      name: "Medical Research Center",
-      equipment: [
-        "Electron Microscopes",
-        "Cell Culture Facility",
-        "Clinical Trial Units",
-      ],
+      name: "Big Data Center",
+      description: "High-performance computing for complex data analysis.",
+      icon: Database,
+      items: ["GPU Clusters", "Cloud Server Farm"]
     },
     {
-      name: "Legal Research Library",
-      equipment: [
-        "Digital Law Libraries",
-        "Case Study Databases",
-        "Legal Documentation Center",
-      ],
+      name: "Chemical Analysis Lab",
+      description: "Advanced spectroscopy and chromatography instruments.",
+      icon: FlaskConical,
+      items: ["NMR Spectrometer", "HPLC Systems"]
     },
+    {
+      name: "Social Research Hub",
+      description: "Digital archives and focus group observation rooms.",
+      icon: Users,
+      items: ["Recording Studio", "Data Analysis Software"]
+    }
   ];
 
   return (
-    <div>
-      <Section>
+    <div className="min-h-screen bg-white">
+      <Hero
+        title="Innovation & Discovery"
+        subtitle="Pushing Boundaries"
+        description="Our research initiatives are driven by a commitment to solving real-world problems and contributing to the global body of knowledge."
+        image="https://placehold.co/1920x800?text=Research"
+        centered
+        className="rounded-3xl"
+      />
+
+      <Section spacing="large">
         <Section.Header
-          title="Research Programs"
-          description="Explore our cutting-edge research initiatives"
+          title="Current Research Projects"
+          description="Explore some of the groundbreaking work being done by our faculty and students."
         />
+
         <div className="space-y-12">
-          {researchAreas.map((area, areaIdx) => (
+          {researchAreas.map((area, aIdx) => (
             <motion.div
               key={area.title}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: areaIdx * 0.2 }}
+              transition={{ duration: 0.5, delay: aIdx * 0.1 }}
               viewport={{ once: true }}
             >
-              <div>
-                <h2 className="text-2xl font-bold mb-6">{area.title}</h2>
-                <Slider>
-                  {area.projects.map((project, projIdx) => (
-                    <motion.div
-                      key={project.name}
-                      initial={{ opacity: 0, x: 20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.5, delay: projIdx * 0.1 }}
-                      viewport={{ once: true }}
-                      className="min-w-[300px] md:min-w-[400px]"
-                    >
-                      <Card className="h-full">
-                        <Microscope className="w-12 h-12 text-blue-600 mb-4" />
-                        <h3 className="text-xl font-bold mb-2">
-                          {project.name}
-                        </h3>
-                        <p className="text-gray-600 mb-4">
-                          {project.description}
-                        </p>
-                        <div className="flex flex-wrap gap-2">
-                          <Badge className="flex items-center gap-2">
-                            <Users className="w-4 h-4" />
-                            {project.researchers} Researchers
-                          </Badge>
-                          <Badge className="flex items-center gap-2">
-                            <BookOpen className="w-4 h-4" />
-                            {project.publications} Publications
-                          </Badge>
-                        </div>
-                      </Card>
-                    </motion.div>
-                  ))}
-                </Slider>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 rounded-2xl bg-blue-100 text-blue-700">
+                  <area.icon className="w-6 h-6" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900">{area.title}</h2>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                {area.projects.map((project, pIdx) => (
+                  <Card key={project.name} hover className="h-full border-l-4 border-l-blue-500 rounded-3xl">
+                    <div className="flex justify-between items-start mb-2">
+                      <Badge variant={project.status === "Ongoing" ? "default" : "secondary"}>
+                        {project.status}
+                      </Badge>
+                      <div className="flex items-center text-gray-400 text-sm">
+                        <BookOpen className="w-4 h-4 mr-1" />
+                        {project.publications} Pubs
+                      </div>
+                    </div>
+
+                    <h3 className="text-lg font-bold mb-2 text-gray-900">{project.name}</h3>
+                    <p className="text-gray-600 text-sm mb-4 leading-relaxed">
+                      {project.description}
+                    </p>
+
+                    <div className="pt-4 border-t border-gray-100 flex items-center text-sm text-gray-500">
+                      <Users className="w-4 h-4 mr-2" />
+                      {project.researchers} Researchers Involved
+                    </div>
+                  </Card>
+                ))}
               </div>
             </motion.div>
           ))}
         </div>
       </Section>
 
-      <Section className="bg-gray-50">
+      <Section className="bg-gray-50" spacing="large">
         <Section.Header
-          title="Research Facilities"
-          description="State-of-the-art facilities supporting our research"
+          title="World-Class Infrastructure"
+          description="Providing researchers with the tools they need to succeed."
+          centered
         />
-        <div className="grid gap-6 md:grid-cols-3">
-          {researchFacilities.map((facility, idx) => (
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {facilities.map((facility, fIdx) => (
             <motion.div
               key={facility.name}
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
+              transition={{ duration: 0.5, delay: fIdx * 0.1 }}
               viewport={{ once: true }}
             >
-              <Card>
-                <h3 className="text-xl font-bold mb-4">{facility.name}</h3>
-                <ul className="space-y-2">
-                  {facility.equipment.map((item) => (
-                    <li key={item} className="flex items-center gap-2">
-                      <Award className="w-4 h-4 text-blue-600" />
+              <Card className="h-full text-center rounded-3xl">
+                <div className="mx-auto w-14 h-14 rounded-full bg-white shadow-sm flex items-center justify-center text-blue-600 mb-4 border border-gray-100">
+                  <facility.icon className="w-7 h-7" />
+                </div>
+                <h3 className="text-lg font-bold mb-2">{facility.name}</h3>
+                <p className="text-sm text-gray-500 mb-4">{facility.description}</p>
+                <div className="flex flex-wrap justify-center gap-1">
+                  {facility.items.map(item => (
+                    <Badge key={item} variant="outline" className="text-xs border-gray-200">
                       {item}
-                    </li>
+                    </Badge>
                   ))}
-                </ul>
+                </div>
               </Card>
             </motion.div>
           ))}
