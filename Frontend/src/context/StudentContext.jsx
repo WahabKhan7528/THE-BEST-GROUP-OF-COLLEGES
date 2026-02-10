@@ -145,25 +145,81 @@ const mockAnnouncementsByStatus = {
   },
 };
 
-// Mock results by campus
+// Mock detailed results for GPA calculation
+const mockDetailedResults = {
+  main: {
+    semesters: [
+      {
+        id: 1,
+        name: "Semester 1",
+        subjects: [
+          { code: "CS-101", title: "Intro to Computing", credits: 3, marks: 87 },
+          { code: "ENG-101", title: "English Comp", credits: 3, marks: 82 },
+          { code: "MTH-101", title: "Calculus I", credits: 3, marks: 75 },
+          { code: "PHY-101", title: "Applied Physics", credits: 3, marks: 71 },
+          { code: "ISL-101", title: "Islamic Studies", credits: 2, marks: 90 },
+        ],
+      },
+      {
+        id: 2,
+        name: "Semester 2",
+        subjects: [
+          { code: "CS-102", title: "Programming Fund", credits: 4, marks: 85 },
+          { code: "ENG-102", title: "Comm Skills", credits: 3, marks: 88 },
+          { code: "MTH-102", title: "Calculus II", credits: 3, marks: 68 },
+          { code: "PHY-102", title: "Basic Electronics", credits: 3, marks: 78 },
+          { code: "PST-101", title: "Pak Studies", credits: 2, marks: 84 },
+        ],
+      },
+      {
+        id: 3,
+        name: "Semester 3",
+        subjects: [
+          { code: "CS-201", title: "Data Structures", credits: 4, marks: 72 },
+          { code: "CS-202", title: "Digital Logic", credits: 3, marks: 76 },
+          { code: "MTH-201", title: "Linear Algebra", credits: 3, marks: 88 },
+          { code: "CS-203", title: "Discrete Struct", credits: 3, marks: 81 },
+          { code: "MGT-101", title: "Principles of Mgt", credits: 3, marks: 85 },
+        ],
+      },
+      {
+        id: 4,
+        name: "Semester 4",
+        subjects: [
+          { code: "CS-205", title: "Operating Systems", credits: 3, marks: 84 },
+          { code: "CS-206", title: "Database Systems", credits: 4, marks: 79 },
+          { code: "CS-207", title: "Software Eng", credits: 3, marks: 86 },
+          { code: "MTH-203", title: "Prob & Stats", credits: 3, marks: 82 },
+          { code: "CS-208", title: "Comp Org & Arch", credits: 3, marks: 74 },
+        ],
+      },
+      {
+        id: 5,
+        name: "Semester 5 (Current)",
+        subjects: [ // Partial results maybe? Or simplified for now
+          { code: "CS-301", title: "Comp Networks", credits: 3, marks: 0 }, // Pending
+          { code: "CS-302", title: "Web Eng", credits: 3, marks: 0 }, // Pending
+        ]
+      }
+    ],
+  },
+  law: { semesters: [] }, // omitted for brevity
+  hala: { semesters: [] }, // omitted for brevity
+};
+
+// Mock results summary by campus
 const mockResultsByStatus = {
   main: {
-    total: 12,
-    passed: 11,
+    gpa: "3.68",
     averageGrade: "A-",
-    gpa: "3.7",
   },
   law: {
-    total: 8,
-    passed: 8,
-    averageGrade: "A",
-    gpa: "3.85",
+    gpa: "3.50",
+    averageGrade: "B+",
   },
   hala: {
-    total: 5,
-    passed: 5,
-    averageGrade: "B+",
-    gpa: "3.45",
+    gpa: "3.20",
+    averageGrade: "B",
   },
 };
 
@@ -253,6 +309,10 @@ export const StudentProvider = ({ children }) => {
     getAssignmentStatsByCurrentCampus,
     getAnnouncementsByCurrentCampus,
     getResultsByCurrentCampus,
+    getDetailedResultsByCurrentCampus: () => {
+      const campus = getCurrentCampus();
+      return mockDetailedResults[campus] || { semesters: [] };
+    },
     getAttendanceByCurrentCampus,
     getCampusContext,
     getTotalCredits,

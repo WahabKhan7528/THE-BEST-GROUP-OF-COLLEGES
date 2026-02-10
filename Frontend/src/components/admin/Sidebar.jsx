@@ -7,8 +7,8 @@ const Sidebar = ({ items, onClose }) => {
       {/* Sidebar Header */}
       <div className="flex items-center justify-between px-6 h-20 border-b border-gray-100/50">
         <div>
-          <p className="text-xs font-semibold text-purple-600 uppercase tracking-wider mb-0.5">Admin Portal</p>
-          <p className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-700 to-indigo-700">
+          <p className="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-0.5">Admin Portal</p>
+          <p className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-cyan-700">
             Best Colleges
           </p>
         </div>
@@ -35,8 +35,8 @@ const Sidebar = ({ items, onClose }) => {
               onClick={() => onClose && onClose()}
               className={({ isActive }) =>
                 `group flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 ${isActive
-                  ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-500/25 translate-x-1"
-                  : "text-gray-600 hover:bg-purple-50 hover:text-purple-700 hover:translate-x-1"
+                  ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-500/25 translate-x-1"
+                  : "text-gray-600 hover:bg-blue-50 hover:text-blue-700 hover:translate-x-1"
                 }`
               }
             >
@@ -44,7 +44,7 @@ const Sidebar = ({ items, onClose }) => {
                 <Icon
                   size={20}
                   className={({ isActive }) =>
-                    `transition-colors ${isActive ? "text-white" : "text-gray-400 group-hover:text-purple-600"}`
+                    `transition-colors ${isActive ? "text-white" : "text-gray-400 group-hover:text-blue-600"}`
                   }
                 />
               )}

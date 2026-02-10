@@ -23,14 +23,14 @@ const PortalSelector = ({ isOpen, onClose }) => {
       description: 'Access teaching resources and manage classes',
       icon: <GraduationCap className="w-6 h-6" />,
       path: '/login/faculty',
-      bgGradient: 'bg-gradient-to-br from-emerald-50 to-teal-50 border-emerald-100 hover:border-emerald-200',
+      bgGradient: 'bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-100 hover:border-blue-200',
     },
     {
       title: 'Student Portal',
       description: 'View courses, grades, and campus resources',
       icon: <Users className="w-6 h-6" />,
       path: '/login/student',
-      bgGradient: 'bg-gradient-to-br from-purple-50 to-fuchsia-50 border-purple-100 hover:border-purple-200',
+      bgGradient: 'bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-100 hover:border-blue-200',
     },
   ];
 
@@ -43,7 +43,7 @@ const PortalSelector = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex min-h-screen items-end justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+      <div className="flex min-h-screen items-center justify-center p-4 text-center">
         {/* Background overlay */}
         <div
           className="fixed inset-0 bg-neutral-900/60 backdrop-blur-sm transition-opacity"
@@ -51,7 +51,7 @@ const PortalSelector = ({ isOpen, onClose }) => {
         />
 
         {/* Portal Modal */}
-        <div className="inline-block align-bottom bg-white/95 backdrop-blur-md rounded-2xl px-6 pt-8 pb-6 text-left overflow-hidden shadow-[0_24px_80px_rgba(0,0,0,0.15)] transform transition-all sm:my-12 sm:align-middle sm:max-w-4xl sm:w-full sm:p-10 border border-gray-200/50">
+        <div className="w-full max-w-4xl bg-white/95 backdrop-blur-md rounded-2xl p-6 sm:p-10 text-left overflow-hidden shadow-[0_24px_80px_rgba(0,0,0,0.15)] transform transition-all border border-gray-200/50">
           <div className="w-full space-y-8">
             {/* Header */}
             <div className="text-center space-y-3">

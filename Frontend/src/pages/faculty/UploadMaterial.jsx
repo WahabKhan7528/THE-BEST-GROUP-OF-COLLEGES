@@ -12,7 +12,7 @@ const UploadMaterial = () => {
         </div>
         <div className="relative z-10">
           <div className="flex items-center gap-2 mb-2">
-            <span className="px-3 py-1 rounded-full bg-purple-50 border border-purple-100 text-purple-700 text-xs font-semibold uppercase tracking-wide">
+            <span className="px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide">
               Faculty Portal
             </span>
           </div>

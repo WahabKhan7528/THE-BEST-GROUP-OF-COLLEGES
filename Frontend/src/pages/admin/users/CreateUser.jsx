@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FormInput from "../../../components/admin/FormInput";
 import { useAdminContext } from "../../../context/AdminContext";
-import { UserPlus, ArrowLeft, Building2, Shield, User } from "lucide-react";
+import { UserPlus, ArrowLeft, Building2, Shield, User, X } from "lucide-react";
 
 const CreateUser = () => {
   const navigate = useNavigate();
@@ -18,7 +18,29 @@ const CreateUser = () => {
     password: "",
     confirmPassword: "",
     campuses: [],
+    // New fields
+    program: "",
+    semester: "",
+    section: "",
+    designation: "",
+    qualification: "",
   });
+  // Allocations for Faculty: Array of { class: "", subject: "" }
+  const [allocations, setAllocations] = useState([{ class: "", subject: "" }]);
+
+  const handleAllocationChange = (index, field, value) => {
+    const newAllocations = [...allocations];
+    newAllocations[index][field] = value;
+    setAllocations(newAllocations);
+  };
+
+  const addAllocation = () => {
+    setAllocations([...allocations, { class: "", subject: "" }]);
+  };
+
+  const removeAllocation = (index) => {
+    setAllocations(allocations.filter((_, i) => i !== index));
+  };
   const [selectedCampuses, setSelectedCampuses] = useState([]);
 
   const handleChange = (key, value) => {
@@ -48,10 +70,19 @@ const CreateUser = () => {
       return;
     }
 
-    const userData = { ...form, role, allocatedCampuses: selectedCampuses };
-    alert(
-      `User created as ${role} (mock)\nAllocated campuses: ${selectedCampuses.map((cId) => campuses.find((c) => c.id === cId)?.name).join(", ")}`,
-    );
+    const userData = {
+      ...form,
+      role,
+      allocatedCampuses: selectedCampuses,
+      teachingAllocations: role === "Faculty" ? allocations : []
+    };
+
+    let alertMessage = `User created as ${role} (mock)`;
+    if (role === "Faculty") {
+      alertMessage += `\nClasses Assigned: ${allocations.length}`;
+      allocations.forEach(a => alertMessage += `\n- ${a.subject} to ${a.class}`);
+    }
+    alert(alertMessage);
     navigate("/admin/users");
   };
 
@@ -83,7 +114,7 @@ const CreateUser = () => {
         {/* Role Selection Section */}
         <div className="space-y-4">
           <div className="flex items-center gap-2 text-gray-800 font-semibold pb-2 border-b border-gray-100">
-            <Shield size={18} className="text-purple-600" />
+            <Shield size={18} className="text-blue-600" />
             <h2>Role & Permissions</h2>
           </div>
 
@@ -100,8 +131,8 @@ const CreateUser = () => {
                       setSelectedCampuses([]);
                     }}
                     className={`px-4 py-3 rounded-xl text-sm font-medium transition-all border ${role === r
-                        ? "bg-purple-50 border-purple-200 text-purple-700 shadow-sm"
-                        : "bg-white border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50"
+                      ? "bg-blue-50 border-blue-200 text-blue-700 shadow-sm"
+                      : "bg-white border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50"
                       }`}
                   >
                     {r}
@@ -157,34 +188,123 @@ const CreateUser = () => {
           </div>
         </div>
 
-        {/* Academic Details (Conditional) */}
-        {(role === "Student" || role === "Faculty") && (
+        {/* Academic / Professional Details */}
+        {(role === "Student" || role === "Faculty" || role === "Sub-Admin") && (
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-gray-800 font-semibold pb-2 border-b border-gray-100">
-              <Building2 size={18} className="text-emerald-600" />
-              <h2>Academic Details</h2>
+              <Building2 size={18} className="text-sky-600" />
+              <h2>{role === "Student" ? "Academic Information" : "Professional Details"}</h2>
             </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormInput
-                label="Department / Class"
-                value={form.department}
-                onChange={(v) => handleChange("department", v)}
-                placeholder={role === "Student" ? "e.g. BSCS-5A" : "e.g. Computer Science"}
-              />
               {role === "Student" && (
-                <FormInput
-                  label="Section"
-                  value={form.section}
-                  onChange={(v) => handleChange("section", v)}
-                  placeholder="e.g. Morning A"
-                />
+                <>
+                  <FormInput
+                    label="Program / Department"
+                    value={form.program}
+                    onChange={(v) => handleChange("program", v)}
+                    placeholder="e.g. BSCS, BBA, LLB"
+                    required
+                  />
+                  <FormInput
+                    label="Semester"
+                    value={form.semester}
+                    onChange={(v) => handleChange("semester", v)}
+                    placeholder="e.g. 1st, 5th"
+                    required
+                  />
+                  <FormInput
+                    label="Section"
+                    value={form.section}
+                    onChange={(v) => handleChange("section", v)}
+                    placeholder="e.g. A, Morning"
+                    required
+                  />
+                  <FormInput
+                    label="Enrollment Year" // Extra useful field
+                    value={form.enrollmentYear || ""}
+                    onChange={(v) => handleChange("enrollmentYear", v)}
+                    placeholder="e.g. 2024"
+                  />
+                </>
               )}
+
               {role === "Faculty" && (
+                <>
+                  <FormInput
+                    label="Department"
+                    value={form.department}
+                    onChange={(v) => handleChange("department", v)}
+                    placeholder="e.g. Computer Science"
+                    required
+                  />
+                  <FormInput
+                    label="Designation"
+                    value={form.designation}
+                    onChange={(v) => handleChange("designation", v)}
+                    placeholder="e.g. Lecturer, Assistant Professor"
+                    required
+                  />
+                  <FormInput
+                    label="Qualification"
+                    value={form.qualification}
+                    onChange={(v) => handleChange("qualification", v)}
+                    placeholder="e.g. PhD, MSCS"
+                  />
+                  <div className="md:col-span-2 space-y-3">
+                    <label className="text-sm font-medium text-gray-700 flex justify-between items-center">
+                      <span>Course & Class Allocation</span>
+                      <button
+                        type="button"
+                        onClick={addAllocation}
+                        className="text-xs text-blue-600 hover:text-blue-700 font-semibold"
+                      >
+                        + Add Class
+                      </button>
+                    </label>
+                    <div className="space-y-3">
+                      {allocations.map((alloc, idx) => (
+                        <div key={idx} className="flex gap-3 items-center">
+                          <div className="flex-1">
+                            <input
+                              type="text"
+                              placeholder="Class / Section (e.g. BSCS-5A)"
+                              className="w-full px-4 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-blue-500"
+                              value={alloc.class}
+                              onChange={(e) => handleAllocationChange(idx, 'class', e.target.value)}
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <input
+                              type="text"
+                              placeholder="Subject (e.g. Operating Systems)"
+                              className="w-full px-4 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-blue-500"
+                              value={alloc.subject}
+                              onChange={(e) => handleAllocationChange(idx, 'subject', e.target.value)}
+                            />
+                          </div>
+                          {allocations.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => removeAllocation(idx)}
+                              className="text-rose-500 hover:text-rose-700 p-2"
+                            >
+                              <X size={18} />
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {(role === "Sub-Admin" || role === "Super Admin") && (
                 <FormInput
-                  label="Specialization / Subjects"
-                  value={form.subjects}
-                  onChange={(v) => handleChange("subjects", v)}
-                  placeholder="e.g. Operating Systems, Database"
+                  label="Designation / Role Title"
+                  value={form.designation}
+                  onChange={(v) => handleChange("designation", v)}
+                  placeholder="e.g. Campus Manager, Registrar"
                 />
               )}
             </div>
@@ -195,7 +315,7 @@ const CreateUser = () => {
         {showCampusField && (
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-gray-800 font-semibold pb-2 border-b border-gray-100">
-              <Building2 size={18} className="text-amber-600" />
+              <Building2 size={18} className="text-cyan-600" />
               <h2>Campus Allocation</h2>
             </div>
 
@@ -211,7 +331,7 @@ const CreateUser = () => {
                     onChange={(e) => {
                       setSelectedCampuses(e.target.value ? [e.target.value] : []);
                     }}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     required
                   >
                     <option value="">Select a campus...</option>
@@ -228,18 +348,18 @@ const CreateUser = () => {
                     <label
                       key={campus.id}
                       className={`flex items-center p-3 border rounded-xl cursor-pointer transition-all ${selectedCampuses.includes(campus.id)
-                          ? "bg-purple-50 border-purple-200 shadow-sm"
-                          : "bg-white border-gray-200 hover:bg-gray-50"
+                        ? "bg-blue-50 border-blue-200 shadow-sm"
+                        : "bg-white border-gray-200 hover:bg-gray-50"
                         }`}
                     >
                       <input
                         type="checkbox"
                         checked={selectedCampuses.includes(campus.id)}
                         onChange={() => handleCampusToggle(campus.id)}
-                        className="w-4 h-4 text-purple-600 rounded focus:ring-purple-500 border-gray-300"
+                        className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 border-gray-300"
                       />
                       <div className="ml-3">
-                        <span className={`block text-sm font-medium ${selectedCampuses.includes(campus.id) ? "text-purple-900" : "text-gray-700"}`}>
+                        <span className={`block text-sm font-medium ${selectedCampuses.includes(campus.id) ? "text-blue-900" : "text-gray-700"}`}>
                           {campus.name}
                         </span>
                         <span className="text-xs text-gray-500">
@@ -290,7 +410,7 @@ const CreateUser = () => {
           </button>
           <button
             type="submit"
-            className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl font-semibold shadow-lg shadow-purple-500/20 transform hover:-translate-y-0.5 transition-all"
+            className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/20 transform hover:-translate-y-0.5 transition-all"
           >
             <UserPlus size={18} />
             Create User

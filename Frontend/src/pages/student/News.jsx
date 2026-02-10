@@ -74,10 +74,10 @@ const News = () => {
         </div>
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-2">
-            <span className="px-3 py-1 rounded-full bg-amber-50 border border-amber-100 text-amber-700 text-xs font-semibold uppercase tracking-wide">
+            <span className="px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide">
               Student Portal
             </span>
-            <span className="px-3 py-1 rounded-full bg-purple-50 border border-purple-100 text-purple-700 text-xs font-semibold uppercase tracking-wide">
+            <span className="px-3 py-1 rounded-full bg-cyan-50 border border-cyan-100 text-cyan-700 text-xs font-semibold uppercase tracking-wide">
               {campusNames[campus]}
             </span>
           </div>
@@ -110,8 +110,8 @@ const News = () => {
         </motion.div>
       ) : (
         <div className="bg-white/60 backdrop-blur-sm border border-dashed border-gray-300 rounded-3xl p-12 text-center">
-          <div className="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Megaphone size={30} className="text-amber-400" />
+          <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Megaphone size={30} className="text-gray-400" />
           </div>
           <h3 className="text-lg font-semibold text-gray-900">No announcements found</h3>
           <p className="text-gray-500 mt-2 max-w-sm mx-auto">

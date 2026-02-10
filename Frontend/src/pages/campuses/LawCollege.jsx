@@ -91,24 +91,7 @@ const LawCollege = () => {
   return (
     <div className="min-h-screen bg-white">
       <Hero
-        title="School of Law"
-        subtitle="Defending Justice, Upholding Truth"
-        description="Developing the next generation of legal minds with a strong foundation in ethics, critical thinking, and advocacy."
         image="https://placehold.co/1920x800?text=Law+College"
-        actions={[
-          {
-            children: "Apply for LLB",
-            icon: ArrowRight,
-            iconPosition: "right",
-            onClick: () => navigate("/admissions"),
-          },
-          {
-            children: "Faculty Profile",
-            variant: "outline",
-            className: "border-white text-white hover:bg-white hover:text-blue-700",
-            onClick: () => navigate("/faculty-info"),
-          }
-        ]}
         centered
         className="rounded-3xl"
       />

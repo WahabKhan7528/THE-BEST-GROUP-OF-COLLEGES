@@ -23,6 +23,9 @@ import Stats from "../components/ui/Stats";
 import TestimonialCard from "../components/ui/TestimonialCard";
 import Slider from "../components/ui/Slider";
 import Badge from "../components/ui/Badge";
+import Faq from "../components/Faq";
+import ContactForm from "../components/ContactForm";
+import ContactInfo from "../components/ContactInfo";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -144,53 +147,65 @@ const Home = () => {
     { text: "Career counseling and placement support", icon: GraduationCap },
   ];
 
-  const faqs = [
+  const announcements = [
     {
-      question: "What programs are offered?",
-      answer: "We offer 50+ programs ranging from FSc and FA to BA, BS, MA, LLB, and LLM across our three campuses.",
+      id: 1,
+      title: "Admissions Open for Spring 2024",
+      date: "February 10, 2024",
+      description: "Applications are now being accepted for the Spring 2024 semester across all our campuses. Early bird discount available until March 1st."
     },
     {
-      question: "How do I apply for admission?",
-      answer: "You can apply online through our admissions portal or visit our campuses directly. Our admission counselors will guide you through the process.",
+      id: 2,
+      title: "Annual Sports Gala",
+      date: "February 8, 2024",
+      description: "Join us for our annual inter-campus sports competition featuring cricket, football, and athletics. Registration deadline: February 20th."
     },
     {
-      question: "What are the campus facilities?",
-      answer: "All campuses feature modern laboratories, libraries, computer labs, sports facilities, and recreational areas for student development.",
+      id: 3,
+      title: "Career Fair 2024",
+      date: "February 5, 2024",
+      description: "Top companies will be visiting our Main Campus for recruitment. Prepare your CVs and register through the student portal by February 15th."
     },
     {
-      question: "Do you offer scholarships?",
-      answer: "Yes, we offer merit-based and need-based scholarships. Contact our financial aid office for more information.",
+      id: 4,
+      title: "Scholarship Program Announced",
+      date: "February 3, 2024",
+      description: "Merit-based scholarships covering up to 100% tuition fee are now available. Apply through our online portal before February 28th."
+    },
+    {
+      id: 5,
+      title: "Science Exhibition 2024",
+      date: "February 1, 2024",
+      description: "Students from all campuses are invited to showcase their innovative projects. Prize money worth Rs. 500,000 for top 3 winners."
+    },
+    {
+      id: 6,
+      title: "Mid-Term Exams Schedule Released",
+      date: "January 28, 2024",
+      description: "Mid-term examinations will commence from March 10th, 2024. Students can download date sheets from the student portal."
+    },
+    {
+      id: 7,
+      title: "Guest Lecture Series",
+      date: "January 25, 2024",
+      description: "Distinguished professionals from various industries will be delivering guest lectures every Friday. Check the events calendar for details."
     },
   ];
+
+
 
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
       <Hero
-        title="Empowering Futures through Quality Education"
-        description="Join Pakistan's leading educational institution with 35+ years of academic excellence. Shape your tomorrow with us."
-        image="https://placehold.co/1920x800?text=Campus+View"
-        actions={[
-          {
-            variant: "gradient",
-            size: "lg",
-            icon: ArrowRight,
-            iconPosition: "right",
-            onClick: () => navigate("/admissions"),
-            children: "Apply Now",
-          },
-          {
-            children: "Explore Campuses",
-            variant: "outline",
-            size: "lg",
-            className: "border-white text-white hover:bg-white hover:text-primary-700",
-            onClick: () => navigate("/colleges"),
-          },
-        ]}
-        centered
+        title="THE BEST GROUP OF COLLEGES"
+        image="/landing-img.png"
+        announcements={announcements}
+        className="mb-12 pl-8 pr-8 "
       />
 
       {/* Stats Section */}
+
       <Section
         className="bg-gradient-to-r from-primary-700 via-primary-600 to-accent-600 -mt-12 relative z-20"
         spacing="large"
@@ -203,18 +218,6 @@ const Home = () => {
         >
           <Stats items={stats} variant="dark" />
         </motion.div>
-      </Section>
-
-      {/* Mission Section */}
-      <Section background="gradient" spacing="large">
-        <div className="text-center max-w-4xl mx-auto py-12">
-          <Section.Header
-            title="Our Mission"
-            description="At Best Group of Colleges, we are committed to providing quality education that empowers students to excel in their chosen fields. Through innovative teaching methods, state-of-the-art facilities, and dedicated faculty, we prepare our students for successful careers and meaningful contributions to society."
-            gradient
-            className="mb-0"
-          />
-        </div>
       </Section>
 
       {/* About Section */}
@@ -274,9 +277,6 @@ const Home = () => {
                   transition={{ delay: index * 0.1 }}
                   className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 hover:bg-primary-50 transition-colors group"
                 >
-                  <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <highlight.icon className="h-5 w-5 text-primary-600" />
-                  </div>
                   <span className="text-gray-700 font-medium text-sm">{highlight.text}</span>
                 </motion.div>
               ))}
@@ -420,150 +420,21 @@ const Home = () => {
           badge="Contact Us"
         />
 
-        <div className="grid lg:grid-cols-3 gap-8 mb-12">
-          {[
-            { icon: MapPin, title: "Address", content: "123 Education Street, Islamabad, Pakistan" },
-            { icon: Phone, title: "Phone", content: "+92 51 1234 5678" },
-            { icon: Mail, title: "Email", content: "info@bestcolleges.edu.pk" },
-          ].map((contact, index) => (
-            <motion.div
-              key={contact.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-            >
-              <Card hover className="text-center h-full">
-                <Card.Body>
-                  <div className="flex justify-center mb-4">
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center">
-                      <contact.icon className="h-6 w-6 text-primary-600" />
-                    </div>
-                  </div>
-                  <Card.Title>{contact.title}</Card.Title>
-                  <p className="text-gray-600 mt-2">{contact.content}</p>
-                </Card.Body>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
+        <ContactInfo />
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          className="mt-16"
         >
-          <Card className="max-w-3xl mx-auto" shadow="xl">
-            <Card.Body className="p-8">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-                Send us a Message
-              </h3>
-              <form
-                className="grid md:grid-cols-2 gap-6"
-                action="https://formsubmit.co/thebestcollege2008@gmail.com"
-                method="POST"
-              >
-                <div>
-                  <label htmlFor="home-name" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Full Name
-                  </label>
-                  <input
-                    id="home-name"
-                    name="Full Name"
-                    type="text"
-                    placeholder="John Doe"
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="home-email" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Email Address
-                  </label>
-                  <input
-                    id="home-email"
-                    name="Email Address"
-                    type="email"
-                    placeholder="john@example.com"
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label htmlFor="home-subject" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Subject
-                  </label>
-                  <input
-                    id="home-subject"
-                    name="Subject"
-                    type="text"
-                    placeholder="Inquiry about admissions"
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label htmlFor="home-message" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Message
-                  </label>
-                  <textarea
-                    id="home-message"
-                    name="Message"
-                    placeholder="Tell us how we can help you..."
-                    rows="5"
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition resize-none bg-gray-50 hover:bg-white"
-                  />
-                </div>
-                <Button
-                  className="md:col-span-2 w-full"
-                  size="lg"
-                  icon={Send}
-                  iconPosition="right"
-                >
-                  Send Message
-                </Button>
-              </form>
-            </Card.Body>
-          </Card>
+          <ContactForm />
         </motion.div>
       </Section>
 
       {/* FAQ Section */}
-      <Section background="white" spacing="large">
-        <Section.Header
-          title="Frequently Asked Questions"
-          description="Find answers to common questions about our colleges and programs"
-          badge="FAQ"
-        />
-        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-          {faqs.map((faq, index) => (
-            <motion.div
-              key={faq.question}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-            >
-              <Card hover className="h-full">
-                <Card.Body>
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center">
-                        <CheckCircle className="h-5 w-5 text-primary-600" />
-                      </div>
-                    </div>
-                    <div>
-                      <Card.Title className="text-lg mb-2">
-                        {faq.question}
-                      </Card.Title>
-                      <p className="text-gray-600 text-sm leading-relaxed">
-                        {faq.answer}
-                      </p>
-                    </div>
-                  </div>
-                </Card.Body>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
-      </Section>
+      <Faq limit={4} />
+
     </div>
   );
 };

@@ -161,10 +161,10 @@ const UsersList = () => {
       key: "role",
       label: "Role",
       render: (row) => (
-        <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${row.role === 'Super Admin' ? 'bg-purple-50 text-purple-700' :
-            row.role === 'Sub-Admin' ? 'bg-blue-50 text-blue-700' :
-              row.role === 'Faculty' ? 'bg-emerald-50 text-emerald-700' :
-                'bg-amber-50 text-amber-700'
+        <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${row.role === 'Super Admin' ? 'bg-blue-50 text-blue-700' :
+          row.role === 'Sub-Admin' ? 'bg-cyan-50 text-cyan-700' :
+            row.role === 'Faculty' ? 'bg-sky-50 text-sky-700' :
+              'bg-slate-50 text-slate-700'
           }`}>
           {row.role}
         </span>
@@ -208,7 +208,7 @@ const UsersList = () => {
 
         <Link
           to="/admin/users/create"
-          className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl font-semibold shadow-lg shadow-purple-500/30 hover:shadow-purple-500/40 transform hover:-translate-y-0.5 transition-all duration-200"
+          className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/30 hover:shadow-blue-500/40 transform hover:-translate-y-0.5 transition-all duration-200"
         >
           <UserPlus size={20} />
           Create New User
@@ -233,7 +233,7 @@ const UsersList = () => {
               placeholder="Search by name, email, or ID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm"
+              className="w-full pl-10 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm"
             />
           </div>
 
@@ -245,7 +245,7 @@ const UsersList = () => {
             <select
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
-              className="w-full pl-10 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm appearance-none"
+              className="w-full pl-10 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm appearance-none"
             >
               <option value="">All Roles</option>
               <option value="Super Admin">Super Admin</option>
@@ -264,7 +264,7 @@ const UsersList = () => {
               <select
                 value={selectedCampus}
                 onChange={(e) => setSelectedCampus(e.target.value)}
-                className="w-full pl-10 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm appearance-none"
+                className="w-full pl-10 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm appearance-none"
               >
                 <option value="">All Campuses</option>
                 {campuses.map((campus) => (
@@ -287,12 +287,12 @@ const UsersList = () => {
               {filteredData.length} Users Found
             </span>
             {selectedRole && (
-              <span className="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-xs font-semibold flex items-center gap-1">
+              <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold flex items-center gap-1">
                 {selectedRole}
               </span>
             )}
             {selectedCampus && (
-              <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold flex items-center gap-1">
+              <span className="px-3 py-1 bg-cyan-50 text-cyan-700 rounded-full text-xs font-semibold flex items-center gap-1">
                 {campuses.find((c) => c.id === selectedCampus)?.name}
               </span>
             )}
@@ -317,7 +317,7 @@ const UsersList = () => {
               setSelectedRole("");
               setSelectedCampus("");
             }}
-            className="mt-4 text-purple-600 hover:text-purple-700 font-semibold text-sm"
+            className="mt-4 text-blue-600 hover:text-blue-700 font-semibold text-sm"
           >
             Clear all filters
           </button>

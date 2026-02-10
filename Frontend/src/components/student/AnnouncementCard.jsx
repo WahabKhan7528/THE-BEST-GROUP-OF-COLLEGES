@@ -7,7 +7,7 @@ const AnnouncementCard = ({ announcement }) => {
           <h3 className="text-lg font-semibold text-gray-900">{announcement.title}</h3>
           <p className="text-sm text-gray-600 mt-2">{announcement.description}</p>
         </div>
-        <span className="text-xs font-semibold text-purple-700 bg-purple-50 px-3 py-1 rounded-full">
+        <span className="text-xs font-semibold text-cyan-700 bg-cyan-50 px-3 py-1 rounded-full">
           Announcement
         </span>
       </div>

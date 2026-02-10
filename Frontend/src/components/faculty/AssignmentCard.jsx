@@ -21,7 +21,7 @@ const AssignmentCard = ({ assignment }) => {
             {assignment.attachment && (
               <>
                 <span className="text-gray-400">•</span>
-                <a href={assignment.attachment} className="flex items-center gap-1 text-purple-700 hover:text-purple-800">
+                <a href={assignment.attachment} className="flex items-center gap-1 text-blue-700 hover:text-blue-800">
                   <FileText size={14} />
                   Attachment
                 </a>
@@ -29,7 +29,7 @@ const AssignmentCard = ({ assignment }) => {
             )}
           </div>
         </div>
-        <span className="text-xs font-semibold text-purple-700 bg-purple-50 px-3 py-1 rounded-full">
+        <span className="text-xs font-semibold text-cyan-700 bg-cyan-50 px-3 py-1 rounded-full">
           Published
         </span>
       </div>
@@ -42,11 +42,14 @@ const AssignmentCard = ({ assignment }) => {
           <ClipboardList size={14} />
           View submissions
         </Link>
-        <button className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-semibold text-gray-700 hover:bg-gray-50">
+        <Link
+          to={`/faculty/assignments/edit/${assignment.id}`}
+          className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-semibold text-gray-700 hover:bg-gray-50"
+        >
           <Pencil size={14} />
           Edit
-        </button>
-        <button className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-semibold text-rose-600 hover:bg-rose-50">
+        </Link>
+        <button className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-semibold text-red-600 hover:bg-red-50">
           <Trash2 size={14} />
           Delete
         </button>

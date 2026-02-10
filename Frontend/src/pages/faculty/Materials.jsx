@@ -92,7 +92,7 @@ const Materials = () => {
           </div>
           <Link
             to="/faculty/materials/upload"
-            className="px-4 py-2 bg-purple-700 text-white rounded-lg text-sm font-semibold hover:bg-purple-800"
+            className="px-4 py-2 bg-blue-700 text-white rounded-lg text-sm font-semibold hover:bg-blue-800"
           >
             Upload Material
           </Link>
@@ -112,7 +112,7 @@ const Materials = () => {
           </p>
           <Link
             to="/faculty/materials/upload"
-            className="text-purple-700 font-semibold hover:text-purple-800 mt-2 inline-block"
+            className="text-blue-700 font-semibold hover:text-blue-800 mt-2 inline-block"
           >
             Upload your first material →
           </Link>

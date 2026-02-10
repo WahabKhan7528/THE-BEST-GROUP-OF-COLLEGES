@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Plus,
   Image as ImageIcon,
@@ -6,7 +6,8 @@ import {
   ExternalLink,
   Search,
   Filter,
-  Calendar
+  Calendar,
+  Pencil
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -20,6 +21,7 @@ const images = [
 ];
 
 const Gallery = () => {
+  const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState("All");
   const albums = ["All", ...new Set(images.map(img => img.album))];
 
@@ -32,7 +34,7 @@ const Gallery = () => {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600">
+          <h1 className="text-2xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-600">
             Media Gallery
           </h1>
           <p className="text-sm text-gray-500 mt-1">
@@ -41,7 +43,7 @@ const Gallery = () => {
         </div>
         <Link
           to="/admin/cms/gallery/upload"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl text-sm font-semibold hover:from-purple-700 hover:to-indigo-700 shadow-lg shadow-purple-500/20 transition-all duration-200 transform hover:-translate-y-0.5"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl text-sm font-semibold hover:from-blue-700 hover:to-cyan-700 shadow-lg shadow-blue-500/20 transition-all duration-200 transform hover:-translate-y-0.5"
         >
           <Plus className="w-4 h-4" />
           Upload Image
@@ -58,7 +60,7 @@ const Gallery = () => {
               className={`
                 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200
                 ${activeFilter === album
-                  ? "bg-purple-50 text-purple-700 shadow-sm"
+                  ? "bg-blue-50 text-blue-700 shadow-sm"
                   : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                 }
               `}
@@ -73,7 +75,7 @@ const Gallery = () => {
           <input
             type="text"
             placeholder="Search images..."
-            className="w-full pl-10 pr-4 py-2 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm"
+            className="w-full pl-10 pr-4 py-2 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm"
           />
         </div>
       </div>
@@ -96,10 +98,22 @@ const Gallery = () => {
 
               {/* Overlay Actions */}
               <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
-                <button className="p-2 bg-white/90 backdrop-blur-sm rounded-full text-gray-700 hover:text-purple-600 hover:bg-white transition-colors shadow-sm">
-                  <ExternalLink className="w-4 h-4" />
+                <button
+                  onClick={() => navigate(`/admin/cms/gallery/edit/${img.id}`)}
+                  className="p-2 bg-white/90 backdrop-blur-sm rounded-full text-gray-700 hover:text-blue-600 hover:bg-white transition-colors shadow-sm"
+                  title="Edit"
+                >
+                  <Pencil className="w-4 h-4" />
                 </button>
-                <button className="p-2 bg-white/90 backdrop-blur-sm rounded-full text-gray-700 hover:text-rose-600 hover:bg-white transition-colors shadow-sm">
+                <button
+                  onClick={() => {
+                    if (window.confirm(`Delete image "${img.title}"?`)) {
+                      alert("Image deleted (mock)");
+                    }
+                  }}
+                  className="p-2 bg-white/90 backdrop-blur-sm rounded-full text-gray-700 hover:text-rose-600 hover:bg-white transition-colors shadow-sm"
+                  title="Delete"
+                >
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
@@ -114,7 +128,7 @@ const Gallery = () => {
 
             {/* Info */}
             <div className="p-4">
-              <h3 className="font-semibold text-gray-900 truncate group-hover:text-purple-600 transition-colors">
+              <h3 className="font-semibold text-gray-900 truncate group-hover:text-blue-600 transition-colors">
                 {img.title}
               </h3>
               <div className="flex items-center gap-2 mt-1 text-xs text-gray-500">
@@ -128,12 +142,12 @@ const Gallery = () => {
         {/* Upload Placeholder (Empty State or just visual cue) */}
         <Link
           to="/admin/cms/gallery/upload"
-          className="flex flex-col items-center justify-center aspect-[4/3] border-2 border-dashed border-gray-200 rounded-2xl hover:border-purple-300 hover:bg-purple-50/50 transition-all duration-200 group cursor-pointer"
+          className="flex flex-col items-center justify-center aspect-[4/3] border-2 border-dashed border-gray-200 rounded-2xl hover:border-blue-300 hover:bg-blue-50/50 transition-all duration-200 group cursor-pointer"
         >
           <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
-            <Plus className="w-6 h-6 text-gray-400 group-hover:text-purple-600" />
+            <Plus className="w-6 h-6 text-gray-400 group-hover:text-blue-600" />
           </div>
-          <span className="mt-3 text-sm font-medium text-gray-500 group-hover:text-purple-600">Add New Image</span>
+          <span className="mt-3 text-sm font-medium text-gray-500 group-hover:text-blue-600">Add New Image</span>
         </Link>
       </div>
     </div>

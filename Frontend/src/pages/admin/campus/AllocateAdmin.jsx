@@ -162,7 +162,7 @@ const AllocateAdmin = () => {
                 <div className="text-sm text-gray-600">{admin.email}</div>
               </div>
               {currentAllocations[admin.id] && (
-                <span className="text-xs bg-green-100 text-green-800 px-3 py-1 rounded-full">
+                <span className="text-xs bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full">
                   Currently Allocated
                 </span>
               )}
@@ -172,8 +172,8 @@ const AllocateAdmin = () => {
       </div>
 
       {/* Additional Info */}
-      <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
-        <p className="text-sm text-amber-800">
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+        <p className="text-sm text-blue-800">
           <strong>Note:</strong> Sub-Admins who are allocated to this campus can
           manage all users, classes, subjects, courses, and CMS content for this
           campus only. They cannot access other campuses.

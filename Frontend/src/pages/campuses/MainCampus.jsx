@@ -107,24 +107,7 @@ const MainCampus = () => {
   return (
     <div className="min-h-screen bg-white">
       <Hero
-        title="Main Campus Excellence"
-        subtitle="Where Innovation Meets Education"
-        description="Our Main Campus is the heart of academic excellence, offering state-of-the-art facilities and a vibrant community for holistic growth."
         image="https://placehold.co/1920x800?text=Main+Campus+View"
-        actions={[
-          {
-            children: "Apply Now",
-            icon: ArrowRight,
-            iconPosition: "right",
-            onClick: () => navigate("/admissions"),
-          },
-          {
-            children: "Virtual Tour",
-            variant: "outline",
-            className: "border-white text-white hover:bg-white hover:text-blue-700",
-            onClick: () => window.open("https://www.google.com/maps", "_blank"),
-          }
-        ]}
         centered
         className="rounded-3xl"
       />

@@ -79,15 +79,6 @@ const ResearchPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Hero
-        title="Innovation & Discovery"
-        subtitle="Pushing Boundaries"
-        description="Our research initiatives are driven by a commitment to solving real-world problems and contributing to the global body of knowledge."
-        image="https://placehold.co/1920x800?text=Research"
-        centered
-        className="rounded-3xl"
-      />
-
       <Section spacing="large">
         <Section.Header
           title="Current Research Projects"
@@ -104,7 +95,7 @@ const ResearchPage = () => {
               viewport={{ once: true }}
             >
               <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 rounded-2xl bg-blue-100 text-blue-700">
+                <div className="p-2 rounded-2xl bg-primary-100 text-primary-700">
                   <area.icon className="w-6 h-6" />
                 </div>
                 <h2 className="text-2xl font-bold text-gray-900">{area.title}</h2>
@@ -112,7 +103,7 @@ const ResearchPage = () => {
 
               <div className="grid md:grid-cols-2 gap-6">
                 {area.projects.map((project, pIdx) => (
-                  <Card key={project.name} hover className="h-full border-l-4 border-l-blue-500 rounded-3xl">
+                  <Card key={project.name} hover className="h-full border-l-4 border-l-primary-500 rounded-3xl">
                     <div className="flex justify-between items-start mb-2">
                       <Badge variant={project.status === "Ongoing" ? "default" : "secondary"}>
                         {project.status}
@@ -157,7 +148,7 @@ const ResearchPage = () => {
               viewport={{ once: true }}
             >
               <Card className="h-full text-center rounded-3xl">
-                <div className="mx-auto w-14 h-14 rounded-full bg-white shadow-sm flex items-center justify-center text-blue-600 mb-4 border border-gray-100">
+                <div className="mx-auto w-14 h-14 rounded-full bg-white shadow-sm flex items-center justify-center text-primary-600 mb-4 border border-gray-100">
                   <facility.icon className="w-7 h-7" />
                 </div>
                 <h3 className="text-lg font-bold mb-2">{facility.name}</h3>

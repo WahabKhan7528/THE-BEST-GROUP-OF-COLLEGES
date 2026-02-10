@@ -74,10 +74,10 @@ const EditCourse = () => {
         <section className="bg-white/80 backdrop-blur-xl border border-white/20 p-6 rounded-2xl shadow-sm space-y-6">
           <div className="flex items-center justify-between border-b border-gray-100 pb-3">
             <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-purple-600" />
+              <BookOpen className="w-5 h-5 text-blue-600" />
               Course Information
             </h2>
-            <span className="px-2.5 py-1 bg-purple-50 text-purple-700 text-xs font-medium rounded-lg border border-purple-100">
+            <span className="px-2.5 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-lg border border-blue-100">
               ID: {id}
             </span>
           </div>
@@ -90,7 +90,7 @@ const EditCourse = () => {
                 value={form.title}
                 onChange={(e) => handleChange("title", e.target.value)}
                 placeholder="e.g. BS Computer Science"
-                className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"
+                className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                 required
               />
             </div>
@@ -105,7 +105,7 @@ const EditCourse = () => {
                 value={form.duration}
                 onChange={(e) => handleChange("duration", e.target.value)}
                 placeholder="e.g. 4 Years"
-                className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"
+                className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
               />
             </div>
 
@@ -119,7 +119,7 @@ const EditCourse = () => {
                 value={form.eligibility}
                 onChange={(e) => handleChange("eligibility", e.target.value)}
                 placeholder="e.g. Intermediate or A-Level"
-                className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"
+                className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
               />
             </div>
 
@@ -133,7 +133,7 @@ const EditCourse = () => {
                 value={form.fee}
                 onChange={(e) => handleChange("fee", e.target.value)}
                 placeholder="e.g. $1200"
-                className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"
+                className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
               />
             </div>
 
@@ -145,7 +145,7 @@ const EditCourse = () => {
               <select
                 value={form.type}
                 onChange={(e) => handleChange("type", e.target.value)}
-                className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all appearance-none"
+                className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all appearance-none"
               >
                 <option value="semester">Per Semester</option>
                 <option value="year">Per Year</option>
@@ -159,7 +159,7 @@ const EditCourse = () => {
                 value={form.description}
                 onChange={(e) => handleChange("description", e.target.value)}
                 rows={4}
-                className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all resize-none"
+                className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
                 placeholder="Enter a brief description of the course..."
               />
             </div>
@@ -169,7 +169,7 @@ const EditCourse = () => {
         {/* Campus Availability */}
         <section className="bg-white/80 backdrop-blur-xl border border-white/20 p-6 rounded-2xl shadow-sm space-y-4">
           <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2 border-b border-gray-100 pb-3">
-            <Building2 className="w-5 h-5 text-indigo-600" />
+            <Building2 className="w-5 h-5 text-cyan-600" />
             Campus Availability <span className="text-red-500 text-sm ml-1">*</span>
           </h2>
 
@@ -183,22 +183,22 @@ const EditCourse = () => {
                   className={`
                       relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 flex items-start gap-3
                       ${isSelected
-                      ? 'border-indigo-600 bg-indigo-50 shadow-sm'
-                      : 'border-gray-100 bg-white hover:border-indigo-200 hover:bg-gray-50'
+                      ? 'border-blue-600 bg-blue-50 shadow-sm'
+                      : 'border-gray-100 bg-white hover:border-blue-200 hover:bg-gray-50'
                     }
                     `}
                 >
-                  <div className={`p-2 rounded-lg ${isSelected ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-100 text-gray-400'}`}>
+                  <div className={`p-2 rounded-lg ${isSelected ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-400'}`}>
                     <Building2 className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className={`font-semibold text-sm ${isSelected ? 'text-indigo-900' : 'text-gray-900'}`}>
+                    <h3 className={`font-semibold text-sm ${isSelected ? 'text-blue-900' : 'text-gray-900'}`}>
                       {campus.name}
                     </h3>
                     <p className="text-xs text-gray-500">{campus.code}</p>
                   </div>
                   {isSelected && (
-                    <CheckCircle2 className="absolute top-3 right-3 w-5 h-5 text-indigo-600" />
+                    <CheckCircle2 className="absolute top-3 right-3 w-5 h-5 text-blue-600" />
                   )}
                 </div>
               );
@@ -225,7 +225,7 @@ const EditCourse = () => {
             </Link>
             <button
               type="submit"
-              className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-indigo-700 shadow-lg shadow-purple-500/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center"
+              className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-cyan-700 shadow-lg shadow-blue-500/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center"
             >
               Save Changes
             </button>

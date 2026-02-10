@@ -49,24 +49,32 @@ import StudentDashboard from "./pages/student/Dashboard";
 // Import Admin Sub-pages
 import UsersList from "./pages/admin/users/UsersList";
 import CreateUser from "./pages/admin/users/CreateUser";
+import EditUser from "./pages/admin/users/EditUser";
 import CourseList from "./pages/admin/courses/CourseList";
 import CreateCourse from "./pages/admin/courses/CreateCourse";
 import EditCourse from "./pages/admin/courses/EditCourse";
 import CampusManagement from "./pages/admin/campus/CampusManagement";
 import CreateCampus from "./pages/admin/campus/CreateCampus";
+import EditCampus from "./pages/admin/campus/EditCampus";
+import CampusAdminsList from "./pages/admin/campus/CampusAdminsList";
 import AllocateAdmin from "./pages/admin/campus/AllocateAdmin";
 import ClassesList from "./pages/admin/classes/ClassesList";
 import CreateClass from "./pages/admin/classes/CreateClass";
+import EditClass from "./pages/admin/classes/EditClass";
 import SubjectsList from "./pages/admin/subjects/SubjectsList";
 import CreateSubject from "./pages/admin/subjects/CreateSubject";
+import EditSubject from "./pages/admin/subjects/EditSubject";
 import NewsList from "./pages/admin/cms/news/NewsList";
 import CreateNews from "./pages/admin/cms/news/CreateNews";
+import EditNews from "./pages/admin/cms/news/EditNews";
 import GalleryManager from "./pages/admin/cms/gallery/Gallery";
 import UploadImage from "./pages/admin/cms/gallery/UploadImage";
+import EditGalleryImage from "./pages/admin/cms/gallery/EditGalleryImage";
 
 // Import Faculty Sub-pages
 import FacultyAssignments from "./pages/faculty/Assignments";
 import CreateAssignment from "./pages/faculty/CreateAssignment";
+import EditAssignment from "./pages/faculty/EditAssignment";
 import FacultySubmissions from "./pages/faculty/Submissions";
 import FacultyMaterials from "./pages/faculty/Materials";
 import UploadMaterial from "./pages/faculty/UploadMaterial";
@@ -77,7 +85,7 @@ import FacultyAnnouncements from "./pages/faculty/Announcements";
 import StudentAssignments from "./pages/student/Assignments";
 import StudentMaterials from "./pages/student/Materials";
 import StudentResults from "./pages/student/Results";
-import StudentNews from "./pages/student/News";
+import StudentAnnouncements from "./pages/student/Announcements";
 
 function App() {
   return (
@@ -138,6 +146,7 @@ function App() {
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="users" element={<UsersList />} />
           <Route path="users/create" element={<CreateUser />} />
+          <Route path="users/edit/:id" element={<EditUser />} />
           <Route path="courses" element={<CourseList />} />
           <Route path="courses/create" element={<CreateCourse />} />
           <Route path="courses/edit/:id" element={<EditCourse />} />
@@ -145,19 +154,25 @@ function App() {
           {/* Campus Management */}
           <Route path="campus" element={<CampusManagement />} />
           <Route path="campus/create" element={<CreateCampus />} />
+          <Route path="campus/:id/edit" element={<EditCampus />} />
+          <Route path="campus/:id/admins" element={<CampusAdminsList />} />
           <Route path="campus/allocate" element={<AllocateAdmin />} />
 
           {/* Academic Management */}
           <Route path="classes" element={<ClassesList />} />
           <Route path="classes/create" element={<CreateClass />} />
+          <Route path="classes/edit/:id" element={<EditClass />} />
           <Route path="subjects" element={<SubjectsList />} />
           <Route path="subjects/create" element={<CreateSubject />} />
+          <Route path="subjects/edit/:id" element={<EditSubject />} />
 
           {/* CMS Management */}
           <Route path="cms/news" element={<NewsList />} />
           <Route path="cms/news/create" element={<CreateNews />} />
+          <Route path="cms/news/edit/:id" element={<EditNews />} />
           <Route path="cms/gallery" element={<GalleryManager />} />
           <Route path="cms/gallery/upload" element={<UploadImage />} />
+          <Route path="cms/gallery/edit/:id" element={<EditGalleryImage />} />
         </Route>
 
         {/* Faculty Portal Routes */}
@@ -173,6 +188,7 @@ function App() {
           <Route path="dashboard" element={<FacultyDashboard />} />
           <Route path="assignments" element={<FacultyAssignments />} />
           <Route path="assignments/create" element={<CreateAssignment />} />
+          <Route path="assignments/edit/:id" element={<EditAssignment />} />
           <Route path="submissions/:assignmentId" element={<FacultySubmissions />} />
           <Route path="materials" element={<FacultyMaterials />} />
           <Route path="materials/upload" element={<UploadMaterial />} />
@@ -194,7 +210,7 @@ function App() {
           <Route path="assignments" element={<StudentAssignments />} />
           <Route path="materials" element={<StudentMaterials />} />
           <Route path="results" element={<StudentResults />} />
-          <Route path="news" element={<StudentNews />} />
+          <Route path="announcements" element={<StudentAnnouncements />} />
         </Route>
       </Routes>
     </Router>

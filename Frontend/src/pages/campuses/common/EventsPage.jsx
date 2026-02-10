@@ -56,15 +56,6 @@ const EventsPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Hero
-        title="Campus Events"
-        subtitle="Life at TBC"
-        description="Stay engaged with our vibrant campus life. From academic conferences to cultural festivals, there's always something happening."
-        image="https://placehold.co/1920x800?text=Events+Hero"
-        centered
-        className="rounded-3xl"
-      />
-
       <Section spacing="large">
         <Section.Header
           title="Upcoming Events"

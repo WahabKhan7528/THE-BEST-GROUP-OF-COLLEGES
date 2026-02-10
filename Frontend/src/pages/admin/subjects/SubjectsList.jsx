@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAdminContext } from "../../../context/AdminContext";
 import Table from "../../../components/admin/Table";
@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 
 const SubjectsList = () => {
+  const navigate = useNavigate();
   const { campuses, isSuperAdmin, currentAdmin } = useAdminContext();
   const [selectedCampus, setSelectedCampus] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -128,7 +129,7 @@ const SubjectsList = () => {
       label: "Faculty",
       render: (row) => (
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center text-white text-xs font-bold ring-2 ring-white shadow-sm">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white text-xs font-bold ring-2 ring-white shadow-sm">
             {row.faculty.charAt(0)}
           </div>
           <span className="text-sm font-medium text-gray-700">{row.faculty}</span>
@@ -143,7 +144,7 @@ const SubjectsList = () => {
           {row.offeredAt.map((campusId) => (
             <span
               key={campusId}
-              className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100"
+              className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-cyan-50 text-cyan-700 border border-cyan-100"
             >
               <Building2 className="w-3 h-3" />
               {getCampusName(campusId)}
@@ -159,7 +160,7 @@ const SubjectsList = () => {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600">
+          <h1 className="text-2xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-600">
             Subjects & Assignments
           </h1>
           <p className="text-sm text-gray-500 mt-1">
@@ -168,7 +169,7 @@ const SubjectsList = () => {
         </div>
         <Link
           to="/admin/subjects/create"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl text-sm font-semibold hover:from-purple-700 hover:to-indigo-700 shadow-sm transition-all duration-200"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl text-sm font-semibold hover:from-blue-700 hover:to-cyan-700 shadow-sm transition-all duration-200"
         >
           <Plus className="w-4 h-4" />
           Add New Subject
@@ -186,7 +187,7 @@ const SubjectsList = () => {
               placeholder="Search subjects, codes, or faculty..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm"
+              className="w-full pl-10 pr-4 py-2 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm"
             />
           </div>
 
@@ -197,7 +198,7 @@ const SubjectsList = () => {
               <select
                 value={selectedCampus}
                 onChange={(e) => setSelectedCampus(e.target.value)}
-                className="w-full pl-10 pr-8 py-2 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm appearance-none cursor-pointer"
+                className="w-full pl-10 pr-8 py-2 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm appearance-none cursor-pointer"
               >
                 <option value="">All Campuses</option>
                 {campuses.map((campus) => (
@@ -216,16 +217,20 @@ const SubjectsList = () => {
         <Table
           columns={columns}
           data={filteredData}
-          actions={(row) => [
+          actionButtons={(row) => [
             {
               label: "Edit",
-              onClick: () => console.log("Edit", row.id),
-              className: "text-blue-600 hover:bg-blue-50",
+              onClick: () => navigate(`/admin/subjects/edit/${row.id}`),
+              className: "text-blue-600 hover:text-blue-700 font-medium bg-blue-50 border border-blue-100",
             },
             {
               label: "Delete",
-              onClick: () => console.log("Delete", row.id),
-              className: "text-rose-600 hover:bg-rose-50",
+              onClick: () => {
+                if (window.confirm("Are you sure you want to delete this subject?")) {
+                  alert(`Subject ${row.id} deleted (mock)`);
+                }
+              },
+              className: "text-rose-600 hover:text-rose-700 font-medium bg-rose-50 border border-rose-100",
             },
           ]}
         />
@@ -243,7 +248,7 @@ const SubjectsList = () => {
           {(searchQuery || selectedCampus) && (
             <button
               onClick={() => { setSearchQuery(""); setSelectedCampus(""); }}
-              className="text-purple-600 text-sm font-medium hover:text-purple-700 hover:underline"
+              className="text-blue-600 text-sm font-medium hover:text-blue-700 hover:underline"
             >
               Clear all filters
             </button>

@@ -167,42 +167,14 @@ const Gallery = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <Hero
-        title="Photo Gallery"
-        description="Explore our campus life, events, and facilities through our photo gallery"
-        image="https://placehold.co/1920x800?text=Gallery"
-        centered
-      />
-
-      {/* Stats */}
-      <Section
-        className="bg-gradient-to-r from-primary-700 via-primary-600 to-accent-600 -mt-16 relative z-20"
-        spacing="default"
-      >
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white">
-          {[
-            { value: "500+", label: "Photos" },
-            { value: "50+", label: "Events Covered" },
-            { value: "3", label: "Campuses" },
-            { value: "10+", label: "Albums" },
-          ].map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-            >
-              <div className="text-3xl md:text-4xl font-bold mb-1">{stat.value}</div>
-              <div className="text-white/80 text-sm">{stat.label}</div>
-            </motion.div>
-          ))}
-        </div>
-      </Section>
-
       {/* Filters */}
       <Section background="white" spacing="default">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-8xl font-bold text-gray-900 mb-6 leading-tight">
+            <span className="text-gradient">PHOTO GALLERY</span>
+          </h2>
+          <p className="text-gray-600">Explore our campus life, events, and facilities through our photo gallery</p>
+        </div>
         <div className="flex flex-wrap justify-center gap-3">
           {filters.map((filter) => {
             const isActive = activeFilter === filter.id;
@@ -213,8 +185,8 @@ const Gallery = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-medium transition-all ${isActive
-                  ? "bg-gray-900 text-white shadow-lg"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  ? "bg-primary-600 text-white shadow-lg"
+                  : "bg-primary-100 text-gray-600 hover:bg-primary-200"
                   }`}
               >
                 <filter.icon className="w-4 h-4" />
@@ -259,7 +231,7 @@ const Gallery = () => {
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300">
                   {/* Category Badge */}
-                  <div className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-medium text-white bg-gray-900/80 backdrop-blur-sm capitalize">
+                  <div className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-medium text-black bg-primary-200 backdrop-blur-sm capitalize">
                     {image.category}
                   </div>
 

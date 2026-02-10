@@ -59,7 +59,7 @@ const CreateAssignment = () => {
               value={form.classSection}
               onChange={(e) => handleChange('classSection', e.target.value)}
               placeholder="e.g. BSCS - A"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all outline-none"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
               required
             />
           </div>
@@ -70,7 +70,7 @@ const CreateAssignment = () => {
               value={form.subject}
               onChange={(e) => handleChange('subject', e.target.value)}
               placeholder="e.g. Operating Systems"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all outline-none"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
               required
             />
           </div>
@@ -83,7 +83,7 @@ const CreateAssignment = () => {
             value={form.title}
             onChange={(e) => handleChange('title', e.target.value)}
             placeholder="e.g. CPU Scheduling Algorithm Report"
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all outline-none"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
             required
           />
         </div>
@@ -95,7 +95,7 @@ const CreateAssignment = () => {
             onChange={(e) => handleChange('description', e.target.value)}
             rows={6}
             placeholder="Detailed instructions for the assignment..."
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all outline-none resize-none"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none resize-none"
           />
         </div>
 
@@ -107,7 +107,7 @@ const CreateAssignment = () => {
                 type="date"
                 value={form.dueDate}
                 onChange={(e) => handleChange('dueDate', e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all outline-none"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
                 required
               />
               <Calendar size={18} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
@@ -121,7 +121,7 @@ const CreateAssignment = () => {
               value={form.maxMarks}
               onChange={(e) => handleChange('maxMarks', e.target.value)}
               placeholder="20"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all outline-none"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
               required
             />
           </div>
@@ -134,7 +134,7 @@ const CreateAssignment = () => {
                 onChange={handleFile}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
               />
-              <div className="w-full px-4 py-3 rounded-xl border border-dashed border-gray-300 bg-white/30 text-gray-500 group-hover:bg-purple-50 group-hover:border-purple-300 group-hover:text-purple-600 transition-all flex items-center gap-2 truncate">
+              <div className="w-full px-4 py-3 rounded-xl border border-dashed border-gray-300 bg-white/30 text-gray-500 group-hover:bg-blue-50 group-hover:border-blue-300 group-hover:text-blue-600 transition-all flex items-center gap-2 truncate">
                 <FileText size={18} />
                 <span className="truncate">{form.attachmentName || "Choose file..."}</span>
               </div>
@@ -151,7 +151,7 @@ const CreateAssignment = () => {
           </Link>
           <button
             type="submit"
-            className="flex items-center gap-2 px-8 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl font-semibold shadow-lg shadow-purple-500/30 hover:shadow-purple-500/40 hover:-translate-y-0.5 transition-all duration-200"
+            className="flex items-center gap-2 px-8 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/30 hover:shadow-blue-500/40 hover:-translate-y-0.5 transition-all duration-200"
           >
             <Check size={18} />
             Publish Assignment

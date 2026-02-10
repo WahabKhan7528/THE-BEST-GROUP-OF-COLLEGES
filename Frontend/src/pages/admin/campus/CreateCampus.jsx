@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminContext } from "../../../context/AdminContext";
 import FormInput from "../../../components/admin/FormInput";
-import Button from "../../../components/ui/Button";
+
 
 const CreateCampus = () => {
   const navigate = useNavigate();
@@ -118,19 +118,19 @@ const CreateCampus = () => {
         </div>
 
         <div className="flex gap-4 pt-4">
-          <Button
+          <button
             type="submit"
-            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+            className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-semibold shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all duration-200"
           >
             Create Campus
-          </Button>
-          <Button
+          </button>
+          <button
             type="button"
             onClick={handleCancel}
-            className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold"
+            className="flex-1 px-6 py-3 rounded-xl bg-gray-100 text-gray-700 hover:bg-gray-200 font-semibold transition-all duration-200"
           >
             Cancel
-          </Button>
+          </button>
         </div>
       </form>
     </div>

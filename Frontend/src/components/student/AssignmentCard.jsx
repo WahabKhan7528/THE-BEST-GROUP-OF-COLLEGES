@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
 const statusStyles = {
-  Submitted: 'bg-emerald-50 text-emerald-700 border-emerald-100',
-  Pending: 'bg-amber-50 text-amber-700 border-amber-100',
-  Late: 'bg-rose-50 text-rose-700 border-rose-100',
+  Submitted: 'bg-cyan-50 text-cyan-700 border-cyan-100',
+  Pending: 'bg-sky-50 text-sky-700 border-sky-100',
+  Late: 'bg-red-50 text-red-700 border-red-100',
 };
 
 const AssignmentCard = ({ assignment }) => {
@@ -32,7 +32,7 @@ const AssignmentCard = ({ assignment }) => {
               Due {assignment.dueDate}
             </span>
             <span className="text-gray-400">•</span>
-            <a href={assignment.attachment} className="text-purple-700 hover:text-purple-800 font-medium">
+            <a href={assignment.attachment} className="text-blue-700 hover:text-blue-800 font-medium">
               Attached file
             </a>
           </div>
@@ -48,7 +48,7 @@ const AssignmentCard = ({ assignment }) => {
           <input
             type="file"
             onChange={handleFileChange}
-            className="block w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-purple-500 focus:ring-purple-500"
+            className="block w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500"
           />
           {fileName && <span className="text-xs text-gray-500">Selected: {fileName}</span>}
         </label>
@@ -60,7 +60,7 @@ const AssignmentCard = ({ assignment }) => {
             onChange={(e) => setNote(e.target.value)}
             rows={3}
             placeholder="Add clarification or links..."
-            className="rounded-lg border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+            className="rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           />
         </label>
       </div>
@@ -69,7 +69,7 @@ const AssignmentCard = ({ assignment }) => {
         <p className="text-xs text-gray-500">
           Last submission status: {assignment.status}
         </p>
-        <button className="px-4 py-2 bg-purple-700 text-white rounded-lg hover:bg-purple-800 text-sm font-semibold">
+        <button className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg text-sm font-semibold shadow-md shadow-blue-500/20">
           Submit Assignment
         </button>
       </div>

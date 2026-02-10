@@ -72,7 +72,7 @@ const CreateSubject = () => {
         {/* Subject Details Section */}
         <section className="bg-white/80 backdrop-blur-xl border border-white/20 p-6 rounded-2xl shadow-sm space-y-6">
           <div className="flex items-center gap-2 mb-2">
-            <BookOpen className="w-5 h-5 text-purple-600" />
+            <BookOpen className="w-5 h-5 text-blue-600" />
             <h2 className="text-lg font-semibold text-gray-800">Subject Details</h2>
           </div>
 
@@ -88,7 +88,7 @@ const CreateSubject = () => {
                   value={form.name}
                   onChange={(e) => handleChange("name", e.target.value)}
                   placeholder="e.g. Operating Systems"
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                   required
                 />
               </div>
@@ -105,7 +105,7 @@ const CreateSubject = () => {
                   value={form.code}
                   onChange={(e) => handleChange("code", e.target.value)}
                   placeholder="e.g. CS-312"
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all font-mono"
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-mono"
                   required
                 />
               </div>
@@ -122,7 +122,7 @@ const CreateSubject = () => {
                   value={form.class}
                   onChange={(e) => handleChange("class", e.target.value)}
                   placeholder="e.g. BSCS - 3rd Semester"
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                 />
               </div>
             </div>
@@ -138,7 +138,7 @@ const CreateSubject = () => {
                   value={form.faculty}
                   onChange={(e) => handleChange("faculty", e.target.value)}
                   placeholder="e.g. Prof. Ahmed Raza"
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                 />
               </div>
             </div>
@@ -148,7 +148,7 @@ const CreateSubject = () => {
         {/* Campus Availability Section */}
         <section className="bg-white/80 backdrop-blur-xl border border-white/20 p-6 rounded-2xl shadow-sm space-y-4">
           <div className="flex items-center gap-2 mb-2">
-            <Building2 className="w-5 h-5 text-indigo-600" />
+            <Building2 className="w-5 h-5 text-cyan-600" />
             <h2 className="text-lg font-semibold text-gray-800">Campus Availability</h2>
           </div>
 
@@ -166,8 +166,8 @@ const CreateSubject = () => {
                     className={`
                       relative flex flex-col items-center justify-center p-4 rounded-xl border-2 cursor-pointer transition-all duration-200
                       ${isSelected
-                        ? 'border-indigo-600 bg-indigo-50'
-                        : 'border-gray-100 bg-white hover:border-indigo-200 hover:bg-gray-50'
+                        ? 'border-blue-600 bg-blue-50'
+                        : 'border-gray-100 bg-white hover:border-blue-200 hover:bg-gray-50'
                       }
                     `}
                   >
@@ -177,12 +177,12 @@ const CreateSubject = () => {
                       onChange={() => handleCampusToggle(campus.id)}
                       className="sr-only"
                     />
-                    <Building2 className={`w-6 h-6 mb-2 ${isSelected ? 'text-indigo-600' : 'text-gray-400'}`} />
-                    <span className={`text-sm font-medium text-center ${isSelected ? 'text-indigo-700' : 'text-gray-600'}`}>
+                    <Building2 className={`w-6 h-6 mb-2 ${isSelected ? 'text-blue-600' : 'text-gray-400'}`} />
+                    <span className={`text-sm font-medium text-center ${isSelected ? 'text-blue-700' : 'text-gray-600'}`}>
                       {campus.name}
                     </span>
                     {isSelected && (
-                      <div className="absolute top-2 right-2 text-indigo-600">
+                      <div className="absolute top-2 right-2 text-blue-600">
                         <CheckCircle2 className="w-4 h-4" />
                       </div>
                     )}
@@ -204,7 +204,7 @@ const CreateSubject = () => {
           </button>
           <button
             type="submit"
-            className="px-8 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-indigo-700 shadow-lg shadow-purple-500/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+            className="px-8 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-cyan-700 shadow-lg shadow-blue-500/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0"
           >
             Create Subject
           </button>

@@ -104,13 +104,13 @@ const CourseList = () => {
       label: "Course Details",
       render: (row) => (
         <div className="flex items-start gap-3">
-          <div className="p-2 bg-purple-50 text-purple-600 rounded-lg">
+          <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
             <BookOpen className="w-5 h-5" />
           </div>
           <div>
             <span className="font-semibold text-gray-900 line-clamp-1">{row.title}</span>
             <div className="flex items-center gap-2 mt-0.5 text-xs text-gray-500">
-              <span className="bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded text-[10px] font-medium uppercase tracking-wide">
+              <span className="bg-cyan-50 text-cyan-700 px-1.5 py-0.5 rounded text-[10px] font-medium uppercase tracking-wide">
                 Undergraduate
               </span>
             </div>
@@ -160,7 +160,7 @@ const CourseList = () => {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600">
+          <h1 className="text-2xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-600">
             Course Management
           </h1>
           <p className="text-sm text-gray-500 mt-1">
@@ -169,7 +169,7 @@ const CourseList = () => {
         </div>
         <Link
           to="/admin/courses/create"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl text-sm font-semibold hover:from-purple-700 hover:to-indigo-700 shadow-lg shadow-purple-500/20 transition-all duration-200 transform hover:-translate-y-0.5"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl text-sm font-semibold hover:from-blue-700 hover:to-cyan-700 shadow-lg shadow-blue-500/20 transition-all duration-200 transform hover:-translate-y-0.5"
         >
           <Plus className="w-4 h-4" />
           Add New Course
@@ -185,7 +185,7 @@ const CourseList = () => {
             placeholder="Search courses by name..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm"
+            className="w-full pl-10 pr-4 py-2 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm"
           />
         </div>
 
@@ -195,7 +195,7 @@ const CourseList = () => {
             <select
               value={selectedCampus}
               onChange={(e) => setSelectedCampus(e.target.value)}
-              className="px-3 py-2 bg-gray-50/50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"
+              className="px-3 py-2 bg-gray-50/50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
             >
               <option value="">All Campuses</option>
               {campuses.map((campus) => (
@@ -214,23 +214,24 @@ const CourseList = () => {
           <Table
             columns={columns}
             data={filteredData}
-            actions={(row) => (
-              <div className="flex items-center justify-end gap-2">
-                <Link
-                  to={`/admin/courses/edit/${row.id}`}
-                  className="p-1.5 text-gray-500 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
-                  title="Edit"
-                >
-                  <Pencil className="w-4 h-4" />
-                </Link>
-                <button
-                  className="p-1.5 text-gray-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
-                  title="Delete"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            )}
+            actionButtons={(row) => [
+              {
+                label: "Edit",
+                onClick: () => {
+                  window.location.href = `/admin/courses/edit/${row.id}`;
+                },
+                className: "text-blue-600 hover:text-blue-700 font-medium bg-blue-50 border border-blue-100",
+              },
+              {
+                label: "Delete",
+                onClick: () => {
+                  if (window.confirm("Are you sure you want to delete this course?")) {
+                    alert(`Course ${row.id} deleted (mock)`);
+                  }
+                },
+                className: "text-rose-600 hover:text-rose-700 font-medium bg-rose-50 border border-rose-100",
+              }
+            ]}
           />
         ) : (
           <div className="flex flex-col items-center justify-center py-12 px-4 text-center">

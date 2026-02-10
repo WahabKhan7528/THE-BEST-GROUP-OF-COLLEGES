@@ -125,46 +125,11 @@ const Admissions = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <Hero
-        title="Admissions Open 2025"
-        description="Take the first step towards your future. Join Pakistan's leading educational institution and shape your tomorrow."
-        image="https://placehold.co/1920x800?text=Admissions"
-        centered
-      />
-
-      {/* Quick Stats */}
-      <Section
-        className="bg-gradient-to-r from-primary-700 via-primary-600 to-accent-600 -mt-16 relative z-20"
-        spacing="default"
-      >
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white">
-          {[
-            { value: "50+", label: "Programs" },
-            { value: "3", label: "Campuses" },
-            { value: "95%", label: "Placement Rate" },
-            { value: "5000+", label: "Students" },
-          ].map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-            >
-              <div className="text-4xl md:text-5xl font-bold mb-2">{stat.value}</div>
-              <div className="text-white/80 text-sm">{stat.label}</div>
-            </motion.div>
-          ))}
-        </div>
-      </Section>
-
       {/* Admission Process */}
       <Section background="white" spacing="large">
         <Section.Header
           title="Admission Process"
           description="Follow these simple steps to begin your educational journey with us"
-          badge="How to Apply"
         />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {admissionSteps.map((step, index) => (
@@ -177,18 +142,17 @@ const Admissions = () => {
             >
               <Card hover className="h-full relative overflow-hidden">
                 {/* Step Number */}
-                <div className="absolute -top-3 -right-3 w-16 h-16 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-end justify-start pb-4 pl-4 opacity-10" />
                 <Card.Body>
                   <div className="flex items-start gap-4">
                     <div className="flex-shrink-0">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-white font-bold text-lg shadow-lg">
-                        {index + 1}
+                      <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center group-hover:bg-primary-600 transition-colors">
+                        <span className="text-2xl font-bold text-primary-600 group-hover:text-white transition-colors">
+                          {index + 1}
+                        </span>
                       </div>
                     </div>
                     <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="text-lg font-bold text-gray-900">{step.title}</h3>
-                      </div>
+                      <h3 className="text-xl font-bold text-gray-900 mb-3">{step.title}</h3>
                       <p className="text-gray-600 text-sm leading-relaxed">{step.description}</p>
                     </div>
                   </div>
@@ -219,8 +183,8 @@ const Admissions = () => {
                   className="flex flex-col sm:flex-row sm:items-center justify-between p-4 hover:bg-gray-50 transition-colors gap-3 sm:gap-4"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center">
-                      <Calendar className="w-5 h-5 text-primary-600" />
+                    <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center">
+                      <Calendar className="w-8 h-8 text-primary-600" />
                     </div>
                     <span className="font-medium text-gray-900">{item.event}</span>
                   </div>
@@ -250,8 +214,8 @@ const Admissions = () => {
             <Card hover className="h-full">
               <Card.Body>
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center">
-                    <FileText className="h-6 w-6 text-green-600" />
+                  <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center group-hover:bg-primary-600 transition-colors">
+                    <FileText className="h-8 w-8 text-primary-600 group-hover:text-white transition-colors" />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-gray-900">Required Documents</h3>
@@ -261,7 +225,7 @@ const Admissions = () => {
                 <ul className="space-y-3">
                   {requirements.documents.map((doc) => (
                     <li key={doc} className="flex items-center gap-3 text-gray-600">
-                      <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                      <CheckCircle className="h-5 w-5 text-primary-600 flex-shrink-0" />
                       <span>{doc}</span>
                     </li>
                   ))}
@@ -280,8 +244,8 @@ const Admissions = () => {
             <Card hover className="h-full">
               <Card.Body>
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-100 to-primary-100 flex items-center justify-center">
-                    <ClipboardCheck className="h-6 w-6 text-primary-600" />
+                  <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center group-hover:bg-primary-600 transition-colors">
+                    <ClipboardCheck className="h-8 w-8 text-primary-600 group-hover:text-white transition-colors" />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-gray-900">Eligibility Criteria</h3>

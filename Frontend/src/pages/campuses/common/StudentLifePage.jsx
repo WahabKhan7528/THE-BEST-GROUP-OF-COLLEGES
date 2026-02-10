@@ -29,7 +29,7 @@ const StudentLifePage = () => {
       description: "Celebrating creativity through painting, drama, and photography. Showcase your talent in our annual exhibitions.",
       members: 200,
       icon: Palette,
-      color: "purple",
+      color: "sky",
       meeting: "Tuesdays, 2 PM"
     },
     {
@@ -37,7 +37,7 @@ const StudentLifePage = () => {
       description: "Promoting physical fitness and team spirit. Organizing inter-departmental leagues and sports galas.",
       members: 300,
       icon: Dribbble,
-      color: "orange",
+      color: "cyan",
       meeting: "Daily Training"
     },
   ];
@@ -67,15 +67,6 @@ const StudentLifePage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Hero
-        title="Vibrant Student Life"
-        subtitle="More Than Just Academics"
-        description="Experience a campus culture that celebrates diversity, creativity, and personal growth. Join a society, make lifelong friends, and create memories."
-        image="https://placehold.co/1920x800?text=Student+Life"
-        centered
-        className="rounded-3xl"
-      />
-
       <Section spacing="large">
         <Section.Header
           title="Student Societies & Clubs"
@@ -83,58 +74,48 @@ const StudentLifePage = () => {
         />
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {societies.map((society, idx) => {
-            const colorStyles = {
-              red: { border: "border-red-500", bg: "bg-red-50", text: "text-red-600", ring: "ring-red-50/50" },
-              blue: { border: "border-blue-500", bg: "bg-blue-50", text: "text-blue-600", ring: "ring-blue-50/50" },
-              purple: { border: "border-purple-500", bg: "bg-purple-50", text: "text-purple-600", ring: "ring-purple-50/50" },
-              orange: { border: "border-orange-500", bg: "bg-orange-50", text: "text-orange-600", ring: "ring-orange-50/50" },
-            };
-            const styles = colorStyles[society.color] || colorStyles.blue;
+          {societies.map((society, idx) => (
+            <motion.div
+              key={society.name}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: idx * 0.1 }}
+              viewport={{ once: true }}
+            >
+              <Card hover className="h-full flex flex-col text-center items-center p-6 border-t-4 rounded-3xl border-t-primary-500">
+                <div className="p-4 rounded-full bg-primary-100 text-primary-600 mb-4 ring-8 ring-primary-50/50">
+                  <society.icon className="w-8 h-8" />
+                </div>
 
-            return (
-              <motion.div
-                key={society.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <Card hover className={`h-full flex flex-col text-center items-center p-6 border-t-4 rounded-3xl ${styles.border}`}>
-                  <div className={`p-4 rounded-full ${styles.bg} ${styles.text} mb-4 ring-8 ${styles.ring}`}>
-                    <society.icon className="w-8 h-8" />
-                  </div>
+                <h3 className="text-xl font-bold mb-2 text-gray-900">{society.name}</h3>
+                <p className="text-gray-600 text-sm mb-6 flex-grow">{society.description}</p>
 
-                  <h3 className="text-xl font-bold mb-2 text-gray-900">{society.name}</h3>
-                  <p className="text-gray-600 text-sm mb-6 flex-grow">{society.description}</p>
+                <div className="w-full space-y-2">
+                  <Badge variant="secondary" className="w-full justify-center py-1">
+                    <Users className="w-3 h-3 mr-1" /> {society.members} Members
+                  </Badge>
+                  <Badge variant="outline" className="w-full justify-center py-1 text-xs">
+                    <Calendar className="w-3 h-3 mr-1" /> {society.meeting}
+                  </Badge>
+                </div>
 
-                  <div className="w-full space-y-2">
-                    <Badge variant="secondary" className="w-full justify-center py-1">
-                      <Users className="w-3 h-3 mr-1" /> {society.members} Members
-                    </Badge>
-                    <Badge variant="outline" className="w-full justify-center py-1 text-xs">
-                      <Calendar className="w-3 h-3 mr-1" /> {society.meeting}
-                    </Badge>
-                  </div>
-
-                  <Button size="sm" variant="ghost" className="mt-4 text-blue-600 hover:text-blue-800 p-0 h-auto hover:bg-transparent" onClick={() => { }}>
-                    Join Now <ArrowRight className="w-3 h-3 ml-1" />
-                  </Button>
-                </Card>
-              </motion.div>
-            );
-          })}
+                <Button size="sm" variant="ghost" className="mt-4 text-blue-600 hover:text-blue-800 p-0 h-auto hover:bg-transparent" onClick={() => { }}>
+                  Join Now <ArrowRight className="w-3 h-3 ml-1" />
+                </Button>
+              </Card>
+            </motion.div>
+          ))}
         </div>
       </Section>
 
-      <Section className="bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 text-white overflow-hidden relative">
+      <Section className="bg-gradient-to-r from-primary-700 via-primary-600 to-accent-600 text-white overflow-hidden relative">
         {/* Decorative circles */}
         <div className="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3"></div>
 
         <div className="relative z-10 grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <Badge className="bg-blue-500/20 text-blue-200 border-blue-400/30 mb-4">Campus Vibes</Badge>
+            <Badge className="bg-primary-500/20 text-primary-200 border-primary-400/30 mb-4">Campus Vibes</Badge>
             <h2 className="text-4xl font-bold mb-6">A Campus That Never Sleeps</h2>
             <p className="text-blue-100 text-lg leading-relaxed mb-8">
               From early morning study sessions in the library to late-night sports matches, our campus is always buzzing with energy. Discover the perfect balance between academic rigor and social fun.

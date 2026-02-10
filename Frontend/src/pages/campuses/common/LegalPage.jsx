@@ -36,15 +36,6 @@ const LegalPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Hero
-        title="Legal & Compliance"
-        subtitle="Transparency & Governance"
-        description="Access important legal documents, policies, and accreditation details governing our institution operations."
-        image="https://placehold.co/1920x800?text=Legal"
-        centered
-        className="rounded-3xl"
-      />
-
       <Section spacing="large">
         <div className="max-w-4xl mx-auto">
           <Section.Header

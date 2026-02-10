@@ -21,7 +21,7 @@ const navItems = [
   { to: "/student/materials", label: "Materials", icon: FolderOpen },
   { to: "/student/assignments", label: "Assignments", icon: ClipboardList },
   { to: "/student/results", label: "Results", icon: BarChart3 },
-  { to: "/student/news", label: "News & Events", icon: Megaphone },
+  { to: "/student/announcements", label: "Class Announcements", icon: Megaphone },
 ];
 
 const StudentLayout = () => {
@@ -36,19 +36,21 @@ const StudentLayout = () => {
         to={item.to}
         className={({ isActive }) =>
           `group flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 ${isActive
-            ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-500/25 translate-x-1"
-            : "text-gray-600 hover:bg-purple-50 hover:text-purple-700 hover:translate-x-1"
+            ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-500/25 translate-x-1"
+            : "text-gray-600 hover:bg-blue-50 hover:text-blue-700 hover:translate-x-1"
           }`
         }
         onClick={() => setIsSidebarOpen(false)}
       >
-        <Icon
-          size={20}
-          className={({ isActive }) =>
-            `transition-colors ${isActive ? "text-white" : "text-gray-400 group-hover:text-purple-600"}`
-          }
-        />
-        <span className="text-sm font-medium">{item.label}</span>
+        {({ isActive }) => (
+          <>
+            <Icon
+              size={20}
+              className={`transition-colors ${isActive ? "text-white" : "text-gray-400 group-hover:text-blue-600"}`}
+            />
+            <span className="text-sm font-medium">{item.label}</span>
+          </>
+        )}
       </NavLink>
     );
   };
@@ -57,8 +59,8 @@ const StudentLayout = () => {
     <div className="min-h-screen bg-[#f8fafc] flex relative overflow-hidden">
       {/* Background Decor */}
       <div className="fixed top-0 left-0 w-full h-full pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-200/30 rounded-full blur-[100px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-200/30 rounded-full blur-[100px]" />
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-200/30 rounded-full blur-[100px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-cyan-200/30 rounded-full blur-[100px]" />
       </div>
 
       {/* Mobile Overlay */}
@@ -76,8 +78,8 @@ const StudentLayout = () => {
       >
         <div className="flex items-center justify-between px-6 h-20 border-b border-gray-100/50">
           <div>
-            <p className="text-xs font-semibold text-purple-600 uppercase tracking-wider mb-0.5">Student Portal</p>
-            <p className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-700 to-indigo-700">
+            <p className="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-0.5">Student Portal</p>
+            <p className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-cyan-700">
               Best Colleges
             </p>
           </div>
@@ -121,7 +123,7 @@ const StudentLayout = () => {
               </button>
 
               <div className="hidden lg:block">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 ring-1 ring-inset ring-indigo-600/20">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-600/20">
                   <GraduationCap size={14} />
                   Student Panel
                 </span>
@@ -131,38 +133,29 @@ const StudentLayout = () => {
             <div className="flex items-center gap-3 sm:gap-4">
               <button
                 onClick={() => navigate("/")}
-                className="p-2.5 rounded-xl text-gray-500 hover:bg-indigo-50 hover:text-indigo-600 transition-all duration-200"
+                className="p-2.5 rounded-xl text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200"
                 title="Back to Home"
               >
                 <Home size={20} />
               </button>
 
-              <div className="relative">
-                <button
-                  className="p-2.5 rounded-xl text-gray-500 hover:bg-indigo-50 hover:text-indigo-600 transition-all duration-200 relative"
-                  aria-label="Notifications"
-                >
-                  <Bell size={20} />
-                  <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white"></span>
-                </button>
-              </div>
+
 
               <div className="h-8 w-px bg-gray-200 mx-1 hidden sm:block"></div>
 
-              <button className="flex items-center gap-3 p-1.5 pl-2 rounded-xl hover:bg-gray-100/50 transition-all duration-200 group">
+              <div className="flex items-center gap-3 p-1.5 pl-2 rounded-xl group cursor-default">
                 <div className="hidden sm:block text-right">
-                  <p className="text-sm font-semibold text-gray-900 leading-none group-hover:text-purple-700 transition-colors">
+                  <p className="text-sm font-semibold text-gray-900 leading-none">
                     Ayesha Khan
                   </p>
                   <p className="text-xs text-gray-500 mt-1 leading-none">
                     CS • Semester 5
                   </p>
                 </div>
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 text-white flex items-center justify-center text-sm font-bold shadow-md shadow-indigo-500/20 ring-2 ring-white group-hover:scale-105 transition-transform">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-600 to-cyan-600 text-white flex items-center justify-center text-sm font-bold shadow-md shadow-blue-500/20 ring-2 ring-white">
                   AK
                 </div>
-                <ChevronDown size={16} className="text-gray-400 group-hover:text-gray-600 sm:block hidden" />
-              </button>
+              </div>
             </div>
           </div>
         </header>

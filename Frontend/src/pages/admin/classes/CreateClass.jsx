@@ -66,7 +66,7 @@ const CreateClass = () => {
         {/* Campus Selection Section */}
         <section className="bg-white/80 backdrop-blur-xl border border-white/20 p-6 rounded-2xl shadow-sm space-y-4">
           <div className="flex items-center gap-2 mb-2">
-            <Building2 className="w-5 h-5 text-purple-600" />
+            <Building2 className="w-5 h-5 text-blue-600" />
             <h2 className="text-lg font-semibold text-gray-800">Campus Allocation</h2>
           </div>
 
@@ -84,8 +84,8 @@ const CreateClass = () => {
                       className={`
                         relative flex flex-col items-center justify-center p-4 rounded-xl border-2 cursor-pointer transition-all duration-200
                         ${form.campus === campus.id
-                          ? 'border-purple-600 bg-purple-50'
-                          : 'border-gray-100 bg-white hover:border-purple-200 hover:bg-gray-50'
+                          ? 'border-blue-600 bg-blue-50'
+                          : 'border-gray-100 bg-white hover:border-blue-200 hover:bg-gray-50'
                         }
                       `}
                     >
@@ -97,12 +97,12 @@ const CreateClass = () => {
                         onChange={(e) => handleChange("campus", e.target.value)}
                         className="sr-only"
                       />
-                      <Building2 className={`w-6 h-6 mb-2 ${form.campus === campus.id ? 'text-purple-600' : 'text-gray-400'}`} />
-                      <span className={`text-sm font-medium text-center ${form.campus === campus.id ? 'text-purple-700' : 'text-gray-600'}`}>
+                      <Building2 className={`w-6 h-6 mb-2 ${form.campus === campus.id ? 'text-blue-600' : 'text-gray-400'}`} />
+                      <span className={`text-sm font-medium text-center ${form.campus === campus.id ? 'text-blue-700' : 'text-gray-600'}`}>
                         {campus.name}
                       </span>
                       {form.campus === campus.id && (
-                        <div className="absolute top-2 right-2 text-purple-600">
+                        <div className="absolute top-2 right-2 text-blue-600">
                           <CheckCircle2 className="w-4 h-4" />
                         </div>
                       )}
@@ -113,7 +113,7 @@ const CreateClass = () => {
                 <div className="flex items-center gap-3 p-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-700">
                   <Building2 className="w-5 h-5 text-gray-400" />
                   <span className="font-medium">{getCampusLabel()}</span>
-                  <span className="ml-auto text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">Automated Selection</span>
+                  <span className="ml-auto text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">Automated Selection</span>
                 </div>
               )}
               <p className="text-xs text-gray-500 mt-2 ml-1">
@@ -126,7 +126,7 @@ const CreateClass = () => {
         {/* Class Details Section */}
         <section className="bg-white/80 backdrop-blur-xl border border-white/20 p-6 rounded-2xl shadow-sm space-y-6">
           <div className="flex items-center gap-2 mb-2">
-            <GraduationCap className="w-5 h-5 text-indigo-600" />
+            <GraduationCap className="w-5 h-5 text-cyan-600" />
             <h2 className="text-lg font-semibold text-gray-800">Academic Details</h2>
           </div>
 
@@ -142,7 +142,7 @@ const CreateClass = () => {
                   value={form.name}
                   onChange={(e) => handleChange("name", e.target.value)}
                   placeholder="e.g. BSCS - 3rd Semester"
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                   required
                 />
               </div>
@@ -159,7 +159,7 @@ const CreateClass = () => {
                   value={form.sections}
                   onChange={(e) => handleChange("sections", e.target.value)}
                   placeholder="e.g. A, B, C (Comma separated)"
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                 />
               </div>
               <p className="text-xs text-gray-500 mt-1.5 ml-1">Separate multiple sections with commas</p>
@@ -176,7 +176,7 @@ const CreateClass = () => {
                   value={form.faculty}
                   onChange={(e) => handleChange("faculty", e.target.value)}
                   placeholder="e.g. Prof. Ahmed Raza"
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                 />
               </div>
             </div>
@@ -192,7 +192,7 @@ const CreateClass = () => {
                   onChange={(e) => handleChange("subjects", e.target.value)}
                   placeholder="e.g. Operating Systems, Data Structures, Linear Algebra..."
                   rows="3"
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all resize-none"
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"
                 />
               </div>
               <p className="text-xs text-gray-500 mt-1.5 ml-1">List the subjects offered to this class</p>
@@ -211,7 +211,7 @@ const CreateClass = () => {
           </button>
           <button
             type="submit"
-            className="px-8 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-indigo-700 shadow-lg shadow-purple-500/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+            className="px-8 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-cyan-700 shadow-lg shadow-blue-500/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0"
           >
             Create Class
           </button>

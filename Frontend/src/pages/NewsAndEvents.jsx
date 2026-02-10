@@ -135,42 +135,15 @@ const NewsAndEvents = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero */}
-      <Hero
-        title="News & Events"
-        description="Stay updated with the latest news, announcements, and upcoming events at Best Group of Colleges"
-        image="https://placehold.co/1920x800?text=News+and+Events"
-        centered
-      />
-
-      {/* Stats Bar */}
-      <Section
-        className="bg-gradient-to-r from-primary-700 via-primary-600 to-accent-600 -mt-16 relative z-20"
-        spacing="default"
-      >
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white">
-          {[
-            { value: "50+", label: "News Articles" },
-            { value: "100+", label: "Events Hosted" },
-            { value: "10K+", label: "Attendees" },
-            { value: "3", label: "Campuses" },
-          ].map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-            >
-              <div className="text-3xl md:text-4xl font-bold mb-1">{stat.value}</div>
-              <div className="text-white/80 text-sm">{stat.label}</div>
-            </motion.div>
-          ))}
-        </div>
-      </Section>
 
       {/* Filter Tabs */}
       <Section background="white" spacing="default">
+        <div className="text-center mb-12 mt-16 ">
+          <h2 className="text-4xl md:text-8xl font-bold text-gray-900 mb-6 leading-tight">
+            News <span className="text-gradient">&</span> Events
+          </h2>
+          <p className="text-gray-600">Explore our campus life, events, and facilities through our photo gallery</p>
+        </div>
         <div className="flex flex-wrap justify-center gap-3">
           {tabs.map((tab) => {
             const isActive = activeTab === tab.id;
@@ -181,8 +154,8 @@ const NewsAndEvents = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all ${isActive
-                  ? "bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-lg"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  ? "bg-primary-600 text-white shadow-lg"
+                  : "bg-primary-100 text-gray-600 hover:bg-primary-200"
                   }`}
               >
                 {tab.name}
@@ -207,8 +180,8 @@ const NewsAndEvents = () => {
             {showNews && (
               <div>
                 <div className="flex items-center gap-3 mb-8">
-                  <div className="w-12 h-12 rounded-xl bg-primary-100 flex items-center justify-center">
-                    <Newspaper className="w-6 h-6 text-primary-600" />
+                  <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center">
+                    <Newspaper className="w-8 h-8 text-primary-600" />
                   </div>
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900">Latest News</h2>
@@ -234,7 +207,7 @@ const NewsAndEvents = () => {
                               alt={news.title}
                               className="w-full h-48 md:h-full object-cover transition-transform duration-500 group-hover:scale-110"
                             />
-                            <div className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-medium text-white bg-gray-900/80 backdrop-blur-sm">
+                            <div className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-medium text-black bg-primary-200 backdrop-blur-sm">
                               {news.category}
                             </div>
                           </div>
@@ -246,7 +219,7 @@ const NewsAndEvents = () => {
                               <span>{news.date}</span>
                             </div>
 
-                            <h3 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors">
+                            <h3 className="text-lg font-bold text-gray-900 mb-3">
                               {news.title}
                             </h3>
 
@@ -275,8 +248,8 @@ const NewsAndEvents = () => {
             {showEvents && (
               <div>
                 <div className="flex items-center gap-3 mb-8">
-                  <div className="w-12 h-12 rounded-xl bg-primary-100 flex items-center justify-center">
-                    <CalendarDays className="w-6 h-6 text-primary-600" />
+                  <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center">
+                    <CalendarDays className="w-8 h-8 text-primary-600" />
                   </div>
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900">Upcoming Events</h2>
@@ -301,7 +274,7 @@ const NewsAndEvents = () => {
                             alt={event.title}
                             className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
                           />
-                          <div className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-medium text-white bg-gray-900/80 backdrop-blur-sm">
+                          <div className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-medium text-black bg-primary-200 backdrop-blur-sm">
                             {event.category}
                           </div>
                           <Badge
@@ -313,7 +286,7 @@ const NewsAndEvents = () => {
 
                         {/* Content */}
                         <Card.Body className="flex flex-col">
-                          <h3 className="text-lg font-bold text-gray-900 mb-4 group-hover:text-primary-600 transition-colors">
+                          <h3 className="text-lg font-bold text-gray-900 mb-4">
                             {event.title}
                           </h3>
 

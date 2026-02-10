@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Table from "../../../../components/admin/Table";
 import {
@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 
 const NewsList = () => {
+  const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -45,7 +46,7 @@ const NewsList = () => {
       title: "New Research Center Inaugurated",
       type: "News",
       date: "Dec 15, 2025",
-      status: "Draft",
+      status: "Published",
       category: "Research",
       views: 0
     },
@@ -80,18 +81,16 @@ const NewsList = () => {
       label: "Title & Category",
       render: (row) => (
         <div className="flex items-start gap-3 max-w-sm">
-          <div className={`p-2 rounded-lg ${row.type === 'Event' ? 'bg-orange-50 text-orange-600' : 'bg-blue-50 text-blue-600'}`}>
+          <div className={`p-2 rounded-lg ${row.type === 'Event' ? 'bg-cyan-50 text-cyan-600' : 'bg-blue-50 text-blue-600'}`}>
             {row.type === 'Event' ? <Calendar className="w-5 h-5" /> : <Newspaper className="w-5 h-5" />}
           </div>
           <div>
             <span className="font-semibold text-gray-900 line-clamp-2">{row.title}</span>
             <div className="flex items-center gap-2 mt-0.5">
               <span className="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">{row.category}</span>
-              {row.status === "Published" && (
-                <span className="text-xs text-gray-400 flex items-center gap-1">
-                  <Eye className="w-3 h-3" /> {row.views}
-                </span>
-              )}
+              <span className="text-xs text-gray-400 flex items-center gap-1">
+                <Eye className="w-3 h-3" /> {row.views}
+              </span>
             </div>
           </div>
         </div>
@@ -102,8 +101,8 @@ const NewsList = () => {
       label: "Type",
       render: (row) => (
         <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium border ${row.type === "Event"
-            ? "bg-orange-50 text-orange-700 border-orange-100"
-            : "bg-blue-50 text-blue-700 border-blue-100"
+          ? "bg-cyan-50 text-cyan-700 border-cyan-100"
+          : "bg-blue-50 text-blue-700 border-blue-100"
           }`}>
           {row.type}
         </span>
@@ -119,19 +118,7 @@ const NewsList = () => {
         </div>
       )
     },
-    {
-      key: "status",
-      label: "Status",
-      render: (row) => (
-        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${row.status === "Published"
-            ? "bg-green-50 text-green-700 border-green-100"
-            : "bg-amber-50 text-amber-700 border-amber-100"
-          }`}>
-          {row.status === "Published" ? <CheckCircle2 className="w-3 h-3" /> : <Clock className="w-3 h-3" />}
-          {row.status}
-        </span>
-      )
-    },
+
   ];
 
   return (
@@ -139,7 +126,7 @@ const NewsList = () => {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600">
+          <h1 className="text-2xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-600">
             News & Events
           </h1>
           <p className="text-sm text-gray-500 mt-1">
@@ -148,7 +135,7 @@ const NewsList = () => {
         </div>
         <Link
           to="/admin/cms/news/create"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl text-sm font-semibold hover:from-purple-700 hover:to-indigo-700 shadow-sm transition-all duration-200"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl text-sm font-semibold hover:from-blue-700 hover:to-cyan-700 shadow-sm transition-all duration-200"
         >
           <Plus className="w-4 h-4" />
           Create Post
@@ -165,8 +152,8 @@ const NewsList = () => {
                 key={filter}
                 onClick={() => setActiveFilter(filter)}
                 className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 capitalize ${activeFilter === filter
-                    ? "bg-white text-gray-900 shadow-sm"
-                    : "text-gray-500 hover:text-gray-700 hover:bg-gray-200/50"
+                  ? "bg-white text-gray-900 shadow-sm"
+                  : "text-gray-500 hover:text-gray-700 hover:bg-gray-200/50"
                   }`}
               >
                 {filter}s
@@ -182,7 +169,7 @@ const NewsList = () => {
               placeholder="Search posts..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm"
+              className="w-full pl-10 pr-4 py-2 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm"
             />
           </div>
         </div>
@@ -192,16 +179,20 @@ const NewsList = () => {
       <Table
         columns={columns}
         data={filteredData}
-        actions={(row) => [
+        actionButtons={(row) => [
           {
             label: "Edit",
-            onClick: () => console.log("Edit", row.id),
-            className: "text-blue-600 hover:bg-blue-50",
+            onClick: () => navigate(`/admin/cms/news/edit/${row.id}`),
+            className: "text-blue-600 hover:text-blue-700 font-medium bg-blue-50 border border-blue-100",
           },
           {
             label: "Delete",
-            onClick: () => console.log("Delete", row.id),
-            className: "text-rose-600 hover:bg-rose-50",
+            onClick: () => {
+              if (window.confirm("Are you sure you want to delete this post?")) {
+                alert(`Post ${row.id} deleted (mock)`);
+              }
+            },
+            className: "text-rose-600 hover:text-rose-700 font-medium bg-rose-50 border border-rose-100",
           },
         ]}
       />
@@ -210,3 +201,4 @@ const NewsList = () => {
 };
 
 export default NewsList;
+

@@ -52,7 +52,7 @@ const CampusManagement = () => {
   };
 
   const handleManageAdmins = (campus) => {
-    navigate(`/admin/campus/${campus.id}/allocate-admin`, {
+    navigate(`/admin/campus/${campus.id}/admins`, {
       state: { campus },
     });
   };
@@ -63,23 +63,23 @@ const CampusManagement = () => {
 
   const actionButtons = (row) => [
     {
-      label: <span className="flex items-center gap-1"><ShieldCheck size={14} /> Admins</span>,
+      label: "Admins",
       onClick: () => handleManageAdmins(row),
       className: "text-blue-600 hover:text-blue-700 font-medium bg-blue-50 border border-blue-100",
     },
     {
-      label: <Edit3 size={16} />,
+      label: "Edit",
       onClick: () => handleEdit(row),
-      className: "text-amber-600 hover:text-amber-700 bg-amber-50 border border-amber-100",
+      className: "text-cyan-600 hover:text-cyan-700 font-medium bg-cyan-50 border border-cyan-100",
     },
     {
-      label: <Trash2 size={16} />,
+      label: "Delete",
       onClick: () => {
         if (window.confirm(`Delete campus "${row.name}"?`)) {
           alert("Delete functionality will be connected to backend");
         }
       },
-      className: "text-red-600 hover:text-red-700 bg-red-50 border border-red-100",
+      className: "text-red-600 hover:text-red-700 font-medium bg-red-50 border border-red-100",
     },
   ];
 
@@ -96,7 +96,7 @@ const CampusManagement = () => {
 
         <button
           onClick={handleAddCampus}
-          className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/30 hover:shadow-blue-500/40 transform hover:-translate-y-0.5 transition-all duration-200"
+          className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/30 hover:shadow-blue-500/40 transform hover:-translate-y-0.5 transition-all duration-200"
         >
           <Plus size={20} />
           Add New Campus
@@ -116,7 +116,7 @@ const CampusManagement = () => {
         </div>
 
         <div className="bg-white/60 backdrop-blur-md border border-white/60 rounded-2xl p-6 shadow-sm flex items-center gap-5">
-          <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-fuchsia-500 flex items-center justify-center text-white shadow-lg shadow-purple-500/30">
+          <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
             <Building2 size={28} />
           </div>
           <div>

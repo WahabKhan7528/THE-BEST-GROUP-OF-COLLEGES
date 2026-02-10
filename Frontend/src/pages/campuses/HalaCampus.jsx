@@ -54,7 +54,7 @@ const HalaCampus = () => {
       duration: "2 Years",
       seats: 150,
       icon: Microscope,
-      color: "emerald",
+      color: "cyan",
     },
     {
       title: "FSc Pre-Engineering",
@@ -70,7 +70,7 @@ const HalaCampus = () => {
       duration: "2 Years",
       seats: 100,
       icon: Cpu,
-      color: "purple",
+      color: "sky",
     },
     {
       title: "I.Com",
@@ -78,7 +78,7 @@ const HalaCampus = () => {
       duration: "2 Years",
       seats: 100,
       icon: TrendingUp,
-      color: "amber",
+      color: "slate",
     },
   ];
 
@@ -108,24 +108,7 @@ const HalaCampus = () => {
   return (
     <div className="min-h-screen bg-white">
       <Hero
-        title="Hala Campus"
-        subtitle="Excellence in Intermediate Education"
-        description="Providing top-tier intermediate education in Hala. We focus on academic rigor, character building, and preparing students for competitive professional careers."
         image="https://placehold.co/1920x800?text=Hala+Campus"
-        actions={[
-          {
-            children: "Apply Now",
-            icon: ArrowRight,
-            iconPosition: "right",
-            onClick: () => navigate("/admissions"),
-          },
-          {
-            children: "Contact Us",
-            variant: "outline",
-            className: "border-white text-white hover:bg-white hover:text-blue-700",
-            onClick: () => navigate("/contact"),
-          }
-        ]}
         centered
         className="rounded-3xl"
       />
@@ -213,10 +196,10 @@ const HalaCampus = () => {
         <div className="grid md:grid-cols-2 gap-8">
           {programs.map((program, idx) => {
             const colorClasses = {
-              emerald: { border: "border-t-emerald-500", bg: "bg-emerald-50", text: "text-emerald-600" },
+              cyan: { border: "border-t-cyan-500", bg: "bg-cyan-50", text: "text-cyan-600" },
               blue: { border: "border-t-blue-500", bg: "bg-blue-50", text: "text-blue-600" },
-              purple: { border: "border-t-purple-500", bg: "bg-purple-50", text: "text-purple-600" },
-              amber: { border: "border-t-amber-500", bg: "bg-amber-50", text: "text-amber-600" },
+              sky: { border: "border-t-sky-500", bg: "bg-sky-50", text: "text-sky-600" },
+              slate: { border: "border-t-slate-500", bg: "bg-slate-50", text: "text-slate-600" },
             };
             const colors = colorClasses[program.color] || colorClasses.blue;
 

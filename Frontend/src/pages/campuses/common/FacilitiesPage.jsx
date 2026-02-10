@@ -83,15 +83,6 @@ const FacilitiesPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Hero
-        title="World-Class Facilities"
-        subtitle="Infrastructure for Excellence"
-        description="We provide a conducive environment where students can learn, grow, and thrive. Explore our state-of-the-art campus facilities."
-        image="https://placehold.co/1920x800?text=Facilities"
-        centered
-        className="rounded-3xl"
-      />
-
       {facilities.map((category, catIdx) => (
         <Section key={category.category} className={catIdx % 2 !== 0 ? "bg-gray-50" : "bg-white"} spacing="large">
           <Section.Header
@@ -100,52 +91,38 @@ const FacilitiesPage = () => {
           />
 
           <div className="grid md:grid-cols-2 gap-8">
-            {category.items.map((facility, idx) => {
-              const colorMap = {
-                blue: "bg-blue-500/20",
-                amber: "bg-amber-500/20",
-                emerald: "bg-emerald-500/20",
-                purple: "bg-purple-500/20",
-                orange: "bg-orange-500/20",
-                red: "bg-red-500/20",
-                cyan: "bg-cyan-500/20",
-                yellow: "bg-yellow-500/20",
-              };
-              const bgClass = colorMap[facility.color] || "bg-gray-500/20";
-
-              return (
-                <motion.div
-                  key={facility.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: idx * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  <Card hover className="h-full overflow-hidden p-0 rounded-3xl">
-                    <div className="h-64 overflow-hidden relative group">
-                      <img
-                        src={facility.image}
-                        alt={facility.name}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
-                        <div className="text-white">
-                          <div className={`p-2 rounded-2xl ${bgClass} backdrop-blur-md inline-flex items-center justify-center mb-2`}>
-                            <facility.icon className="w-6 h-6 text-white" />
-                          </div>
-                          <h3 className="text-2xl font-bold">{facility.name}</h3>
+            {category.items.map((facility, idx) => (
+              <motion.div
+                key={facility.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <Card hover className="h-full overflow-hidden p-0 rounded-3xl">
+                  <div className="h-64 overflow-hidden relative group">
+                    <img
+                      src={facility.image}
+                      alt={facility.name}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
+                      <div className="text-white">
+                        <div className="p-2 rounded-2xl bg-primary-500/30 backdrop-blur-md inline-flex items-center justify-center mb-2">
+                          <facility.icon className="w-6 h-6 text-white" />
                         </div>
+                        <h3 className="text-2xl font-bold">{facility.name}</h3>
                       </div>
                     </div>
-                    <div className="p-6">
-                      <p className="text-gray-600 leading-relaxed">
-                        {facility.description}
-                      </p>
-                    </div>
-                  </Card>
-                </motion.div>
-              );
-            })}
+                  </div>
+                  <div className="p-6">
+                    <p className="text-gray-600 leading-relaxed">
+                      {facility.description}
+                    </p>
+                  </div>
+                </Card>
+              </motion.div>
+            ))}
           </div>
         </Section>
       ))}

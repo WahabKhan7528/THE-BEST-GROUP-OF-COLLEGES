@@ -1,11 +1,11 @@
 import { FileText, Play, Image as ImageIcon, File } from 'lucide-react';
 
 const typeBadge = {
-  PDF: 'bg-rose-50 text-rose-700',
+  PDF: 'bg-red-50 text-red-700',
   Slides: 'bg-blue-50 text-blue-700',
-  Notes: 'bg-emerald-50 text-emerald-700',
-  Image: 'bg-amber-50 text-amber-700',
-  Video: 'bg-indigo-50 text-indigo-700',
+  Notes: 'bg-cyan-50 text-cyan-700',
+  Image: 'bg-sky-50 text-sky-700',
+  Video: 'bg-slate-50 text-slate-700',
 };
 
 const iconForType = {
@@ -38,11 +38,21 @@ const MaterialCard = ({ material }) => {
         <p className="text-xs text-gray-500">{material.uploadDate}</p>
       </div>
       <div className="flex items-center gap-3 text-sm">
-        <a href={material.link || '#'} className="text-purple-700 font-semibold hover:text-purple-800">
+        <a
+          href={material.link || '#'}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-700 font-semibold hover:text-blue-800"
+        >
           View
         </a>
         <span className="text-gray-400">•</span>
-        <button className="text-gray-600 hover:text-gray-800">Download</button>
+        <button
+          onClick={() => alert(`Starting download for: ${material.title}`)}
+          className="text-gray-600 hover:text-gray-800"
+        >
+          Download
+        </button>
       </div>
     </div>
   );

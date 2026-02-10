@@ -65,15 +65,6 @@ const AcademicsPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Hero
-        title="Academic Excellence"
-        subtitle="Nurturing Minds, Shaping Futures"
-        description="Our diverse academic programs are designed to challenge, inspire, and prepare students for a rapidly changing world."
-        image="https://placehold.co/1920x800?text=Academics"
-        centered
-        className="rounded-3xl"
-      />
-
       {programs.map((program, idx) => (
         <Section key={program.title} className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"} spacing="large">
           <Section.Header
@@ -89,9 +80,9 @@ const AcademicsPage = () => {
                 transition={{ duration: 0.5, delay: cIdx * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card hover className="h-full flex flex-col border-t-4 border-t-blue-500 rounded-3xl overflow-hidden">
+                <Card hover className="h-full flex flex-col border-t-4 border-t-primary-500 rounded-3xl overflow-hidden">
                   <div className="flex items-start justify-between mb-4">
-                    <div className="p-2 rounded-2xl bg-blue-50 text-blue-600">
+                    <div className="p-2 rounded-2xl bg-primary-100 text-primary-600">
                       <GraduationCap className="w-6 h-6" />
                     </div>
                     <Badge variant="outline" className="rounded-full">{course.duration}</Badge>

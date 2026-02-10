@@ -1,8 +1,8 @@
 import { FileText, CheckCircle2, Clock } from 'lucide-react';
 
 const statusBadge = {
-  'On-time': 'bg-emerald-50 text-emerald-700 border-emerald-100',
-  Late: 'bg-amber-50 text-amber-700 border-amber-100',
+  'On-time': 'bg-cyan-50 text-cyan-700 border-cyan-100',
+  Late: 'bg-red-50 text-red-700 border-red-100',
 };
 
 const SubmissionCard = ({ submission }) => {
@@ -30,7 +30,7 @@ const SubmissionCard = ({ submission }) => {
       </div>
 
       <div className="flex items-center justify-between text-sm">
-        <a href={submission.file} className="inline-flex items-center gap-2 text-purple-700 font-semibold hover:text-purple-800">
+        <a href={submission.file} className="inline-flex items-center gap-2 text-blue-700 font-semibold hover:text-blue-800">
           <FileText size={14} />
           View file
         </a>
@@ -38,14 +38,14 @@ const SubmissionCard = ({ submission }) => {
           <input
             type="number"
             placeholder="Marks"
-            className="w-24 rounded-lg border-gray-300 text-sm shadow-sm focus:border-purple-500 focus:ring-purple-500"
+            className="w-24 rounded-lg border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500"
           />
           <input
             type="text"
             placeholder="Remarks"
-            className="w-40 rounded-lg border-gray-300 text-sm shadow-sm focus:border-purple-500 focus:ring-purple-500"
+            className="w-40 rounded-lg border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500"
           />
-          <button className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-purple-700 text-white text-sm font-semibold hover:bg-purple-800">
+          <button className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 text-white text-sm font-semibold hover:from-blue-700 hover:to-cyan-700 shadow-md shadow-blue-500/20">
             <CheckCircle2 size={14} />
             Mark graded
           </button>

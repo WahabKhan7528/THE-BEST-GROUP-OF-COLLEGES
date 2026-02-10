@@ -86,8 +86,8 @@ const CreateNews = () => {
                 className={`
                   relative flex flex-col items-center justify-center p-4 rounded-xl border-2 cursor-pointer transition-all duration-200
                   ${type === "event"
-                    ? 'border-orange-600 bg-orange-50'
-                    : 'border-gray-100 bg-white hover:border-orange-200 hover:bg-gray-50'
+                    ? 'border-cyan-600 bg-cyan-50'
+                    : 'border-gray-100 bg-white hover:border-cyan-200 hover:bg-gray-50'
                   }
                 `}
               >
@@ -99,9 +99,9 @@ const CreateNews = () => {
                   onChange={() => setType("event")}
                   className="sr-only"
                 />
-                <Calendar className={`w-6 h-6 mb-2 ${type === "event" ? 'text-orange-600' : 'text-gray-400'}`} />
-                <span className={`text-sm font-medium ${type === "event" ? 'text-orange-700' : 'text-gray-600'}`}>Event</span>
-                {type === "event" && <CheckCircle2 className="absolute top-2 right-2 w-4 h-4 text-orange-600" />}
+                <Calendar className={`w-6 h-6 mb-2 ${type === "event" ? 'text-cyan-600' : 'text-gray-400'}`} />
+                <span className={`text-sm font-medium ${type === "event" ? 'text-cyan-700' : 'text-gray-600'}`}>Event</span>
+                {type === "event" && <CheckCircle2 className="absolute top-2 right-2 w-4 h-4 text-cyan-600" />}
               </label>
             </div>
           </section>
@@ -117,7 +117,7 @@ const CreateNews = () => {
                 value={form.title}
                 onChange={(e) => handleChange("title", e.target.value)}
                 placeholder="Enter post title"
-                className="w-full px-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all font-medium"
+                className="w-full px-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
                 required
               />
             </div>
@@ -128,7 +128,7 @@ const CreateNews = () => {
                 <select
                   value={form.category}
                   onChange={(e) => handleChange("category", e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm appearance-none"
+                  className="w-full px-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm appearance-none"
                 >
                   <option value="" disabled>Select category</option>
                   <option value="Academic">Academic</option>
@@ -149,7 +149,7 @@ const CreateNews = () => {
                       value={form.location}
                       onChange={(e) => handleChange("location", e.target.value)}
                       placeholder="Event Venue"
-                      className="w-full pl-9 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm"
+                      className="w-full pl-9 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm"
                     />
                   </div>
                 </div>
@@ -165,7 +165,7 @@ const CreateNews = () => {
                 onChange={(e) => handleChange("description", e.target.value)}
                 rows={6}
                 placeholder="Write the full content description here..."
-                className="w-full px-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all text-sm resize-none leading-relaxed"
+                className="w-full px-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm resize-none leading-relaxed"
                 required
               />
             </div>
@@ -178,18 +178,7 @@ const CreateNews = () => {
           <section className="bg-white/80 backdrop-blur-xl border border-white/20 p-6 rounded-2xl shadow-sm space-y-4">
             <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">Publishing</h3>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
-              <select
-                value={form.status}
-                onChange={(e) => handleChange("status", e.target.value)}
-                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 text-sm"
-              >
-                <option value="Published">Published</option>
-                <option value="Draft">Draft</option>
-                <option value="Archived">Archived</option>
-              </select>
-            </div>
+
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Date</label>
@@ -197,7 +186,7 @@ const CreateNews = () => {
                 type="date"
                 value={form.date}
                 onChange={(e) => handleChange("date", e.target.value)}
-                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 text-sm"
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
                 required
               />
             </div>
@@ -209,7 +198,7 @@ const CreateNews = () => {
                   type="time"
                   value={form.time}
                   onChange={(e) => handleChange("time", e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 text-sm"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
                 />
               </div>
             )}
@@ -227,7 +216,7 @@ const CreateNews = () => {
                 onChange={(e) => handleChange("image", e.target.files?.[0])}
               />
               <label htmlFor="image-upload" className="cursor-pointer flex flex-col items-center w-full">
-                <div className="w-12 h-12 bg-purple-50 text-purple-600 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                   <Upload className="w-5 h-5" />
                 </div>
                 <span className="text-sm font-medium text-gray-700">Click to upload</span>
@@ -235,7 +224,7 @@ const CreateNews = () => {
               </label>
             </div>
             {form.image && (
-              <div className="bg-purple-50 text-purple-700 px-3 py-2 rounded-lg text-xs flex items-center gap-2">
+              <div className="bg-blue-50 text-blue-700 px-3 py-2 rounded-lg text-xs flex items-center gap-2">
                 <ImageIcon className="w-3 h-3" />
                 <span className="truncate">{form.image.name}</span>
               </div>
@@ -246,17 +235,11 @@ const CreateNews = () => {
           <div className="flex flex-col gap-3">
             <button
               type="submit"
-              className="w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-purple-700 hover:to-indigo-700 shadow-lg shadow-purple-500/30 transition-all transform hover:-translate-y-0.5"
+              className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-cyan-700 shadow-lg shadow-blue-500/30 transition-all transform hover:-translate-y-0.5"
             >
               Publish Post
             </button>
-            <button
-              type="button"
-              onClick={() => navigate("/admin/cms/news")}
-              className="w-full px-4 py-3 bg-white border border-gray-200 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition-colors"
-            >
-              Save as Draft
-            </button>
+
           </div>
         </div>
       </form>

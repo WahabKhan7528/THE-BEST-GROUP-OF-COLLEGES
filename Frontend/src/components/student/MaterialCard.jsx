@@ -1,8 +1,8 @@
 const badgeColors = {
   PDF: 'text-red-700 bg-red-50 border-red-100',
-  Video: 'text-blue-700 bg-blue-50 border-blue-100',
-  Image: 'text-amber-700 bg-amber-50 border-amber-100',
-  Notes: 'text-emerald-700 bg-emerald-50 border-emerald-100',
+  Video: 'text-slate-700 bg-slate-50 border-slate-100',
+  Image: 'text-sky-700 bg-sky-50 border-sky-100',
+  Notes: 'text-cyan-700 bg-cyan-50 border-cyan-100',
 };
 
 const MaterialCard = ({ name, type, date, description }) => {
@@ -24,7 +24,7 @@ const MaterialCard = ({ name, type, date, description }) => {
       </div>
       <div className="flex items-center justify-between mt-4 text-sm">
         <div className="flex items-center gap-3">
-          <button className="text-purple-700 font-semibold hover:text-purple-800">
+          <button className="text-blue-700 font-semibold hover:text-blue-800">
             View
           </button>
           <button className="text-gray-600 hover:text-gray-800">
