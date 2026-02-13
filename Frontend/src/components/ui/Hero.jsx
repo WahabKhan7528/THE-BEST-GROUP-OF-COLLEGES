@@ -1,6 +1,7 @@
 import { clsx } from "clsx";
 import { motion } from "framer-motion";
 import { Calendar, Bell } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Hero = ({
   title,
@@ -45,18 +46,18 @@ const Hero = ({
                 {title}
               </h1>
               <div className="flex flex-col sm:flex-row gap-4 pt-4 items-center md:items-start">
-                <a
-                  href="/admissions"
+                <Link
+                  to="/admissions"
                   className="w-full sm:w-auto px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 flex items-center justify-center gap-2"
                 >
                   Apply Now
-                </a>
-                <a
-                  href="/about"
+                </Link>
+                <Link
+                  to="/about"
                   className="w-full sm:w-auto px-8 py-3 bg-transparent border-2 border-white/80 text-white hover:bg-white hover:text-primary-900 font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2"
                 >
                   More Info
-                </a>
+                </Link>
               </div>
             </motion.div>
           )}
