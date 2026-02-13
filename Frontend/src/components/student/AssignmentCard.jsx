@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
 const statusStyles = {
-  Submitted: 'bg-cyan-50 text-cyan-700 border-cyan-100',
-  Pending: 'bg-sky-50 text-sky-700 border-sky-100',
+  Submitted: 'bg-primary-50 text-emerald-700 border-primary-100',
+  Pending: 'bg-primary-50 text-primary-700 border-primary-100',
   Late: 'bg-red-50 text-red-700 border-red-100',
 };
 
@@ -32,7 +32,7 @@ const AssignmentCard = ({ assignment }) => {
               Due {assignment.dueDate}
             </span>
             <span className="text-gray-400">•</span>
-            <a href={assignment.attachment} className="text-blue-700 hover:text-blue-800 font-medium">
+            <a href={assignment.attachment} className="text-primary-700 hover:text-primary-800 font-medium">
               Attached file
             </a>
           </div>
@@ -48,7 +48,7 @@ const AssignmentCard = ({ assignment }) => {
           <input
             type="file"
             onChange={handleFileChange}
-            className="block w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="block w-full rounded-lg border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500"
           />
           {fileName && <span className="text-xs text-gray-500">Selected: {fileName}</span>}
         </label>
@@ -60,7 +60,7 @@ const AssignmentCard = ({ assignment }) => {
             onChange={(e) => setNote(e.target.value)}
             rows={3}
             placeholder="Add clarification or links..."
-            className="rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
           />
         </label>
       </div>
@@ -69,7 +69,7 @@ const AssignmentCard = ({ assignment }) => {
         <p className="text-xs text-gray-500">
           Last submission status: {assignment.status}
         </p>
-        <button className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg text-sm font-semibold shadow-md shadow-blue-500/20">
+        <button className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-sm font-semibold shadow-md hover:-translate-y-0.5 transition-all">
           Submit Assignment
         </button>
       </div>

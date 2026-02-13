@@ -19,7 +19,7 @@ const Modal = ({ open, title, children, onClose, onConfirm, confirmLabel = 'Conf
             Cancel
           </button>
           <button
-            className="px-4 py-2 rounded-lg bg-purple-700 text-white text-sm font-semibold hover:bg-purple-800"
+            className="px-4 py-2 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700"
             onClick={onConfirm || onClose}
           >
             {confirmLabel}

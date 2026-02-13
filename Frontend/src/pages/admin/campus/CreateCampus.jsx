@@ -120,7 +120,7 @@ const CreateCampus = () => {
         <div className="flex gap-4 pt-4">
           <button
             type="submit"
-            className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-semibold shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all duration-200"
+            className="flex-1 px-6 py-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-semibold shadow-md transition-all duration-200"
           >
             Create Campus
           </button>

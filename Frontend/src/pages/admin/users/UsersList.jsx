@@ -161,9 +161,9 @@ const UsersList = () => {
       key: "role",
       label: "Role",
       render: (row) => (
-        <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${row.role === 'Super Admin' ? 'bg-blue-50 text-blue-700' :
-          row.role === 'Sub-Admin' ? 'bg-cyan-50 text-cyan-700' :
-            row.role === 'Faculty' ? 'bg-sky-50 text-sky-700' :
+        <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${row.role === 'Super Admin' ? 'bg-primary-100 text-primary-800' :
+          row.role === 'Sub-Admin' ? 'bg-primary-50 text-primary-700' :
+            row.role === 'Faculty' ? 'bg-white border border-primary-200 text-primary-700' :
               'bg-slate-50 text-slate-700'
           }`}>
           {row.role}
@@ -208,7 +208,7 @@ const UsersList = () => {
 
         <Link
           to="/admin/users/create"
-          className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/30 hover:shadow-blue-500/40 transform hover:-translate-y-0.5 transition-all duration-200"
+          className="flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
         >
           <UserPlus size={20} />
           Create New User
@@ -292,7 +292,7 @@ const UsersList = () => {
               </span>
             )}
             {selectedCampus && (
-              <span className="px-3 py-1 bg-cyan-50 text-cyan-700 rounded-full text-xs font-semibold flex items-center gap-1">
+              <span className="px-3 py-1 bg-primary-50 text-primary-700 rounded-full text-xs font-semibold flex items-center gap-1">
                 {campuses.find((c) => c.id === selectedCampus)?.name}
               </span>
             )}

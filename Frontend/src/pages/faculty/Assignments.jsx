@@ -95,14 +95,14 @@ const Assignments = () => {
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <span className="px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide">
+              <span className="px-3 py-1 rounded-full bg-primary-50 border border-primary-100 text-primary-700 text-xs font-semibold uppercase tracking-wide">
                 Faculty Portal
               </span>
-              <span className="px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide">
+              <span className="px-3 py-1 rounded-full bg-primary-50 border border-primary-100 text-primary-700 text-xs font-semibold uppercase tracking-wide">
                 {campusNames[campus]}
               </span>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">
+            <h1 className="text-3xl font-bold text-gray-900">
               Assignments
             </h1>
             <p className="text-gray-500 mt-2 max-w-xl">
@@ -111,7 +111,7 @@ const Assignments = () => {
           </div>
           <Link
             to="/faculty/assignments/create"
-            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/30 hover:shadow-blue-500/40 hover:-translate-y-0.5 transition-all duration-200"
+            className="flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-semibold shadow-md hover:-translate-y-0.5 transition-all duration-200"
           >
             <PlusCircle size={20} />
             Create Assignment
@@ -155,8 +155,8 @@ const Assignments = () => {
         </motion.div>
       ) : (
         <div className="bg-white/60 backdrop-blur-sm border border-dashed border-gray-300 rounded-3xl p-12 text-center">
-          <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
-            <BookOpen size={30} className="text-blue-400" />
+          <div className="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <BookOpen size={30} className="text-primary-400" />
           </div>
           <h3 className="text-lg font-semibold text-gray-900">No assignments found</h3>
           <p className="text-gray-500 mt-2 mb-6 max-w-sm mx-auto">

@@ -169,7 +169,7 @@ const EditCourse = () => {
         {/* Campus Availability */}
         <section className="bg-white/80 backdrop-blur-xl border border-white/20 p-6 rounded-2xl shadow-sm space-y-4">
           <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2 border-b border-gray-100 pb-3">
-            <Building2 className="w-5 h-5 text-cyan-600" />
+            <Building2 className="w-5 h-5 text-primary-600" />
             Campus Availability <span className="text-red-500 text-sm ml-1">*</span>
           </h2>
 
@@ -225,7 +225,7 @@ const EditCourse = () => {
             </Link>
             <button
               type="submit"
-              className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-cyan-700 shadow-lg shadow-blue-500/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center"
+              className="px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl shadow-md transform hover:-translate-y-0.5 transition-all flex items-center justify-center"
             >
               Save Changes
             </button>

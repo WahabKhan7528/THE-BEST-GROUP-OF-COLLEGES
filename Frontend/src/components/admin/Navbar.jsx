@@ -30,8 +30,8 @@ const Navbar = ({ onMenuToggle }) => {
 
           <div className="hidden lg:block">
             <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ring-1 ring-inset ${isSuperAdmin
-              ? "bg-blue-50 text-blue-700 ring-blue-600/20"
-              : "bg-blue-50 text-blue-700 ring-blue-600/20"
+              ? "bg-primary-50 text-primary-700 ring-primary-600/20"
+              : "bg-primary-50 text-primary-700 ring-primary-600/20"
               }`}>
               <User size={12} />
               {adminRoleDisplay}
@@ -67,7 +67,7 @@ const Navbar = ({ onMenuToggle }) => {
                 {currentAdmin?.email || "admin@example.com"}
               </p>
             </div>
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-600 to-cyan-600 text-white flex items-center justify-center text-sm font-bold shadow-md shadow-blue-500/20 ring-2 ring-white">
+            <div className="w-10 h-10 rounded-full bg-primary-600 text-white flex items-center justify-center text-sm font-bold shadow-sm ring-2 ring-white">
               {initials}
             </div>
           </div>

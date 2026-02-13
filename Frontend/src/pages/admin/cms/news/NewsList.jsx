@@ -81,7 +81,7 @@ const NewsList = () => {
       label: "Title & Category",
       render: (row) => (
         <div className="flex items-start gap-3 max-w-sm">
-          <div className={`p-2 rounded-lg ${row.type === 'Event' ? 'bg-cyan-50 text-cyan-600' : 'bg-blue-50 text-blue-600'}`}>
+          <div className={`p-2 rounded-lg ${row.type === 'Event' ? 'bg-primary-50 text-primary-600' : 'bg-white border border-primary-100 text-primary-600'}`}>
             {row.type === 'Event' ? <Calendar className="w-5 h-5" /> : <Newspaper className="w-5 h-5" />}
           </div>
           <div>
@@ -101,8 +101,8 @@ const NewsList = () => {
       label: "Type",
       render: (row) => (
         <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium border ${row.type === "Event"
-          ? "bg-cyan-50 text-cyan-700 border-cyan-100"
-          : "bg-blue-50 text-blue-700 border-blue-100"
+          ? "bg-primary-50 text-primary-700 border-primary-100"
+          : "bg-white text-primary-700 border-primary-200"
           }`}>
           {row.type}
         </span>
@@ -126,7 +126,7 @@ const NewsList = () => {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-600">
+          <h1 className="text-2xl font-bold text-gray-900">
             News & Events
           </h1>
           <p className="text-sm text-gray-500 mt-1">
@@ -135,7 +135,7 @@ const NewsList = () => {
         </div>
         <Link
           to="/admin/cms/news/create"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl text-sm font-semibold hover:from-blue-700 hover:to-cyan-700 shadow-sm transition-all duration-200"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-sm font-semibold shadow-md transition-all duration-200"
         >
           <Plus className="w-4 h-4" />
           Create Post

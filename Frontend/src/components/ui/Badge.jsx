@@ -1,21 +1,21 @@
 import { clsx } from 'clsx';
 
 const variants = {
-  primary: 'bg-gradient-to-r from-primary-100 to-primary-200 text-primary-800 border border-primary-200',
-  success: 'bg-gradient-to-r from-cyan-100 to-blue-100 text-cyan-800 border border-cyan-200',
-  warning: 'bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 border border-yellow-200',
-  danger: 'bg-gradient-to-r from-red-100 to-red-200 text-red-800 border border-red-200',
-  info: 'bg-gradient-to-r from-gray-100 to-slate-100 text-gray-800 border border-gray-200',
-  accent: 'bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-800 border border-blue-200',
+  primary: 'bg-primary-50 text-primary-700 border border-primary-200',
+  success: 'bg-green-50 text-green-700 border border-green-200',
+  warning: 'bg-yellow-50 text-yellow-700 border border-yellow-200',
+  danger: 'bg-red-50 text-red-700 border border-red-200',
+  info: 'bg-slate-50 text-slate-700 border border-slate-200',
+  accent: 'bg-primary-50 text-primary-700 border border-primary-200', // Mapped to primary
 };
 
 const solidVariants = {
   primary: 'bg-primary-600 text-white border-0',
-  success: 'bg-cyan-600 text-white border-0',
+  success: 'bg-green-600 text-white border-0',
   warning: 'bg-yellow-500 text-white border-0',
   danger: 'bg-red-600 text-white border-0',
-  info: 'bg-gray-600 text-white border-0',
-  accent: 'bg-blue-600 text-white border-0',
+  info: 'bg-slate-600 text-white border-0',
+  accent: 'bg-primary-600 text-white border-0', // Mapped to primary
 };
 
 const sizes = {
@@ -52,12 +52,11 @@ const Badge = ({
             className={clsx(
               'block h-2 w-2 rounded-full',
               solid ? 'bg-white/80' : {
-                'bg-primary-500': variant === 'primary',
-                'bg-cyan-500': variant === 'success',
+                'bg-primary-500': variant === 'primary' || variant === 'accent',
+                'bg-green-500': variant === 'success',
                 'bg-yellow-500': variant === 'warning',
                 'bg-red-500': variant === 'danger',
-                'bg-gray-500': variant === 'info',
-                'bg-blue-500': variant === 'accent',
+                'bg-slate-500': variant === 'info',
               }
             )}
           />
@@ -66,12 +65,11 @@ const Badge = ({
               className={clsx(
                 'absolute top-0 left-0 h-2 w-2 rounded-full animate-ping',
                 solid ? 'bg-white/60' : {
-                  'bg-primary-400': variant === 'primary',
-                  'bg-cyan-400': variant === 'success',
+                  'bg-primary-400': variant === 'primary' || variant === 'accent',
+                  'bg-green-400': variant === 'success',
                   'bg-yellow-400': variant === 'warning',
                   'bg-red-400': variant === 'danger',
-                  'bg-gray-400': variant === 'info',
-                  'bg-blue-400': variant === 'accent',
+                  'bg-slate-400': variant === 'info',
                 }
               )}
             />

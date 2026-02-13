@@ -6,9 +6,9 @@ import { BarChart3, TrendingUp, Award, Calendar, ChevronDown, CheckCircle, BookO
 const getGradeDetails = (marks) => {
   if (marks >= 85) return { grade: "A", qp: 4.0, color: "text-emerald-600 bg-emerald-50" };
   if (marks >= 80) return { grade: "A-", qp: 3.7, color: "text-emerald-600 bg-emerald-50" };
-  if (marks >= 75) return { grade: "B+", qp: 3.3, color: "text-blue-600 bg-blue-50" };
-  if (marks >= 70) return { grade: "B", qp: 3.0, color: "text-blue-600 bg-blue-50" };
-  if (marks >= 65) return { grade: "B-", qp: 2.7, color: "text-blue-600 bg-blue-50" };
+  if (marks >= 75) return { grade: "B+", qp: 3.3, color: "text-primary-600 bg-primary-50" };
+  if (marks >= 70) return { grade: "B", qp: 3.0, color: "text-primary-600 bg-primary-50" };
+  if (marks >= 65) return { grade: "B-", qp: 2.7, color: "text-primary-600 bg-primary-50" };
   if (marks >= 61) return { grade: "C+", qp: 2.3, color: "text-orange-600 bg-orange-50" };
   if (marks >= 58) return { grade: "C", qp: 2.0, color: "text-orange-600 bg-orange-50" };
   if (marks >= 55) return { grade: "C-", qp: 1.7, color: "text-orange-600 bg-orange-50" };
@@ -76,9 +76,9 @@ const StudentResults = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="bg-blue-50 px-4 py-2 rounded-xl border border-blue-100 flex flex-col items-end">
-            <span className="text-xs text-blue-600 font-semibold uppercase tracking-wider">CGPA</span>
-            <span className="text-2xl font-bold text-blue-700 leading-none">{currentCGPA}</span>
+          <div className="bg-primary-50 px-4 py-2 rounded-xl border border-primary-100 flex flex-col items-end">
+            <span className="text-xs text-primary-600 font-semibold uppercase tracking-wider">CGPA</span>
+            <span className="text-2xl font-bold text-primary-700 leading-none">{currentCGPA}</span>
           </div>
 
           <div className="relative">
@@ -111,11 +111,11 @@ const StudentResults = () => {
                 className="group relative bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden"
               >
                 {/* Decorative Background */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-150 group-hover:bg-blue-50/50"></div>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-150 group-hover:bg-primary-50/50"></div>
 
                 <div className="relative z-10">
                   <div className="flex justify-between items-start mb-6">
-                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl font-bold ${isCompleted ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-400'}`}>
+                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl font-bold ${isCompleted ? 'bg-primary-100 text-primary-600' : 'bg-gray-100 text-gray-400'}`}>
                       {sem.id}
                     </div>
                     <div className="text-right">
@@ -141,7 +141,7 @@ const StudentResults = () => {
                     <span className={`text-xs font-semibold px-2 py-1 rounded-md ${isCompleted ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}`}>
                       {isCompleted ? 'Completed' : 'In Progress'}
                     </span>
-                    <div className="flex items-center gap-1 text-sm font-semibold text-blue-600 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                    <div className="flex items-center gap-1 text-sm font-semibold text-primary-600 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
                       View Results <ChevronRight size={16} />
                     </div>
                   </div>
@@ -154,29 +154,32 @@ const StudentResults = () => {
         <div className="space-y-6">
           {/* Semester Summary Card */}
           {selectedSemester && (
-            <div className="bg-gradient-to-br from-blue-900 to-cyan-900 rounded-2xl p-6 text-white shadow-lg">
-              <div className="flex items-center justify-between mb-6">
+            <div className="bg-primary-800 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-8 opacity-10">
+                <BarChart3 size={120} />
+              </div>
+              <div className="relative z-10 flex items-center justify-between mb-8">
                 <div>
-                  <h2 className="text-2xl font-bold">{selectedSemester.name}</h2>
-                  <p className="text-blue-200 text-sm">Summary Report</p>
+                  <h2 className="text-3xl font-bold">{selectedSemester.name}</h2>
+                  <p className="text-primary-100/80 text-sm mt-1">Academic Performance Summary</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm text-blue-200 uppercase font-medium">SGPA</p>
-                  <p className="text-4xl font-bold tracking-tight">{calculateSGPA(selectedSemester.subjects)}</p>
+                  <p className="text-xs text-primary-200 uppercase font-bold tracking-wider">Semester GPA</p>
+                  <p className="text-5xl font-extrabold tracking-tight mt-1">{calculateSGPA(selectedSemester.subjects)}</p>
                 </div>
               </div>
-              <div className="grid grid-cols-3 gap-4 border-t border-white/10 pt-4">
+              <div className="grid grid-cols-3 gap-8 border-t border-white/10 pt-6">
                 <div>
-                  <p className="text-xs text-blue-200 uppercase">Total Credits</p>
-                  <p className="text-lg font-semibold">{calculateCredits(selectedSemester.subjects)}</p>
+                  <p className="text-xs text-primary-200 uppercase font-bold tracking-wider">Total Credits</p>
+                  <p className="text-xl font-bold mt-1">{calculateCredits(selectedSemester.subjects)}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-blue-200 uppercase">Subjects</p>
-                  <p className="text-lg font-semibold">{selectedSemester.subjects ? selectedSemester.subjects.length : 0}</p>
+                  <p className="text-xs text-primary-200 uppercase font-bold tracking-wider">Enrolled Subjects</p>
+                  <p className="text-xl font-bold mt-1">{selectedSemester.subjects ? selectedSemester.subjects.length : 0}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-blue-200 uppercase">Status</p>
-                  <p className="text-lg font-semibold text-emerald-300">{calculateSGPA(selectedSemester.subjects) > 0 ? "Completed" : "In Progress"}</p>
+                  <p className="text-xs text-primary-200 uppercase font-bold tracking-wider">Semester Status</p>
+                  <p className="text-xl font-bold text-emerald-300 mt-1">{calculateSGPA(selectedSemester.subjects) > 0 ? "Completed" : "In Progress"}</p>
                 </div>
               </div>
             </div>

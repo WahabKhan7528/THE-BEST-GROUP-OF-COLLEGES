@@ -86,13 +86,13 @@ const Materials = () => {
             <h1 className="text-2xl font-semibold text-gray-900">
               Uploaded resources
             </h1>
-            <p className="text-sm text-blue-600 mt-2">
+            <p className="text-sm text-primary-600 mt-2">
               📍 {campusNames[campus]}
             </p>
           </div>
           <Link
             to="/faculty/materials/upload"
-            className="px-4 py-2 bg-blue-700 text-white rounded-lg text-sm font-semibold hover:bg-blue-800"
+            className="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-semibold hover:bg-primary-700 transition-colors"
           >
             Upload Material
           </Link>
@@ -112,7 +112,7 @@ const Materials = () => {
           </p>
           <Link
             to="/faculty/materials/upload"
-            className="text-blue-700 font-semibold hover:text-blue-800 mt-2 inline-block"
+            className="text-primary-700 font-semibold hover:text-primary-800 mt-2 inline-block"
           >
             Upload your first material →
           </Link>

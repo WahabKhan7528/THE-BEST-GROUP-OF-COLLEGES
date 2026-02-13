@@ -20,6 +20,8 @@ import {
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
+import { programsData } from "../../data/programsData";
+
 const MainCampus = () => {
   const navigate = useNavigate();
 
@@ -46,40 +48,7 @@ const MainCampus = () => {
     },
   ];
 
-  const programs = [
-    {
-      title: "BS Computer Science",
-      description: "A comprehensive four-year program designed to mold future tech leaders. Covers algorithms, software engineering, AI, and more.",
-      duration: "4 Years",
-      seats: 120,
-      icon: Laptop,
-      color: "blue",
-    },
-    {
-      title: "Bachelor of Business Admin",
-      description: "Develop strong management and leadership skills. Focuses on marketing, finance, human resources, and entrepreneurship.",
-      duration: "4 Years",
-      seats: 100,
-      icon: Target,
-      color: "purple",
-    },
-    {
-      title: "BS Mathematics",
-      description: "Explore the world of numbers and logic. Prepares students for careers in data science, research, and academia.",
-      duration: "4 Years",
-      seats: 60,
-      icon: Lightbulb,
-      color: "amber",
-    },
-    {
-      title: "BS English",
-      description: "Master the art of communication and literature. Ideal for aspiring writers, editors, and educators.",
-      duration: "4 Years",
-      seats: 80,
-      icon: BookOpen,
-      color: "pink",
-    },
-  ];
+  const programs = programsData.main[0].items;
 
   const facilities = [
     {
@@ -173,13 +142,9 @@ const MainCampus = () => {
             <Card className="relative border-0 shadow-xl bg-white/50 backdrop-blur-sm rounded-3xl">
               <div className="p-6">
                 <Badge variant="outline" className="mb-4 border-blue-200 text-blue-700 rounded-full">Our Mission</Badge>
-                <h3 className="text-2xl font-bold mb-4 text-gray-900">Empowering Through Knowledge</h3>
+                <h3 className="text-2xl font-bold mb-4 text-gray-900">Inspiring Excellence, Nurturing Leaders</h3>
                 <p className="text-gray-600 mb-6">
-                  To empower students with the knowledge, skills, and values they need to thrive in a rapidly changing world. We focus on holistic development, critical thinking, and social responsibility.
-                </p>
-                <Button variant="ghost" className="text-blue-600 hover:text-blue-700 p-0 hover:bg-transparent">
-                  Read our full strategic plan <ArrowRight className="ml-2 w-4 h-4" />
-                </Button>
+                  Our mission is to cultivate a dynamic learning environment that fosters academic excellence, ethical values, and the leadership skills necessary to shape a better future for our society and the world.                </p>
               </div>
             </Card>
           </motion.div>
@@ -256,7 +221,7 @@ const MainCampus = () => {
         </div>
       </Section>
 
-      <Section background="gradient" className="text-center">
+      <Section className="text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

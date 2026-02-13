@@ -12,10 +12,10 @@ const Section = ({
 }) => {
   const backgrounds = {
     white: 'bg-white',
-    gray: 'bg-gradient-to-b from-gray-50 to-white',
-    blue: 'bg-gradient-to-br from-primary-600 to-primary-700 text-white',
-    dark: 'bg-gradient-to-br from-gray-900 to-gray-800 text-white',
-    gradient: 'bg-gradient-to-br from-primary-50 via-white to-accent-50',
+    gray: 'bg-gray-50', // Simplified from gradient
+    blue: 'bg-primary-700 text-white', // Simplified from gradient
+    dark: 'bg-primary-950 text-white', // Changed to primary-950
+    gradient: 'bg-primary-50', // Simplified to solid subtle blue
   };
 
   const spacings = {
@@ -37,7 +37,7 @@ const Section = ({
     <Wrapper
       className={clsx(
         'relative overflow-hidden',
-        backgrounds[background],
+        backgrounds[background] || backgrounds.white,
         spacings[spacing],
         className
       )}
@@ -60,7 +60,7 @@ Section.Header = function SectionHeader({
   badge,
   className,
   center = true,
-  gradient = false,
+  gradient = false, // Ignored now
   animate = true,
   ...props
 }) {
@@ -91,8 +91,7 @@ Section.Header = function SectionHeader({
       )}
       <h2
         className={clsx(
-          'text-3xl md:text-4xl lg:text-5xl font-bold mb-4 tracking-tight',
-          gradient ? 'bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent' : 'text-gray-900'
+          'text-3xl md:text-4xl lg:text-5xl font-bold mb-4 tracking-tight text-primary-900'
         )}
       >
         {title}
@@ -101,7 +100,7 @@ Section.Header = function SectionHeader({
         <p className="text-lg text-primary-600 font-medium mb-2">{subtitle}</p>
       )}
       {description && (
-        <p className={clsx("text-lg md:text-xl text-gray-600 leading-relaxed", { "mx-auto max-w-3xl": center })}>{description}</p>
+        <p className={clsx("text-lg md:text-xl text-text-secondary leading-relaxed", { "mx-auto max-w-3xl": center })}>{description}</p>
       )}
     </Wrapper>
   );
@@ -110,7 +109,7 @@ Section.Header = function SectionHeader({
 Section.Divider = function SectionDivider({ className }) {
   return (
     <div className={clsx('max-w-7xl mx-auto px-4 sm:px-6 lg:px-8', className)}>
-      <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+      <div className="h-px bg-border" />
     </div>
   );
 };

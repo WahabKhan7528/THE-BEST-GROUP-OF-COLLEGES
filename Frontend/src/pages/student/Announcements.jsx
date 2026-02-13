@@ -48,13 +48,13 @@ const StudentAnnouncements = () => {
             {/* Header */}
             <div className="bg-white border rounded-2xl shadow-sm p-6">
                 <div className="flex items-center gap-4">
-                    <div className="p-3 bg-blue-100 rounded-full text-blue-600">
+                    <div className="p-3 bg-primary-100 rounded-full text-primary-600">
                         <Bell size={24} />
                     </div>
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900">Class Announcements</h1>
                         <p className="text-gray-500 text-sm">Updates from your teachers and department</p>
-                        <p className="text-xs text-blue-600 font-medium mt-1"> {campusNames[campus]}</p>
+                        <p className="text-xs text-primary-600 font-medium mt-1"> {campusNames[campus]}</p>
                     </div>
                 </div>
             </div>

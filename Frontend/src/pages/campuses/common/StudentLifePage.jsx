@@ -98,10 +98,6 @@ const StudentLifePage = () => {
                     <Calendar className="w-3 h-3 mr-1" /> {society.meeting}
                   </Badge>
                 </div>
-
-                <Button size="sm" variant="ghost" className="mt-4 text-blue-600 hover:text-blue-800 p-0 h-auto hover:bg-transparent" onClick={() => { }}>
-                  Join Now <ArrowRight className="w-3 h-3 ml-1" />
-                </Button>
               </Card>
             </motion.div>
           ))}
@@ -141,17 +137,8 @@ const StudentLifePage = () => {
               transition={{ duration: 0.8 }}
               className="space-y-4"
             >
-              <div className="relative rounded-3xl overflow-hidden shadow-lg transform translate-y-8 aspect-video group">
-                <iframe
-                  className="w-full h-full object-cover"
-                  src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&controls=0&rel=0" // Placeholder video
-                  title="Campus Life Video"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors pointer-events-none" />
-              </div>
               <img src="https://placehold.co/400x400?text=Sports" alt="Campus Sports" className="rounded-3xl shadow-lg" />
+              <img src="https://placehold.co/400x400?text=Hall" alt="Campus hall" className="rounded-3xl shadow-lg" />
             </motion.div>
             <motion.div
               initial={{ y: -20 }}

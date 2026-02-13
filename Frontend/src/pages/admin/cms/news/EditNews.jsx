@@ -120,8 +120,8 @@ const EditNews = () => {
                 className={`
                   relative flex flex-col items-center justify-center p-4 rounded-xl border-2 cursor-pointer transition-all duration-200
                   ${type === "event"
-                    ? 'border-cyan-600 bg-cyan-50'
-                    : 'border-gray-100 bg-white hover:border-cyan-200 hover:bg-gray-50'
+                    ? 'border-primary-600 bg-primary-50'
+                    : 'border-gray-100 bg-white hover:border-primary-200 hover:bg-gray-50'
                   }
                 `}
               >
@@ -133,9 +133,9 @@ const EditNews = () => {
                   onChange={() => setType("event")}
                   className="sr-only"
                 />
-                <Calendar className={`w-6 h-6 mb-2 ${type === "event" ? 'text-cyan-600' : 'text-gray-400'}`} />
-                <span className={`text-sm font-medium ${type === "event" ? 'text-cyan-700' : 'text-gray-600'}`}>Event</span>
-                {type === "event" && <CheckCircle2 className="absolute top-2 right-2 w-4 h-4 text-cyan-600" />}
+                <Calendar className={`w-6 h-6 mb-2 ${type === "event" ? 'text-primary-600' : 'text-gray-400'}`} />
+                <span className={`text-sm font-medium ${type === "event" ? 'text-primary-700' : 'text-gray-600'}`}>Event</span>
+                {type === "event" && <CheckCircle2 className="absolute top-2 right-2 w-4 h-4 text-primary-600" />}
               </label>
             </div>
           </section>
@@ -269,7 +269,7 @@ const EditNews = () => {
           <div className="flex flex-col gap-3">
             <button
               type="submit"
-              className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-cyan-700 shadow-lg shadow-blue-500/30 transition-all transform hover:-translate-y-0.5"
+              className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl shadow-md transform hover:-translate-y-0.5 transition-all"
             >
               <Save size={18} />
               Save Changes

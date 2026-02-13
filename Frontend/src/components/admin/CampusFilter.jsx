@@ -24,7 +24,7 @@ const CampusFilter = () => {
       <select
         value={selectedCampusFilter}
         onChange={(e) => setSelectedCampusFilter(e.target.value)}
-        className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+        className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
       >
         <option value="all">All Campuses (Unified View)</option>
         {campuses.map((campus) => (

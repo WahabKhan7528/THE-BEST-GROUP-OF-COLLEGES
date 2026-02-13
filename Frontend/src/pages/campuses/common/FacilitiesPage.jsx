@@ -127,7 +127,7 @@ const FacilitiesPage = () => {
         </Section>
       ))}
 
-      <Section background="gradient" className="text-center">
+      <Section className="text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -138,7 +138,7 @@ const FacilitiesPage = () => {
           <p className="text-lg text-gray-600 mb-8">
             We invite you to visit our campus and see our facilities firsthand. Book a guided tour today.
           </p>
-          <Button size="lg" variant="outline" className="bg-white text-blue-900 border-white hover:bg-blue-50" onClick={() => navigate("/contact")}>
+          <Button size="lg" variant="primary" className="bg-white text-blue-900 border-white hover:bg-blue-50" onClick={() => navigate("/contact")}>
             Schedule a Visit
           </Button>
         </motion.div>

@@ -104,13 +104,13 @@ const CourseList = () => {
       label: "Course Details",
       render: (row) => (
         <div className="flex items-start gap-3">
-          <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
+          <div className="p-2 bg-primary-50 text-primary-600 rounded-lg">
             <BookOpen className="w-5 h-5" />
           </div>
           <div>
             <span className="font-semibold text-gray-900 line-clamp-1">{row.title}</span>
             <div className="flex items-center gap-2 mt-0.5 text-xs text-gray-500">
-              <span className="bg-cyan-50 text-cyan-700 px-1.5 py-0.5 rounded text-[10px] font-medium uppercase tracking-wide">
+              <span className="bg-primary-50 text-primary-700 px-1.5 py-0.5 rounded text-[10px] font-medium uppercase tracking-wide">
                 Undergraduate
               </span>
             </div>
@@ -160,7 +160,7 @@ const CourseList = () => {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-600">
+          <h1 className="text-2xl font-bold text-gray-900">
             Course Management
           </h1>
           <p className="text-sm text-gray-500 mt-1">
@@ -169,7 +169,7 @@ const CourseList = () => {
         </div>
         <Link
           to="/admin/courses/create"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl text-sm font-semibold hover:from-blue-700 hover:to-cyan-700 shadow-lg shadow-blue-500/20 transition-all duration-200 transform hover:-translate-y-0.5"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-sm font-semibold shadow-md transition-all duration-200 transform hover:-translate-y-0.5"
         >
           <Plus className="w-4 h-4" />
           Add New Course

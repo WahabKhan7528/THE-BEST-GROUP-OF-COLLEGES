@@ -16,7 +16,7 @@ const AnnouncementCard = ({ announcement }) => {
         </div>
         <div className="text-right">
           <p className="text-xs text-gray-500">{announcement.date}</p>
-          <span className="text-xs font-semibold text-cyan-700 bg-cyan-50 px-3 py-1 rounded-full">
+          <span className="text-xs font-semibold text-primary-700 bg-primary-50 px-3 py-1 rounded-full">
             Announcement
           </span>
         </div>

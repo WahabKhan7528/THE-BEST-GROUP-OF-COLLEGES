@@ -162,7 +162,7 @@ const AllocateAdmin = () => {
                 <div className="text-sm text-gray-600">{admin.email}</div>
               </div>
               {currentAllocations[admin.id] && (
-                <span className="text-xs bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full">
+                <span className="text-xs bg-primary-50 text-primary-700 px-3 py-1 rounded-full">
                   Currently Allocated
                 </span>
               )}

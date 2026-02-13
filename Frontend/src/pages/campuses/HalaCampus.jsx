@@ -21,6 +21,8 @@ import {
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
+import { programsData } from "../../data/programsData";
+
 const HalaCampus = () => {
   const navigate = useNavigate();
 
@@ -47,40 +49,7 @@ const HalaCampus = () => {
     },
   ];
 
-  const programs = [
-    {
-      title: "FSc Pre-Medical",
-      description: "Comprehensive study of Biology, Physics, and Chemistry. Ideal for aspiring doctors and medical professionals.",
-      duration: "2 Years",
-      seats: 150,
-      icon: Microscope,
-      color: "cyan",
-    },
-    {
-      title: "FSc Pre-Engineering",
-      description: "A rigorous foundation in Mathematics, Physics, and Chemistry. Prepares students for top engineering universities.",
-      duration: "2 Years",
-      seats: 150,
-      icon: Calculator,
-      color: "blue",
-    },
-    {
-      title: "ICS",
-      description: "Information & Computer Science. Perfect blend of computer science with mathematics or physics for future tech leaders.",
-      duration: "2 Years",
-      seats: 100,
-      icon: Cpu,
-      color: "sky",
-    },
-    {
-      title: "I.Com",
-      description: "Intermediate in Commerce. Building strong fundamentals in accounting, banking, and business finance.",
-      duration: "2 Years",
-      seats: 100,
-      icon: TrendingUp,
-      color: "slate",
-    },
-  ];
+  const programs = programsData.hala[0].items;
 
   const facilities = [
     {

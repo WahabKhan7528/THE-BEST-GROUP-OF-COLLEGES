@@ -237,13 +237,13 @@ const Results = () => {
             <h1 className="text-2xl font-semibold text-gray-900">
               Enter marks & grades
             </h1>
-            <p className="text-sm text-blue-600 mt-2">
+            <p className="text-sm text-primary-600 mt-2">
               📍 {campusNames[campus]}
             </p>
           </div>
           <button
             onClick={handleSaveMarks}
-            className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg text-sm font-semibold shadow-md shadow-blue-500/20"
+            className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-semibold shadow-md"
           >
             Save marks
           </button>
@@ -315,7 +315,7 @@ const Results = () => {
       {selectedClass && selectedStudents.length > 0 && (
         <>
           <div className="bg-white border rounded-2xl shadow-sm p-6 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-100/50 to-transparent rounded-bl-full -mr-8 -mt-8"></div>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary-100/50 rounded-bl-full -mr-8 -mt-8"></div>
 
             <div className="relative z-10">
               <h2 className="text-sm font-bold text-blue-700 uppercase tracking-wider mb-4">Current Selection Logic</h2>

@@ -34,7 +34,7 @@ const Gallery = () => {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-600">
+          <h1 className="text-2xl font-bold text-gray-900">
             Media Gallery
           </h1>
           <p className="text-sm text-gray-500 mt-1">
@@ -43,7 +43,7 @@ const Gallery = () => {
         </div>
         <Link
           to="/admin/cms/gallery/upload"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl text-sm font-semibold hover:from-blue-700 hover:to-cyan-700 shadow-lg shadow-blue-500/20 transition-all duration-200 transform hover:-translate-y-0.5"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-sm font-semibold shadow-md transition-all duration-200 transform hover:-translate-y-0.5"
         >
           <Plus className="w-4 h-4" />
           Upload Image
@@ -60,7 +60,7 @@ const Gallery = () => {
               className={`
                 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200
                 ${activeFilter === album
-                  ? "bg-blue-50 text-blue-700 shadow-sm"
+                  ? "bg-primary-50 text-primary-700 shadow-sm"
                   : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                 }
               `}

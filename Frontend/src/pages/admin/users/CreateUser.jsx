@@ -192,7 +192,7 @@ const CreateUser = () => {
         {(role === "Student" || role === "Faculty" || role === "Sub-Admin") && (
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-gray-800 font-semibold pb-2 border-b border-gray-100">
-              <Building2 size={18} className="text-sky-600" />
+              <Building2 size={18} className="text-primary-600" />
               <h2>{role === "Student" ? "Academic Information" : "Professional Details"}</h2>
             </div>
 
@@ -315,7 +315,7 @@ const CreateUser = () => {
         {showCampusField && (
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-gray-800 font-semibold pb-2 border-b border-gray-100">
-              <Building2 size={18} className="text-cyan-600" />
+              <Building2 size={18} className="text-primary-600" />
               <h2>Campus Allocation</h2>
             </div>
 
@@ -410,7 +410,7 @@ const CreateUser = () => {
           </button>
           <button
             type="submit"
-            className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/20 transform hover:-translate-y-0.5 transition-all"
+            className="flex items-center gap-2 px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-semibold shadow-md transform hover:-translate-y-0.5 transition-all"
           >
             <UserPlus size={18} />
             Create User

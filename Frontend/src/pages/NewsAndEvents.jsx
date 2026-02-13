@@ -138,7 +138,7 @@ const NewsAndEvents = () => {
 
       {/* Filter Tabs */}
       <Section background="white" spacing="default">
-        <div className="text-center mb-12 mt-16 ">
+        <div className="text-center mb-12 ">
           <h2 className="text-4xl md:text-8xl font-bold text-gray-900 mb-6 leading-tight">
             News <span className="text-gradient">&</span> Events
           </h2>

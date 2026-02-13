@@ -35,7 +35,7 @@ const MaterialUploadForm = ({ onSubmit }) => {
             value={form.classSection}
             onChange={(e) => handleChange('classSection', e.target.value)}
             placeholder="e.g., BSCS - Section A"
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all outline-none"
           />
         </label>
         <label className="block space-y-2">
@@ -45,7 +45,7 @@ const MaterialUploadForm = ({ onSubmit }) => {
             value={form.subject}
             onChange={(e) => handleChange('subject', e.target.value)}
             placeholder="e.g., Operating Systems"
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all outline-none"
           />
         </label>
       </div>
@@ -57,7 +57,7 @@ const MaterialUploadForm = ({ onSubmit }) => {
           value={form.title}
           onChange={(e) => handleChange('title', e.target.value)}
           placeholder="Lecture 07 - CPU Scheduling"
-          className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
+          className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all outline-none"
         />
       </label>
 
@@ -85,7 +85,7 @@ const MaterialUploadForm = ({ onSubmit }) => {
             value={form.link}
             onChange={(e) => handleChange('link', e.target.value)}
             placeholder="https://..."
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all outline-none"
           />
         </label>
       </div>
@@ -102,7 +102,7 @@ const MaterialUploadForm = ({ onSubmit }) => {
             />
             <label
               htmlFor="file-upload"
-              className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl border border-dashed border-gray-300 bg-white/30 hover:bg-purple-50 hover:border-purple-300 cursor-pointer transition-all"
+              className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl border border-dashed border-gray-300 bg-white/30 hover:bg-primary-50 hover:border-primary-300 cursor-pointer transition-all"
             >
               <Upload size={18} className="text-gray-400" />
               <span className="text-sm text-gray-600 truncate">
@@ -117,7 +117,7 @@ const MaterialUploadForm = ({ onSubmit }) => {
             type="date"
             value={form.uploadDate || ''}
             onChange={(e) => handleChange('uploadDate', e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all outline-none"
           />
         </label>
       </div>
@@ -125,7 +125,7 @@ const MaterialUploadForm = ({ onSubmit }) => {
       <div className="flex justify-end pt-4 border-t border-gray-200/50">
         <button
           type="submit"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-semibold shadow-lg shadow-blue-500/30 hover:shadow-blue-500/40 hover:-translate-y-0.5 transition-all duration-200"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-semibold shadow-md hover:-translate-y-0.5 transition-all duration-200"
         >
           <Upload size={18} />
           Upload Material

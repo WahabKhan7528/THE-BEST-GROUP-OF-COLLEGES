@@ -45,7 +45,7 @@ const Contact = () => {
     <div className="min-h-screen bg-white">
       {/* Contact Info Cards */}
       <Section background="white" spacing="large">
-        <div className="text-center mb-12 mt-16">
+        <div className="text-center mb-12">
           <h2 className="text-4xl md:text-8xl font-bold text-gray-900 mb-6 leading-tight">
             CONTACT <span className="text-gradient">US</span>
           </h2>
@@ -125,7 +125,7 @@ const Contact = () => {
       </Section>
 
       {/* FAQ Section */}
-      <Faq />
+      <Faq limit={6}/>
     </div>
   );
 };

@@ -93,10 +93,10 @@ const UploadImage = () => {
             className={`
               relative aspect-square md:aspect-[4/3] rounded-2xl border-2 border-dashed transition-all duration-200 flex flex-col items-center justify-center cursor-pointer overflow-hidden
               ${isDragging
-                ? 'border-blue-500 bg-blue-50'
+                ? 'border-primary-500 bg-primary-50'
                 : preview
-                  ? 'border-blue-200 bg-gray-50'
-                  : 'border-gray-300 bg-white hover:border-blue-400 hover:bg-gray-50'
+                  ? 'border-primary-200 bg-gray-50'
+                  : 'border-gray-300 bg-white hover:border-primary-400 hover:bg-gray-50'
               }
             `}
           >
@@ -126,7 +126,7 @@ const UploadImage = () => {
               </div>
             ) : (
               <div className="text-center p-6 space-y-3">
-                <div className="w-16 h-16 mx-auto bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-2">
+                <div className="w-16 h-16 mx-auto bg-primary-50 text-primary-600 rounded-full flex items-center justify-center mb-2">
                   <Upload className="w-8 h-8" />
                 </div>
                 <div>
@@ -139,7 +139,7 @@ const UploadImage = () => {
 
           {file && (
             <div className="flex items-center gap-3 p-3 bg-white/50 border border-white/20 rounded-xl shadow-sm">
-              <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
+              <div className="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center text-primary-600">
                 <ImageIcon className="w-5 h-5" />
               </div>
               <div className="flex-1 min-w-0">
@@ -154,7 +154,7 @@ const UploadImage = () => {
         {/* Right Column: Details Form */}
         <div className="bg-white/80 backdrop-blur-xl border border-white/20 p-6 rounded-2xl shadow-sm space-y-5 h-fit">
           <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-            <ImageIcon className="w-5 h-5 text-blue-600" />
+            <ImageIcon className="w-5 h-5 text-primary-600" />
             Image Details
           </h2>
 
@@ -211,7 +211,7 @@ const UploadImage = () => {
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-cyan-700 shadow-lg shadow-blue-500/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+              className="flex-1 px-4 py-2.5 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl shadow-md transform hover:-translate-y-0.5 transition-all"
             >
               Upload Image
             </button>

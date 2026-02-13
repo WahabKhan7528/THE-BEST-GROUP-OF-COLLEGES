@@ -34,8 +34,8 @@ const ResultEntryTable = ({ rows }) => {
   };
 
   const getGradeColor = (percentage) => {
-    if (percentage >= 80) return "text-cyan-700 bg-cyan-50";
-    if (percentage >= 60) return "text-blue-700 bg-blue-50";
+    if (percentage >= 80) return "text-primary-700 bg-primary-50";
+    if (percentage >= 60) return "text-primary-700 bg-primary-50";
     if (percentage >= 40) return "text-slate-700 bg-slate-50";
     return "text-red-700 bg-red-50";
   };
@@ -115,7 +115,7 @@ const ResultEntryTable = ({ rows }) => {
                             row.maxMarks,
                           )
                         }
-                        className="w-20 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-20 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                       />
                       <span className="text-gray-500 text-xs">
                         / {row.maxMarks}
@@ -137,6 +137,7 @@ const ResultEntryTable = ({ rows }) => {
                     </span>
                   </td>
                   <td className="px-6 py-4">
+
                     <input
                       type="text"
                       placeholder="Add feedback..."
@@ -144,20 +145,20 @@ const ResultEntryTable = ({ rows }) => {
                       onChange={(e) =>
                         handleRemarksChange(row.studentId, e.target.value)
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     />
                   </td>
                   <td className="px-6 py-4 text-center">
                     {isGraded ? (
                       <div className="flex items-center justify-center">
-                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-cyan-50 text-cyan-700">
+                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-primary-50 text-emerald-700">
                           <Check size={14} />
                           Graded
                         </span>
                       </div>
                     ) : (
                       <div className="flex items-center justify-center">
-                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-sky-50 text-sky-700">
+                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-primary-50 text-primary-700">
                           <AlertCircle size={14} />
                           Pending
                         </span>
@@ -171,7 +172,7 @@ const ResultEntryTable = ({ rows }) => {
         </table>
       </div>
       <div className="px-6 py-4 flex justify-end border-t bg-gray-50">
-        <button className="px-6 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg text-sm font-semibold shadow-md shadow-blue-500/20 transition">
+        <button className="px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-sm font-semibold shadow-md hover:-translate-y-0.5 transition-all">
           Save All Marks
         </button>
       </div>

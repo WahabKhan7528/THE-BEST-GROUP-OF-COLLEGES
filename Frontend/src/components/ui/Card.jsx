@@ -4,38 +4,37 @@ const Card = ({
   children,
   className,
   hover = false,
-  shadow = 'md',
+  shadow = 'sm', // Changed default to sm
   padding = true,
   variant = 'default',
-  gradient = false,
+  // gradient prop is largely ignored or deprecated
   ...props
 }) => {
   const shadowClasses = {
     none: '',
     sm: 'shadow-sm',
-    md: 'shadow-md',
-    lg: 'shadow-lg',
-    xl: 'shadow-xl',
+    md: 'shadow',
+    lg: 'shadow-md',
+    xl: 'shadow-lg',
   };
 
   const variantClasses = {
-    default: gradient ? '' : 'bg-white border border-gray-100', // Allow gradient to take precedence
-    glass: 'bg-white/70 backdrop-blur-md border border-white/20',
-    elevated: 'bg-white border-0',
-    outline: 'bg-transparent border-2 border-gray-200',
+    default: 'bg-white border border-border',
+    glass: 'bg-white border border-border', // Fallback to default
+    elevated: 'bg-white shadow-md border border-gray-100',
+    outline: 'bg-transparent border border-border',
   };
 
   return (
     <div
       className={clsx(
-        'rounded-2xl overflow-hidden',
-        'transition-all duration-300 ease-out',
-        variantClasses[variant],
+        'rounded-xl overflow-hidden', // Changed from 2xl to xl for more professional look
+        'transition-all duration-200 ease-out',
+        variantClasses[variant] || variantClasses.default,
         shadowClasses[shadow],
         {
-          'hover:shadow-xl hover:-translate-y-1 hover:border-primary-100 cursor-pointer': hover,
+          'hover:shadow-md hover:border-primary-200 cursor-pointer': hover,
           'p-6': padding,
-          'bg-gradient-to-br from-white via-white to-primary-50/30': gradient,
         },
         className
       )}

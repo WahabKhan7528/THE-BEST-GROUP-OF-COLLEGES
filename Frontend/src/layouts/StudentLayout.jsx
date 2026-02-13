@@ -36,8 +36,8 @@ const StudentLayout = () => {
         to={item.to}
         className={({ isActive }) =>
           `group flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 ${isActive
-            ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-500/25 translate-x-1"
-            : "text-gray-600 hover:bg-blue-50 hover:text-blue-700 hover:translate-x-1"
+            ? "bg-primary-600 text-white shadow-md translate-x-1"
+            : "text-gray-600 hover:bg-primary-50 hover:text-primary-700 hover:translate-x-1"
           }`
         }
         onClick={() => setIsSidebarOpen(false)}
@@ -46,7 +46,7 @@ const StudentLayout = () => {
           <>
             <Icon
               size={20}
-              className={`transition-colors ${isActive ? "text-white" : "text-gray-400 group-hover:text-blue-600"}`}
+              className={`transition-colors ${isActive ? "text-white" : "text-gray-400 group-hover:text-primary-600"}`}
             />
             <span className="text-sm font-medium">{item.label}</span>
           </>
@@ -57,11 +57,7 @@ const StudentLayout = () => {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] flex relative overflow-hidden">
-      {/* Background Decor */}
-      <div className="fixed top-0 left-0 w-full h-full pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-200/30 rounded-full blur-[100px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-cyan-200/30 rounded-full blur-[100px]" />
-      </div>
+
 
       {/* Mobile Overlay */}
       {isSidebarOpen && (
@@ -79,7 +75,7 @@ const StudentLayout = () => {
         <div className="flex items-center justify-between px-6 h-20 border-b border-gray-100/50">
           <div>
             <p className="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-0.5">Student Portal</p>
-            <p className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-cyan-700">
+            <p className="text-xl font-bold text-primary-900">
               Best Colleges
             </p>
           </div>
@@ -123,7 +119,7 @@ const StudentLayout = () => {
               </button>
 
               <div className="hidden lg:block">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-600/20">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary-50 text-primary-700 ring-1 ring-inset ring-primary-600/20">
                   <GraduationCap size={14} />
                   Student Panel
                 </span>
@@ -133,7 +129,7 @@ const StudentLayout = () => {
             <div className="flex items-center gap-3 sm:gap-4">
               <button
                 onClick={() => navigate("/")}
-                className="p-2.5 rounded-xl text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200"
+                className="p-2.5 rounded-xl text-gray-500 hover:bg-primary-50 hover:text-primary-600 transition-all duration-200"
                 title="Back to Home"
               >
                 <Home size={20} />
@@ -152,7 +148,7 @@ const StudentLayout = () => {
                     CS • Semester 5
                   </p>
                 </div>
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-600 to-cyan-600 text-white flex items-center justify-center text-sm font-bold shadow-md shadow-blue-500/20 ring-2 ring-white">
+                <div className="w-10 h-10 rounded-full bg-primary-600 text-white flex items-center justify-center text-sm font-bold shadow-sm ring-2 ring-white">
                   AK
                 </div>
               </div>

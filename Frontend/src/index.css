@@ -5,73 +5,51 @@
 @layer base {
   html {
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #f8fafc;
-    color: #0f172a;
+    background: #F8FAFC;
+    color: #1E293B;
     scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
     min-height: 100vh;
-    background: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.08), transparent 25%),
-      radial-gradient(circle at 90% 10%, rgba(14, 165, 233, 0.08), transparent 25%),
-      #f8fafc;
+    background: #F8FAFC;
+    color: #1E293B;
   }
 
   a {
     color: inherit;
     text-decoration: none;
+    transition: color 0.15s ease-in-out;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: #0F2A52; /* primary-800 */
+    font-weight: 700;
   }
 }
 
 @layer components {
-
-  /* Gradient text utility */
-  .text-gradient {
-    @apply bg-gradient-to-r from-primary-600 via-accent-500 to-primary-600 bg-clip-text text-transparent;
+  /* Clean component classes */
+  .btn-primary {
+    @apply bg-primary-600 text-white hover:bg-primary-700 shadow-sm rounded-xl transition-colors duration-200 font-medium px-4 py-2;
   }
 
-  /* Glow effects for buttons and cards */
-  .glow-primary {
-    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3),
-      0 0 40px rgba(99, 102, 241, 0.1);
+  .btn-secondary {
+    @apply bg-primary-100 text-primary-700 hover:bg-primary-200 rounded-xl transition-colors duration-200 font-medium px-4 py-2;
   }
 
-  .glow-accent {
-    box-shadow: 0 0 20px rgba(14, 165, 233, 0.3),
-      0 0 40px rgba(14, 165, 233, 0.1);
+  .btn-outline {
+    @apply border border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white rounded-xl transition-colors duration-200 font-medium px-4 py-2;
   }
 
-  /* Glassmorphism utility */
-  .glass {
-    @apply bg-white/70 backdrop-blur-md border border-white/20;
+  .card {
+     @apply bg-white border border-border rounded-xl shadow-sm;
   }
 
-  .glass-dark {
-    @apply bg-gray-900/70 backdrop-blur-md border border-gray-700/20;
-  }
-
-  /* Shimmer effect for buttons */
-  .shimmer {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .shimmer::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg,
-        transparent,
-        rgba(255, 255, 255, 0.2),
-        transparent);
-    transition: left 0.5s ease;
-  }
-
-  .shimmer:hover::before {
-    left: 100%;
+  .input-field {
+    @apply w-full px-4 py-2 rounded-xl border border-border focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all duration-200;
   }
 }
 
@@ -83,91 +61,5 @@
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
-  }
-
-  /* Animated gradient background */
-  .animate-gradient-x {
-    animation: gradient-x 3s ease infinite;
-    background-size: 200% 100%;
-  }
-
-  @keyframes gradient-x {
-
-    0%,
-    100% {
-      background-position: 0% 50%;
-    }
-
-    50% {
-      background-position: 100% 50%;
-    }
-  }
-
-  /* Float animation for decorative elements */
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-
-  @keyframes float {
-
-    0%,
-    100% {
-      transform: translateY(0px);
-    }
-
-    50% {
-      transform: translateY(-20px);
-    }
-  }
-
-  /* Subtle pulse for attention */
-  .animate-pulse-subtle {
-    animation: pulse-subtle 2s ease-in-out infinite;
-  }
-
-  @keyframes pulse-subtle {
-
-    0%,
-    100% {
-      opacity: 1;
-    }
-
-    50% {
-      opacity: 0.8;
-    }
-  }
-
-  /* Scale in animation */
-  .animate-scale-in {
-    animation: scale-in 0.3s ease-out;
-  }
-
-  @keyframes scale-in {
-    0% {
-      transform: scale(0.95);
-      opacity: 0;
-    }
-
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-
-  /* Slide up animation */
-  .animate-slide-up {
-    animation: slide-up 0.4s ease-out;
-  }
-
-  @keyframes slide-up {
-    0% {
-      transform: translateY(10px);
-      opacity: 0;
-    }
-
-    100% {
-      transform: translateY(0);
-      opacity: 1;
-    }
   }
 }

@@ -87,14 +87,14 @@ const Assignments = () => {
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <span className="px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide">
+              <span className="px-3 py-1 rounded-full bg-primary-50 border border-primary-100 text-primary-700 text-xs font-semibold uppercase tracking-wide">
                 Student Portal
               </span>
-              <span className="px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-wide">
+              <span className="px-3 py-1 rounded-full bg-primary-50 border border-primary-100 text-primary-700 text-xs font-semibold uppercase tracking-wide">
                 {campusNames[campus]}
               </span>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">
+            <h1 className="text-3xl font-bold text-gray-900">
               Assignments
             </h1>
             <p className="text-gray-500 mt-2 max-w-xl">
@@ -106,7 +106,7 @@ const Assignments = () => {
               <p className="text-sm text-gray-500 font-medium">Pending Tasks</p>
               <p className="text-2xl font-bold text-gray-900">{assignments.filter(a => a.status === 'Pending').length}</p>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center">
               <Clock size={24} />
             </div>
           </div>
@@ -133,8 +133,8 @@ const Assignments = () => {
         </motion.div>
       ) : (
         <div className="bg-white/60 backdrop-blur-sm border border-dashed border-gray-300 rounded-3xl p-12 text-center">
-          <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle size={30} className="text-blue-400" />
+          <div className="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <CheckCircle size={30} className="text-primary-400" />
           </div>
           <h3 className="text-lg font-semibold text-gray-900">All caught up!</h3>
           <p className="text-gray-500 mt-2 max-w-sm mx-auto">

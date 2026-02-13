@@ -4,14 +4,9 @@ import {
   Users,
   Trophy,
   GraduationCap,
-  Mail,
-  Phone,
-  MapPin,
   CheckCircle,
   Book,
   School,
-  Sparkles,
-  Send,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -45,7 +40,6 @@ const Home = () => {
       ],
       image: "https://placehold.co/800x400?text=Law+Campus",
       path: "/campuses/law",
-      color: "from-amber-500 to-orange-600",
     },
     {
       name: "Main Campus",
@@ -65,7 +59,6 @@ const Home = () => {
       ],
       image: "https://placehold.co/800x400?text=Main+Campus",
       path: "/campuses/main",
-      color: "from-primary-500 to-primary-700",
     },
     {
       name: "Hala Campus",
@@ -86,7 +79,6 @@ const Home = () => {
       ],
       image: "https://placehold.co/800x400?text=Hala+Campus",
       path: "/campuses/hala",
-      color: "from-emerald-500 to-teal-600",
     },
   ];
 
@@ -195,19 +187,19 @@ const Home = () => {
 
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-background">
       {/* Hero Section */}
       <Hero
         title="THE BEST GROUP OF COLLEGES"
         image="/landing-img.png"
         announcements={announcements}
-        className="mb-12 pl-8 pr-8 "
+        className="mb-12 pl-8 pr-8"
       />
 
       {/* Stats Section */}
 
       <Section
-        className="bg-gradient-to-r from-primary-700 via-primary-600 to-accent-600 -mt-12 relative z-20"
+        className="bg-primary-900 -mt-12 relative z-20 border-y border-primary-800"
         spacing="large"
       >
         <motion.div
@@ -230,17 +222,18 @@ const Home = () => {
             transition={{ duration: 0.6 }}
             className="relative"
           >
-            <div className="absolute -inset-4 bg-gradient-to-r from-primary-100 to-accent-100 rounded-3xl transform rotate-2" />
+            {/* Replaced gradient background with solid primary color block */}
+            <div className="absolute -inset-4 bg-primary-100/50 rounded-3xl transform rotate-2" />
             <img
               src="https://placehold.co/600x500?text=About+Us"
               alt="About Us"
-              className="relative rounded-2xl shadow-2xl w-full"
+              className="relative rounded-2xl shadow-lg border border-border w-full"
             />
             {/* Floating Badge */}
-            <div className="absolute -bottom-6 -right-6 bg-white p-4 rounded-2xl shadow-xl">
+            <div className="absolute -bottom-6 -right-6 bg-white p-4 rounded-xl shadow-lg border border-border">
               <div className="text-center">
-                <div className="text-3xl font-bold text-primary-600">35+</div>
-                <div className="text-sm text-gray-600">Years of Excellence</div>
+                <div className="text-3xl font-bold text-primary-700">35+</div>
+                <div className="text-sm text-text-secondary">Years of Excellence</div>
               </div>
             </div>
           </motion.div>
@@ -252,16 +245,16 @@ const Home = () => {
             transition={{ duration: 0.6 }}
           >
             <Badge variant="primary" className="mb-4">About Us</Badge>
-            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight">
-              Excellence in Education Since <span className="text-gradient">1985</span>
+            <h3 className="text-3xl md:text-4xl font-bold text-primary-900 mb-6 leading-tight">
+              Excellence in Education Since <span className="text-primary-600">1985</span>
             </h3>
-            <p className="text-gray-600 mb-4 leading-relaxed text-lg">
+            <p className="text-text-secondary mb-4 leading-relaxed text-lg">
               Best Group of Colleges has been at the forefront of educational
               excellence for nearly four decades. Our commitment to academic
               rigor, student development, and community engagement has shaped
               thousands of successful careers.
             </p>
-            <p className="text-gray-600 mb-8 leading-relaxed">
+            <p className="text-text-secondary mb-8 leading-relaxed">
               With three dynamic campuses offering diverse programs from FSc to
               postgraduate studies, we provide a comprehensive educational
               ecosystem that nurtures talent and builds leaders.
@@ -275,9 +268,9 @@ const Home = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 hover:bg-primary-50 transition-colors group"
+                  className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 hover:bg-primary-50 transition-colors group border border-transparent hover:border-primary-100"
                 >
-                  <span className="text-gray-700 font-medium text-sm">{highlight.text}</span>
+                  <span className="text-text-primary font-medium text-sm">{highlight.text}</span>
                 </motion.div>
               ))}
             </div>
@@ -286,6 +279,7 @@ const Home = () => {
               icon={ArrowRight}
               iconPosition="right"
               onClick={() => navigate("/about")}
+              variant="outline"
             >
               Learn More About Us
             </Button>
@@ -310,7 +304,7 @@ const Home = () => {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
             >
-              <Card hover className="overflow-hidden p-0">
+              <Card hover className="overflow-hidden p-0 border border-border">
                 <div
                   className={`flex flex-col lg:flex-row ${index % 2 === 1 ? "lg:flex-row-reverse" : ""
                     }`}
@@ -322,37 +316,37 @@ const Home = () => {
                       alt={college.name}
                       className="w-full h-64 lg:h-full object-cover transition-transform duration-500 hover:scale-105"
                     />
-                    <div className={`absolute inset-0 bg-gradient-to-t ${college.color} opacity-20`} />
+                    <div className="absolute inset-0 bg-primary-900/10" />
                   </div>
 
                   {/* College Information */}
                   <div className="w-full lg:w-3/5 p-6 md:p-8 space-y-6">
                     <div className="flex items-center gap-3">
-                      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${college.color} flex items-center justify-center`}>
-                        <college.icon className="h-6 w-6 text-white" />
+                      <div className="w-12 h-12 rounded-xl bg-primary-50 flex items-center justify-center border border-primary-100">
+                        <college.icon className="h-6 w-6 text-primary-700" />
                       </div>
                       <div>
-                        <h2 className="text-2xl font-bold text-gray-900">
+                        <h2 className="text-2xl font-bold text-primary-900">
                           {college.name}
                         </h2>
-                        <p className="text-sm text-gray-500">{college.programs.length} Programs Available</p>
+                        <p className="text-sm text-text-secondary">{college.programs.length} Programs Available</p>
                       </div>
                     </div>
 
-                    <p className="text-gray-600 leading-relaxed">
+                    <p className="text-text-secondary leading-relaxed">
                       {college.description}
                     </p>
 
                     {/* Programs & Features Grid */}
                     <div className="grid md:grid-cols-2 gap-4">
-                      <div className="bg-gray-50 rounded-xl p-4">
+                      <div className="bg-gray-50 rounded-xl p-4 border border-border">
                         <div className="flex items-center gap-2 mb-3">
                           <Book className="h-4 w-4 text-primary-600" />
-                          <span className="font-semibold text-gray-900 text-sm">Programs</span>
+                          <span className="font-semibold text-primary-800 text-sm">Programs</span>
                         </div>
                         <ul className="space-y-2">
                           {college.programs.map((program) => (
-                            <li key={program} className="flex items-center text-gray-600 text-sm">
+                            <li key={program} className="flex items-center text-text-secondary text-sm">
                               <span className="h-1.5 w-1.5 bg-primary-500 rounded-full mr-2" />
                               {program}
                             </li>
@@ -360,15 +354,15 @@ const Home = () => {
                         </ul>
                       </div>
 
-                      <div className="bg-gray-50 rounded-xl p-4">
+                      <div className="bg-gray-50 rounded-xl p-4 border border-border">
                         <div className="flex items-center gap-2 mb-3">
                           <Trophy className="h-4 w-4 text-primary-600" />
-                          <span className="font-semibold text-gray-900 text-sm">Features</span>
+                          <span className="font-semibold text-primary-800 text-sm">Features</span>
                         </div>
                         <ul className="space-y-2">
                           {college.features.slice(0, 3).map((feature) => (
-                            <li key={feature} className="flex items-center text-gray-600 text-sm">
-                              <CheckCircle className="h-3.5 w-3.5 text-green-500 mr-2 flex-shrink-0" />
+                            <li key={feature} className="flex items-center text-text-secondary text-sm">
+                              <CheckCircle className="h-3.5 w-3.5 text-primary-600 mr-2 flex-shrink-0" />
                               {feature}
                             </li>
                           ))}
@@ -413,7 +407,7 @@ const Home = () => {
       </Section>
 
       {/* Contact Section */}
-      <Section background="gradient" spacing="large">
+      <Section background="gray" spacing="large">
         <Section.Header
           title="Get in Touch"
           description="Have questions? We'd love to hear from you"

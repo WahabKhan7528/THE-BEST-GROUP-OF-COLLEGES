@@ -104,7 +104,7 @@ const SubjectsList = () => {
       label: "Subject",
       render: (row) => (
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+          <div className="w-10 h-10 rounded-lg bg-primary-50 flex items-center justify-center text-primary-600">
             <BookOpen className="w-5 h-5" />
           </div>
           <div>
@@ -129,7 +129,7 @@ const SubjectsList = () => {
       label: "Faculty",
       render: (row) => (
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white text-xs font-bold ring-2 ring-white shadow-sm">
+          <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white text-xs font-bold ring-2 ring-white shadow-sm">
             {row.faculty.charAt(0)}
           </div>
           <span className="text-sm font-medium text-gray-700">{row.faculty}</span>
@@ -144,7 +144,7 @@ const SubjectsList = () => {
           {row.offeredAt.map((campusId) => (
             <span
               key={campusId}
-              className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-cyan-50 text-cyan-700 border border-cyan-100"
+              className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-primary-50 text-primary-700 border border-primary-100"
             >
               <Building2 className="w-3 h-3" />
               {getCampusName(campusId)}
@@ -160,7 +160,7 @@ const SubjectsList = () => {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-600">
+          <h1 className="text-2xl font-bold text-gray-900">
             Subjects & Assignments
           </h1>
           <p className="text-sm text-gray-500 mt-1">
@@ -169,7 +169,7 @@ const SubjectsList = () => {
         </div>
         <Link
           to="/admin/subjects/create"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl text-sm font-semibold hover:from-blue-700 hover:to-cyan-700 shadow-sm transition-all duration-200"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-sm font-semibold shadow-md transition-all duration-200"
         >
           <Plus className="w-4 h-4" />
           Add New Subject

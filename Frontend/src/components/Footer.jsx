@@ -14,7 +14,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gray-900 text-white">
+    <footer className="bg-primary-950 text-white border-t border-primary-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
         <div className="py-12 md:py-16">
@@ -24,13 +24,13 @@ const Footer = () => {
               <h3 className="text-xl font-bold mb-4 text-white">
                 Best Group of Colleges
               </h3>
-              <p className="text-gray-400 text-sm leading-relaxed mb-4">
+              <p className="text-primary-200 text-sm leading-relaxed mb-4">
                 Empowering futures through quality education since 1985. Three
                 dynamic campuses, exceptional faculty, and comprehensive
                 programs.
               </p>
-              <div className="flex items-center gap-2 text-gray-400 text-sm">
-                <Award className="h-4 w-4 text-primary-500" />
+              <div className="flex items-center gap-2 text-primary-200 text-sm">
+                <Award className="h-4 w-4 text-primary-400" />
                 <span>ISO Certified Institution</span>
               </div>
             </div>
@@ -42,7 +42,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/campuses/main"
-                    className="text-gray-400 hover:text-primary-400 text-sm transition"
+                    className="text-primary-200 hover:text-white text-sm transition"
                   >
                     Main Campus
                   </Link>
@@ -50,7 +50,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/campuses/law"
-                    className="text-gray-400 hover:text-primary-400 text-sm transition"
+                    className="text-primary-200 hover:text-white text-sm transition"
                   >
                     Law College
                   </Link>
@@ -58,7 +58,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/campuses/hala"
-                    className="text-gray-400 hover:text-primary-400 text-sm transition"
+                    className="text-primary-200 hover:text-white text-sm transition"
                   >
                     Hala Campus
                   </Link>
@@ -66,7 +66,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/colleges"
-                    className="text-gray-400 hover:text-primary-400 text-sm transition"
+                    className="text-primary-200 hover:text-white text-sm transition"
                   >
                     All Colleges
                   </Link>
@@ -74,7 +74,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/admissions"
-                    className="text-gray-400 hover:text-primary-400 text-sm transition"
+                    className="text-primary-200 hover:text-white text-sm transition"
                   >
                     Admissions
                   </Link>
@@ -89,7 +89,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/about"
-                    className="text-gray-400 hover:text-primary-400 text-sm transition"
+                    className="text-primary-200 hover:text-white text-sm transition"
                   >
                     About Us
                   </Link>
@@ -97,7 +97,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/faculty-info"
-                    className="text-gray-400 hover:text-primary-400 text-sm transition"
+                    className="text-primary-200 hover:text-white text-sm transition"
                   >
                     Faculty & Staff
                   </Link>
@@ -105,7 +105,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/news-events"
-                    className="text-gray-400 hover:text-primary-400 text-sm transition"
+                    className="text-primary-200 hover:text-white text-sm transition"
                   >
                     News & Events
                   </Link>
@@ -113,7 +113,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/gallery"
-                    className="text-gray-400 hover:text-primary-400 text-sm transition"
+                    className="text-primary-200 hover:text-white text-sm transition"
                   >
                     Gallery
                   </Link>
@@ -121,7 +121,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/contact"
-                    className="text-gray-400 hover:text-primary-400 text-sm transition"
+                    className="text-primary-200 hover:text-white text-sm transition"
                   >
                     Contact Us
                   </Link>
@@ -136,32 +136,32 @@ const Footer = () => {
               </h3>
               <ul className="space-y-3">
                 <li className="flex items-start gap-3">
-                  <MapPin className="h-5 w-5 text-primary-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-400 text-sm">
+                  <MapPin className="h-5 w-5 text-primary-400 flex-shrink-0 mt-0.5" />
+                  <span className="text-primary-200 text-sm">
                     123 Education Street, Islamabad, Pakistan
                   </span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <Phone className="h-5 w-5 text-primary-500 flex-shrink-0" />
+                  <Phone className="h-5 w-5 text-primary-400 flex-shrink-0" />
                   <a
                     href="tel:+92511234567"
-                    className="text-gray-400 hover:text-primary-400 text-sm transition"
+                    className="text-primary-200 hover:text-white text-sm transition"
                   >
                     +92 51 1234 567
                   </a>
                 </li>
                 <li className="flex items-center gap-3">
-                  <Mail className="h-5 w-5 text-primary-500 flex-shrink-0" />
+                  <Mail className="h-5 w-5 text-primary-400 flex-shrink-0" />
                   <a
                     href="mailto:info@bestcolleges.edu.pk"
-                    className="text-gray-400 hover:text-primary-400 text-sm transition"
+                    className="text-primary-200 hover:text-white text-sm transition"
                   >
                     info@bestcolleges.edu.pk
                   </a>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Clock className="h-5 w-5 text-primary-500 flex-shrink-0 mt-0.5" />
-                  <div className="text-gray-400 text-sm">
+                  <Clock className="h-5 w-5 text-primary-400 flex-shrink-0 mt-0.5" />
+                  <div className="text-primary-200 text-sm">
                     <p>Mon - Fri: 8:00 AM - 5:00 PM</p>
                     <p>Sat - Sun: Closed</p>
                   </div>
@@ -175,19 +175,19 @@ const Footer = () => {
               <div className="flex flex-wrap gap-4 mb-6">
                 <a
                   href="#"
-                  className="text-gray-400 hover:text-primary-400 transition transform hover:scale-110"
+                  className="text-primary-200 hover:text-white transition transform hover:scale-110"
                 >
                   <Facebook className="h-6 w-6" />
                 </a>
                 <a
                   href="#"
-                  className="text-gray-400 hover:text-primary-400 transition transform hover:scale-110"
+                  className="text-primary-200 hover:text-white transition transform hover:scale-110"
                 >
                   <Twitter className="h-6 w-6" />
                 </a>
                 <a
                   href="#"
-                  className="text-gray-400 hover:text-primary-400 transition transform hover:scale-110"
+                  className="text-primary-200 hover:text-white transition transform hover:scale-110"
                 >
                   <Instagram className="h-6 w-6" />
                 </a>
@@ -197,38 +197,38 @@ const Footer = () => {
         </div>
 
         {/* Divider */}
-        <div className="border-t border-gray-800"></div>
+        <div className="border-t border-primary-900"></div>
 
         {/* Bottom Footer */}
         <div className="py-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="order-2 md:order-1">
-              <p className="text-gray-400 text-xs text-center md:text-left">
+              <p className="text-primary-300 text-xs text-center md:text-left">
                 © {currentYear} Best Group of Colleges. All rights reserved.
               </p>
             </div>
             <div className="flex justify-center gap-6 order-1 md:order-2">
               <a
                 href="#"
-                className="text-gray-400 hover:text-white text-xs transition"
+                className="text-primary-300 hover:text-white text-xs transition"
               >
                 Privacy Policy
               </a>
               <a
                 href="#"
-                className="text-gray-400 hover:text-white text-xs transition"
+                className="text-primary-300 hover:text-white text-xs transition"
               >
                 Terms of Service
               </a>
               <a
                 href="#"
-                className="text-gray-400 hover:text-white text-xs transition"
+                className="text-primary-300 hover:text-white text-xs transition"
               >
                 Disclaimer
               </a>
             </div>
             <div className="order-3 text-center md:text-right">
-              <p className="text-gray-400 text-xs">
+              <p className="text-primary-300 text-xs">
                 Designed by Nexyvora for The Best Group of Colleges
               </p>
             </div>
@@ -238,5 +238,4 @@ const Footer = () => {
     </footer>
   );
 };
-
 export default Footer;

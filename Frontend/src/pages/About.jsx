@@ -86,7 +86,7 @@ const About = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Our Story */}
-      <Section background="gray" spacing="large" className="mt-20">
+      <Section background="gray" spacing="large">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <motion.div
             initial={{ opacity: 0, x: -50 }}

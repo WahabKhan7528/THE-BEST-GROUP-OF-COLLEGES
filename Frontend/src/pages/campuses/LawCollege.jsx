@@ -20,6 +20,8 @@ import {
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
+import { programsData } from "../../data/programsData";
+
 const LawCollege = () => {
   const navigate = useNavigate();
 
@@ -46,24 +48,7 @@ const LawCollege = () => {
     },
   ];
 
-  const programs = [
-    {
-      title: "LLB (5 Years)",
-      description: "A comprehensive five-year degree program recognized by the Pakistan Bar Council. Covers civil, criminal, and corporate law in depth.",
-      duration: "5 Years",
-      seats: 100,
-      icon: Scale,
-      color: "blue",
-    },
-    {
-      title: "LLM",
-      description: "Advanced Master of Laws program for specialization in International Law, Corporate Law, or Human Rights.",
-      duration: "2 Years",
-      seats: 50,
-      icon: Scroll,
-      color: "purple",
-    },
-  ];
+  const programs = programsData.law[0].items;
 
   const facilities = [
     {
@@ -161,9 +146,6 @@ const LawCollege = () => {
                 <p className="text-gray-600 mb-6">
                   To be a premier center of legal learning that produces competent professionals capable of interpreting and applying the law for the betterment of society.
                 </p>
-                <Button variant="ghost" className="text-blue-600 hover:text-blue-700 p-0 hover:bg-transparent">
-                  View Academic Calendar <ArrowRight className="ml-2 w-4 h-4" />
-                </Button>
               </div>
             </Card>
           </motion.div>
@@ -196,13 +178,9 @@ const LawCollege = () => {
                   <h3 className="text-xl font-bold mb-3 text-gray-900">{program.title}</h3>
                   <p className="text-gray-600 mb-6 flex-grow">{program.description}</p>
 
-                  <div className="mt-auto pt-6 border-t border-gray-100 flex items-center justify-between">
-                    <div className="flex items-center text-sm text-gray-500">
-                      <Users className="w-4 h-4 mr-2" />
-                      {program.seats} Seats Available
-                    </div>
+                  <div className="mt-auto pt-6 border-t border-gray-100 flex items-center justify-end">
                     <Button size="sm" onClick={() => navigate("/admissions")}>
-                      View Criteria
+                      Ask Criteria
                     </Button>
                   </div>
                 </div>
@@ -240,7 +218,7 @@ const LawCollege = () => {
         </div>
       </Section>
 
-      <Section background="gradient" className="text-center">
+      <Section className="text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -249,14 +227,14 @@ const LawCollege = () => {
         >
           <h2 className="text-3xl font-bold mb-6">Pursue a Career in Law</h2>
           <p className="text-lg text-gray-600 mb-8">
-            Become a part of our prestigious legal community. Apply now for the upcoming Spring session.
+            Become a part of our prestigious legal community. Apply now for the upcoming session.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" icon={ArrowRight} iconPosition="right" onClick={() => navigate("/admissions")}>
               Apply Now
             </Button>
             <Button size="lg" variant="outline" onClick={() => navigate("/contact")}>
-              Contact Law Dept
+              Contact Us
             </Button>
           </div>
         </motion.div>

@@ -59,7 +59,7 @@ const Faq = ({ limit }) => {
                                 <div className="flex items-start gap-4">
                                     <div className="flex-shrink-0">
                                         <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center group-hover:bg-primary-600 transition-colors">
-                                            <span  className="text-2xl font-bold text-primary-600 group-hover:text-white transition-colors">{idx + 1}</span>
+                                            <span className="text-2xl font-bold text-primary-600 group-hover:text-white transition-colors">{idx + 1}</span>
                                         </div>
                                     </div>
                                     <div>

@@ -13,10 +13,8 @@ const CampusLayout = () => {
     { name: "Overview", path: "" },
     { name: "Academics", path: "academics" },
     { name: "Faculty", path: "faculty" },
-    { name: "Research", path: "research" },
     { name: "Student Life", path: "student-life" },
     { name: "Facilities", path: "facilities" },
-    { name: "Legal", path: "legal" },
   ];
 
   // 🔧 FIX: detect active link correctly for mobile dropdown

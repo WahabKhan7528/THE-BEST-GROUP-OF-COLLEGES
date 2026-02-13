@@ -50,15 +50,15 @@ const Stats = ({ items, variant = "light", columns = 4 }) => {
   const variants = {
     light: {
       wrapper: "bg-white",
-      icon: "bg-blue-100 text-blue-600",
-      value: "text-gray-900",
-      label: "text-gray-600",
+      icon: "bg-primary-50 text-primary-600",
+      value: "text-primary-900",
+      label: "text-text-secondary",
     },
     dark: {
       wrapper: "bg-transparent",
-      icon: "bg-blue-500 text-white",
+      icon: "bg-primary-700 text-white border border-primary-600",
       value: "text-white",
-      label: "text-gray-100",
+      label: "text-primary-200",
     },
   };
 
@@ -76,10 +76,10 @@ const Stats = ({ items, variant = "light", columns = 4 }) => {
         const suffix = stat.value.replace(/\d/g, "");
 
         return (
-          <div key={index} ref={ref} className="text-center">
+          <div key={index} ref={ref} className="text-center group">
             <div
               className={clsx(
-                "inline-flex items-center justify-center w-12 h-12 rounded-full mb-4",
+                "inline-flex items-center justify-center w-12 h-12 rounded-xl mb-4 transition-transform group-hover:scale-110",
                 variants[variant].icon
               )}
             >

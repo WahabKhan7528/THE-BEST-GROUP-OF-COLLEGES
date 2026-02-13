@@ -103,7 +103,7 @@ const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
             <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
             <input
               type="text"
-              className="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-primary-500 outline-none"
               placeholder="e.g. Quiz on Monday"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -114,7 +114,7 @@ const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
             <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
             <textarea
               rows={4}
-              className="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none resize-none"
+              className="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-primary-500 outline-none resize-none"
               placeholder="Details about the announcement..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -125,10 +125,10 @@ const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
             <label className="block text-sm font-medium text-gray-700 mb-2">Target Classes</label>
             <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto">
               {classes.map(cls => (
-                <label key={cls.id} className={`flex items-center p-2 rounded-lg border cursor-pointer transition-all ${selectedClasses.includes(cls.id) ? 'bg-blue-50 border-blue-200' : 'hover:bg-gray-50 border-gray-200'}`}>
+                <label key={cls.id} className={`flex items-center p-2 rounded-lg border cursor-pointer transition-all ${selectedClasses.includes(cls.id) ? 'bg-primary-50 border-primary-200' : 'hover:bg-gray-50 border-gray-200'}`}>
                   <input
                     type="checkbox"
-                    className="w-4 h-4 text-blue-600 rounded"
+                    className="w-4 h-4 text-primary-600 rounded"
                     checked={selectedClasses.includes(cls.id)}
                     onChange={() => toggleClass(cls.id)}
                   />
@@ -142,7 +142,7 @@ const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
 
           <div className="flex justify-end gap-2 pt-2">
             <button type="button" onClick={onClose} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
-            <button type="submit" className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-sm">Post</button>
+            <button type="submit" className="px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl shadow-sm">Post</button>
           </div>
         </form>
       </div>
@@ -193,13 +193,13 @@ const Announcements = () => {
             <h1 className="text-2xl font-semibold text-gray-900">
               Class updates
             </h1>
-            <p className="text-sm text-blue-600 mt-2">
+            <p className="text-sm text-primary-600 mt-2">
               📍 {campusNames[campus]}
             </p>
           </div>
           <button
             onClick={() => setIsPosting(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-700 text-white rounded-lg text-sm font-semibold hover:bg-blue-800 transition-all shadow-lg shadow-blue-500/30"
+            className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-semibold hover:bg-primary-700 transition-all shadow-md"
           >
             <Plus size={18} />
             Post Announcement
@@ -231,7 +231,7 @@ const Announcements = () => {
           </p>
           <button
             onClick={() => setIsPosting(true)}
-            className="text-blue-700 font-semibold hover:text-blue-800 mt-2"
+            className="text-primary-700 font-semibold hover:text-primary-800 mt-2"
           >
             Post the first announcement →
           </button>

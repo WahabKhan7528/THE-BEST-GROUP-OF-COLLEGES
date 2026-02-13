@@ -74,7 +74,7 @@ const CampusAdminsList = () => {
             key: "role",
             label: "Role",
             render: (row) => (
-                <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${row.role === 'Super Admin' ? 'bg-cyan-50 text-cyan-700' : 'bg-blue-50 text-blue-700'
+                <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${row.role === 'Super Admin' ? 'bg-primary-50 text-primary-700' : 'bg-white text-primary-600 border border-primary-100'
                     }`}>
                     {row.role}
                 </span>
@@ -122,7 +122,7 @@ const CampusAdminsList = () => {
 
                 <Link
                     to="/admin/users/create"
-                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-xl font-semibold shadow-md transition-all text-sm"
+                    className="flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-semibold shadow-md transition-all text-sm"
                 >
                     <UserPlus size={18} />
                     Add New Admin

@@ -2,23 +2,21 @@ import { clsx } from "clsx";
 
 const variants = {
   primary:
-    "bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/40 hover:from-primary-500 hover:to-primary-600",
+    "bg-primary-600 text-white shadow-sm hover:bg-primary-700 hover:shadow-md active:bg-primary-800",
   secondary:
-    "bg-gradient-to-r from-gray-100 to-gray-200 text-gray-900 shadow-md hover:shadow-lg hover:from-gray-50 hover:to-gray-100",
+    "bg-primary-50 text-primary-700 shadow-sm hover:bg-primary-100 hover:text-primary-800",
   outline:
-    "border-2 border-primary-600 text-primary-600 hover:bg-primary-50 hover:border-primary-500 shadow-sm hover:shadow-md",
-  gradient:
-    "bg-gradient-to-r from-primary-600 via-accent-500 to-primary-600 bg-[length:200%_100%] text-white shadow-lg shadow-primary-500/30 hover:shadow-xl hover:shadow-accent-500/40 hover:animate-gradient-x",
+    "border border-primary-600 text-primary-600 hover:bg-primary-50 hover:text-primary-700 active:bg-primary-100",
   ghost:
-    "text-gray-600 hover:text-primary-600 hover:bg-primary-50",
+    "text-secondary-600 hover:text-primary-600 hover:bg-slate-50",
   danger:
-    "bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg shadow-red-500/25 hover:shadow-xl hover:shadow-red-500/40 hover:from-red-400 hover:to-red-500",
+    "bg-red-600 text-white shadow-sm hover:bg-red-700",
 };
 
 const sizes = {
-  sm: "px-4 py-2 text-sm rounded-lg gap-1.5",
-  md: "px-6 py-3 text-base rounded-xl gap-2",
-  lg: "px-8 py-4 text-lg rounded-xl gap-2.5",
+  sm: "px-3 py-1.5 text-sm rounded-lg gap-1.5",
+  md: "px-5 py-2.5 text-sm font-medium rounded-xl gap-2",
+  lg: "px-6 py-3 text-base font-medium rounded-xl gap-2.5",
 };
 
 export default function Button({
@@ -37,14 +35,12 @@ export default function Button({
   return (
     <button
       className={clsx(
-        "inline-flex items-center justify-center font-semibold",
-        "transition-all duration-300 ease-out",
-        "transform hover:scale-[1.02] active:scale-[0.98]",
-        "focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2",
-        variants[variant],
+        "inline-flex items-center justify-center transition-all duration-200",
+        "focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:ring-offset-1",
+        variants[variant] || variants.primary,
         sizes[size],
         {
-          "opacity-60 cursor-not-allowed hover:scale-100": isDisabled,
+          "opacity-50 cursor-not-allowed pointer-events-none": isDisabled,
           "flex-row-reverse": iconPosition === "right",
         },
         className

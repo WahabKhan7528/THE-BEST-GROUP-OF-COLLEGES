@@ -148,7 +148,7 @@ const EditAssignment = () => {
                             value={form.classSection}
                             onChange={(e) => handleChange('classSection', e.target.value)}
                             placeholder="e.g. BSCS - A"
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all outline-none"
                             required
                         />
                     </div>
@@ -223,7 +223,7 @@ const EditAssignment = () => {
                                 onChange={handleFile}
                                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                             />
-                            <div className="w-full px-4 py-3 rounded-xl border border-dashed border-gray-300 bg-white/30 text-gray-500 group-hover:bg-blue-50 group-hover:border-blue-300 group-hover:text-blue-600 transition-all flex items-center gap-2 truncate">
+                            <div className="w-full px-4 py-3 rounded-xl border border-dashed border-gray-300 bg-white/30 text-gray-500 group-hover:bg-primary-50 group-hover:border-primary-300 group-hover:text-primary-600 transition-all flex items-center gap-2 truncate">
                                 <FileText size={18} />
                                 <span className="truncate">{form.attachmentName || "Choose file..."}</span>
                             </div>
@@ -240,7 +240,7 @@ const EditAssignment = () => {
                     </Link>
                     <button
                         type="submit"
-                        className="flex items-center gap-2 px-8 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/30 hover:shadow-blue-500/40 hover:-translate-y-0.5 transition-all duration-200"
+                        className="flex items-center gap-2 px-8 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-semibold shadow-md hover:-translate-y-0.5 transition-all duration-200"
                     >
                         <Save size={18} />
                         Save Changes

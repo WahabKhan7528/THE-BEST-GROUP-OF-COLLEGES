@@ -24,7 +24,7 @@ const Table = ({ columns, data, actionButtons }) => {
             {data.map((row, idx) => (
               <tr
                 key={row.id || idx}
-                className="hover:bg-blue-50/30 transition-colors duration-150 group"
+                className="hover:bg-primary-50/50 transition-colors duration-150 group"
               >
                 {columns.map((col) => (
                   <td key={col.key} className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 group-hover:text-gray-900 transition-colors">
