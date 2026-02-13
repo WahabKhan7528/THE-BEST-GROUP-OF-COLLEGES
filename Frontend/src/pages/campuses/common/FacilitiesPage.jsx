@@ -84,7 +84,7 @@ const FacilitiesPage = () => {
   return (
     <div className="min-h-screen bg-white">
       {facilities.map((category, catIdx) => (
-        <Section key={category.category} className={catIdx % 2 !== 0 ? "bg-gray-50" : "bg-white"} spacing="large">
+        <Section key={category.category} background={catIdx % 2 !== 0 ? "gray" : "white"} spacing="large">
           <Section.Header
             title={category.category}
             description={category.description}
@@ -106,7 +106,7 @@ const FacilitiesPage = () => {
                       alt={facility.name}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
+                    <div className="absolute inset-0 bg-black/40 flex items-end p-6">
                       <div className="text-white">
                         <div className="p-2 rounded-2xl bg-primary-500/30 backdrop-blur-md inline-flex items-center justify-center mb-2">
                           <facility.icon className="w-6 h-6 text-white" />
@@ -138,7 +138,7 @@ const FacilitiesPage = () => {
           <p className="text-lg text-gray-600 mb-8">
             We invite you to visit our campus and see our facilities firsthand. Book a guided tour today.
           </p>
-          <Button size="lg" variant="primary" className="bg-white text-blue-900 border-white hover:bg-blue-50" onClick={() => navigate("/contact")}>
+          <Button size="lg" variant="primary" className="bg-white text-primary-900 border-white hover:bg-primary-50" onClick={() => navigate("/contact")}>
             Schedule a Visit
           </Button>
         </motion.div>

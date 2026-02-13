@@ -11,11 +11,11 @@ const Section = ({
   ...props
 }) => {
   const backgrounds = {
-    white: 'bg-white',
-    gray: 'bg-gray-50', // Simplified from gradient
-    blue: 'bg-primary-700 text-white', // Simplified from gradient
-    dark: 'bg-primary-950 text-white', // Changed to primary-950
-    gradient: 'bg-primary-50', // Simplified to solid subtle blue
+    white: 'bg-white text-text-primary',
+    gray: 'bg-gray-50 text-text-primary',
+    blue: 'bg-primary-700 text-white',
+    dark: 'bg-primary-900 text-white',
+    gradient: 'bg-primary-50 text-text-primary',
   };
 
   const spacings = {
@@ -37,7 +37,7 @@ const Section = ({
     <Wrapper
       className={clsx(
         'relative overflow-hidden',
-        backgrounds[background] || backgrounds.white,
+        !className?.includes('bg-') && (backgrounds[background] || backgrounds.white),
         spacings[spacing],
         className
       )}
@@ -62,6 +62,7 @@ Section.Header = function SectionHeader({
   center = true,
   gradient = false, // Ignored now
   animate = true,
+  light = false,
   ...props
 }) {
   const Wrapper = animate ? motion.div : 'div';
@@ -91,16 +92,17 @@ Section.Header = function SectionHeader({
       )}
       <h2
         className={clsx(
-          'text-3xl md:text-4xl lg:text-5xl font-bold mb-4 tracking-tight text-primary-900'
+          'text-3xl md:text-4xl lg:text-5xl font-bold mb-4 tracking-tight',
+          light ? 'text-white' : 'text-primary-900'
         )}
       >
         {title}
       </h2>
       {subtitle && (
-        <p className="text-lg text-primary-600 font-medium mb-2">{subtitle}</p>
+        <p className={clsx("text-lg font-medium mb-2", light ? 'text-primary-100' : 'text-primary-600')}>{subtitle}</p>
       )}
       {description && (
-        <p className={clsx("text-lg md:text-xl text-text-secondary leading-relaxed", { "mx-auto max-w-3xl": center })}>{description}</p>
+        <p className={clsx("text-lg md:text-xl leading-relaxed", center && "mx-auto max-w-3xl", light ? 'text-primary-50/80' : 'text-text-secondary')}>{description}</p>
       )}
     </Wrapper>
   );

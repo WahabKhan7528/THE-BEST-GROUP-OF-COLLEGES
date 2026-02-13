@@ -184,8 +184,6 @@ const Home = () => {
     },
   ];
 
-
-
   return (
     <div className="flex flex-col min-h-screen bg-background">
       {/* Hero Section */}
@@ -199,7 +197,8 @@ const Home = () => {
       {/* Stats Section */}
 
       <Section
-        className="bg-primary-900 -mt-12 relative z-20 border-y border-primary-800"
+        background="blue"
+        className="-mt-12 relative z-20 border-y border-primary-800"
         spacing="large"
       >
         <motion.div
@@ -232,7 +231,7 @@ const Home = () => {
             {/* Floating Badge */}
             <div className="absolute -bottom-6 -right-6 bg-white p-4 rounded-xl shadow-lg border border-border">
               <div className="text-center">
-                <div className="text-3xl font-bold text-primary-700">35+</div>
+                <div className="text-3xl font-bold text-primary-700">18+</div>
                 <div className="text-sm text-text-secondary">Years of Excellence</div>
               </div>
             </div>
@@ -244,7 +243,7 @@ const Home = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <Badge variant="primary" className="mb-4">About Us</Badge>
+            <Badge variant="primary" solid className="mb-4">About Us</Badge>
             <h3 className="text-3xl md:text-4xl font-bold text-primary-900 mb-6 leading-tight">
               Excellence in Education Since <span className="text-primary-600">1985</span>
             </h3>
@@ -279,7 +278,7 @@ const Home = () => {
               icon={ArrowRight}
               iconPosition="right"
               onClick={() => navigate("/about")}
-              variant="outline"
+              variant="primary"
             >
               Learn More About Us
             </Button>

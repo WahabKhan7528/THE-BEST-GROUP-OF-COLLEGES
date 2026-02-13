@@ -84,7 +84,8 @@ const HalaCampus = () => {
 
       {/* Stats Bar */}
       <Section
-        className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 -mt-16 relative z-20"
+        background="blue"
+        className="-mt-16 relative z-20"
         spacing="default"
       >
         <motion.div
@@ -112,7 +113,7 @@ const HalaCampus = () => {
             </p>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <div className="mt-1 p-1 rounded-full bg-blue-100 text-blue-600">
+                <div className="mt-1 p-1 rounded-full bg-primary-100 text-primary-600">
                   <CheckCircle size={16} />
                 </div>
                 <div>
@@ -121,7 +122,7 @@ const HalaCampus = () => {
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="mt-1 p-1 rounded-full bg-blue-100 text-blue-600">
+                <div className="mt-1 p-1 rounded-full bg-primary-100 text-primary-600">
                   <CheckCircle size={16} />
                 </div>
                 <div>
@@ -139,15 +140,15 @@ const HalaCampus = () => {
             viewport={{ once: true }}
             className="relative"
           >
-            <div className="absolute inset-0 bg-gradient-to-tr from-blue-600 to-cyan-500 rounded-3xl transform -rotate-3 opacity-10"></div>
+            <div className="absolute inset-0 bg-primary-600/10 rounded-3xl transform -rotate-3 opacity-10"></div>
             <Card className="relative border-0 shadow-xl bg-white/50 backdrop-blur-sm rounded-3xl">
               <div className="p-6">
-                <Badge variant="outline" className="mb-4 border-blue-200 text-blue-700 rounded-full">Our Mission</Badge>
+                <Badge variant="outline" className="mb-4 border-primary-200 text-primary-700 rounded-full">Our Mission</Badge>
                 <h3 className="text-2xl font-bold mb-4 text-gray-900">Nurturing Talent</h3>
                 <p className="text-gray-600 mb-6">
                   To provide high-quality intermediate education that empowers students to achieve top positions in board exams and secure admissions in prestigious universities.
                 </p>
-                <Button variant="ghost" className="text-blue-600 hover:text-blue-700 p-0 hover:bg-transparent" onClick={() => navigate("/faculty-info")}>
+                <Button variant="ghost" className="text-primary-600 hover:text-primary-700 p-0 hover:bg-transparent" onClick={() => navigate("/faculty-info")}>
                   View Faculty Members <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </div>
@@ -156,7 +157,7 @@ const HalaCampus = () => {
         </div>
       </Section>
 
-      <Section className="bg-gray-50 from-gray-50 to-white bg-gradient-to-b" spacing="large">
+      <Section className="bg-gray-50" spacing="large">
         <Section.Header
           title="Intermediate Programs"
           description="Choose the right path for your future career."
@@ -164,13 +165,7 @@ const HalaCampus = () => {
         />
         <div className="grid md:grid-cols-2 gap-8">
           {programs.map((program, idx) => {
-            const colorClasses = {
-              cyan: { border: "border-t-cyan-500", bg: "bg-cyan-50", text: "text-cyan-600" },
-              blue: { border: "border-t-blue-500", bg: "bg-blue-50", text: "text-blue-600" },
-              sky: { border: "border-t-sky-500", bg: "bg-sky-50", text: "text-sky-600" },
-              slate: { border: "border-t-slate-500", bg: "bg-slate-50", text: "text-slate-600" },
-            };
-            const colors = colorClasses[program.color] || colorClasses.blue;
+            const colors = { border: "border-t-primary-600", bg: "bg-primary-50", text: "text-primary-600" };
 
             return (
               <motion.div
@@ -224,7 +219,7 @@ const HalaCampus = () => {
             >
               <Card hover className="h-full text-center bg-white border border-gray-100 rounded-3xl">
                 <div className="flex justify-center mb-4">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-16 h-16 rounded-full bg-primary-50 flex items-center justify-center text-primary-600 group-hover:scale-110 transition-transform duration-300">
                     <facility.icon size={28} />
                   </div>
                 </div>

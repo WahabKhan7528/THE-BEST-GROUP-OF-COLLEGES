@@ -76,14 +76,14 @@ const EventsPage = () => {
                 <div className="w-full md:w-2/5 h-48 md:h-auto relative">
                   <img src={event.image} alt={event.title} className="w-full h-full object-cover" />
                   <div className="absolute top-4 left-4">
-                    <Badge className="bg-white/90 text-blue-800 backdrop-blur shadow-sm rounded-full">
+                    <Badge className="bg-white/90 text-primary-800 backdrop-blur shadow-sm rounded-full">
                       {event.category}
                     </Badge>
                   </div>
                 </div>
 
                 <div className="p-6 flex flex-col flex-grow w-full md:w-3/5">
-                  <div className="flex items-center text-sm text-blue-600 font-semibold mb-2">
+                  <div className="flex items-center text-sm text-primary-600 font-semibold mb-2">
                     <Calendar className="w-4 h-4 mr-2" />
                     {event.date}
                   </div>
@@ -110,7 +110,7 @@ const EventsPage = () => {
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="text-blue-600 p-0 h-auto hover:bg-transparent hover:text-blue-800"
+                      className="text-primary-600 p-0 h-auto hover:bg-transparent hover:text-primary-800"
                       onClick={() => { }}
                       aria-label={`View details for ${event.title}`}
                     >

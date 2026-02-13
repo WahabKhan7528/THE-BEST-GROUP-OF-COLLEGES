@@ -82,7 +82,7 @@ const StudentLifePage = () => {
               transition={{ duration: 0.5, delay: idx * 0.1 }}
               viewport={{ once: true }}
             >
-              <Card hover className="h-full flex flex-col text-center items-center p-6 border-t-4 rounded-3xl border-t-primary-500">
+              <Card hover className="h-full flex flex-col text-center items-center p-6 border-t-4 rounded-3xl border-t-primary-600">
                 <div className="p-4 rounded-full bg-primary-100 text-primary-600 mb-4 ring-8 ring-primary-50/50">
                   <society.icon className="w-8 h-8" />
                 </div>
@@ -104,29 +104,29 @@ const StudentLifePage = () => {
         </div>
       </Section>
 
-      <Section className="bg-gradient-to-r from-primary-700 via-primary-600 to-accent-600 text-white overflow-hidden relative">
+      <Section background="blue" className="overflow-hidden relative">
         {/* Decorative circles */}
         <div className="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3"></div>
 
         <div className="relative z-10 grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <Badge className="bg-primary-500/20 text-primary-200 border-primary-400/30 mb-4">Campus Vibes</Badge>
-            <h2 className="text-4xl font-bold mb-6">A Campus That Never Sleeps</h2>
-            <p className="text-blue-100 text-lg leading-relaxed mb-8">
+            <Badge className="bg-primary-600/20 text-primary-100 border-primary-400/30 mb-4">Campus Vibes</Badge>
+            <h2 className="text-4xl font-bold mb-6 text-white">A Campus That Never Sleeps</h2>
+            <p className="text-primary-100 text-lg leading-relaxed mb-8">
               From early morning study sessions in the library to late-night sports matches, our campus is always buzzing with energy. Discover the perfect balance between academic rigor and social fun.
             </p>
             <ul className="grid grid-cols-2 gap-4 mb-8">
               {campusHighlights.map(highlight => (
                 <li key={highlight.title} className="flex items-center gap-3">
                   <div className="p-2 rounded-lg bg-white/10">
-                    <highlight.icon className="w-5 h-5 text-cyan-300" />
+                    <highlight.icon className="w-5 h-5 text-primary-200" />
                   </div>
                   <span className="font-semibold">{highlight.title}</span>
                 </li>
               ))}
             </ul>
-            <Button variant="outline" className="border-white text-white hover:bg-white hover:text-blue-900" onClick={() => { }}>
+            <Button variant="outline" className="border-white text-white hover:bg-white hover:text-primary-900" onClick={() => { }}>
               Explore Gallery
             </Button>
           </div>

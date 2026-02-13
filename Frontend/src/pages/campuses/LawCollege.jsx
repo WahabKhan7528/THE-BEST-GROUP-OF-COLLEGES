@@ -83,7 +83,8 @@ const LawCollege = () => {
 
       {/* Stats Bar */}
       <Section
-        className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 -mt-16 relative z-20"
+        background="blue"
+        className="-mt-16 relative z-20"
         spacing="default"
       >
         <motion.div
@@ -111,7 +112,7 @@ const LawCollege = () => {
             </p>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <div className="mt-1 p-1 rounded-full bg-blue-100 text-blue-600">
+                <div className="mt-1 p-1 rounded-full bg-primary-100 text-primary-600">
                   <CheckCircle size={16} />
                 </div>
                 <div>
@@ -120,7 +121,7 @@ const LawCollege = () => {
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="mt-1 p-1 rounded-full bg-blue-100 text-blue-600">
+                <div className="mt-1 p-1 rounded-full bg-primary-100 text-primary-600">
                   <CheckCircle size={16} />
                 </div>
                 <div>
@@ -138,10 +139,10 @@ const LawCollege = () => {
             viewport={{ once: true }}
             className="relative"
           >
-            <div className="absolute inset-0 bg-gradient-to-tr from-blue-600 to-cyan-500 rounded-3xl transform rotate-3 opacity-10"></div>
+            <div className="absolute inset-0 bg-primary-600/10 rounded-3xl transform rotate-3 opacity-10"></div>
             <Card className="relative border-0 shadow-xl bg-white/50 backdrop-blur-sm rounded-3xl">
               <div className="p-6">
-                <Badge variant="outline" className="mb-4 border-blue-200 text-blue-700 rounded-full">Our Vision</Badge>
+                <Badge variant="outline" className="mb-4 border-primary-200 text-primary-700 rounded-full">Our Vision</Badge>
                 <h3 className="text-2xl font-bold mb-4 text-gray-900">Upholding the Rule of Law</h3>
                 <p className="text-gray-600 mb-6">
                   To be a premier center of legal learning that produces competent professionals capable of interpreting and applying the law for the betterment of society.
@@ -152,7 +153,7 @@ const LawCollege = () => {
         </div>
       </Section>
 
-      <Section className="bg-gray-50 from-gray-50 to-white bg-gradient-to-b" spacing="large">
+      <Section className="bg-gray-50" spacing="large">
         <Section.Header
           title="Legal Programs"
           description="Approved by HEC and Pakistan Bar Council."
@@ -167,10 +168,10 @@ const LawCollege = () => {
               transition={{ duration: 0.5, delay: idx * 0.1 }}
               viewport={{ once: true }}
             >
-              <Card hover className="h-full border-t-4 border-t-blue-500 rounded-3xl">
+              <Card hover className="h-full border-t-4 border-t-primary-600 rounded-3xl">
                 <div className="flex flex-col h-full">
                   <div className="flex items-start justify-between mb-4">
-                    <div className="p-3 rounded-2xl bg-blue-50 text-blue-600">
+                    <div className="p-3 rounded-2xl bg-primary-50 text-primary-600">
                       <program.icon size={24} />
                     </div>
                     <Badge variant="secondary" className="rounded-full">{program.duration}</Badge>
@@ -206,7 +207,7 @@ const LawCollege = () => {
             >
               <Card hover className="h-full text-center bg-white border border-gray-100 rounded-3xl">
                 <div className="flex justify-center mb-4">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-16 h-16 rounded-full bg-primary-50 flex items-center justify-center text-primary-600 group-hover:scale-110 transition-transform duration-300">
                     <facility.icon size={28} />
                   </div>
                 </div>

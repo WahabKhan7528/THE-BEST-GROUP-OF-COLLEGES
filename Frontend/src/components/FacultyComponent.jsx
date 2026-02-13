@@ -238,7 +238,7 @@ const FacultyComponent = ({ filterCampus }) => {
                                     viewport={{ once: true }}
                                     transition={{ duration: 0.4, delay: fIdx * 0.1 }}
                                 >
-                                    <Card hover className="h-full flex flex-col items-center text-center p-6 rounded-3xl border-t-4 border-t-primary-500">
+                                    <Card hover className="h-full flex flex-col items-center text-center p-6 rounded-3xl border-t-4 border-t-primary-600">
                                         <div className="w-32 h-32 rounded-full overflow-hidden mb-6 border-4 border-primary-50 shadow-inner">
                                             <img src={faculty.image} alt={faculty.name} className="w-full h-full object-cover" />
                                         </div>
@@ -279,7 +279,7 @@ const FacultyComponent = ({ filterCampus }) => {
                                         </div>
 
                                         <div className="mt-6 flex justify-center gap-3 w-full">
-                                            <Button size="sm" variant="outline" className="w-full text-gray-600 border-gray-200 hover:border-primary-500 hover:text-primary-600 rounded-full" onClick={() => window.location.href = `mailto:${faculty.email}`}>
+                                            <Button size="sm" variant="outline" className="w-full text-gray-600 border-gray-200 hover:border-primary-600 hover:text-primary-600 rounded-full" onClick={() => window.location.href = `mailto:${faculty.email}`}>
                                                 <Mail className="w-4 h-4 mr-2" /> Contact
                                             </Button>
                                         </div>

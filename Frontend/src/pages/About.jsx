@@ -94,7 +94,7 @@ const About = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <Badge variant="primary" className="mb-4">Our Story</Badge>
+            <Badge variant="primary" solid className="mb-4">Our Story</Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight">
               A Legacy of <span className="text-gradient">Educational Excellence</span>
             </h2>

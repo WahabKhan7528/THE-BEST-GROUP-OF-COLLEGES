@@ -19,7 +19,7 @@ const AcademicsPage = () => {
   return (
     <div className="min-h-screen bg-white">
       {campusData.map((category, idx) => (
-        <Section key={category.category} className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"} spacing="large">
+        <Section key={category.category} background={idx % 2 === 0 ? "white" : "gray"} spacing="large">
           <Section.Header
             title={category.category}
             description={category.description}
@@ -33,7 +33,7 @@ const AcademicsPage = () => {
                 transition={{ duration: 0.5, delay: pIdx * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card hover className="h-full flex flex-col border-t-4 border-t-primary-500 rounded-3xl overflow-hidden">
+                <Card hover className="h-full flex flex-col border-t-4 border-t-primary-600 rounded-3xl overflow-hidden">
                   <div className="flex items-start justify-between mb-4">
                     <div className="p-2 rounded-2xl bg-primary-100 text-primary-600">
                       <program.icon className="w-6 h-6" />

@@ -1,21 +1,22 @@
 import { clsx } from 'clsx';
 
-const variants = {
-  primary: 'bg-primary-50 text-primary-700 border border-primary-200',
-  success: 'bg-green-50 text-green-700 border border-green-200',
-  warning: 'bg-yellow-50 text-yellow-700 border border-yellow-200',
-  danger: 'bg-red-50 text-red-700 border border-red-200',
-  info: 'bg-slate-50 text-slate-700 border border-slate-200',
-  accent: 'bg-primary-50 text-primary-700 border border-primary-200', // Mapped to primary
-};
-
-const solidVariants = {
-  primary: 'bg-primary-600 text-white border-0',
-  success: 'bg-green-600 text-white border-0',
-  warning: 'bg-yellow-500 text-white border-0',
-  danger: 'bg-red-600 text-white border-0',
-  info: 'bg-slate-600 text-white border-0',
-  accent: 'bg-primary-600 text-white border-0', // Mapped to primary
+const badgeStyles = {
+  soft: {
+    primary: 'bg-primary-50 text-primary-700 border border-primary-200',
+    success: 'bg-green-50 text-green-700 border border-green-200',
+    warning: 'bg-yellow-50 text-yellow-700 border border-yellow-200',
+    danger: 'bg-red-50 text-red-700 border border-red-200',
+    info: 'bg-slate-50 text-slate-700 border border-slate-200',
+    accent: 'bg-primary-50 text-primary-700 border border-primary-200',
+  },
+  solid: {
+    primary: 'bg-primary-600 text-white border-0',
+    success: 'bg-green-600 text-white border-0',
+    warning: 'bg-yellow-500 text-white border-0',
+    danger: 'bg-red-600 text-white border-0',
+    info: 'bg-slate-600 text-white border-0',
+    accent: 'bg-primary-600 text-white border-0',
+  }
 };
 
 const sizes = {
@@ -40,7 +41,7 @@ const Badge = ({
       className={clsx(
         'inline-flex items-center font-medium rounded-full',
         'transition-all duration-200',
-        solid ? solidVariants[variant] : variants[variant],
+        badgeStyles[solid ? 'solid' : 'soft'][variant] || badgeStyles.soft.primary,
         sizes[size],
         className
       )}
