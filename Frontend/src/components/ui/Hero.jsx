@@ -39,21 +39,21 @@ const Hero = ({
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="space-y-6"
+              className="space-y-6 text-center md:text-left"
             >
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight">
                 {title}
               </h1>
-              <div className="flex gap-4 pt-4">
+              <div className="flex flex-col sm:flex-row gap-4 pt-4 items-center md:items-start">
                 <a
                   href="/admissions"
-                  className="px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 flex items-center gap-2"
+                  className="w-full sm:w-auto px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 flex items-center justify-center gap-2"
                 >
                   Apply Now
                 </a>
                 <a
                   href="/about"
-                  className="px-8 py-3 bg-transparent border-2 border-white/80 text-white hover:bg-white hover:text-primary-900 font-semibold rounded-xl transition-all duration-200 flex items-center gap-2"
+                  className="w-full sm:w-auto px-8 py-3 bg-transparent border-2 border-white/80 text-white hover:bg-white hover:text-primary-900 font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2"
                 >
                   More Info
                 </a>

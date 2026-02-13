@@ -79,20 +79,20 @@ const Materials = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white border rounded-2xl shadow-sm p-5">
-        <div className="flex items-center justify-between">
+      <div className="bg-white border rounded-xl md:rounded-2xl shadow-sm p-4 md:p-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 md:gap-4">
           <div>
-            <p className="text-sm text-gray-500">Course Materials</p>
-            <h1 className="text-2xl font-semibold text-gray-900">
+            <p className="text-xs md:text-sm text-gray-500">Course Materials</p>
+            <h1 className="text-xl md:text-2xl font-semibold text-gray-900">
               Uploaded resources
             </h1>
-            <p className="text-sm text-primary-600 mt-2">
+            <p className="text-xs md:text-sm text-primary-600 mt-2">
               📍 {campusNames[campus]}
             </p>
           </div>
           <Link
             to="/faculty/materials/upload"
-            className="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-semibold hover:bg-primary-700 transition-colors"
+            className="px-4 md:px-5 py-2.5 md:py-3 text-xs md:text-sm bg-primary-600 text-white rounded-lg md:rounded-xl font-semibold hover:bg-primary-700 transition-all shadow-md hover:shadow-lg"
           >
             Upload Material
           </Link>

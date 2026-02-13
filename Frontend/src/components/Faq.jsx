@@ -55,18 +55,18 @@ const Faq = ({ limit }) => {
                         viewport={{ once: true }}
                     >
                         <Card hover className="h-full">
-                            <Card.Body>
-                                <div className="flex items-start gap-4">
+                            <Card.Body className="p-5 md:p-6">
+                                <div className="flex items-start gap-2 md:gap-4">
                                     <div className="flex-shrink-0">
-                                        <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center group-hover:bg-primary-600 transition-colors">
-                                            <span className="text-2xl font-bold text-primary-600 group-hover:text-white transition-colors">{idx + 1}</span>
+                                        <div className="w-10 h-10 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-primary-100 flex items-center justify-center group-hover:bg-primary-600 transition-colors">
+                                            <span className="text-base md:text-2xl font-bold text-primary-600 group-hover:text-white transition-colors">{idx + 1}</span>
                                         </div>
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-bold text-gray-900 mb-3">
+                                        <h3 className="text-sm md:text-xl font-bold text-gray-900 mb-2 md:mb-3">
                                             {faq.question}
                                         </h3>
-                                        <p className="text-gray-600 text-sm leading-relaxed">
+                                        <p className="text-gray-600 text-xs md:text-sm leading-relaxed">
                                             {faq.answer}
                                         </p>
                                     </div>

@@ -24,25 +24,21 @@ const Footer = () => {
               <h3 className="text-xl font-bold mb-4 text-white">
                 Best Group of Colleges
               </h3>
-              <p className="text-primary-200 text-sm leading-relaxed mb-4">
+              <p className="text-gray-300 text-sm leading-relaxed mb-4">
                 Empowering futures through quality education since 1985. Three
                 dynamic campuses, exceptional faculty, and comprehensive
                 programs.
               </p>
-              <div className="flex items-center gap-2 text-primary-200 text-sm">
-                <Award className="h-4 w-4 text-primary-400" />
-                <span>ISO Certified Institution</span>
-              </div>
             </div>
 
             {/* Academics */}
             <div className="col-span-1">
-              <h3 className="text-lg font-semibold mb-4">Academics</h3>
+              <h3 className="text-lg font-bold mb-4 text-white">Academics</h3>
               <ul className="space-y-2">
                 <li>
                   <Link
                     to="/campuses/main"
-                    className="text-primary-200 hover:text-white text-sm transition"
+                    className="text-gray-300 hover:text-white text-sm transition"
                   >
                     Main Campus
                   </Link>
@@ -50,7 +46,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/campuses/law"
-                    className="text-primary-200 hover:text-white text-sm transition"
+                    className="text-gray-300 hover:text-white text-sm transition"
                   >
                     Law College
                   </Link>
@@ -58,7 +54,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/campuses/hala"
-                    className="text-primary-200 hover:text-white text-sm transition"
+                    className="text-gray-300 hover:text-white text-sm transition"
                   >
                     Hala Campus
                   </Link>
@@ -66,7 +62,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/colleges"
-                    className="text-primary-200 hover:text-white text-sm transition"
+                    className="text-gray-300 hover:text-white text-sm transition"
                   >
                     All Colleges
                   </Link>
@@ -74,7 +70,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/admissions"
-                    className="text-primary-200 hover:text-white text-sm transition"
+                    className="text-gray-300 hover:text-white text-sm transition"
                   >
                     Admissions
                   </Link>
@@ -84,12 +80,12 @@ const Footer = () => {
 
             {/* Information */}
             <div className="col-span-1">
-              <h3 className="text-lg font-semibold mb-4">Information</h3>
+              <h3 className="text-lg font-bold text-white mb-4">Information</h3>
               <ul className="space-y-2">
                 <li>
                   <Link
                     to="/about"
-                    className="text-primary-200 hover:text-white text-sm transition"
+                    className="text-gray-300 hover:text-white text-sm transition"
                   >
                     About Us
                   </Link>
@@ -97,7 +93,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/faculty-info"
-                    className="text-primary-200 hover:text-white text-sm transition"
+                    className="text-gray-300 hover:text-white text-sm transition"
                   >
                     Faculty & Staff
                   </Link>
@@ -105,7 +101,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/news-events"
-                    className="text-primary-200 hover:text-white text-sm transition"
+                    className="text-gray-300 hover:text-white text-sm transition"
                   >
                     News & Events
                   </Link>
@@ -113,7 +109,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/gallery"
-                    className="text-primary-200 hover:text-white text-sm transition"
+                    className="text-gray-300 hover:text-white text-sm transition"
                   >
                     Gallery
                   </Link>
@@ -121,7 +117,7 @@ const Footer = () => {
                 <li>
                   <Link
                     to="/contact"
-                    className="text-primary-200 hover:text-white text-sm transition"
+                    className="text-gray-300 hover:text-white text-sm transition"
                   >
                     Contact Us
                   </Link>
@@ -131,37 +127,37 @@ const Footer = () => {
 
             {/* Contact Info */}
             <div className="col-span-1 md:col-span-1">
-              <h3 className="text-lg font-semibold mb-4">
+              <h3 className="text-lg font-bold text-white mb-4">
                 Contact Information
               </h3>
               <ul className="space-y-3">
                 <li className="flex items-start gap-3">
-                  <MapPin className="h-5 w-5 text-primary-400 flex-shrink-0 mt-0.5" />
-                  <span className="text-primary-200 text-sm">
+                  <MapPin className="h-5 w-5 text-white flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-300 text-sm">
                     123 Education Street, Islamabad, Pakistan
                   </span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <Phone className="h-5 w-5 text-primary-400 flex-shrink-0" />
+                  <Phone className="h-5 w-5 text-white flex-shrink-0" />
                   <a
                     href="tel:+92511234567"
-                    className="text-primary-200 hover:text-white text-sm transition"
+                    className="text-gray-300 hover:text-white text-sm transition"
                   >
                     +92 51 1234 567
                   </a>
                 </li>
                 <li className="flex items-center gap-3">
-                  <Mail className="h-5 w-5 text-primary-400 flex-shrink-0" />
+                  <Mail className="h-5 w-5 text-white flex-shrink-0" />
                   <a
                     href="mailto:info@bestcolleges.edu.pk"
-                    className="text-primary-200 hover:text-white text-sm transition"
+                    className="text-gray-300 hover:text-white text-sm transition"
                   >
                     info@bestcolleges.edu.pk
                   </a>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Clock className="h-5 w-5 text-primary-400 flex-shrink-0 mt-0.5" />
-                  <div className="text-primary-200 text-sm">
+                  <Clock className="h-5 w-5 text-white flex-shrink-0 mt-0.5" />
+                  <div className="text-gray-300 text-sm">
                     <p>Mon - Fri: 8:00 AM - 5:00 PM</p>
                     <p>Sat - Sun: Closed</p>
                   </div>
@@ -171,23 +167,23 @@ const Footer = () => {
 
             {/* Social Links */}
             <div className="col-span-1">
-              <h3 className="text-lg font-semibold mb-4">Follow Us</h3>
+              <h3 className="text-lg font-bold text-white mb-4">Follow Us</h3>
               <div className="flex flex-wrap gap-4 mb-6">
                 <a
                   href="#"
-                  className="text-primary-200 hover:text-white transition transform hover:scale-110"
+                  className="text-gray-300 hover:text-white transition transform hover:scale-110"
                 >
                   <Facebook className="h-6 w-6" />
                 </a>
                 <a
                   href="#"
-                  className="text-primary-200 hover:text-white transition transform hover:scale-110"
+                  className="text-gray-300 hover:text-white transition transform hover:scale-110"
                 >
                   <Twitter className="h-6 w-6" />
                 </a>
                 <a
                   href="#"
-                  className="text-primary-200 hover:text-white transition transform hover:scale-110"
+                  className="text-gray-300 hover:text-white transition transform hover:scale-110"
                 >
                   <Instagram className="h-6 w-6" />
                 </a>
@@ -203,32 +199,32 @@ const Footer = () => {
         <div className="py-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="order-2 md:order-1">
-              <p className="text-primary-300 text-xs text-center md:text-left">
+              <p className="text-gray-400 text-xs text-center md:text-left">
                 © {currentYear} Best Group of Colleges. All rights reserved.
               </p>
             </div>
             <div className="flex justify-center gap-6 order-1 md:order-2">
               <a
                 href="#"
-                className="text-primary-300 hover:text-white text-xs transition"
+                className="text-gray-400 hover:text-white text-xs transition"
               >
                 Privacy Policy
               </a>
               <a
                 href="#"
-                className="text-primary-300 hover:text-white text-xs transition"
+                className="text-gray-400 hover:text-white text-xs transition"
               >
                 Terms of Service
               </a>
               <a
                 href="#"
-                className="text-primary-300 hover:text-white text-xs transition"
+                className="text-gray-400 hover:text-white text-xs transition"
               >
                 Disclaimer
               </a>
             </div>
             <div className="order-3 text-center md:text-right">
-              <p className="text-primary-300 text-xs">
+              <p className="text-gray-400 text-xs">
                 Designed by Nexyvora for The Best Group of Colleges
               </p>
             </div>

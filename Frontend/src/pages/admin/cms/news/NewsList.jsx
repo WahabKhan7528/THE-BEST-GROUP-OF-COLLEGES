@@ -156,7 +156,7 @@ const NewsList = () => {
                   : "text-gray-500 hover:text-gray-700 hover:bg-gray-200/50"
                   }`}
               >
-                {filter}s
+                {filter === "all" ? "All" : filter === "news" ? "News" : "Events"}
               </button>
             ))}
           </div>

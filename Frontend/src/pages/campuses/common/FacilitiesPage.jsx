@@ -3,9 +3,10 @@ import Section from "../../../components/ui/Section";
 import Card from "../../../components/ui/Card";
 import Badge from "../../../components/ui/Badge";
 import Button from "../../../components/ui/Button";
-import { Building, Wifi, Library, Activity, Coffee, Stethoscope, Dumbbell, Monitor, FlaskConical, Bus } from "lucide-react";
+import { Building, Wifi, Library, Activity, Coffee, Stethoscope, Dumbbell, Monitor, FlaskConical, Bus , ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+
 
 const FacilitiesPage = () => {
   const navigate = useNavigate();
@@ -90,7 +91,7 @@ const FacilitiesPage = () => {
             description={category.description}
           />
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             {category.items.map((facility, idx) => (
               <motion.div
                 key={facility.name}
@@ -99,24 +100,24 @@ const FacilitiesPage = () => {
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card hover className="h-full overflow-hidden p-0 rounded-3xl">
-                  <div className="h-64 overflow-hidden relative group">
+                <Card hover className="h-full overflow-hidden p-0 rounded-2xl md:rounded-3xl">
+                  <div className="h-56 md:h-64 overflow-hidden relative group">
                     <img
                       src={facility.image}
                       alt={facility.name}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-black/40 flex items-end p-6">
+                    <div className="absolute inset-0 bg-black/40 flex items-end p-4 md:p-6">
                       <div className="text-white">
-                        <div className="p-2 rounded-2xl bg-primary-500/30 backdrop-blur-md inline-flex items-center justify-center mb-2">
-                          <facility.icon className="w-6 h-6 text-white" />
+                        <div className="p-1.5 md:p-2 rounded-xl md:rounded-2xl bg-primary-500/30 backdrop-blur-md inline-flex items-center justify-center mb-2">
+                          <facility.icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
                         </div>
-                        <h3 className="text-2xl font-bold">{facility.name}</h3>
+                        <h3 className="text-xl md:text-2xl text-white font-bold">{facility.name}</h3>
                       </div>
                     </div>
                   </div>
-                  <div className="p-6">
-                    <p className="text-gray-600 leading-relaxed">
+                  <div className="p-5 md:p-6">
+                    <p className="text-gray-600 text-sm md:text-base leading-relaxed">
                       {facility.description}
                     </p>
                   </div>
@@ -134,12 +135,12 @@ const FacilitiesPage = () => {
           viewport={{ once: true }}
           className="max-w-3xl mx-auto"
         >
-          <h2 className="text-3xl font-bold mb-6">Experience It Yourself</h2>
-          <p className="text-lg text-gray-600 mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6">Experience It Yourself</h2>
+          <p className="text-base md:text-lg text-gray-600 mb-6 md:mb-8">
             We invite you to visit our campus and see our facilities firsthand. Book a guided tour today.
           </p>
-          <Button size="lg" variant="primary" className="bg-white text-primary-900 border-white hover:bg-primary-50" onClick={() => navigate("/contact")}>
-            Schedule a Visit
+          <Button size="lg" variant="primary" className="border-white hover:bg-primary-50" onClick={() => navigate("/contact")}>
+            Schedule a Visit <ArrowRight />
           </Button>
         </motion.div>
       </Section>

@@ -22,7 +22,7 @@ const Login = () => {
                 return {
                     title: 'Admin Portal',
                     description: 'Manage college system and operations',
-                    icon: <ShieldCheck size={40} className="text-primary-600" />,
+                    icon: <ShieldCheck size={32} className="md:w-10 md:h-10 text-primary-600" />,
                     buttonClass: 'bg-primary-600 hover:bg-primary-700',
                     shadow: 'shadow-md',
                     path: '/admin/dashboard'
@@ -31,7 +31,7 @@ const Login = () => {
                 return {
                     title: 'Faculty Portal',
                     description: 'Access teaching resources and manage classes',
-                    icon: <GraduationCap size={40} className="text-primary-600" />,
+                    icon: <GraduationCap size={32} className="md:w-10 md:h-10 text-primary-600" />,
                     buttonClass: 'bg-primary-600 hover:bg-primary-700',
                     shadow: 'shadow-md',
                     path: '/faculty/dashboard'
@@ -40,7 +40,7 @@ const Login = () => {
                 return {
                     title: 'Student Portal',
                     description: 'View courses, grades, and campus resources',
-                    icon: <Users size={40} className="text-primary-600" />,
+                    icon: <Users size={32} className="md:w-10 md:h-10 text-primary-600" />,
                     buttonClass: 'bg-primary-600 hover:bg-primary-700',
                     shadow: 'shadow-md',
                     path: '/student/dashboard'
@@ -79,25 +79,25 @@ const Login = () => {
                 backgroundSize: '32px 32px'
             }}></div>
 
-            <div className="w-full max-w-md bg-white border border-border shadow-lg rounded-2xl p-8 relative z-10">
-                <div className="text-center mb-10">
-                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-primary-50 text-primary-900 mb-6 border border-primary-100">
+            <div className="w-full max-w-md bg-white border border-border shadow-lg rounded-xl md:rounded-2xl p-6 md:p-8 relative z-10">
+                <div className="text-center mb-8 md:mb-10">
+                    <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-xl md:rounded-2xl bg-primary-50 text-primary-900 mb-5 md:mb-6 border border-primary-100">
                         {portalinfo.icon}
                     </div>
-                    <h1 className="text-3xl font-bold text-primary-900 tracking-tight">{portalinfo.title}</h1>
-                    <p className="text-text-secondary mt-3 text-base">{portalinfo.description}</p>
+                    <h1 className="text-2xl md:text-3xl font-bold text-primary-900 tracking-tight">{portalinfo.title}</h1>
+                    <p className="text-text-secondary mt-2 md:mt-3 text-sm md:text-base">{portalinfo.description}</p>
                 </div>
 
-                <form onSubmit={handleLogin} className="space-y-6">
+                <form onSubmit={handleLogin} className="space-y-5 md:space-y-6">
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-primary-900">Email Address</label>
+                        <label className="text-xs md:text-sm font-semibold text-primary-900">Email Address</label>
                         <div className="relative group">
-                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary transition-colors" size={20} />
+                            <Mail className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 text-text-secondary transition-colors" size={18} />
                             <input
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full pl-12 pr-4 py-3 rounded-xl border border-border bg-white focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none transition-all font-medium text-primary-900 placeholder:text-text-disabled"
+                                className="w-full pl-10 md:pl-12 pr-3 md:pr-4 py-2.5 md:py-3 rounded-lg md:rounded-xl border border-border bg-white focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none transition-all font-medium text-sm md:text-base text-primary-900 placeholder:text-text-disabled"
                                 placeholder="name@example.com"
                             />
                         </div>
@@ -105,15 +105,15 @@ const Login = () => {
 
                     <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                            <label className="text-sm font-semibold text-primary-900">Password</label>
+                            <label className="text-xs md:text-sm font-semibold text-primary-900">Password</label>
                         </div>
                         <div className="relative group">
-                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary transition-colors" size={20} />
+                            <Lock className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 text-text-secondary transition-colors" size={18} />
                             <input
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full pl-12 pr-4 py-3 rounded-xl border border-border bg-white focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none transition-all font-medium text-primary-900 placeholder:text-text-disabled"
+                                className="w-full pl-10 md:pl-12 pr-3 md:pr-4 py-2.5 md:py-3 rounded-lg md:rounded-xl border border-border bg-white focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none transition-all font-medium text-sm md:text-base text-primary-900 placeholder:text-text-disabled"
                                 placeholder="••••••••"
                             />
                         </div>
@@ -121,10 +121,10 @@ const Login = () => {
 
                     <button
                         type="submit"
-                        className={`w-full py-3.5 px-4 ${portalinfo.buttonClass} text-white font-bold rounded-xl ${portalinfo.shadow} hover:shadow-lg transform active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 mt-4`}
+                        className={`w-full py-3 md:py-3.5 px-4 ${portalinfo.buttonClass} text-white font-bold text-sm md:text-base rounded-lg md:rounded-xl ${portalinfo.shadow} hover:shadow-lg transform active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 mt-4`}
                     >
                         <span>Sign In</span>
-                        <ArrowRight size={20} />
+                        <ArrowRight size={18} className="md:w-5 md:h-5" />
                     </button>
 
                     <div className="text-center mt-6">

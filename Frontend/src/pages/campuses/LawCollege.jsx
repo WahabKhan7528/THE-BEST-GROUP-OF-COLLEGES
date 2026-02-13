@@ -98,7 +98,7 @@ const LawCollege = () => {
       </Section>
 
       <Section spacing="large">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -159,7 +159,7 @@ const LawCollege = () => {
           description="Approved by HEC and Pakistan Bar Council."
           badge="Admissions Open"
         />
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {programs.map((program, idx) => (
             <motion.div
               key={program.title}

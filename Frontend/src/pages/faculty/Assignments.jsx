@@ -88,30 +88,30 @@ const Assignments = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white/70 backdrop-blur-xl border border-white/40 rounded-3xl shadow-xl p-8 relative overflow-hidden">
+      <div className="bg-white/70 backdrop-blur-xl border border-white/40 rounded-2xl md:rounded-3xl shadow-xl p-5 md:p-8 relative overflow-hidden">
         <div className="absolute top-0 right-0 p-8 opacity-5">
           <BookOpen size={150} />
         </div>
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6">
           <div>
-            <div className="flex items-center gap-3 mb-2">
-              <span className="px-3 py-1 rounded-full bg-primary-50 border border-primary-100 text-primary-700 text-xs font-semibold uppercase tracking-wide">
+            <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-2">
+              <span className="px-2 md:px-3 py-1 rounded-full bg-primary-50 border border-primary-100 text-primary-700 text-[10px] md:text-xs font-semibold uppercase tracking-wide">
                 Faculty Portal
               </span>
-              <span className="px-3 py-1 rounded-full bg-primary-50 border border-primary-100 text-primary-700 text-xs font-semibold uppercase tracking-wide">
+              <span className="px-2 md:px-3 py-1 rounded-full bg-primary-50 border border-primary-100 text-primary-700 text-[10px] md:text-xs font-semibold uppercase tracking-wide">
                 {campusNames[campus]}
               </span>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
               Assignments
             </h1>
-            <p className="text-gray-500 mt-2 max-w-xl">
+            <p className="text-gray-500 text-sm md:text-base mt-2 max-w-xl">
               Manage and publish assignments for your classes. Track submissions and grade student work efficiently.
             </p>
           </div>
           <Link
             to="/faculty/assignments/create"
-            className="flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-semibold shadow-md hover:-translate-y-0.5 transition-all duration-200"
+            className="flex items-center justify-center gap-2 px-4 md:px-6 py-2.5 md:py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-lg md:rounded-xl text-xs md:text-sm font-semibold shadow-md hover:-translate-y-0.5 transition-all duration-200"
           >
             <PlusCircle size={20} />
             Create Assignment

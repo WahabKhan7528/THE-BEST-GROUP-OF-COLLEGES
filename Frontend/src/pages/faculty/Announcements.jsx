@@ -90,11 +90,11 @@ const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 space-y-4">
+      <div className="bg-white rounded-xl md:rounded-2xl shadow-xl w-full max-w-lg p-5 md:p-6 space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold text-gray-900">New Announcement</h2>
+          <h2 className="text-lg md:text-xl font-bold text-gray-900">New Announcement</h2>
           <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-full transition-colors">
-            <X size={20} className="text-gray-500" />
+            <X size={18} className="md:w-5 md:h-5 text-gray-500" />
           </button>
         </div>
 
@@ -199,9 +199,9 @@ const Announcements = () => {
           </div>
           <button
             onClick={() => setIsPosting(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-semibold hover:bg-primary-700 transition-all shadow-md"
+            className="flex items-center gap-2 px-4 md:px-5 py-2.5 md:py-3 bg-primary-600 text-white rounded-lg md:rounded-xl text-xs md:text-sm font-semibold hover:bg-primary-700 transition-all shadow-md hover:shadow-lg"
           >
-            <Plus size={18} />
+            <Plus size={16} className="md:w-[18px] md:h-[18px]" />
             Post Announcement
           </button>
         </div>

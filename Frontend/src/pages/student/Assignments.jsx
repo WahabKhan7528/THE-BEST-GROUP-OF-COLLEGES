@@ -80,34 +80,34 @@ const Assignments = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white/70 backdrop-blur-xl border border-white/40 rounded-3xl shadow-xl p-8 relative overflow-hidden">
+      <div className="bg-white/70 backdrop-blur-xl border border-white/40 rounded-2xl md:rounded-3xl shadow-xl p-5 md:p-8 relative overflow-hidden">
         <div className="absolute top-0 right-0 p-8 opacity-5">
           <ClipboardList size={150} />
         </div>
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6">
           <div>
-            <div className="flex items-center gap-3 mb-2">
-              <span className="px-3 py-1 rounded-full bg-primary-50 border border-primary-100 text-primary-700 text-xs font-semibold uppercase tracking-wide">
+            <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-2">
+              <span className="px-2 md:px-3 py-1 rounded-full bg-primary-50 border border-primary-100 text-primary-700 text-[10px] md:text-xs font-semibold uppercase tracking-wide">
                 Student Portal
               </span>
-              <span className="px-3 py-1 rounded-full bg-primary-50 border border-primary-100 text-primary-700 text-xs font-semibold uppercase tracking-wide">
+              <span className="px-2 md:px-3 py-1 rounded-full bg-primary-50 border border-primary-100 text-primary-700 text-[10px] md:text-xs font-semibold uppercase tracking-wide">
                 {campusNames[campus]}
               </span>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
               Assignments
             </h1>
-            <p className="text-gray-500 mt-2 max-w-xl">
+            <p className="text-gray-500 text-sm md:text-base mt-2 max-w-xl">
               Manage your coursework, track deadlines, and submit your assignments on time.
             </p>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="text-right">
-              <p className="text-sm text-gray-500 font-medium">Pending Tasks</p>
-              <p className="text-2xl font-bold text-gray-900">{assignments.filter(a => a.status === 'Pending').length}</p>
+          <div className="flex items-center gap-2 md:gap-3">
+            <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center">
+              <Clock size={20} className="md:w-6 md:h-6" />
             </div>
-            <div className="w-12 h-12 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center">
-              <Clock size={24} />
+            <div className="flex items-baseline gap-2">
+              <p className="text-2xl md:text-3xl font-bold text-gray-900">{assignments.filter(a => a.status === 'Pending').length}</p>
+              <p className="text-xs md:text-sm text-gray-500 font-medium">Pending Tasks</p>
             </div>
           </div>
         </div>

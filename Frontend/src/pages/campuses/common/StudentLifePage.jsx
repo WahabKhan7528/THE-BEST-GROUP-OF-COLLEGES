@@ -73,7 +73,7 @@ const StudentLifePage = () => {
           description="Find your tribe. Pursue your passions outside the classroom."
         />
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
           {societies.map((society, idx) => (
             <motion.div
               key={society.name}
@@ -82,13 +82,13 @@ const StudentLifePage = () => {
               transition={{ duration: 0.5, delay: idx * 0.1 }}
               viewport={{ once: true }}
             >
-              <Card hover className="h-full flex flex-col text-center items-center p-6 border-t-4 rounded-3xl border-t-primary-600">
-                <div className="p-4 rounded-full bg-primary-100 text-primary-600 mb-4 ring-8 ring-primary-50/50">
-                  <society.icon className="w-8 h-8" />
+              <Card hover className="h-full flex flex-col text-center items-center p-5 md:p-6 border-t-3 md:border-t-4 rounded-2xl md:rounded-3xl border-t-primary-600">
+                <div className="p-3 md:p-4 rounded-full bg-primary-100 text-primary-600 mb-3 md:mb-4 ring-4 md:ring-8 ring-primary-50/50">
+                  <society.icon className="w-6 h-6 md:w-8 md:h-8" />
                 </div>
 
-                <h3 className="text-xl font-bold mb-2 text-gray-900">{society.name}</h3>
-                <p className="text-gray-600 text-sm mb-6 flex-grow">{society.description}</p>
+                <h3 className="text-lg md:text-xl font-bold mb-2 text-gray-900">{society.name}</h3>
+                <p className="text-gray-600 text-xs md:text-sm mb-5 md:mb-6 flex-grow">{society.description}</p>
 
                 <div className="w-full space-y-2">
                   <Badge variant="secondary" className="w-full justify-center py-1">
@@ -109,20 +109,20 @@ const StudentLifePage = () => {
         <div className="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3"></div>
 
-        <div className="relative z-10 grid md:grid-cols-2 gap-12 items-center">
+        <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
           <div>
-            <Badge className="bg-primary-600/20 text-primary-100 border-primary-400/30 mb-4">Campus Vibes</Badge>
-            <h2 className="text-4xl font-bold mb-6 text-white">A Campus That Never Sleeps</h2>
-            <p className="text-primary-100 text-lg leading-relaxed mb-8">
+            <Badge variant="secondary" className="mb-3 md:mb-4">Campus Vibes</Badge>
+            <h2 className="text-2xl md:text-4xl font-bold mb-4 md:mb-6 text-white">A Campus That Never Sleeps</h2>
+            <p className="text-primary-100 text-sm md:text-lg leading-relaxed mb-6 md:mb-8">
               From early morning study sessions in the library to late-night sports matches, our campus is always buzzing with energy. Discover the perfect balance between academic rigor and social fun.
             </p>
-            <ul className="grid grid-cols-2 gap-4 mb-8">
+            <ul className="grid grid-cols-2 gap-3 md:gap-4 mb-6 md:mb-8">
               {campusHighlights.map(highlight => (
-                <li key={highlight.title} className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-white/10">
-                    <highlight.icon className="w-5 h-5 text-primary-200" />
+                <li key={highlight.title} className="flex items-center gap-2 md:gap-3">
+                  <div className="p-1.5 md:p-2 rounded-lg bg-white/10">
+                    <highlight.icon className="w-4 h-4 md:w-5 md:h-5 text-primary-200" />
                   </div>
-                  <span className="font-semibold">{highlight.title}</span>
+                  <span className="font-semibold text-sm md:text-base">{highlight.title}</span>
                 </li>
               ))}
             </ul>

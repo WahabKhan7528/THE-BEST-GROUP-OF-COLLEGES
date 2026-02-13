@@ -37,29 +37,29 @@ const CreateAssignment = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
     >
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3 md:gap-4">
         <Link
           to="/faculty/assignments"
-          className="p-2.5 rounded-xl bg-white/50 hover:bg-white text-gray-500 hover:text-gray-900 border border-transparent hover:border-gray-200 transition-all duration-200"
+          className="p-2 md:p-2.5 rounded-lg md:rounded-xl bg-white/50 hover:bg-white text-gray-500 hover:text-gray-900 border border-transparent hover:border-gray-200 transition-all duration-200"
         >
-          <ArrowLeft size={20} />
+          <ArrowLeft size={18} className="md:w-5 md:h-5" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Create New Assignment</h1>
-          <p className="text-sm text-gray-500">Publish a new assignment for your students</p>
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">Create New Assignment</h1>
+          <p className="text-xs md:text-sm text-gray-500">Publish a new assignment for your students</p>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white/70 backdrop-blur-xl border border-white/50 rounded-3xl shadow-xl p-8 space-y-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <form onSubmit={handleSubmit} className="bg-white/70 backdrop-blur-xl border border-white/50 rounded-2xl md:rounded-3xl shadow-xl p-5 md:p-8 space-y-6 md:space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           <div className="space-y-2">
-            <label className="text-sm font-semibold text-gray-700">Class / Section</label>
+            <label className="text-xs md:text-sm font-semibold text-gray-700">Class / Section</label>
             <input
               type="text"
               value={form.classSection}
               onChange={(e) => handleChange('classSection', e.target.value)}
               placeholder="e.g. BSCS - A"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all outline-none"
+              className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base rounded-lg md:rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all outline-none"
               required
             />
           </div>

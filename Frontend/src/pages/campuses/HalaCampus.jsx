@@ -99,7 +99,7 @@ const HalaCampus = () => {
       </Section>
 
       <Section spacing="large">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -163,7 +163,7 @@ const HalaCampus = () => {
           description="Choose the right path for your future career."
           badge="Admissions Open"
         />
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {programs.map((program, idx) => {
             const colors = { border: "border-t-primary-600", bg: "bg-primary-50", text: "text-primary-600" };
 

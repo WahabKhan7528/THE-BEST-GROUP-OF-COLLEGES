@@ -93,6 +93,7 @@ const About = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
+            className="text-center md:text-left"
           >
             <Badge variant="primary" solid className="mb-4">Our Story</Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight">
@@ -111,13 +112,15 @@ const About = () => {
               a comprehensive educational ecosystem that adapts to the evolving needs
               of society.
             </p>
-            <Button
-              icon={ArrowRight}
-              iconPosition="right"
-              onClick={() => navigate("/campuses/main")}
-            >
-              Explore Our Campuses
-            </Button>
+            <div className="flex justify-center md:justify-start">
+              <Button
+                icon={ArrowRight}
+                iconPosition="right"
+                onClick={() => navigate("/campuses/main")}
+              >
+                Explore Our Campuses
+              </Button>
+            </div>
           </motion.div>
 
           <motion.div
@@ -169,16 +172,18 @@ const About = () => {
 
       {/* Journey Timeline */}
       <Section background="gradient" spacing="large">
+        <div className="flex justify-center mb-4">
+          <Badge variant="primary" solid>Timeline</Badge>
+        </div>
         <Section.Header
           title="Our Journey"
           description="Key milestones that have shaped our institution"
-          badge="Timeline"
         />
 
         {/* Desktop Timeline */}
         <div className="hidden md:block relative">
           {/* Timeline Line */}
-          <div className="absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-primary-200 via-primary-400 to-accent-400 transform -translate-y-1/2 rounded-full" />
+          <div className="absolute top-1/2 left-0 right-0 h-1 bg-primary-800 transform -translate-y-1/2 rounded-full" />
 
           <div className="grid grid-cols-4 gap-8 relative">
             {milestones.map((milestone, idx) => (

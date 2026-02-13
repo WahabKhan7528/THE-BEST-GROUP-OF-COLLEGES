@@ -230,11 +230,11 @@ const Results = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-white border rounded-2xl shadow-sm p-5">
-        <div className="flex items-center justify-between">
+      <div className="bg-white border rounded-xl md:rounded-2xl shadow-sm p-4 md:p-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 md:gap-4">
           <div>
-            <p className="text-sm text-gray-500">Student Results Management</p>
-            <h1 className="text-2xl font-semibold text-gray-900">
+            <p className="text-xs md:text-sm text-gray-500">Student Results Management</p>
+            <h1 className="text-xl md:text-2xl font-semibold text-gray-900">
               Enter marks & grades
             </h1>
             <p className="text-sm text-primary-600 mt-2">

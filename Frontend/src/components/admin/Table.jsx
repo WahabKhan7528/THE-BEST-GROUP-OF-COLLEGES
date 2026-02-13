@@ -8,13 +8,13 @@ const Table = ({ columns, data, actionButtons }) => {
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
+                  className="px-3 md:px-6 py-3 md:py-4 text-left text-[10px] md:text-xs font-semibold text-gray-500 uppercase tracking-wider"
                 >
                   {col.label}
                 </th>
               ))}
               {actionButtons && (
-                <th className="px-6 py-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="px-3 md:px-6 py-3 md:py-4 text-right text-[10px] md:text-xs font-semibold text-gray-500 uppercase tracking-wider">
                   Actions
                 </th>
               )}
@@ -27,19 +27,19 @@ const Table = ({ columns, data, actionButtons }) => {
                 className="hover:bg-primary-50/50 transition-colors duration-150 group"
               >
                 {columns.map((col) => (
-                  <td key={col.key} className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 group-hover:text-gray-900 transition-colors">
+                  <td key={col.key} className="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-700 group-hover:text-gray-900 transition-colors">
                     {row[col.key]}
                   </td>
                 ))}
 
                 {actionButtons && (
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div className="flex items-center justify-end gap-3">
+                  <td className="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap text-right text-xs md:text-sm font-medium">
+                    <div className="flex items-center justify-end gap-2 md:gap-3">
                       {actionButtons(row).map((btn, i) => (
                         <button
                           key={i}
                           onClick={btn.onClick}
-                          className={`${btn.className} px-3 py-1.5 rounded-lg hover:bg-white hover:shadow-sm transition-all duration-200`}
+                          className={`${btn.className} px-2 md:px-3 py-1 md:py-1.5 text-xs md:text-sm rounded-lg hover:bg-white hover:shadow-sm transition-all duration-200`}
                           title={btn.label}
                         >
                           {btn.label}

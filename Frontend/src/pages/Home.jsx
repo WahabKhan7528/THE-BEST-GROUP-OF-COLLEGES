@@ -229,10 +229,17 @@ const Home = () => {
               className="relative rounded-2xl shadow-lg border border-border w-full"
             />
             {/* Floating Badge */}
-            <div className="absolute -bottom-6 -right-6 bg-white p-4 rounded-xl shadow-lg border border-border">
+            <div className="hidden sm:block absolute -bottom-6 -right-6 bg-white p-4 rounded-xl shadow-lg border border-border">
               <div className="text-center">
                 <div className="text-3xl font-bold text-primary-700">18+</div>
                 <div className="text-sm text-text-secondary">Years of Excellence</div>
+              </div>
+            </div>
+            {/* Mobile Badge */}
+            <div className="sm:hidden absolute -bottom-4 right-0 bg-white p-3 rounded-xl shadow-lg border border-border">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-primary-700">18+</div>
+                <div className="text-xs text-text-secondary">Years</div>
               </div>
             </div>
           </motion.div>
@@ -242,22 +249,25 @@ const Home = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
+            className="px-6 md:px-0 text-center md:text-left"
           >
             <Badge variant="primary" solid className="mb-4">About Us</Badge>
             <h3 className="text-3xl md:text-4xl font-bold text-primary-900 mb-6 leading-tight">
               Excellence in Education Since <span className="text-primary-600">1985</span>
             </h3>
-            <p className="text-text-secondary mb-4 leading-relaxed text-lg">
-              Best Group of Colleges has been at the forefront of educational
-              excellence for nearly four decades. Our commitment to academic
-              rigor, student development, and community engagement has shaped
-              thousands of successful careers.
-            </p>
-            <p className="text-text-secondary mb-8 leading-relaxed">
-              With three dynamic campuses offering diverse programs from FSc to
-              postgraduate studies, we provide a comprehensive educational
-              ecosystem that nurtures talent and builds leaders.
-            </p>
+            <div>
+              <p className="text-text-secondary mb-4 leading-relaxed text-lg">
+                Best Group of Colleges has been at the forefront of educational
+                excellence for nearly four decades. Our commitment to academic
+                rigor, student development, and community engagement has shaped
+                thousands of successful careers.
+              </p>
+              <p className="text-text-secondary mb-8 leading-relaxed">
+                With three dynamic campuses offering diverse programs from FSc to
+                postgraduate studies, we provide a comprehensive educational
+                ecosystem that nurtures talent and builds leaders.
+              </p>
+            </div>
 
             <div className="grid sm:grid-cols-2 gap-4 mb-8">
               {highlights.map((highlight, index) => (
@@ -274,14 +284,16 @@ const Home = () => {
               ))}
             </div>
 
-            <Button
-              icon={ArrowRight}
-              iconPosition="right"
-              onClick={() => navigate("/about")}
-              variant="primary"
-            >
-              Learn More About Us
-            </Button>
+            <div className="flex justify-center md:justify-start">
+              <Button
+                icon={ArrowRight}
+                iconPosition="right"
+                onClick={() => navigate("/about")}
+                variant="primary"
+              >
+                Learn More About Us
+              </Button>
+            </div>
           </motion.div>
         </div>
       </Section>
@@ -397,7 +409,7 @@ const Home = () => {
           {testimonials.map((testimonial) => (
             <div
               key={testimonial.name}
-              className="min-w-[320px] md:min-w-[380px] p-2"
+              className="min-w-[280px] md:min-w-[380px] p-2"
             >
               <TestimonialCard {...testimonial} />
             </div>

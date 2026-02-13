@@ -33,14 +33,14 @@ const ContactForm = () => {
 
     return (
         <Card shadow="xl">
-            <Card.Body className="p-8">
-                <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 rounded-xl bg-primary-100 flex items-center justify-center">
-                        <MessageSquare className="w-6 h-6 text-primary-600" />
+            <Card.Body className="p-5 md:p-8">
+                <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
+                    <div className="w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-primary-100 flex items-center justify-center">
+                        <MessageSquare className="w-4 h-4 md:w-6 md:h-6 text-primary-600" />
                     </div>
                     <div>
-                        <h2 className="text-2xl font-bold text-gray-900">Send us a Message</h2>
-                        <p className="text-gray-500 text-sm">We'll get back to you within 24 hours</p>
+                        <h2 className="text-lg md:text-2xl font-bold text-gray-900">Send us a Message</h2>
+                        <p className="text-gray-500 text-xs md:text-sm">We'll get back to you within 24 hours</p>
                     </div>
                 </div>
 

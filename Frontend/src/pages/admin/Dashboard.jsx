@@ -72,10 +72,10 @@ const Dashboard = () => {
   return (
     <div className="space-y-8 pb-10">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-primary-900 tracking-tight">System Dashboard</h1>
-          <p className="text-text-secondary mt-1">Real-time overview of your educational ecosystem</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-primary-900 tracking-tight">System Dashboard</h1>
+          <p className="text-text-secondary text-sm md:text-base mt-1">Real-time overview of your educational ecosystem</p>
         </div>
 
         {/* Context Badge */}
