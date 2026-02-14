@@ -38,7 +38,7 @@ const Home = () => {
         "Legal Aid Clinic",
         "Distinguished Faculty",
       ],
-      image: "https://placehold.co/800x400?text=Law+Campus",
+      image: "../../public/campuslaw.jpg",
       path: "/campuses/law",
     },
     {
@@ -57,7 +57,7 @@ const Home = () => {
         "Digital Library",
         "Career Counseling",
       ],
-      image: "https://placehold.co/800x400?text=Main+Campus",
+      image: "../../public/campusmain.jpg",
       path: "/campuses/main",
     },
     {
@@ -77,7 +77,7 @@ const Home = () => {
         "Sports Facilities",
         "Experienced Faculty",
       ],
-      image: "https://placehold.co/800x400?text=Hala+Campus",
+      image: "../../public/campus hala.jpg",
       path: "/campuses/hala",
     },
   ];
@@ -224,9 +224,9 @@ const Home = () => {
             {/* Replaced gradient background with solid primary color block */}
             <div className="absolute -inset-4 bg-primary-100/50 rounded-3xl transform rotate-2" />
             <img
-              src="https://placehold.co/600x500?text=About+Us"
+              src="../../public/P4.jpg"
               alt="About Us"
-              className="relative rounded-2xl shadow-lg border border-border w-full"
+              className="relative rounded-2xl shadow-lg border border-border w-full object-cover aspect-square"
             />
             {/* Floating Badge */}
             <div className="hidden sm:block absolute -bottom-6 -right-6 bg-white p-4 rounded-xl shadow-lg border border-border">
@@ -325,7 +325,7 @@ const Home = () => {
                     <img
                       src={college.image}
                       alt={college.name}
-                      className="w-full h-64 lg:h-full object-cover transition-transform duration-500 hover:scale-105"
+                      className="w-full h-64 lg:h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-primary-900/10" />
                   </div>

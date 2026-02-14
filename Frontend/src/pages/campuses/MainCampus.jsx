@@ -76,7 +76,7 @@ const MainCampus = () => {
   return (
     <div className="min-h-screen bg-white">
       <Hero
-        image="https://placehold.co/1920x800?text=Main+Campus+View"
+        image="../../public/campusmain.jpg"
         centered
         className="rounded-3xl"
       />

@@ -28,7 +28,7 @@ const Hero = ({
           />
         )}
         {/* Overlay - simplified */}
-        <div className="absolute inset-0 bg-primary-950/60" />
+        <div className="absolute inset-0 " />
       </div>
 
       {/* Content */}

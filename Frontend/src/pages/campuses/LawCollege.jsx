@@ -76,7 +76,7 @@ const LawCollege = () => {
   return (
     <div className="min-h-screen bg-white">
       <Hero
-        image="https://placehold.co/1920x800?text=Law+College"
+        image="../../public/campuslaw.jpg"
         centered
         className="rounded-3xl"
       />

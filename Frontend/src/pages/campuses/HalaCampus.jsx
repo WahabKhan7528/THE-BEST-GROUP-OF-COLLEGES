@@ -77,7 +77,7 @@ const HalaCampus = () => {
   return (
     <div className="min-h-screen bg-white">
       <Hero
-        image="https://placehold.co/1920x800?text=Hala+Campus"
+        image="../../public/campus hala.jpg"
         centered
         className="rounded-3xl"
       />
