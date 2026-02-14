@@ -76,7 +76,7 @@ const MainCampus = () => {
   return (
     <div className="min-h-screen bg-white">
       <Hero
-        image="../../public/campusmain.jpg"
+        image="/campusmain.jpg"
         centered
         className="rounded-3xl"
       />

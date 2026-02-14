@@ -77,7 +77,7 @@ const HalaCampus = () => {
   return (
     <div className="min-h-screen bg-white">
       <Hero
-        image="../../public/campus hala.jpg"
+        image="/campus-hala.jpg"
         centered
         className="rounded-3xl"
       />

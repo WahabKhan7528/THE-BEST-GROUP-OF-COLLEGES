@@ -38,7 +38,7 @@ const Home = () => {
         "Legal Aid Clinic",
         "Distinguished Faculty",
       ],
-      image: "../../public/campuslaw.jpg",
+      image: "/campuslaw.jpg",
       path: "/campuses/law",
     },
     {
@@ -57,7 +57,7 @@ const Home = () => {
         "Digital Library",
         "Career Counseling",
       ],
-      image: "../../public/campusmain.jpg",
+      image: "/campusmain.jpg",
       path: "/campuses/main",
     },
     {
@@ -77,7 +77,7 @@ const Home = () => {
         "Sports Facilities",
         "Experienced Faculty",
       ],
-      image: "../../public/campus hala.jpg",
+      image: "/campus-hala.jpg",
       path: "/campuses/hala",
     },
   ];
@@ -224,7 +224,7 @@ const Home = () => {
             {/* Replaced gradient background with solid primary color block */}
             <div className="absolute -inset-4 bg-primary-100/50 rounded-3xl transform rotate-2" />
             <img
-              src="../../public/P4.jpg"
+              src="/P4.jpg"
               alt="About Us"
               className="relative rounded-2xl shadow-lg border border-border w-full object-cover aspect-square"
             />

@@ -132,7 +132,7 @@ const About = () => {
           >
             <div className="absolute -inset-4 bg-gradient-to-r from-primary-100 to-accent-100 rounded-3xl transform rotate-3" />
             <img
-              src="../../public/P1.jpg"
+              src="/P1.jpg"
               alt="Our Story"
               className="relative rounded-2xl shadow-2xl w-full"
             />

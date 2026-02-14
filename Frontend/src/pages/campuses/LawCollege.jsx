@@ -76,7 +76,7 @@ const LawCollege = () => {
   return (
     <div className="min-h-screen bg-white">
       <Hero
-        image="../../public/campuslaw.jpg"
+        image="/campuslaw.jpg"
         centered
         className="rounded-3xl"
       />
