@@ -365,9 +365,7 @@ const Results = () => {
               <h3 className="text-lg font-semibold text-gray-900">
                 Student Marks
               </h3>
-              <button className="text-sm text-blue-700 font-semibold hover:text-blue-800">
-                Download Sheet
-              </button>
+
             </div>
             <ResultEntryTable rows={selectedStudents} />
           </div>

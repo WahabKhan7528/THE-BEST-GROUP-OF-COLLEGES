@@ -1,9 +1,11 @@
 import MaterialUploadForm from '../../components/faculty/MaterialUploadForm';
+import { useNavigate } from 'react-router-dom';
 
 
 import { UploadCloud } from 'lucide-react';
 
 const UploadMaterial = () => {
+  const navigate = useNavigate();
   return (
     <div className="space-y-8">
       <div className="bg-white/70 backdrop-blur-xl border border-white/40 rounded-3xl shadow-xl p-8 relative overflow-hidden">
@@ -26,7 +28,10 @@ const UploadMaterial = () => {
       </div>
 
       <div className="max-w-4xl mx-auto">
-        <MaterialUploadForm onSubmit={() => alert('Material uploaded (mock)')} />
+        <MaterialUploadForm
+          onSubmit={() => alert('Material uploaded (mock)')}
+          onCancel={() => navigate(-1)}
+        />
       </div>
     </div>
   );

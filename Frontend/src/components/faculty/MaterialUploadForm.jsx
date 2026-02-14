@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Upload } from 'lucide-react';
 
-const MaterialUploadForm = ({ onSubmit }) => {
+const MaterialUploadForm = ({ onSubmit, onCancel }) => {
   const [form, setForm] = useState({
     classSection: '',
     subject: '',
@@ -122,7 +122,14 @@ const MaterialUploadForm = ({ onSubmit }) => {
         </label>
       </div>
 
-      <div className="flex justify-end pt-4 border-t border-gray-200/50">
+      <div className="flex justify-between items-center pt-4 border-t border-gray-200/50">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="px-6 py-3 rounded-xl border border-gray-200 text-gray-700 font-semibold hover:bg-gray-50 hover:border-gray-300 transition-all duration-200"
+        >
+          Cancel
+        </button>
         <button
           type="submit"
           className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-semibold shadow-md hover:-translate-y-0.5 transition-all duration-200"

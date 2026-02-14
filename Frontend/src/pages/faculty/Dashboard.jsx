@@ -94,7 +94,7 @@ const Dashboard = () => {
       {/* Header Section with Campus Info */}
       <motion.section
         variants={itemVariants}
-        className="relative overflow-hidden bg-white border border-border rounded-3xl shadow-sm p-8"
+        className="relative overflow-hidden bg-white border border-border rounded-3xl shadow-sm p-6 md:p-8"
       >
         <div className="absolute top-0 right-0 p-4 opacity-[0.03] pointer-events-none">
           <GraduationCap size={200} />
@@ -103,7 +103,7 @@ const Dashboard = () => {
         <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div>
             <p className="text-sm font-semibold text-primary-600 tracking-wide uppercase">Faculty Dashboard</p>
-            <h1 className="text-4xl font-bold text-primary-900 mt-2 mb-4">
+            <h1 className="text-2xl md:text-4xl font-bold text-primary-900 mt-2 mb-4">
               Welcome, {currentFaculty.name}
             </h1>
             <div className="flex flex-wrap gap-3 text-sm">
@@ -127,11 +127,11 @@ const Dashboard = () => {
               </p>
             )}
           </div>
-          <div className="flex items-center gap-8">
-            <div className="text-right">
+          <div className="flex items-center gap-8 w-full md:w-auto">
+            <div className="text-left md:text-right w-full md:w-auto">
               <p className="text-sm font-medium text-text-secondary mb-1">Total Students</p>
-              <div className="flex items-baseline justify-end gap-2">
-                <span className="text-4xl font-bold text-primary-900">{totalStudents}</span>
+              <div className="flex items-baseline justify-start md:justify-end gap-2">
+                <span className="text-3xl md:text-4xl font-bold text-primary-900">{totalStudents}</span>
                 <span className="text-sm text-green-600 font-medium">active</span>
               </div>
             </div>
@@ -165,15 +165,15 @@ const Dashboard = () => {
       </motion.section>
 
       {/* Announcements Section - Expanded */}
-      <motion.section variants={itemVariants} className="bg-white border border-border rounded-3xl shadow-sm p-8">
-        <div className="flex items-center justify-between mb-6">
+      <motion.section variants={itemVariants} className="bg-white border border-border rounded-3xl shadow-sm p-6 md:p-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
           <div>
             <h2 className="text-xl font-bold text-primary-900">Recent Announcements</h2>
             <p className="text-sm text-text-secondary mt-1">Updates for your students and classes</p>
           </div>
           <Link
             to="/faculty/announcements"
-            className="flex items-center gap-2 text-sm font-semibold text-primary-600 hover:text-primary-700 hover:bg-primary-50 px-4 py-2 rounded-xl transition-all"
+            className="flex items-center justify-center gap-2 text-sm font-semibold text-primary-600 hover:text-primary-700 hover:bg-primary-50 px-4 py-2 rounded-xl transition-all border border-transparent hover:border-primary-100"
           >
             View All
             <ArrowRight size={16} />
@@ -191,7 +191,7 @@ const Dashboard = () => {
                   <Megaphone size={18} />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-primary-900 leading-tight mb-2">
+                  <h3 className="text-sm font-bold text-primary-900 leading-tight mb-2 line-clamp-2">
                     {item.title}
                   </h3>
                   <p className="text-xs text-text-secondary font-medium flex items-center gap-1">
@@ -203,7 +203,7 @@ const Dashboard = () => {
             </div>
           ))}
 
-          <button className="flex flex-col items-center justify-center gap-2 p-5 rounded-2xl border border-dashed border-border text-sm font-medium text-text-secondary hover:border-primary-300 hover:text-primary-600 hover:bg-primary-50 transition-all duration-300 h-full">
+          <button className="flex flex-col items-center justify-center gap-2 p-5 rounded-2xl border border-dashed border-border text-sm font-medium text-text-secondary hover:border-primary-300 hover:text-primary-600 hover:bg-primary-50 transition-all duration-300 min-h-[100px]">
             <PlusCircle size={24} className="opacity-50" />
             <span>Create New Announcement</span>
           </button>

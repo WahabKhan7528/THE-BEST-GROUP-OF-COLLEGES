@@ -61,14 +61,6 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    to="/colleges"
-                    className="text-gray-300 hover:text-white text-sm transition"
-                  >
-                    All Colleges
-                  </Link>
-                </li>
-                <li>
-                  <Link
                     to="/admissions"
                     className="text-gray-300 hover:text-white text-sm transition"
                   >
@@ -202,26 +194,6 @@ const Footer = () => {
               <p className="text-gray-400 text-xs text-center md:text-left">
                 © {currentYear} Best Group of Colleges. All rights reserved.
               </p>
-            </div>
-            <div className="flex justify-center gap-6 order-1 md:order-2">
-              <a
-                href="#"
-                className="text-gray-400 hover:text-white text-xs transition"
-              >
-                Privacy Policy
-              </a>
-              <a
-                href="#"
-                className="text-gray-400 hover:text-white text-xs transition"
-              >
-                Terms of Service
-              </a>
-              <a
-                href="#"
-                className="text-gray-400 hover:text-white text-xs transition"
-              >
-                Disclaimer
-              </a>
             </div>
             <div className="order-3 text-center md:text-right">
               <p className="text-gray-400 text-xs">

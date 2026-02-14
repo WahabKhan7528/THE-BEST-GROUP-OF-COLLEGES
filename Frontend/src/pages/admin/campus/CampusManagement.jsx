@@ -116,7 +116,7 @@ const CampusManagement = () => {
         </div>
 
         <div className="bg-white/60 backdrop-blur-md border border-white/60 rounded-2xl p-6 shadow-sm flex items-center gap-5">
-          <div className="w-14 h-14 rounded-xl bg-primary-50 flex items-center justify-center text-primary-600 shadow-sm border border-primary-100">
+          <div className="w-14 h-14 rounded-xl bg-primary-100 flex items-center justify-center text-primary-600 shadow-sm">
             <Building2 size={28} />
           </div>
           <div>
@@ -125,11 +125,11 @@ const CampusManagement = () => {
           </div>
         </div>
 
-        <div className="bg-white/60 backdrop-blur-md border border-white/60 rounded-2xl p-6 shadow-sm flex items-center gap-5">
-          <div className="w-14 h-14 rounded-xl bg-white flex items-center justify-center text-primary-600 shadow-sm border border-primary-200">
+        <div className="bg-white/60 backdrop-blur-md border border-white/60 rounded-2xl p-6 shadow-sm flex items-center gap-5 ">
+          <div className="w-14 h-14 rounded-xl bg-primary-100 flex items-center justify-center text-primary-600 shadow-sm">
             <MapPin size={28} />
           </div>
-          <div>
+          <div >
             <p className="text-sm font-medium text-gray-500">Total Locations</p>
             <p className="text-3xl font-bold text-gray-900">{campuses.length}</p>
           </div>
@@ -137,7 +137,7 @@ const CampusManagement = () => {
       </div>
 
       {/* Search Bar */}
-      <div className="relative">
+      <div className="relative max-w-md w-full">
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
           <Search className="h-5 w-5 text-gray-400" />
         </div>

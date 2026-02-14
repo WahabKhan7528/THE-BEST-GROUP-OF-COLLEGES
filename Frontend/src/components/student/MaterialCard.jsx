@@ -11,14 +11,14 @@ const MaterialCard = ({ name, type, date, description }) => {
   return (
     <div className="bg-white border rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between gap-3">
-        <div>
+        <div className="min-w-0">
           <p className="text-xs text-gray-500">{date}</p>
-          <h3 className="text-lg font-semibold text-gray-900">{name}</h3>
+          <h3 className="text-lg font-semibold text-gray-900 break-words">{name}</h3>
           {description && (
-            <p className="text-sm text-gray-600 mt-1">{description}</p>
+            <p className="text-sm text-gray-600 mt-1 break-words">{description}</p>
           )}
         </div>
-        <span className={`text-xs font-semibold px-3 py-1 rounded-full border ${badgeClass}`}>
+        <span className={`text-xs font-semibold px-3 py-1 rounded-full border shrink-0 ${badgeClass}`}>
           {type}
         </span>
       </div>

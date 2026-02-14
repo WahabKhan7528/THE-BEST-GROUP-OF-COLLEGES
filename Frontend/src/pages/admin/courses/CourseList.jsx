@@ -12,7 +12,8 @@ import {
   Building2,
   Pencil,
   Trash2,
-  MoreVertical
+  MoreVertical,
+  ChevronDown
 } from "lucide-react";
 
 const CourseList = () => {
@@ -190,12 +191,12 @@ const CourseList = () => {
         </div>
 
         {isSuperAdmin && (
-          <div className="flex items-center gap-2">
-            <Building2 className="w-4 h-4 text-gray-400" />
+          <div className="relative min-w-[200px] w-full md:w-auto">
+            <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none" />
             <select
               value={selectedCampus}
               onChange={(e) => setSelectedCampus(e.target.value)}
-              className="px-3 py-2 bg-gray-50/50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+              className="w-full pl-10 pr-10 py-2 bg-gray-50/50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all appearance-none cursor-pointer text-gray-700"
             >
               <option value="">All Campuses</option>
               {campuses.map((campus) => (
@@ -204,6 +205,7 @@ const CourseList = () => {
                 </option>
               ))}
             </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none" />
           </div>
         )}
       </div>

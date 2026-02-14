@@ -186,17 +186,18 @@ const Materials = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
             >
-              <div className="flex items-center justify-between px-2">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-2">
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900">
+                  <h2 className="text-xl font-bold text-gray-900 break-words">
                     {subject.name}
                   </h2>
-                  <div className="flex items-center gap-2 text-sm text-gray-500">
-                    <span className="font-medium px-2 py-0.5 bg-gray-100 rounded text-gray-600">{subject.code}</span>
-                    <span>• PDFs, videos, images, notes</span>
+                  <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500 mt-1 sm:mt-0">
+                    <span className="font-medium px-2 py-0.5 bg-gray-100 rounded text-gray-600 shrink-0">{subject.code}</span>
+                    <span className="hidden sm:inline">•</span>
+                    <span className="break-words">PDFs, videos, images, notes</span>
                   </div>
                 </div>
-                <span className="text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200">
+                <span className="self-start sm:self-center text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 border border-gray-200 shrink-0">
                   {subject.materials.length} items
                 </span>
               </div>
