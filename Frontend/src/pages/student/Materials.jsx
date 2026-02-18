@@ -1,5 +1,5 @@
 import { useStudentContext } from "../../context/StudentContext";
-import MaterialCard from "../../components/student/MaterialCard";
+import MaterialCard from "../../components/shared/MaterialCard";
 import { FolderOpen, Search, Filter } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -205,10 +205,8 @@ const Materials = () => {
                 {subject.materials.map((item) => (
                   <MaterialCard
                     key={item.name}
-                    name={item.name}
-                    type={item.type}
-                    date={item.date}
-                    description={item.description}
+                    material={item}
+                    role="student"
                   />
                 ))}
               </div>

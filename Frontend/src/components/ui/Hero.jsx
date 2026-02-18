@@ -19,6 +19,9 @@ const Hero = ({ title, image, announcements = [], className, ...props }) => {
             src={image}
             alt={title || "Hero Background"}
             className="w-full h-full object-cover opacity-40"
+            loading="eager"
+            fetchpriority="high"
+            sizes="100vw"
           />
         )}
         {/* Overlay - simplified */}
@@ -74,7 +77,7 @@ const Hero = ({ title, image, announcements = [], className, ...props }) => {
                 </h2>
               </div>
 
-              <div className="space-y-4 max-h-[500px] overflow-y-auto scrollbar-hide">
+              <div className="space-y-4 max-h-[500px] overflow-y-auto no-scrollbar">
                 {announcements.map((announcement, index) => (
                   <motion.div
                     key={announcement.id || index}

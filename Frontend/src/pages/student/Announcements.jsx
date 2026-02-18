@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useStudentContext } from "../../context/StudentContext";
-import AnnouncementCard from "../../components/faculty/AnnouncementCard"; // Reusing existing card
+import AnnouncementCard from "../../components/shared/AnnouncementCard";
 import { Bell, Search } from "lucide-react";
 
 const StudentAnnouncements = () => {

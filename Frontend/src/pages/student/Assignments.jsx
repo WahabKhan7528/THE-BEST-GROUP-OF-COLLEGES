@@ -1,5 +1,5 @@
 import { useStudentContext } from "../../context/StudentContext";
-import AssignmentCard from "../../components/student/AssignmentCard";
+import AssignmentCard from "../../components/shared/AssignmentCard";
 import { ClipboardList, CheckCircle, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -127,7 +127,7 @@ const Assignments = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
             >
-              <AssignmentCard assignment={assignment} />
+              <AssignmentCard assignment={assignment} role="student" />
             </motion.div>
           ))}
         </motion.div>

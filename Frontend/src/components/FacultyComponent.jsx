@@ -256,7 +256,7 @@ const FacultyComponent = ({ filterCampus }) => {
                                 >
                                     <Card hover className="h-full flex flex-col items-center text-center p-5 md:p-6 rounded-2xl md:rounded-3xl border-t-3 md:border-t-4 border-t-primary-600">
                                         <div className="w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden mb-5 md:mb-6 border-3 md:border-4 border-primary-50 shadow-inner">
-                                            <img src={faculty.image} alt={faculty.name} className="w-full h-full object-cover" />
+                                            <img src={faculty.image} alt={faculty.name} className="w-full h-full object-cover" loading="lazy" />
                                         </div>
 
                                         <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-1">{faculty.name}</h3>
