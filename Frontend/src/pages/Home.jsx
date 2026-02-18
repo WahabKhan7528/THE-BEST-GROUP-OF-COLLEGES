@@ -38,7 +38,7 @@ const Home = () => {
         "Legal Aid Clinic",
         "Distinguished Faculty",
       ],
-      image: "/campuslaw.jpg",
+      image: "/campuslaw.webp",
       path: "/campuses/law",
     },
     {
@@ -57,7 +57,7 @@ const Home = () => {
         "Digital Library",
         "Career Counseling",
       ],
-      image: "/campusmain.jpg",
+      image: "/campusmain.webp",
       path: "/campuses/main",
     },
     {
@@ -77,7 +77,7 @@ const Home = () => {
         "Sports Facilities",
         "Experienced Faculty",
       ],
-      image: "/campus-hala.jpg",
+      image: "/campus-hala.webp",
       path: "/campuses/hala",
     },
   ];
@@ -105,7 +105,15 @@ const Home = () => {
       content:
         "Outstanding teachers and modern labs make learning engaging and effective. I'm confident about my future in medicine.",
       image: "https://placehold.co/100x100?text=FK",
-      rating: 5,
+      rating: 4,
+    },
+    {
+      name: "Fatima Khan",
+      role: "FSc Pre-Medical",
+      content:
+        "Outstanding teachers and modern labs make learning engaging and effective. I'm confident about my future in medicine.",
+      image: "https://placehold.co/100x100?text=FK",
+      rating: 4,
     },
   ];
 
@@ -189,7 +197,7 @@ const Home = () => {
       {/* Hero Section */}
       <Hero
         title="THE BEST GROUP OF COLLEGES"
-        image="/landing-img.png"
+        image="/landing-img.webp"
         announcements={announcements}
         className="mb-12 pl-8 pr-8"
       />
@@ -224,7 +232,7 @@ const Home = () => {
             {/* Replaced gradient background with solid primary color block */}
             <div className="absolute -inset-4 bg-primary-100/50 rounded-3xl transform rotate-2" />
             <img
-              src="/P4.jpg"
+              src="/P4.webp"
               alt="About Us"
               className="relative rounded-2xl shadow-lg border border-border w-full object-cover aspect-square"
             />

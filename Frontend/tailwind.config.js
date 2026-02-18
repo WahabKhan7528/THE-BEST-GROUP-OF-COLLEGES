@@ -11,14 +11,14 @@ export default {
       },
       colors: {
         primary: {
-          DEFAULT: '#2563EB', // 500
+          DEFAULT: '#2563EB',
           50: '#EFF6FF',
           100: '#DBEAFE',
           200: '#BFDBFE',
           300: '#93C5FD',
           400: '#60A5FA',
           500: '#2563EB',
-          600: '#1D4E89', // Adjusted for institutional feel
+          600: '#1D4E89',
           700: '#123A6B',
           800: '#0F2A52',
           900: '#0B1F3B',
@@ -37,7 +37,7 @@ export default {
           800: '#1E293B',
           900: '#0F172A',
         },
-        // Semantic aliases
+        // Naming them for easy use
         surface: '#FFFFFF',
         background: '#F8FAFC',
         border: '#E2E8F0',
@@ -50,26 +50,10 @@ export default {
         'md': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)',
         'lg': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
         'xl': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
-        // Removed glow shadows
       },
-      // Removed custom animations for a static, professional look
     },
   },
   plugins: [
     require('@tailwindcss/forms'),
-    function ({ addUtilities }) {
-      addUtilities({
-        '.scrollbar-hide': {
-          /* IE and Edge */
-          '-ms-overflow-style': 'none',
-          /* Firefox */
-          'scrollbar-width': 'none',
-          /* Safari and Chrome */
-          '&::-webkit-scrollbar': {
-            display: 'none'
-          }
-        }
-      })
-    }
   ],
 }
