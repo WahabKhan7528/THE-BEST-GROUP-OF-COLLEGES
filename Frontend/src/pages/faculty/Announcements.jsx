@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useFacultyContext } from "../../context/FacultyContext";
-import AnnouncementCard from "../../components/faculty/AnnouncementCard";
+import AnnouncementCard from "../../components/shared/AnnouncementCard";
 import { X, Plus } from "lucide-react";
 
 // Mock announcements data by campus

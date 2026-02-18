@@ -1,5 +1,5 @@
 import { useStudentContext } from "../../context/StudentContext";
-import AnnouncementCard from "../../components/student/AnnouncementCard";
+import AnnouncementCard from "../../components/shared/AnnouncementCard";
 import { Megaphone, Search, Filter } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -104,7 +104,7 @@ const News = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
             >
-              <AnnouncementCard announcement={announcement} />
+              <AnnouncementCard announcement={announcement} role="student" />
             </motion.div>
           ))}
         </motion.div>

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useFacultyContext } from "../../context/FacultyContext";
-import AssignmentCard from "../../components/faculty/AssignmentCard";
+import AssignmentCard from "../../components/shared/AssignmentCard";
 import { PlusCircle, Search, Filter, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
 

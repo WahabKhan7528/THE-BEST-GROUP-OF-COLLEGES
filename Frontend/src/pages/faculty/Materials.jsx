@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useFacultyContext } from "../../context/FacultyContext";
-import MaterialCard from "../../components/faculty/MaterialCard";
+import MaterialCard from "../../components/shared/MaterialCard";
 
 // Mock materials data by campus
 const materialsByCampus = {

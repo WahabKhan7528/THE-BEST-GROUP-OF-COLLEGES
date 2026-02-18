@@ -137,8 +137,8 @@ const StudentLifePage = () => {
               transition={{ duration: 0.8 }}
               className="space-y-4"
             >
-              <img src="https://placehold.co/400x400?text=Sports" alt="Campus Sports" className="rounded-3xl shadow-lg" />
-              <img src="https://placehold.co/400x400?text=Hall" alt="Campus hall" className="rounded-3xl shadow-lg" />
+              <img src="https://placehold.co/400x400?text=Sports" alt="Campus Sports" className="rounded-3xl shadow-lg" loading="lazy" />
+              <img src="https://placehold.co/400x400?text=Hall" alt="Campus hall" className="rounded-3xl shadow-lg" loading="lazy" />
             </motion.div>
             <motion.div
               initial={{ y: -20 }}
@@ -146,8 +146,8 @@ const StudentLifePage = () => {
               transition={{ duration: 0.8 }}
               className="space-y-4 pt-8"
             >
-              <img src="https://placehold.co/400x400?text=Cafeteria" alt="Campus Cafeteria" className="rounded-3xl shadow-lg" />
-              <img src="https://placehold.co/400x500?text=Concert" alt="Campus Concert" className="rounded-3xl shadow-lg" />
+              <img src="https://placehold.co/400x400?text=Cafeteria" alt="Campus Cafeteria" className="rounded-3xl shadow-lg" loading="lazy" />
+              <img src="https://placehold.co/400x500?text=Concert" alt="Campus Concert" className="rounded-3xl shadow-lg" loading="lazy" />
             </motion.div>
           </div>
         </div>

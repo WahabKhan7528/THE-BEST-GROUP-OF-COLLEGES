@@ -39,9 +39,11 @@ const Navbar = () => {
         {/* Logo */}
         <Link to="/" className="block group flex items-center gap-2">
           <img
-            src="/LOGO-1-WHITE-NO-BACKGROUND.png"
+            src="/LOGO-1-WHITE-NO-BACKGROUND.webp"
             alt="Logo"
             className="h-12 w-auto"
+            loading="eager"
+            fetchpriority="high"
           />
           <span className="sm:text-2xl md:text-3xl lg:text-4xl font-black tracking-wider text-primary-900">
             THE BEST GROUP

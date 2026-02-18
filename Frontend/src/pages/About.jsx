@@ -135,6 +135,9 @@ const About = () => {
               src="/P1.webp"
               alt="Our Story"
               className="relative rounded-2xl shadow-2xl w-full"
+              loading="lazy"
+              srcSet="/P1.webp 800w"
+              sizes="(max-width: 768px) 100vw, 50vw"
             />
           </motion.div>
         </div>

@@ -229,12 +229,14 @@ const Home = () => {
             transition={{ duration: 0.6 }}
             className="relative"
           >
-            {/* Replaced gradient background with solid primary color block */}
             <div className="absolute -inset-4 bg-primary-100/50 rounded-3xl transform rotate-2" />
             <img
               src="/P4.webp"
               alt="About Us"
               className="relative rounded-2xl shadow-lg border border-border w-full object-cover aspect-square"
+              loading="lazy"
+              srcSet="/P4.webp 800w"
+              sizes="(max-width: 768px) 100vw, 50vw"
             />
             {/* Floating Badge */}
             <div className="hidden sm:block absolute -bottom-6 -right-6 bg-white p-4 rounded-xl shadow-lg border border-border">
@@ -334,6 +336,8 @@ const Home = () => {
                       src={college.image}
                       alt={college.name}
                       className="w-full h-64 lg:h-full object-cover"
+                      loading="lazy"
+                      sizes="(max-width: 1024px) 100vw, 40vw"
                     />
                     <div className="absolute inset-0 bg-primary-900/10" />
                   </div>

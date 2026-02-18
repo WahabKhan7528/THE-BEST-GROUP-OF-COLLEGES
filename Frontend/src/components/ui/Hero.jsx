@@ -19,6 +19,9 @@ const Hero = ({ title, image, announcements = [], className, ...props }) => {
             src={image}
             alt={title || "Hero Background"}
             className="w-full h-full object-cover opacity-40"
+            loading="eager"
+            fetchpriority="high"
+            sizes="100vw"
           />
         )}
         {/* Overlay - simplified */}
