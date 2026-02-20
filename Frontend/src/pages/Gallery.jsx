@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Hero from "../components/ui/Hero";
 import Section from "../components/ui/Section";
 import Badge from "../components/ui/Badge";
 import {
@@ -33,84 +32,84 @@ const Gallery = () => {
       category: "campus",
       title: "Main Campus Building",
       description: "The iconic main building of our institution",
-      src: "https://placehold.co/800x600?text=Campus+Building",
+      src: "https://placehold.co/800x600/E0F2FE/E0F2FE", // sky-100
     },
     {
       id: 2,
       category: "events",
       title: "Graduation Ceremony 2024",
       description: "Celebrating the achievements of our graduating class",
-      src: "https://placehold.co/800x600?text=Graduation",
+      src: "https://placehold.co/800x600/DBEAFE/DBEAFE", // blue-100
     },
     {
       id: 3,
       category: "facilities",
       title: "Law Library",
       description: "Our extensive law library with thousands of resources",
-      src: "https://placehold.co/800x600?text=Library",
+      src: "https://placehold.co/800x600/E0F2FE/E0F2FE", // sky-100
     },
     {
       id: 4,
       category: "students",
       title: "Student Life",
       description: "Students enjoying campus activities",
-      src: "https://placehold.co/800x600?text=Student+Life",
+      src: "https://placehold.co/800x600/EFF6FF/EFF6FF", // blue-50
     },
     {
       id: 5,
       category: "campus",
       title: "Sports Ground",
       description: "State-of-the-art sports facilities",
-      src: "https://placehold.co/800x600?text=Sports+Ground",
+      src: "https://placehold.co/800x600/DBEAFE/DBEAFE", // blue-100
     },
     {
       id: 6,
       category: "facilities",
       title: "Science Laboratory",
       description: "Modern equipped science labs",
-      src: "https://placehold.co/800x600?text=Laboratory",
+      src: "https://placehold.co/800x600/E0F2FE/E0F2FE", // sky-100
     },
     {
       id: 7,
       category: "events",
       title: "Annual Sports Day",
       description: "Annual inter-campus sports competition",
-      src: "https://placehold.co/800x600?text=Sports+Day",
+      src: "https://placehold.co/800x600/EFF6FF/EFF6FF", // blue-50
     },
     {
       id: 8,
       category: "students",
       title: "Class Activities",
       description: "Interactive classroom sessions",
-      src: "https://placehold.co/800x600?text=Class+Activities",
+      src: "https://placehold.co/800x600/DBEAFE/DBEAFE", // blue-100
     },
     {
       id: 9,
       category: "facilities",
       title: "Computer Lab",
       description: "High-tech computer facilities",
-      src: "https://placehold.co/800x600?text=Computer+Lab",
+      src: "https://placehold.co/800x600/E0F2FE/E0F2FE", // sky-100
     },
     {
       id: 10,
       category: "events",
       title: "Cultural Festival",
       description: "Celebrating diversity through culture",
-      src: "https://placehold.co/800x600?text=Cultural+Fest",
+      src: "https://placehold.co/800x600/EFF6FF/EFF6FF", // blue-50
     },
     {
       id: 11,
       category: "campus",
       title: "Campus Gardens",
       description: "Beautiful green spaces around campus",
-      src: "https://placehold.co/800x600?text=Gardens",
+      src: "https://placehold.co/800x600/DBEAFE/DBEAFE", // blue-100
     },
     {
       id: 12,
       category: "students",
       title: "Study Groups",
       description: "Collaborative learning sessions",
-      src: "https://placehold.co/800x600?text=Study+Groups",
+      src: "https://placehold.co/800x600/E0F2FE/E0F2FE", // sky-100
     },
   ];
 
@@ -217,38 +216,36 @@ const Gallery = () => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3, delay: idx * 0.05 }}
-                className="group relative overflow-hidden rounded-2xl shadow-lg cursor-pointer bg-white"
+                className="group flex flex-col overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 bg-white cursor-pointer border border-gray-100"
                 onClick={() => openLightbox(image)}
               >
-                <div className="aspect-[4/3] overflow-hidden">
+                {/* Image Section */}
+                <div className="relative aspect-[4/3] overflow-hidden">
                   <img
                     src={image.src}
                     alt={image.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                </div>
-
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  {/* Hover Overlay with Zoom Icon */}
+                  <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center transform scale-50 group-hover:scale-100 transition-transform duration-300 shadow-lg">
+                      <ZoomIn className="w-6 h-6 text-white" />
+                    </div>
+                  </div>
                   {/* Category Badge */}
-                  <div className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-medium text-black bg-primary-200 backdrop-blur-sm capitalize">
+                  <div className="absolute top-4 left-4 px-3 py-1.5 rounded-full text-xs font-bold text-gray-700 bg-white/95 backdrop-blur-sm capitalize shadow-md">
                     {image.category}
                   </div>
+                </div>
 
-                  {/* Zoom Icon */}
-                  <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                    <ZoomIn className="w-5 h-5 text-white" />
-                  </div>
-
-                  {/* Title & Description */}
-                  <div className="absolute bottom-0 left-0 right-0 p-5">
-                    <h3 className="text-white text-lg font-bold mb-1">
-                      {image.title}
-                    </h3>
-                    <p className="text-gray-300 text-sm line-clamp-2">
-                      {image.description}
-                    </p>
-                  </div>
+                {/* Content Section */}
+                <div className="p-5 flex flex-col flex-grow bg-blue-50/50 z-10 border-t-2 border-primary-100/30 group-hover:bg-blue-100/50 transition-colors duration-300">
+                  <h3 className="text-gray-900 text-lg font-bold mb-2 group-hover:text-primary-600 transition-colors">
+                    {image.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm line-clamp-2">
+                    {image.description}
+                  </p>
                 </div>
               </motion.div>
             ))}

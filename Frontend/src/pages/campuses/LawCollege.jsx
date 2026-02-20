@@ -76,7 +76,7 @@ const LawCollege = () => {
   return (
     <div className="min-h-screen bg-white">
       <Hero
-        image="/campuslaw.jpg"
+        image="/Law.webp"
         centered
         className="rounded-3xl"
       />

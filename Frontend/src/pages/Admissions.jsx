@@ -170,29 +170,50 @@ const Admissions = () => {
           description="Mark your calendar with these key admission dates"
           badge="Timeline"
         />
-        <div className="max-w-4xl mx-auto">
-          <Card className="overflow-hidden">
-            <div className="divide-y divide-gray-100">
+        <div className="max-w-4xl mx-auto px-4 mt-8 md:mt-12">
+          <div className="relative">
+            {/* The continuous vertical line */}
+            <div className="absolute left-[31px] md:left-[39px] top-8 md:top-10 bottom-8 md:bottom-10 w-0.5 bg-gradient-to-b from-transparent via-primary-300 to-transparent opacity-60 rounded-full" />
+
+            <div className="space-y-6 md:space-y-8 cursor-pointer">
               {importantDates.map((item, index) => (
                 <motion.div
                   key={item.event}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between p-4 hover:bg-gray-50 transition-colors gap-3 sm:gap-4"
+                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                  className="relative flex gap-4 md:gap-8 group"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center">
-                      <Calendar className="w-8 h-8 text-primary-600" />
+                  {/* Timeline Core: Icon Node */}
+                  <div className="relative z-10 flex flex-col items-start">
+                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gray-50 flex items-center justify-center p-2 shadow-sm border border-white group-hover:border-primary-100 transition-all duration-300 group-hover:scale-110 group-hover:shadow-md">
+                      <div className="w-full h-full rounded-full bg-white border border-gray-100 flex items-center justify-center group-hover:bg-primary-600 group-hover:border-primary-600 group-hover:text-white text-primary-600 transition-colors duration-300 shadow-sm">
+                        <Calendar className="w-5 h-5 md:w-6 md:h-6" />
+                      </div>
                     </div>
-                    <span className="font-medium text-gray-900">{item.event}</span>
                   </div>
-                  <Badge variant="primary">{item.date}</Badge>
+
+                  {/* Content Card */}
+                  <div className="flex-1 bg-white p-5 md:p-6 rounded-2xl md:rounded-3xl shadow-sm border border-gray-100 group-hover:shadow-xl group-hover:shadow-primary-500/5 group-hover:border-primary-100 transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="flex flex-col gap-1 md:gap-2">
+                      <h4 className="text-lg md:text-xl font-bold text-gray-900 group-hover:text-primary-700 transition-colors">
+                        {item.event}
+                      </h4>
+                      <span className="text-sm text-gray-500 flex items-center gap-1.5 md:hidden">
+                        <Calendar className="w-3.5 h-3.5" /> Key Date
+                      </span>
+                    </div>
+                    <div className="inline-flex items-center">
+                      <div className="bg-primary-50 border border-primary-100 text-primary-700 font-semibold px-4 py-2 rounded-xl text-sm md:text-base shadow-inner group-hover:bg-primary-600 group-hover:text-white group-hover:border-primary-600 group-hover:shadow-md transition-all duration-300 whitespace-nowrap flex items-center gap-2">
+                        {item.date}
+                      </div>
+                    </div>
+                  </div>
                 </motion.div>
               ))}
             </div>
-          </Card>
+          </div>
         </div>
       </Section>
 

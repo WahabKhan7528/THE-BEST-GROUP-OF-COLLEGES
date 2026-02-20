@@ -38,7 +38,7 @@ const Home = () => {
         "Legal Aid Clinic",
         "Distinguished Faculty",
       ],
-      image: "/campuslaw.webp",
+      image: "/Law.webp",
       path: "/campuses/law",
     },
     {
@@ -57,7 +57,7 @@ const Home = () => {
         "Digital Library",
         "Career Counseling",
       ],
-      image: "/campusmain.webp",
+      image: "/maincampus.webp",
       path: "/campuses/main",
     },
     {
@@ -197,7 +197,7 @@ const Home = () => {
       {/* Hero Section */}
       <Hero
         title="THE BEST GROUP OF COLLEGES"
-        image="/landing-img.webp"
+        image="/maincampus.webp"
         announcements={announcements}
         className="mb-12 pl-8 pr-8"
       />
@@ -231,11 +231,11 @@ const Home = () => {
           >
             <div className="absolute -inset-4 bg-primary-100/50 rounded-3xl transform rotate-2" />
             <img
-              src="/P4.webp"
+              src="/aboutUs.webp"
               alt="About Us"
               className="relative rounded-2xl shadow-lg border border-border w-full object-cover aspect-square"
               loading="lazy"
-              srcSet="/P4.webp 800w"
+              srcSet="/aboutUs.webp 800w"
               sizes="(max-width: 768px) 100vw, 50vw"
             />
             {/* Floating Badge */}
@@ -331,11 +331,11 @@ const Home = () => {
                     }`}
                 >
                   {/* College Image */}
-                  <div className="w-full lg:w-2/5 relative overflow-hidden">
+                  <div className="w-full lg:w-2/5 relative overflow-hidden h-64 lg:h-auto">
                     <img
                       src={college.image}
                       alt={college.name}
-                      className="w-full h-64 lg:h-full object-cover"
+                      className="absolute inset-0 w-full h-full object-cover"
                       loading="lazy"
                       sizes="(max-width: 1024px) 100vw, 40vw"
                     />
