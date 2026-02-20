@@ -132,11 +132,11 @@ const About = () => {
           >
             <div className="absolute -inset-4 bg-gradient-to-r from-primary-100 to-accent-100 rounded-3xl transform rotate-3" />
             <img
-              src="/ourstory.webp"
+              src="/our-story.webp"
               alt="Our Story"
               className="relative rounded-2xl shadow-2xl w-full"
               loading="lazy"
-              srcSet="/ourstory.webp 800w"
+              srcSet="/our-story.webp 800w"
               sizes="(max-width: 768px) 100vw, 50vw"
             />
           </motion.div>
