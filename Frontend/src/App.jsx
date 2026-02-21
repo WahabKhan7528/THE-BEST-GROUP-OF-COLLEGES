@@ -7,7 +7,7 @@ import {
 import { Suspense, lazy } from "react";
 import PageLoader from "./components/shared/PageLoader";
 
-// Eagerly loaded layouts & providers (tiny, always needed)
+// All time neccessary imports
 import RootLayout from "./layouts/RootLayout";
 import CampusLayout from "./layouts/CampusLayout";
 import AdminLayout from "./layouts/AdminLayout";
@@ -17,7 +17,7 @@ import { AdminProvider } from "./context/AdminContext";
 import { FacultyProvider } from "./context/FacultyContext";
 import { StudentProvider } from "./context/StudentContext";
 
-// ─── Lazy-loaded: Public pages ────────────────────────────────────────────────
+// Public pages
 const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() => import("./pages/About"));
 const Admissions = lazy(() => import("./pages/Admissions"));
@@ -27,7 +27,7 @@ const Contact = lazy(() => import("./pages/Contact"));
 const NewsAndEvents = lazy(() => import("./pages/NewsAndEvents"));
 const Login = lazy(() => import("./pages/Login"));
 
-// ─── Lazy-loaded: Campus pages ────────────────────────────────────────────────
+// Campus pages 
 const MainCampus = lazy(() => import("./pages/campuses/MainCampus"));
 const LawCampus = lazy(() => import("./pages/campuses/LawCampus"));
 const HalaCampus = lazy(() => import("./pages/campuses/HalaCampus"));
@@ -36,7 +36,7 @@ const FacultyPage = lazy(() => import("./pages/campuses/common/FacultyPage"));
 const StudentLifePage = lazy(() => import("./pages/campuses/common/StudentLifePage"));
 const FacilitiesPage = lazy(() => import("./pages/campuses/common/FacilitiesPage"));
 
-// ─── Lazy-loaded: Admin pages ─────────────────────────────────────────────────
+// Admin pages
 const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
 const UsersList = lazy(() => import("./pages/admin/users/UsersList"));
 const CreateUser = lazy(() => import("./pages/admin/users/CreateUser"));
@@ -62,7 +62,7 @@ const GalleryManager = lazy(() => import("./pages/admin/cms/gallery/Gallery"));
 const UploadImage = lazy(() => import("./pages/admin/cms/gallery/UploadImage"));
 const EditGalleryImage = lazy(() => import("./pages/admin/cms/gallery/EditGalleryImage"));
 
-// ─── Lazy-loaded: Faculty pages ───────────────────────────────────────────────
+// Faculty pages 
 const FacultyDashboard = lazy(() => import("./pages/faculty/Dashboard"));
 const FacultyAssignments = lazy(() => import("./pages/faculty/Assignments"));
 const CreateAssignment = lazy(() => import("./pages/faculty/CreateAssignment"));
@@ -73,7 +73,7 @@ const UploadMaterial = lazy(() => import("./pages/faculty/UploadMaterial"));
 const FacultyResults = lazy(() => import("./pages/faculty/Results"));
 const FacultyAnnouncements = lazy(() => import("./pages/faculty/Announcements"));
 
-// ─── Lazy-loaded: Student pages ───────────────────────────────────────────────
+// Student pages 
 const StudentDashboard = lazy(() => import("./pages/student/Dashboard"));
 const StudentAssignments = lazy(() => import("./pages/student/Assignments"));
 const StudentMaterials = lazy(() => import("./pages/student/Materials"));

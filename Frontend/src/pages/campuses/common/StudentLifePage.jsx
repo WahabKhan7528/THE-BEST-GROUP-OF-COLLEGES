@@ -90,10 +90,10 @@ const StudentLifePage = () => {
                 <p className="text-gray-600 text-xs md:text-sm mb-5 md:mb-6 flex-grow">{society.description}</p>
 
                 <div className="w-full space-y-2">
-                  <Badge variant="secondary" className="w-full justify-center py-1">
+                  <Badge variant="soft" className="w-full justify-center py-1">
                     <Users className="w-3 h-3 mr-1" /> {society.members} Members
                   </Badge>
-                  <Badge variant="outline" className="w-full justify-center py-1 text-xs">
+                  <Badge variant="soft" className="w-full justify-center py-1 text-xs">
                     <Calendar className="w-3 h-3 mr-1" /> {society.meeting}
                   </Badge>
                 </div>
@@ -110,7 +110,7 @@ const StudentLifePage = () => {
 
         <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
           <div>
-            <Badge variant="secondary" className="mb-3 md:mb-4">Campus Vibes</Badge>
+            <Badge variant="soft" className="mb-3 md:mb-4">Campus Vibes</Badge>
             <h2 className="text-2xl md:text-4xl font-bold mb-4 md:mb-6 text-white">A Campus That Never Sleeps</h2>
             <p className="text-primary-100 text-sm md:text-lg leading-relaxed mb-6 md:mb-8">
               From early morning study sessions in the library to late-night sports matches, our campus is always buzzing with energy. Discover the perfect balance between academic rigor and social fun.

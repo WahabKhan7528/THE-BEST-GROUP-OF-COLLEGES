@@ -22,7 +22,7 @@ import ContactForm from "../components/ContactForm";
 import ContactInfo from "../components/ContactInfo";
 
 const Home = () => {
-  
+
 
   const collegesData = [
     {
@@ -256,7 +256,7 @@ const Home = () => {
             transition={{ duration: 0.6 }}
             className="px-6 md:px-0"
           >
-            <Badge variant="primary" solid className="mb-4">About Us</Badge>
+            <Badge variant="solid" className="mb-4">About Us</Badge>
             <h3 className="text-3xl md:text-4xl font-bold text-primary-900 mb-6 leading-tight">
               Excellence in Education Since <span className="text-primary-600">1985</span>
             </h3>
@@ -292,7 +292,6 @@ const Home = () => {
             <div className="flex justify-center md:justify-start">
               <Button
                 icon={ArrowRight}
-                iconPosition="right"
                 to="/about"
                 variant="primary"
               >

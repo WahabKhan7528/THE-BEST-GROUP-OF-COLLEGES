@@ -132,7 +132,6 @@ const ContactForm = () => {
                         size="lg"
                         className="w-full"
                         icon={Send}
-                        iconPosition="right"
                     >
                         {loading ? "Sending..." : "Send Message"}
                     </Button>

@@ -36,7 +36,7 @@ const AcademicsPage = () => {
                     <div className="p-1.5 md:p-2 rounded-xl md:rounded-2xl bg-primary-100 text-primary-600">
                       <program.icon className="w-5 h-5 md:w-6 md:h-6" />
                     </div>
-                    <Badge variant="outline" className="rounded-full">{program.duration}</Badge>
+                    <Badge variant="soft" className="rounded-full">{program.duration}</Badge>
                   </div>
 
                   <h3 className="text-lg md:text-xl font-bold mb-2.5 md:mb-3 text-gray-900">{program.title}</h3>
@@ -75,7 +75,7 @@ const AcademicsPage = () => {
           <p className="text-base md:text-lg text-gray-600 mb-6 md:mb-8">
             Ready to take the next step? Explore our admission requirements and apply today.
           </p>
-          <Button size="lg" icon={ArrowRight} iconPosition="right" to="/admissions">
+          <Button size="lg" icon={ArrowRight} to="/admissions">
             View Admissions
           </Button>
         </motion.div>

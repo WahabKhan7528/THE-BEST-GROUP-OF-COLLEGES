@@ -4,10 +4,9 @@ const Card = ({
   children,
   className,
   hover = false,
-  shadow = 'sm', // Changed default to sm
+  shadow = 'sm',
   padding = true,
   variant = 'default',
-  // gradient prop is largely ignored or deprecated
   ...props
 }) => {
   const shadowClasses = {
@@ -20,7 +19,7 @@ const Card = ({
 
   const variantClasses = {
     default: 'bg-white border border-border',
-    glass: 'bg-white border border-border', // Fallback to default
+    glass: 'bg-white border border-border',
     elevated: 'bg-white shadow-md border border-gray-100',
     outline: 'bg-transparent border border-border',
   };
@@ -28,7 +27,7 @@ const Card = ({
   return (
     <div
       className={clsx(
-        'rounded-xl overflow-hidden', // Changed from 2xl to xl for more professional look
+        'rounded-xl overflow-hidden',
         'transition-all duration-200 ease-out',
         variantClasses[variant] || variantClasses.default,
         shadowClasses[shadow],
@@ -44,8 +43,6 @@ const Card = ({
     </div>
   );
 };
-
-// ... existing subcomponents ...
 
 Card.Image = function CardImage({ src, alt, className, overlay = false, bleed = true, ...props }) {
   return (

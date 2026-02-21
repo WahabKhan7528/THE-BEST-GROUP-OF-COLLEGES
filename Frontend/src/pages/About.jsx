@@ -89,7 +89,7 @@ const About = () => {
             transition={{ duration: 0.6 }}
             className="text-center md:text-left"
           >
-            <Badge variant="primary" solid className="mb-4">Our Story</Badge>
+            <Badge variant="solid" className="mb-4">Our Story</Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 leading-tight">
               A Legacy of <span className="text-gradient">Educational Excellence</span>
             </h2>
@@ -109,7 +109,6 @@ const About = () => {
             <div className="flex justify-center md:justify-start">
               <Button
                 icon={ArrowRight}
-                iconPosition="right"
                 to="/campuses/main"
               >
                 Explore Our Campuses
@@ -170,7 +169,7 @@ const About = () => {
       {/* Journey Timeline */}
       <Section background="gradient" spacing="large">
         <div className="flex justify-center mb-4">
-          <Badge variant="primary" solid>Timeline</Badge>
+          <Badge variant="solid">Timeline</Badge>
         </div>
         <Section.Header
           title="Our Journey"
@@ -197,7 +196,7 @@ const About = () => {
                     <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-600 transition-colors">
                       <milestone.icon className="w-8 h-8 text-primary-600 group-hover:text-white transition-colors" />
                     </div>
-                    <Badge variant="primary" solid className="mb-3">{milestone.year}</Badge>
+                    <Badge variant="solid" className="mb-3">{milestone.year}</Badge>
                     <h3 className="text-xl font-bold mb-3 text-gray-900">{milestone.title}</h3>
                     <p className="text-gray-600 text-sm leading-relaxed">{milestone.description}</p>
                   </Card.Body>
@@ -223,7 +222,7 @@ const About = () => {
                     <milestone.icon className="w-8 h-8 text-primary-600 group-hover:text-white transition-colors" />
                   </div>
                   <div>
-                    <Badge variant="primary" solid className="mb-2">{milestone.year}</Badge>
+                    <Badge variant="solid" className="mb-2">{milestone.year}</Badge>
                     <h3 className="text-xl font-bold mb-3 text-gray-900">{milestone.title}</h3>
                     <p className="text-gray-600 text-sm leading-relaxed">{milestone.description}</p>
                   </div>
@@ -254,7 +253,6 @@ const About = () => {
               variant="gradient"
               size="lg"
               icon={ArrowRight}
-              iconPosition="right"
               to="/admissions"
             >
               Apply Now

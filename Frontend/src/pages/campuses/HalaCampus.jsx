@@ -136,7 +136,7 @@ const HalaCampus = () => {
             <div className="absolute inset-0 bg-primary-600/10 rounded-3xl transform -rotate-3 opacity-10"></div>
             <Card className="relative border-0 shadow-xl bg-white/50 backdrop-blur-sm rounded-3xl">
               <div className="p-6">
-                <Badge variant="outline" className="mb-4 border-primary-200 text-primary-700 rounded-full">Our Mission</Badge>
+                <Badge variant="soft" className="mb-4 border-primary-200 text-primary-700 rounded-full">Our Mission</Badge>
                 <h3 className="text-2xl font-bold mb-4 text-gray-900">Nurturing Talent</h3>
                 <p className="text-gray-600 mb-6">
                   To provide high-quality intermediate education that empowers students to achieve top positions in board exams and secure admissions in prestigious universities.
@@ -174,7 +174,7 @@ const HalaCampus = () => {
                       <div className={`p-3 rounded-2xl ${colors.bg} ${colors.text}`}>
                         <program.icon size={24} />
                       </div>
-                      <Badge variant="secondary" className="rounded-full">{program.duration}</Badge>
+                      <Badge variant="soft" className="rounded-full">{program.duration}</Badge>
                     </div>
                     <h3 className="text-xl font-bold mb-3 text-gray-900">{program.title}</h3>
                     <p className="text-gray-600 mb-6 flex-grow">{program.description}</p>
@@ -236,7 +236,7 @@ const HalaCampus = () => {
             Join the best intermediate college in Hala. Limited seats available for the upcoming session.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" icon={ArrowRight} iconPosition="right" to="/admissions">
+            <Button size="lg" icon={ArrowRight} to="/admissions">
               Apply Online
             </Button>
             <Button size="lg" variant="outline" to="/contact">

@@ -321,7 +321,7 @@ const Gallery = () => {
 
               {/* Image Info */}
               <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent rounded-b-lg">
-                <Badge className="mb-2 bg-gray-900 text-white border-0 capitalize">
+                <Badge variant="solid" className="mb-2 bg-gray-900 capitalize">
                   {selectedImage.category}
                 </Badge>
                 <h3 className="text-white text-xl font-bold mb-1">

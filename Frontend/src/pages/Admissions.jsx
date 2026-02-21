@@ -403,7 +403,6 @@ const Admissions = () => {
                   size="lg"
                   variant="gradient"
                   icon={Send}
-                  iconPosition="right"
                   disabled={loading}
                 >
                   {loading ? "Submitting..." : "Submit Application"}
@@ -445,7 +444,6 @@ const Admissions = () => {
           <Button
             variant="outline"
             icon={ArrowRight}
-            iconPosition="right"
             to="/contact"
           >
             Visit Contact Page
