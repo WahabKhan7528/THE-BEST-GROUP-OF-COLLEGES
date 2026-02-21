@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useStudentContext } from "../../context/StudentContext";
-import { BarChart3, TrendingUp, Award, Calendar, ChevronDown, CheckCircle, BookOpen, ChevronRight } from "lucide-react";
+import { BarChart3, TrendingUp, Award, ChevronDown, ChevronRight } from "lucide-react";
 
 // Grading Logic
 const getGradeDetails = (marks) => {

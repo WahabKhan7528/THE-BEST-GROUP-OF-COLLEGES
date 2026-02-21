@@ -1,16 +1,9 @@
-import Hero from "../../../components/ui/Hero";
 import Section from "../../../components/ui/Section";
 import Card from "../../../components/ui/Card";
-import Badge from "../../../components/ui/Badge";
-import Button from "../../../components/ui/Button";
-import { Building, Wifi, Library, Activity, Coffee, Stethoscope, Dumbbell, Monitor, FlaskConical, Bus , ArrowRight } from "lucide-react";
+import { Wifi, Library, Coffee, Stethoscope, Dumbbell, Monitor, FlaskConical, Bus } from "lucide-react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-
 
 const FacilitiesPage = () => {
-  const navigate = useNavigate();
-
   const facilities = [
     {
       category: "Academic Infrastructure",
@@ -139,7 +132,7 @@ const FacilitiesPage = () => {
           <p className="text-base md:text-lg text-gray-600 mb-6 md:mb-8">
             We invite you to visit our campus and see our facilities firsthand. Book a guided tour today.
           </p>
-          <Button size="lg" variant="primary" className="border-white hover:bg-primary-50" onClick={() => navigate("/contact")}>
+          <Button size="lg" variant="primary" className="border-white hover:bg-primary-50" to="/contact">
             Schedule a Visit <ArrowRight />
           </Button>
         </motion.div>

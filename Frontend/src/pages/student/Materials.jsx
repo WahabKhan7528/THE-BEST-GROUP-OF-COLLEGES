@@ -1,6 +1,6 @@
 import { useStudentContext } from "../../context/StudentContext";
 import MaterialCard from "../../components/shared/MaterialCard";
-import { FolderOpen, Search, Filter } from "lucide-react";
+import { FolderOpen } from "lucide-react";
 import { motion } from "framer-motion";
 
 // Mock subjects and materials data by campus

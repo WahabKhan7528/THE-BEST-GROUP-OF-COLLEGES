@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Calendar, Upload, FileText, ArrowLeft, Check } from 'lucide-react';
+import { Calendar, FileText, ArrowLeft, Check } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 

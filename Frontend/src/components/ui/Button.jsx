@@ -19,6 +19,8 @@ const sizes = {
   lg: "px-6 py-3 text-base font-medium rounded-xl gap-2.5",
 };
 
+import { Link } from "react-router-dom";
+
 export default function Button({
   children,
   variant = "primary",
@@ -28,26 +30,25 @@ export default function Button({
   iconPosition = "left",
   loading = false,
   disabled = false,
+  to,
   ...props
 }) {
   const isDisabled = disabled || loading;
 
-  return (
-    <button
-      className={clsx(
-        "inline-flex items-center justify-center transition-all duration-200",
-        "focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:ring-offset-1",
-        variants[variant] || variants.primary,
-        sizes[size],
-        {
-          "opacity-50 cursor-not-allowed pointer-events-none": isDisabled,
-          "flex-row-reverse": iconPosition === "right",
-        },
-        className
-      )}
-      disabled={isDisabled}
-      {...props}
-    >
+  const baseClasses = clsx(
+    "inline-flex items-center justify-center transition-all duration-200",
+    "focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:ring-offset-1",
+    variants[variant] || variants.primary,
+    sizes[size],
+    {
+      "opacity-50 cursor-not-allowed pointer-events-none": isDisabled,
+      "flex-row-reverse": iconPosition === "right",
+    },
+    className
+  );
+
+  const content = (
+    <>
       {loading ? (
         <svg
           className={clsx("animate-spin", size === "sm" ? "h-4 w-4" : "h-5 w-5")}
@@ -73,6 +74,24 @@ export default function Button({
         <Icon className={clsx("flex-shrink-0", size === "sm" ? "h-4 w-4" : "h-5 w-5")} />
       ) : null}
       {children}
+    </>
+  );
+
+  if (to) {
+    return (
+      <Link to={to} className={baseClasses} {...props}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <button
+      className={baseClasses}
+      disabled={isDisabled}
+      {...props}
+    >
+      {content}
     </button>
   );
 }

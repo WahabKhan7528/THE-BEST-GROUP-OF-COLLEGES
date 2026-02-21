@@ -8,9 +8,6 @@ import {
   BookOpen,
   Award,
   Users,
-  Clock,
-  Target,
-  Lightbulb,
   ArrowRight,
   CheckCircle,
   Laptop,
@@ -18,12 +15,9 @@ import {
   GraduationCap
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-
 import { programsData } from "../../data/programsData";
 
 const MainCampus = () => {
-  const navigate = useNavigate();
 
   const stats = [
     {
@@ -183,8 +177,8 @@ const MainCampus = () => {
                       <Users className="w-4 h-4 mr-2" />
                       {program.seats} Seats Available
                     </div>
-                    <Button size="sm" onClick={() => navigate("/admissions")}>
-                      Apply
+                    <Button to={program.path || "/admissions"}>
+                      View Details
                     </Button>
                   </div>
                 </div>
@@ -234,10 +228,10 @@ const MainCampus = () => {
             Take the first step towards a bright future. Applications are open for the upcoming session.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" icon={ArrowRight} iconPosition="right" onClick={() => navigate("/admissions")}>
+            <Button size="lg" icon={ArrowRight} iconPosition="right" to="/admissions">
               Start Application
             </Button>
-            <Button size="lg" variant="outline" onClick={() => navigate("/contact")}>
+            <Button size="lg" variant="outline" to="/contact">
               Contact Admissions
             </Button>
           </div>

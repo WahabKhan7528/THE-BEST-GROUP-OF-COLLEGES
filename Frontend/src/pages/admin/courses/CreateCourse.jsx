@@ -6,7 +6,6 @@ import {
   BookOpen,
   Clock,
   GraduationCap,
-  DollarSign,
   FileText,
   Building2,
   CheckCircle2
@@ -19,8 +18,7 @@ const CreateCourse = () => {
     title: "",
     duration: "",
     eligibility: "",
-    fee: "",
-    type: "semester",
+    examSystem: "annual",
     description: "",
     offeredAt: [],
   });
@@ -116,33 +114,18 @@ const CreateCourse = () => {
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5 flex items-center gap-2">
-                <DollarSign className="w-4 h-4 text-gray-400" />
-                Fee Amount
-              </label>
-              <input
-                type="text"
-                value={form.fee}
-                onChange={(e) => handleChange("fee", e.target.value)}
-                placeholder="e.g. $1200"
-                className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
-              />
-            </div>
-
-            <div>
+            <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1.5 flex items-center gap-2">
                 <FileText className="w-4 h-4 text-gray-400" />
-                Fee Period
+                Exam System
               </label>
               <select
-                value={form.type}
-                onChange={(e) => handleChange("type", e.target.value)}
+                value={form.examSystem}
+                onChange={(e) => handleChange("examSystem", e.target.value)}
                 className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all appearance-none"
               >
-                <option value="semester">Per Semester</option>
-                <option value="year">Per Year</option>
-                <option value="course">Full Course</option>
+                <option value="annual">Annual</option>
+                <option value="semester">Semester</option>
               </select>
             </div>
 

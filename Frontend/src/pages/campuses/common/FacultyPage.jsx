@@ -1,6 +1,5 @@
 
 import { useLocation } from "react-router-dom";
-import Hero from "../../../components/ui/Hero";
 import FacultyComponent from "../../../components/FacultyComponent";
 
 const FacultyPage = () => {

@@ -8,13 +8,9 @@ import {
   Filter,
   BookOpen,
   Users,
-  GraduationCap,
   Building2,
-  MoreVertical,
-  Pencil,
-  Trash2
 } from "lucide-react";
-import { motion } from "framer-motion";
+
 
 const ClassesList = () => {
   const navigate = useNavigate();

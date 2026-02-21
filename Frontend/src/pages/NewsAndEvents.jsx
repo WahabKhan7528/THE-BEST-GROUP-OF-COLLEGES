@@ -7,12 +7,7 @@ import {
   Newspaper,
   CalendarDays,
   Sparkles,
-  Award,
-  Building,
-  Users,
-  Microscope
 } from "lucide-react";
-import Hero from "../components/ui/Hero";
 import Section from "../components/ui/Section";
 import Card from "../components/ui/Card";
 import Badge from "../components/ui/Badge";

@@ -8,7 +8,6 @@ import {
   Book,
   School,
 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Hero from "../components/ui/Hero";
 import Section from "../components/ui/Section";
@@ -23,7 +22,7 @@ import ContactForm from "../components/ContactForm";
 import ContactInfo from "../components/ContactInfo";
 
 const Home = () => {
-  const navigate = useNavigate();
+  
 
   const collegesData = [
     {
@@ -199,7 +198,7 @@ const Home = () => {
         title="THE BEST GROUP OF COLLEGES"
         image="/maincampus.webp"
         announcements={announcements}
-        className="mb-12 pl-8 pr-8"
+        className="mb-12 px-8"
       />
 
       {/* Stats Section */}
@@ -239,17 +238,13 @@ const Home = () => {
               sizes="(max-width: 768px) 100vw, 50vw"
             />
             {/* Floating Badge */}
-            <div className="hidden sm:block absolute -bottom-6 -right-6 bg-white p-4 rounded-xl shadow-lg border border-border">
+            <div className="absolute -bottom-4 right-0 sm:-bottom-6 sm:-right-6 bg-white p-3 sm:p-4 rounded-xl shadow-lg border border-border">
               <div className="text-center">
-                <div className="text-3xl font-bold text-primary-700">18+</div>
-                <div className="text-sm text-text-secondary">Years of Excellence</div>
-              </div>
-            </div>
-            {/* Mobile Badge */}
-            <div className="sm:hidden absolute -bottom-4 right-0 bg-white p-3 rounded-xl shadow-lg border border-border">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary-700">18+</div>
-                <div className="text-xs text-text-secondary">Years</div>
+                <div className="text-2xl sm:text-3xl font-bold text-primary-700">18+</div>
+                <div className="text-xs sm:text-sm text-text-secondary">
+                  <span className="sm:hidden">Years</span>
+                  <span className="hidden sm:inline">Years of Excellence</span>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -259,7 +254,7 @@ const Home = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="px-6 md:px-0 text-center md:text-left"
+            className="px-6 md:px-0"
           >
             <Badge variant="primary" solid className="mb-4">About Us</Badge>
             <h3 className="text-3xl md:text-4xl font-bold text-primary-900 mb-6 leading-tight">
@@ -286,7 +281,7 @@ const Home = () => {
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ delay: index * 0.2 }}
                   className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 hover:bg-primary-50 transition-colors group border border-transparent hover:border-primary-100"
                 >
                   <span className="text-text-primary font-medium text-sm">{highlight.text}</span>
@@ -298,7 +293,7 @@ const Home = () => {
               <Button
                 icon={ArrowRight}
                 iconPosition="right"
-                onClick={() => navigate("/about")}
+                to="/about"
                 variant="primary"
               >
                 Learn More About Us
@@ -395,10 +390,10 @@ const Home = () => {
 
                     {/* Actions */}
                     <div className="flex flex-wrap gap-3 pt-2">
-                      <Button onClick={() => navigate(college.path)}>
+                      <Button to={college.path}>
                         View Details
                       </Button>
-                      <Button variant="outline" onClick={() => navigate("/admissions")}>
+                      <Button variant="outline" to="/admissions">
                         Apply Now
                       </Button>
                     </div>

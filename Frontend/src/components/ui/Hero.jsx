@@ -1,6 +1,6 @@
 import { clsx } from "clsx";
 import { motion } from "framer-motion";
-import { Calendar, Bell } from "lucide-react";
+import { Bell } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Hero = ({ title, image, announcements = [], className, ...props }) => {

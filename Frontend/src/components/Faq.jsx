@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { HelpCircle } from "lucide-react";
 import Section from "./ui/Section";
 import Card from "./ui/Card";
 

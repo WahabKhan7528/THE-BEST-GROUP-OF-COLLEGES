@@ -29,7 +29,7 @@ const Login = lazy(() => import("./pages/Login"));
 
 // ─── Lazy-loaded: Campus pages ────────────────────────────────────────────────
 const MainCampus = lazy(() => import("./pages/campuses/MainCampus"));
-const LawCollege = lazy(() => import("./pages/campuses/LawCollege"));
+const LawCampus = lazy(() => import("./pages/campuses/LawCampus"));
 const HalaCampus = lazy(() => import("./pages/campuses/HalaCampus"));
 const AcademicsPage = lazy(() => import("./pages/campuses/common/AcademicsPage"));
 const FacultyPage = lazy(() => import("./pages/campuses/common/FacultyPage"));
@@ -106,7 +106,7 @@ function App() {
               <Route path="main/student-life" element={<StudentLifePage />} />
               <Route path="main/facilities" element={<FacilitiesPage />} />
 
-              <Route path="law" element={<LawCollege />} />
+              <Route path="law" element={<LawCampus />} />
               <Route path="law/academics" element={<AcademicsPage />} />
               <Route path="law/faculty" element={<FacultyPage />} />
               <Route path="law/student-life" element={<StudentLifePage />} />

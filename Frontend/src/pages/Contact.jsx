@@ -1,46 +1,25 @@
 import { useState, useRef } from "react";
 import {
   MapPin,
-  Phone,
-  Mail,
-  Clock,
-  Send,
-  MessageSquare,
-  ChevronDown,
   Facebook,
   Twitter,
   Instagram,
   Linkedin
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import Hero from "../components/ui/Hero";
+import { motion } from "framer-motion";
 import Section from "../components/ui/Section";
 import Card from "../components/ui/Card";
-import Button from "../components/ui/Button";
-import Badge from "../components/ui/Badge";
-import emailjs from "@emailjs/browser";
 import Faq from "../components/Faq";
 import ContactForm from "../components/ContactForm";
 import ContactInfo from "../components/ContactInfo";
 
 const Contact = () => {
-
-
-
-
-
-
   const socialLinks = [
     { icon: Facebook, href: "#", label: "Facebook" },
     { icon: Twitter, href: "#", label: "Twitter" },
     { icon: Instagram, href: "#", label: "Instagram" },
     { icon: Linkedin, href: "#", label: "LinkedIn" },
   ];
-
-
-
-
-
   return (
     <div className="min-h-screen bg-white">
       {/* Contact Info Cards */}

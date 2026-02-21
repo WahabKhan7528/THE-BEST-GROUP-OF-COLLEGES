@@ -5,12 +5,8 @@ import {
   FolderOpen,
   Megaphone,
   BarChart3,
-  CalendarCheck,
   BookOpen,
-  FileText,
-  Users,
   ArrowRight,
-  TrendingUp,
 } from "lucide-react";
 import { useStudentContext } from "../../context/StudentContext";
 import { motion } from "framer-motion";

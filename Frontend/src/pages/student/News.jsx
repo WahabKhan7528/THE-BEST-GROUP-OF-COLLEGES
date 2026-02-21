@@ -1,6 +1,6 @@
 import { useStudentContext } from "../../context/StudentContext";
 import AnnouncementCard from "../../components/shared/AnnouncementCard";
-import { Megaphone, Search, Filter } from "lucide-react";
+import { Megaphone } from "lucide-react";
 import { motion } from "framer-motion";
 
 // Mock announcements/news data by campus

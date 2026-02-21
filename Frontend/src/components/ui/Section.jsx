@@ -1,47 +1,36 @@
 import { clsx } from 'clsx';
 import { motion } from 'framer-motion';
 
+const BACKGROUNDS = {
+  white: 'bg-white text-text-primary',
+  gray: 'bg-gray-50 text-text-primary',
+  blue: 'bg-primary-700 text-white',
+  dark: 'bg-primary-900 text-white',
+};
+
+const SPACINGS = {
+  none: '',
+  small: 'py-10 md:py-12',
+  default: 'py-12 md:py-20',
+  large: 'py-16 md:py-28',
+};
+
 const Section = ({
   children,
   className,
   background = 'white',
   spacing = 'default',
   container = true,
-  animate = false,
   ...props
 }) => {
-  const backgrounds = {
-    white: 'bg-white text-text-primary',
-    gray: 'bg-gray-50 text-text-primary',
-    blue: 'bg-primary-700 text-white',
-    dark: 'bg-primary-900 text-white',
-    gradient: 'bg-primary-50 text-text-primary',
-  };
-
-  const spacings = {
-    none: '',
-    small: 'py-10 md:py-12',
-    default: 'py-12 md:py-20',
-    large: 'py-16 md:py-28',
-  };
-
-  const Wrapper = animate ? motion.section : 'section';
-  const wrapperProps = animate ? {
-    initial: { opacity: 0 },
-    whileInView: { opacity: 1 },
-    viewport: { once: true },
-    transition: { duration: 0.5 }
-  } : {};
-
   return (
-    <Wrapper
+    <section
       className={clsx(
         'relative overflow-hidden',
-        !className?.includes('bg-') && (backgrounds[background] || backgrounds.white),
-        spacings[spacing],
+        !className?.includes('bg-') && (BACKGROUNDS[background] || BACKGROUNDS.white),
+        SPACINGS[spacing],
         className
       )}
-      {...wrapperProps}
       {...props}
     >
       {container ? (
@@ -49,40 +38,30 @@ const Section = ({
       ) : (
         children
       )}
-    </Wrapper>
+    </section>
   );
 };
 
 Section.Header = function SectionHeader({
   title,
   description,
-  subtitle,
   badge,
   className,
   center = true,
-  gradient = false, // Ignored now
-  animate = true,
-  light = false,
+  light = false,// usefull where background is dark
   ...props
 }) {
-  const Wrapper = animate ? motion.div : 'div';
-  const wrapperProps = animate ? {
-    initial: { opacity: 0, y: 20 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true },
-    transition: { duration: 0.5 }
-  } : {};
-
   return (
-    <Wrapper
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
       className={clsx(
         'mb-10 md:mb-16',
-        {
-          'text-center': center,
-        },
+        center && 'text-center',
         className
       )}
-      {...wrapperProps}
       {...props}
     >
       {badge && (
@@ -98,21 +77,10 @@ Section.Header = function SectionHeader({
       >
         {title}
       </h2>
-      {subtitle && (
-        <p className={clsx("text-lg font-medium mb-2", light ? 'text-primary-100' : 'text-primary-600')}>{subtitle}</p>
-      )}
       {description && (
         <p className={clsx("text-lg md:text-xl leading-relaxed", center && "mx-auto max-w-3xl", light ? 'text-primary-50/80' : 'text-text-secondary')}>{description}</p>
       )}
-    </Wrapper>
-  );
-};
-
-Section.Divider = function SectionDivider({ className }) {
-  return (
-    <div className={clsx('max-w-7xl mx-auto px-4 sm:px-6 lg:px-8', className)}>
-      <div className="h-px bg-border" />
-    </div>
+    </motion.div>
   );
 };
 

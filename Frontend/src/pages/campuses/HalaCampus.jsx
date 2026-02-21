@@ -8,23 +8,16 @@ import {
   BookOpen,
   Award,
   Users,
-  Clock,
-  Microscope,
   Cpu,
-  Calculator,
-  TrendingUp,
   ArrowRight,
   CheckCircle,
   FlaskConical,
   GraduationCap
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-
 import { programsData } from "../../data/programsData";
 
 const HalaCampus = () => {
-  const navigate = useNavigate();
 
   const stats = [
     {
@@ -148,7 +141,7 @@ const HalaCampus = () => {
                 <p className="text-gray-600 mb-6">
                   To provide high-quality intermediate education that empowers students to achieve top positions in board exams and secure admissions in prestigious universities.
                 </p>
-                <Button variant="ghost" className="text-primary-600 hover:text-primary-700 p-0 hover:bg-transparent" onClick={() => navigate("/faculty-info")}>
+                <Button variant="ghost" className="text-primary-600 hover:text-primary-700 p-0 hover:bg-transparent" to="/faculty-info">
                   View Faculty Members <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </div>
@@ -191,7 +184,7 @@ const HalaCampus = () => {
                         <Users className="w-4 h-4 mr-2" />
                         {program.seats} Seats
                       </div>
-                      <Button size="sm" onClick={() => navigate("/admissions")}>
+                      <Button size="sm" to="/admissions">
                         Details
                       </Button>
                     </div>
@@ -243,10 +236,10 @@ const HalaCampus = () => {
             Join the best intermediate college in Hala. Limited seats available for the upcoming session.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" icon={ArrowRight} iconPosition="right" onClick={() => navigate("/admissions")}>
+            <Button size="lg" icon={ArrowRight} iconPosition="right" to="/admissions">
               Apply Online
             </Button>
-            <Button size="lg" variant="outline" onClick={() => navigate("/contact")}>
+            <Button size="lg" variant="outline" to="/contact">
               Visit Campus
             </Button>
           </div>

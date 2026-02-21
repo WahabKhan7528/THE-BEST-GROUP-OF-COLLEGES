@@ -8,8 +8,6 @@ import {
   MapPin,
   Building2,
   ShieldCheck,
-  Edit3,
-  Trash2,
   School
 } from "lucide-react";
 

@@ -1,6 +1,5 @@
 import { Quote, Star } from 'lucide-react';
 import Card from './Card';
-import { motion } from 'framer-motion';
 
 const TestimonialCard = ({ name, role, content, image, rating = 5 }) => {
   return (

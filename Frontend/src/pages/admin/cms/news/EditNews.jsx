@@ -6,7 +6,6 @@ import {
   Newspaper,
   Image as ImageIcon,
   MapPin,
-  Clock,
   CheckCircle2,
   Save,
   Trash2,

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import FormInput from "../../../components/admin/FormInput";
 import { useAdminContext } from "../../../context/AdminContext";
-import { UserCog, ArrowLeft, Building2, Shield, User, Save, Trash2, X } from "lucide-react";
+import {  ArrowLeft, Building2, Shield, User, Save, Trash2, X } from "lucide-react";
 
 const EditUser = () => {
   const { id } = useParams();

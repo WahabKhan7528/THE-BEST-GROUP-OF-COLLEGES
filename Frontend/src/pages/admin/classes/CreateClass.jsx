@@ -10,7 +10,6 @@ import {
   ArrowLeft,
   CheckCircle2
 } from "lucide-react";
-import { motion } from "framer-motion";
 
 const CreateClass = () => {
   const { campuses, currentAdmin, isSuperAdmin } = useAdminContext();

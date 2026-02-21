@@ -1,11 +1,9 @@
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Plus,
-  Image as ImageIcon,
+  Image,
   Trash2,
-  ExternalLink,
   Search,
-  Filter,
   Calendar,
   Pencil
 } from 'lucide-react';

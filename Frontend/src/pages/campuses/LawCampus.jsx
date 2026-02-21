@@ -7,24 +7,17 @@ import Stats from "../../components/ui/Stats";
 import {
   Scale,
   Gavel,
-  BookOpen,
   Award,
   Users,
-  Clock,
   ArrowRight,
   CheckCircle,
-  Scroll,
   Landmark,
   Library
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-
 import { programsData } from "../../data/programsData";
 
-const LawCollege = () => {
-  const navigate = useNavigate();
-
+const LawCampus = () => {
   const stats = [
     {
       icon: Users,
@@ -180,7 +173,7 @@ const LawCollege = () => {
                   <p className="text-gray-600 mb-6 flex-grow">{program.description}</p>
 
                   <div className="mt-auto pt-6 border-t border-gray-100 flex items-center justify-end">
-                    <Button size="sm" onClick={() => navigate("/admissions")}>
+                    <Button size="sm" to="/admissions">
                       Ask Criteria
                     </Button>
                   </div>
@@ -231,10 +224,10 @@ const LawCollege = () => {
             Become a part of our prestigious legal community. Apply now for the upcoming session.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" icon={ArrowRight} iconPosition="right" onClick={() => navigate("/admissions")}>
+            <Button size="lg" icon={ArrowRight} iconPosition="right" to="/admissions">
               Apply Now
             </Button>
-            <Button size="lg" variant="outline" onClick={() => navigate("/contact")}>
+            <Button size="lg" variant="outline" to="/contact">
               Contact Us
             </Button>
           </div>
@@ -244,4 +237,4 @@ const LawCollege = () => {
   );
 };
 
-export default LawCollege;
+export default LawCampus;

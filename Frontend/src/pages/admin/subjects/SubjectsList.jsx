@@ -7,13 +7,8 @@ import {
   Search,
   Filter,
   BookOpen,
-  GraduationCap,
   Building2,
-  MoreVertical,
   Hash,
-  User,
-  Pencil,
-  Trash2
 } from "lucide-react";
 
 const SubjectsList = () => {

@@ -9,7 +9,6 @@ import {
   Users,
   UserPlus,
   Shield,
-  GraduationCap,
   Building2
 } from "lucide-react";
 

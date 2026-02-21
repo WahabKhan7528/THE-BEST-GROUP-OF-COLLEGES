@@ -6,10 +6,8 @@ import {
   Newspaper,
   Image as ImageIcon,
   MapPin,
-  Clock,
-  Link as LinkIcon,
+  Link,
   CheckCircle2,
-  FileText,
   Upload
 } from "lucide-react";
 

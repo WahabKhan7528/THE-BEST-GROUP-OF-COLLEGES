@@ -1,15 +1,13 @@
-import Hero from "../../../components/ui/Hero";
 import Section from "../../../components/ui/Section";
 import Card from "../../../components/ui/Card";
 import Badge from "../../../components/ui/Badge";
 import Button from "../../../components/ui/Button";
-import { GraduationCap, Clock, BookOpen, CheckCircle, ArrowRight } from "lucide-react";
+import { BookOpen, CheckCircle, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { programsData } from "../../../data/programsData";
 
 const AcademicsPage = () => {
-  const navigate = useNavigate();
   const location = useLocation();
 
   // Extract campus (main / law / hala)
@@ -77,7 +75,7 @@ const AcademicsPage = () => {
           <p className="text-base md:text-lg text-gray-600 mb-6 md:mb-8">
             Ready to take the next step? Explore our admission requirements and apply today.
           </p>
-          <Button size="lg" icon={ArrowRight} iconPosition="right" onClick={() => navigate("/admissions")}>
+          <Button size="lg" icon={ArrowRight} iconPosition="right" to="/admissions">
             View Admissions
           </Button>
         </motion.div>

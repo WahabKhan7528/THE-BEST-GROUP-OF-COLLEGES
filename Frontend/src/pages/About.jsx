@@ -1,4 +1,3 @@
-import Hero from "../components/ui/Hero";
 import Section from "../components/ui/Section";
 import Card from "../components/ui/Card";
 import Badge from "../components/ui/Badge";
@@ -7,20 +6,15 @@ import {
   Star,
   BookOpen,
   Shield,
-  Users,
-  Target,
   Heart,
   Award,
   Lightbulb,
-  GraduationCap,
   Building,
   ArrowRight
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 
 const About = () => {
-  const navigate = useNavigate();
 
   const milestones = [
     {
@@ -116,7 +110,7 @@ const About = () => {
               <Button
                 icon={ArrowRight}
                 iconPosition="right"
-                onClick={() => navigate("/campuses/main")}
+                to="/campuses/main"
               >
                 Explore Our Campuses
               </Button>
@@ -261,14 +255,14 @@ const About = () => {
               size="lg"
               icon={ArrowRight}
               iconPosition="right"
-              onClick={() => navigate("/admissions")}
+              to="/admissions"
             >
               Apply Now
             </Button>
             <Button
               variant="outline"
               size="lg"
-              onClick={() => navigate("/contact")}
+              to="/contact"
             >
               Contact Us
             </Button>

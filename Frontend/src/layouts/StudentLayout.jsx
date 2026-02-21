@@ -7,12 +7,9 @@ import {
   BarChart3,
   Megaphone,
   Menu,
-  Bell,
   X,
   Home,
   LogOut,
-  ChevronDown,
-  User,
   GraduationCap
 } from "lucide-react";
 

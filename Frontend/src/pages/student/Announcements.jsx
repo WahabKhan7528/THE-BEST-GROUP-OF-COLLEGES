@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useStudentContext } from "../../context/StudentContext";
 import AnnouncementCard from "../../components/shared/AnnouncementCard";
-import { Bell, Search } from "lucide-react";
+import { Bell } from "lucide-react";
 
 const StudentAnnouncements = () => {
     const { getCurrentCampus, getCoursesByCurrentCampus } = useStudentContext();

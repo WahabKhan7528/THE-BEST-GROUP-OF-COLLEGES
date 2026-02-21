@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import { MessageSquare, Send } from "lucide-react";
-import { motion } from "framer-motion";
 import emailjs from "@emailjs/browser";
 import Card from "./ui/Card";
 import Button from "./ui/Button";

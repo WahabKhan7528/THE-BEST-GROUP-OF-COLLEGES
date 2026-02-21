@@ -14,18 +14,14 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import Hero from "../components/ui/Hero";
 import Section from "../components/ui/Section";
-import Card from "../components/ui/Card";
-import Badge from "../components/ui/Badge";
+import Card from "../components/ui/Card";;
 import Button from "../components/ui/Button";
 import { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
 
 
 const Admissions = () => {
-  const navigate = useNavigate();
   const admissionSteps = [
     {
       title: "Choose Your Program",
@@ -450,7 +446,7 @@ const Admissions = () => {
             variant="outline"
             icon={ArrowRight}
             iconPosition="right"
-            onClick={() => navigate('/contact')}
+            to="/contact"
           >
             Visit Contact Page
           </Button>

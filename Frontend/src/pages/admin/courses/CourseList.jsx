@@ -10,9 +10,6 @@ import {
   GraduationCap,
   DollarSign,
   Building2,
-  Pencil,
-  Trash2,
-  MoreVertical,
   ChevronDown
 } from "lucide-react";
 

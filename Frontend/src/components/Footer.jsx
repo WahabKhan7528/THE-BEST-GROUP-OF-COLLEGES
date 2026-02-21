@@ -6,7 +6,6 @@ import {
   Phone,
   MapPin,
   Clock,
-  Award,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 

@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
 import {
   Users,
-  ClipboardList,
-  FileText,
   Layers,
   BookOpen,
   GraduationCap,

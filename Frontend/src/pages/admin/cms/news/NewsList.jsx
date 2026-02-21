@@ -6,15 +6,7 @@ import {
   Search,
   Calendar,
   Newspaper,
-  FileText,
-  MoreVertical,
-  Pencil,
-  Trash2,
-  Clock,
-  MapPin,
   Eye,
-  CheckCircle2,
-  AlertCircle
 } from "lucide-react";
 
 const NewsList = () => {

@@ -3,9 +3,7 @@ import {
   ClipboardList,
   FolderOpen,
   Megaphone,
-  BarChart3,
   PlusCircle,
-  Users,
   BookOpen,
   ArrowRight,
   GraduationCap

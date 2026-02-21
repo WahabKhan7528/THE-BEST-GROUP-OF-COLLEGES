@@ -1,9 +1,8 @@
-import Hero from "../../../components/ui/Hero";
 import Section from "../../../components/ui/Section";
 import Card from "../../../components/ui/Card";
 import Badge from "../../../components/ui/Badge";
 import Button from "../../../components/ui/Button";
-import { Users, Calendar, MapPin, Activity, Music, Mic, Palette, Dribbble, ArrowRight } from "lucide-react";
+import { Users, Calendar, MapPin, Activity, Music, Mic, Palette, Dribbble } from "lucide-react";
 import { motion } from "framer-motion";
 
 const StudentLifePage = () => {

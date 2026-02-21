@@ -9,12 +9,10 @@ import {
   BarChart3,
   Megaphone,
   Menu,
-  Bell,
   X,
   Home,
   LogOut,
   User,
-  ChevronDown
 } from "lucide-react";
 
 const navItems = [
