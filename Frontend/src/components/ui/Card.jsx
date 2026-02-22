@@ -10,17 +10,12 @@ const Card = ({
   ...props
 }) => {
   const shadowClasses = {
-    none: '',
     sm: 'shadow-sm',
-    md: 'shadow',
-    lg: 'shadow-md',
     xl: 'shadow-lg',
   };
 
   const variantClasses = {
     default: 'bg-white border border-border',
-    glass: 'bg-white border border-border',
-    elevated: 'bg-white shadow-md border border-gray-100',
     outline: 'bg-transparent border border-border',
   };
 
@@ -43,44 +38,4 @@ const Card = ({
     </div>
   );
 };
-
-Card.Image = function CardImage({ src, alt, className, overlay = false, bleed = true, ...props }) {
-  return (
-    <div className={clsx("relative overflow-hidden mb-6", {
-      "-mx-6 -mt-6": bleed,
-      "rounded-t-2xl": !bleed
-    })}>
-      <img
-        src={src}
-        alt={alt}
-        className={clsx(
-          'w-full h-48 object-cover',
-          'transition-transform duration-500 hover:scale-105',
-          className
-        )}
-        {...props}
-      />
-      {overlay && (
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-      )}
-    </div>
-  );
-};
-
-Card.Body = function CardBody({ children, className, ...props }) {
-  return (
-    <div className={clsx(className)} {...props}>
-      {children}
-    </div>
-  );
-};
-
-Card.Title = function CardTitle({ children, className, as: Component = "h3", ...props }) {
-  return (
-    <Component className={clsx("text-xl font-bold text-gray-900", className)} {...props}>
-      {children}
-    </Component>
-  );
-};
-
 export default Card;

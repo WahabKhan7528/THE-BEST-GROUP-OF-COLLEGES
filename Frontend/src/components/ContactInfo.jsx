@@ -40,20 +40,18 @@ const ContactInfo = () => {
                     transition={{ duration: 0.5, delay: idx * 0.1 }}
                     viewport={{ once: true }}
                 >
-                    <Card hover className="h-full group border border-border">
-                        <Card.Body className="p-4 md:p-6">
-                            <div className="w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-primary-100 flex items-center justify-center mb-3 md:mb-5 group-hover:bg-primary-600 transition-colors">
-                                <info.icon className="h-5 w-5 md:h-6 md:w-6 text-primary-600 group-hover:text-white transition-colors" />
-                            </div>
-                            <h3 className="text-base md:text-lg font-bold text-primary-900 mb-2 md:mb-3">{info.title}</h3>
-                            <div className="space-y-1.5">
-                                {info.details.map((detail) => (
-                                    <p key={detail} className="text-text-secondary text-sm">
-                                        {detail}
-                                    </p>
-                                ))}
-                            </div>
-                        </Card.Body>
+                    <Card hover className="h-full group border border-border p-4 md:p-6">
+                        <div className="w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-primary-100 flex items-center justify-center mb-3 md:mb-5 group-hover:bg-primary-600 transition-colors">
+                            <info.icon className="h-5 w-5 md:h-6 md:w-6 text-primary-600 group-hover:text-white transition-colors" />
+                        </div>
+                        <h3 className="text-base md:text-lg font-bold text-primary-900 mb-2 md:mb-3">{info.title}</h3>
+                        <div className="space-y-1.5">
+                            {info.details.map((detail) => (
+                                <p key={detail} className="text-text-secondary text-sm">
+                                    {detail}
+                                </p>
+                            ))}
+                        </div>
                     </Card>
                 </motion.div>
             ))}

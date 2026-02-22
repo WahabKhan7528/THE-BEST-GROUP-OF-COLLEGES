@@ -8,7 +8,6 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    // Debug logging
     useEffect(() => {
         console.log('Login Page Mounted');
         console.log('Portal Type:', type);

@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from "react";
 import {
   ArrowRight,
   BookOpen,
@@ -15,14 +16,20 @@ import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import Stats from "../components/ui/Stats";
 import TestimonialCard from "../components/ui/TestimonialCard";
-import Slider from "../components/ui/Slider";
 import Badge from "../components/ui/Badge";
 import Faq from "../components/Faq";
 import ContactForm from "../components/ContactForm";
 import ContactInfo from "../components/ContactInfo";
 
 const Home = () => {
+  const [sliderWidth, setSliderWidth] = useState(0);
+  const sliderRef = useRef(null);
 
+  useEffect(() => {
+    if (sliderRef.current) {
+      setSliderWidth(sliderRef.current.scrollWidth - sliderRef.current.offsetWidth);
+    }
+  }, []);
 
   const collegesData = [
     {
@@ -97,6 +104,14 @@ const Home = () => {
         "The practical approach to education at the Degree College has prepared me well for my career. Amazing learning environment!",
       image: "https://placehold.co/100x100?text=MA",
       rating: 5,
+    },
+    {
+      name: "Fatima Khan",
+      role: "FSc Pre-Medical",
+      content:
+        "Outstanding teachers and modern labs make learning engaging and effective. I'm confident about my future in medicine.",
+      image: "https://placehold.co/100x100?text=FK",
+      rating: 4,
     },
     {
       name: "Fatima Khan",
@@ -411,16 +426,20 @@ const Home = () => {
           description="Hear from our students and alumni about their experience"
           badge="Testimonials"
         />
-        <Slider>
-          {testimonials.map((testimonial) => (
-            <div
-              key={testimonial.name}
-              className="min-w-[280px] md:min-w-[380px] p-2"
-            >
-              <TestimonialCard {...testimonial} />
-            </div>
-          ))}
-        </Slider>
+        <motion.div ref={sliderRef} className="cursor-grab overflow-hidden outline-none">
+          <motion.div
+            drag="x"
+            dragConstraints={{ right: 0, left: -sliderWidth }}
+            whileTap={{ cursor: "grabbing" }}
+            className="flex gap-6 pb-4"
+          >
+            {testimonials.map((testimonial, index) => (
+              <motion.div key={index} className="min-w-[300px] md:min-w-[400px]">
+                <TestimonialCard {...testimonial} />
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.div>
       </Section>
 
       {/* Contact Section */}

@@ -153,13 +153,11 @@ const About = () => {
               viewport={{ once: true }}
             >
               <Card hover className="h-full text-center">
-                <Card.Body>
-                  <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-600 transition-colors">
-                    <value.icon className="w-8 h-8 text-primary-600 group-hover:text-white transition-colors" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-3 text-gray-900">{value.title}</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">{value.description}</p>
-                </Card.Body>
+                <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-600 transition-colors">
+                  <value.icon className="w-8 h-8 text-primary-600 group-hover:text-white transition-colors" />
+                </div>
+                <h3 className="text-xl font-bold mb-3 text-gray-900">{value.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{value.description}</p>
               </Card>
             </motion.div>
           ))}
@@ -192,14 +190,12 @@ const About = () => {
                 className={`flex flex-col ${idx % 2 === 0 ? 'items-center' : 'items-center'}`}
               >
                 <Card hover className="w-full text-center relative">
-                  <Card.Body>
-                    <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-600 transition-colors">
-                      <milestone.icon className="w-8 h-8 text-primary-600 group-hover:text-white transition-colors" />
-                    </div>
-                    <Badge variant="solid" className="mb-3">{milestone.year}</Badge>
-                    <h3 className="text-xl font-bold mb-3 text-gray-900">{milestone.title}</h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">{milestone.description}</p>
-                  </Card.Body>
+                  <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-600 transition-colors">
+                    <milestone.icon className="w-8 h-8 text-primary-600 group-hover:text-white transition-colors" />
+                  </div>
+                  <Badge variant="solid" className="mb-3">{milestone.year}</Badge>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900">{milestone.title}</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">{milestone.description}</p>
                 </Card>
               </motion.div>
             ))}
@@ -216,17 +212,15 @@ const About = () => {
               transition={{ duration: 0.5, delay: idx * 0.1 }}
               viewport={{ once: true }}
             >
-              <Card hover>
-                <Card.Body className="flex items-start gap-4">
-                  <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center flex-shrink-0 group-hover:bg-primary-600 transition-colors">
-                    <milestone.icon className="w-8 h-8 text-primary-600 group-hover:text-white transition-colors" />
-                  </div>
-                  <div>
-                    <Badge variant="solid" className="mb-2">{milestone.year}</Badge>
-                    <h3 className="text-xl font-bold mb-3 text-gray-900">{milestone.title}</h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">{milestone.description}</p>
-                  </div>
-                </Card.Body>
+              <Card hover className="flex items-start gap-4">
+                <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center flex-shrink-0 group-hover:bg-primary-600 transition-colors">
+                  <milestone.icon className="w-8 h-8 text-primary-600 group-hover:text-white transition-colors" />
+                </div>
+                <div>
+                  <Badge variant="solid" className="mb-2">{milestone.year}</Badge>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900">{milestone.title}</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">{milestone.description}</p>
+                </div>
               </Card>
             </motion.div>
           ))}

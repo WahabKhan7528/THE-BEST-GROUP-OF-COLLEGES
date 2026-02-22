@@ -136,23 +136,21 @@ const Admissions = () => {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
             >
-              <Card hover className="h-full relative overflow-hidden">
+              <Card hover className="h-full relative overflow-hidden p-6">
                 {/* Step Number */}
-                <Card.Body>
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0">
-                      <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center group-hover:bg-primary-600 transition-colors">
-                        <span className="text-2xl font-bold text-primary-600 group-hover:text-white transition-colors">
-                          {index + 1}
-                        </span>
-                      </div>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-3">{step.title}</h3>
-                      <p className="text-gray-600 text-sm leading-relaxed">{step.description}</p>
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0">
+                    <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center group-hover:bg-primary-600 transition-colors">
+                      <span className="text-2xl font-bold text-primary-600 group-hover:text-white transition-colors">
+                        {index + 1}
+                      </span>
                     </div>
                   </div>
-                </Card.Body>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">{step.title}</h3>
+                    <p className="text-gray-600 text-sm leading-relaxed">{step.description}</p>
+                  </div>
+                </div>
               </Card>
             </motion.div>
           ))}
@@ -228,26 +226,24 @@ const Admissions = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <Card hover className="h-full">
-              <Card.Body>
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center group-hover:bg-primary-600 transition-colors">
-                    <FileText className="h-8 w-8 text-primary-600 group-hover:text-white transition-colors" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900">Required Documents</h3>
-                    <p className="text-sm text-gray-500">What you need to submit</p>
-                  </div>
+            <Card hover className="h-full p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center group-hover:bg-primary-600 transition-colors">
+                  <FileText className="h-8 w-8 text-primary-600 group-hover:text-white transition-colors" />
                 </div>
-                <ul className="space-y-3">
-                  {requirements.documents.map((doc) => (
-                    <li key={doc} className="flex items-center gap-3 text-gray-600">
-                      <CheckCircle className="h-5 w-5 text-primary-600 flex-shrink-0" />
-                      <span>{doc}</span>
-                    </li>
-                  ))}
-                </ul>
-              </Card.Body>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900">Required Documents</h3>
+                  <p className="text-sm text-gray-500">What you need to submit</p>
+                </div>
+              </div>
+              <ul className="space-y-3">
+                {requirements.documents.map((doc) => (
+                  <li key={doc} className="flex items-center gap-3 text-gray-600">
+                    <CheckCircle className="h-5 w-5 text-primary-600 flex-shrink-0" />
+                    <span>{doc}</span>
+                  </li>
+                ))}
+              </ul>
             </Card>
           </motion.div>
 
@@ -259,25 +255,23 @@ const Admissions = () => {
             viewport={{ once: true }}
           >
             <Card hover className="h-full">
-              <Card.Body>
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center group-hover:bg-primary-600 transition-colors">
-                    <ClipboardCheck className="h-8 w-8 text-primary-600 group-hover:text-white transition-colors" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900">Eligibility Criteria</h3>
-                    <p className="text-sm text-gray-500">Requirements you must meet</p>
-                  </div>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center group-hover:bg-primary-600 transition-colors">
+                  <ClipboardCheck className="h-8 w-8 text-primary-600 group-hover:text-white transition-colors" />
                 </div>
-                <ul className="space-y-3">
-                  {requirements.eligibility.map((criterion) => (
-                    <li key={criterion} className="flex items-center gap-3 text-gray-600">
-                      <AlertCircle className="h-5 w-5 text-primary-500 flex-shrink-0" />
-                      <span>{criterion}</span>
-                    </li>
-                  ))}
-                </ul>
-              </Card.Body>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900">Eligibility Criteria</h3>
+                  <p className="text-sm text-gray-500">Requirements you must meet</p>
+                </div>
+              </div>
+              <ul className="space-y-3">
+                {requirements.eligibility.map((criterion) => (
+                  <li key={criterion} className="flex items-center gap-3 text-gray-600">
+                    <AlertCircle className="h-5 w-5 text-primary-500 flex-shrink-0" />
+                    <span>{criterion}</span>
+                  </li>
+                ))}
+              </ul>
             </Card>
           </motion.div>
         </div>
@@ -295,125 +289,123 @@ const Admissions = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <Card className="max-w-3xl mx-auto" shadow="xl">
-            <Card.Body className="p-8">
-              <form
-                ref={formRef}
-                onSubmit={handleApplicationSubmit}
-                className="space-y-6"
-              >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Full Name *
-                    </label>
-                    <input
-                      name="fullname"
-                      type="text"
-                      required
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
-                      placeholder="Enter your full name"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Email Address *
-                    </label>
-                    <input
-                      name="email"
-                      type="email"
-                      required
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
-                      placeholder="Enter your email"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Phone Number *
-                    </label>
-                    <input
-                      name="phone"
-                      type="tel"
-                      required
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
-                      placeholder="+92 300 1234567"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      CNIC Number
-                    </label>
-                    <input
-                      name="cnic"
-                      type="text"
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
-                      placeholder="12345-1234567-1"
-                    />
-                  </div>
-                </div>
-
+          <Card className="max-w-3xl mx-auto p-8" shadow="xl">
+            <form
+              ref={formRef}
+              onSubmit={handleApplicationSubmit}
+              className="space-y-6"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Select Program *
-                  </label>
-                  <select
-                    name="program"
-                    required
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
-                  >
-                    <option value="">Choose a program</option>
-                    {programs.map((program) => (
-                      <option key={program.value} value={program.value}>
-                        {program.label} - {program.campus}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Previous Education
+                    Full Name *
                   </label>
                   <input
-                    name="previous_education"
+                    name="fullname"
                     type="text"
+                    required
                     className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
-                    placeholder="e.g., Matric with 85% marks"
+                    placeholder="Enter your full name"
                   />
                 </div>
-
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Additional Message
+                    Email Address *
                   </label>
-                  <textarea
-                    name="message"
-                    rows="4"
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition resize-none bg-gray-50 hover:bg-white"
-                    placeholder="Any additional information you'd like to share..."
+                  <input
+                    name="email"
+                    type="email"
+                    required
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
+                    placeholder="Enter your email"
                   />
                 </div>
+              </div>
 
-                <Button
-                  type="submit"
-                  className="w-full"
-                  size="lg"
-                  variant="gradient"
-                  icon={Send}
-                  disabled={loading}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Phone Number *
+                  </label>
+                  <input
+                    name="phone"
+                    type="tel"
+                    required
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
+                    placeholder="+92 300 1234567"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    CNIC Number
+                  </label>
+                  <input
+                    name="cnic"
+                    type="text"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
+                    placeholder="12345-1234567-1"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Select Program *
+                </label>
+                <select
+                  name="program"
+                  required
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
                 >
-                  {loading ? "Submitting..." : "Submit Application"}
-                </Button>
+                  <option value="">Choose a program</option>
+                  {programs.map((program) => (
+                    <option key={program.value} value={program.value}>
+                      {program.label} - {program.campus}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Previous Education
+                </label>
+                <input
+                  name="previous_education"
+                  type="text"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
+                  placeholder="e.g., Matric with 85% marks"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Additional Message
+                </label>
+                <textarea
+                  name="message"
+                  rows="4"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition resize-none bg-gray-50 hover:bg-white"
+                  placeholder="Any additional information you'd like to share..."
+                />
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full"
+                size="lg"
+                variant="gradient"
+                icon={Send}
+                disabled={loading}
+              >
+                {loading ? "Submitting..." : "Submit Application"}
+              </Button>
 
 
-                <p className="text-center text-sm text-gray-500">
-                  By submitting this form, you agree to our terms and conditions.
-                </p>
-              </form>
-            </Card.Body>
+              <p className="text-center text-sm text-gray-500">
+                By submitting this form, you agree to our terms and conditions.
+              </p>
+            </form>
           </Card>
         </motion.div>
       </Section>
