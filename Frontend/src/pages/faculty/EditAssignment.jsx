@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Calendar, Upload, FileText, ArrowLeft, Check, Save } from 'lucide-react';
+import { FileText, ArrowLeft, Save } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useFacultyContext } from '../../context/FacultyContext';
+import FormInput from '../../components/admin/FormInput';
 
 // Mock assignments data (duplicated for simulation)
 const assignmentsByCampus = {
@@ -141,38 +142,32 @@ const EditAssignment = () => {
 
             <form onSubmit={handleSubmit} className="bg-white/70 backdrop-blur-xl border border-white/50 rounded-3xl shadow-xl p-8 space-y-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-700">Class / Section</label>
-                        <input
-                            type="text"
+                    <div>
+                        <FormInput
+                            label="Class / Section"
                             value={form.classSection}
-                            onChange={(e) => handleChange('classSection', e.target.value)}
+                            onChange={(val) => handleChange('classSection', val)}
                             placeholder="e.g. BSCS - A"
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all outline-none"
                             required
                         />
                     </div>
-                    <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-700">Subject</label>
-                        <input
-                            type="text"
+                    <div>
+                        <FormInput
+                            label="Subject"
                             value={form.subject}
-                            onChange={(e) => handleChange('subject', e.target.value)}
+                            onChange={(val) => handleChange('subject', val)}
                             placeholder="e.g. Operating Systems"
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
                             required
                         />
                     </div>
                 </div>
 
-                <div className="space-y-2">
-                    <label className="text-sm font-semibold text-gray-700">Assignment Title</label>
-                    <input
-                        type="text"
+                <div>
+                    <FormInput
+                        label="Assignment Title"
                         value={form.title}
-                        onChange={(e) => handleChange('title', e.target.value)}
+                        onChange={(val) => handleChange('title', val)}
                         placeholder="e.g. CPU Scheduling Algorithm Report"
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
                         required
                     />
                 </div>
@@ -189,28 +184,23 @@ const EditAssignment = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-700">Due Date</label>
-                        <div className="relative">
-                            <input
-                                type="date"
-                                value={form.dueDate}
-                                onChange={(e) => handleChange('dueDate', e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
-                                required
-                            />
-                            <Calendar size={18} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-                        </div>
+                    <div>
+                        <FormInput
+                            label="Due Date"
+                            type="date"
+                            value={form.dueDate}
+                            onChange={(val) => handleChange('dueDate', val)}
+                            required
+                        />
                     </div>
 
-                    <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-700">Maximum Marks</label>
-                        <input
+                    <div>
+                        <FormInput
+                            label="Maximum Marks"
                             type="number"
                             value={form.maxMarks}
-                            onChange={(e) => handleChange('maxMarks', e.target.value)}
+                            onChange={(val) => handleChange('maxMarks', val)}
                             placeholder="20"
-                            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
                             required
                         />
                     </div>

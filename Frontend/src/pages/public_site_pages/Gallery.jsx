@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Section from "../components/ui/Section";
-import Badge from "../components/ui/Badge";
+import Section from "../../components/public_site/Section";
+import Badge from "../../components/public_site/Badge";
 import {
   X,
   ChevronLeft,

@@ -1,12 +1,9 @@
 import { useState, useEffect } from "react";
 import { useAdminContext } from "../../../context/AdminContext";
 import { useNavigate, useParams, Link, useLocation } from "react-router-dom";
+import FormInput from "../../../components/admin/FormInput";
 import {
-  Building2,
   MapPin,
-  Globe,
-  Phone,
-  Mail,
   ArrowLeft,
   Save,
   Trash2,
@@ -137,47 +134,29 @@ const EditCampus = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="col-span-1 md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Campus Name <span className="text-red-500">*</span>
-              </label>
-              <div className="relative">
-                <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  value={form.name}
-                  onChange={(e) => handleChange("name", e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
-                  required
-                />
-              </div>
+              <FormInput
+                label="Campus Name"
+                value={form.name}
+                onChange={(val) => handleChange("name", val)}
+                required
+              />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Campus Code <span className="text-red-500">*</span>
-              </label>
-              <div className="relative">
-                <Globe className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  value={form.code}
-                  onChange={(e) => handleChange("code", e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-mono uppercase"
-                  required
-                />
-              </div>
+              <FormInput
+                label="Campus Code"
+                value={form.code}
+                onChange={(val) => handleChange("code", val)}
+                required
+              />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Established Year
-              </label>
-              <input
-                type="text"
+              <FormInput
+                label="Established Year"
                 value={form.established}
-                onChange={(e) => handleChange("established", e.target.value)}
+                onChange={(val) => handleChange("established", val)}
                 placeholder="e.g. 1995"
-                className="w-full px-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
               />
             </div>
           </div>
@@ -192,48 +171,29 @@ const EditCampus = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="col-span-1 md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Address / Location
-              </label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  value={form.location}
-                  onChange={(e) => handleChange("location", e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
-                />
-              </div>
+              <FormInput
+                label="Address / Location"
+                value={form.location}
+                onChange={(val) => handleChange("location", val)}
+              />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Phone Number
-              </label>
-              <div className="relative">
-                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="tel"
-                  value={form.contact.phone}
-                  onChange={(e) => handleChange("contact.phone", e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
-                />
-              </div>
+              <FormInput
+                label="Phone Number"
+                type="tel"
+                value={form.contact.phone}
+                onChange={(val) => handleChange("contact.phone", val)}
+              />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="email"
-                  value={form.contact.email}
-                  onChange={(e) => handleChange("contact.email", e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
-                />
-              </div>
+              <FormInput
+                label="Email Address"
+                type="email"
+                value={form.contact.email}
+                onChange={(val) => handleChange("contact.email", val)}
+              />
             </div>
           </div>
         </section>

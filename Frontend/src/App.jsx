@@ -18,14 +18,14 @@ import { FacultyProvider } from "./context/FacultyContext";
 import { StudentProvider } from "./context/StudentContext";
 
 // Public pages
-const Home = lazy(() => import("./pages/Home"));
-const About = lazy(() => import("./pages/About"));
-const Admissions = lazy(() => import("./pages/Admissions"));
-const Faculty = lazy(() => import("./pages/Faculty"));
-const Gallery = lazy(() => import("./pages/Gallery"));
-const Contact = lazy(() => import("./pages/Contact"));
-const NewsAndEvents = lazy(() => import("./pages/NewsAndEvents"));
-const Login = lazy(() => import("./pages/Login"));
+const Home = lazy(() => import("./pages/public_site_pages/Home"));
+const About = lazy(() => import("./pages/public_site_pages/About"));
+const Admissions = lazy(() => import("./pages/public_site_pages/Admissions"));
+const Faculty = lazy(() => import("./pages/public_site_pages/Faculty"));
+const Gallery = lazy(() => import("./pages/public_site_pages/Gallery"));
+const Contact = lazy(() => import("./pages/public_site_pages/Contact"));
+const NewsAndEvents = lazy(() => import("./pages/public_site_pages/NewsAndEvents"));
+const Login = lazy(() => import("./pages/public_site_pages/Login"));
 
 // Campus pages 
 const MainCampus = lazy(() => import("./pages/campuses/MainCampus"));

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAdminContext } from "../../context/AdminContext";
 import CampusFilter from "./CampusFilter";
 
-const Navbar = ({ onMenuToggle }) => {
+const AdminNavbar = ({ onMenuToggle }) => {
   const navigate = useNavigate();
   const { currentAdmin, isSuperAdmin } = useAdminContext();
 
@@ -28,7 +28,7 @@ const Navbar = ({ onMenuToggle }) => {
             <Menu size={22} />
           </button>
 
-          <div className="hidden lg:block">
+          <div className="hidden lg:flex items-center gap-4">
             <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ring-1 ring-inset ${isSuperAdmin
               ? "bg-primary-50 text-primary-700 ring-primary-600/20"
               : "bg-primary-50 text-primary-700 ring-primary-600/20"
@@ -39,13 +39,12 @@ const Navbar = ({ onMenuToggle }) => {
           </div>
         </div>
 
-        {/* Center Section: Campus Filter */}
-        <div className="hidden md:block flex-1 max-w-xl mx-4">
-          <CampusFilter />
-        </div>
-
         {/* Right Section: Actions & Profile */}
-        <div className="flex items-center gap-3 sm:gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
+          <div className="mr-1 sm:mr-2">
+            <CampusFilter />
+          </div>
+
           <button
             onClick={() => navigate("/")}
             className="p-2.5 rounded-xl text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200"
@@ -77,4 +76,4 @@ const Navbar = ({ onMenuToggle }) => {
   );
 };
 
-export default Navbar;
+export default AdminNavbar;

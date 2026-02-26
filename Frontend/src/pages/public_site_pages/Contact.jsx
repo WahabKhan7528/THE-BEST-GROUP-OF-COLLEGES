@@ -7,11 +7,11 @@ import {
   Linkedin
 } from "lucide-react";
 import { motion } from "framer-motion";
-import Section from "../components/ui/Section";
-import Card from "../components/ui/Card";
-import Faq from "../components/Faq";
-import ContactForm from "../components/ContactForm";
-import ContactInfo from "../components/ContactInfo";
+import Section from "../../components/public_site/Section";
+import Card from "../../components/public_site/Card";
+import Faq from "../../components/public_site/Faq";
+import ContactForm from "../../components/public_site/ContactForm";
+import ContactInfo from "../../components/public_site/ContactInfo";
 
 const Contact = () => {
   const socialLinks = [

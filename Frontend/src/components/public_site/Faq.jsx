@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import Section from "./ui/Section";
-import Card from "./ui/Card";
+import Section from "./Section";
+import Card from "./Card";
 
 const Faq = ({ limit }) => {
     const faqs = [

@@ -1,4 +1,4 @@
-import FacultyComponent from "../components/FacultyComponent";
+import FacultyComponent from "../../components/public_site/FacultyComponent";
 
 const Faculty = () => {
   return (

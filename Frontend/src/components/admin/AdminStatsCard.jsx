@@ -1,4 +1,4 @@
-const StatsCard = ({ title, value, hint, icon: Icon }) => {
+const AdminStatsCard = ({ title, value, hint, icon: Icon }) => {
   return (
     <div className="group bg-white/80 backdrop-blur-sm border border-white/40 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_10px_30px_-4px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-300">
       <div className="flex items-start justify-between">
@@ -17,5 +17,5 @@ const StatsCard = ({ title, value, hint, icon: Icon }) => {
   );
 };
 
-export default StatsCard;
+export default AdminStatsCard;
 

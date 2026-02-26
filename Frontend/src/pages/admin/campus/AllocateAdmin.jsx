@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useAdminContext } from "../../../context/AdminContext";
-import Button from "../../../components/ui/Button";
+import Button from "../../../components/shared/Button";
 
 // Mock all admins in system (would come from backend)
 const mockAllAdmins = [

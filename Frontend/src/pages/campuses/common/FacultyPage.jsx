@@ -1,6 +1,6 @@
 
 import { useLocation } from "react-router-dom";
-import FacultyComponent from "../../../components/FacultyComponent";
+import FacultyComponent from "../../../components/public_site/FacultyComponent";
 
 const FacultyPage = () => {
   const location = useLocation();

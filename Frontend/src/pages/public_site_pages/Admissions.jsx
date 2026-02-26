@@ -14,9 +14,9 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import Section from "../components/ui/Section";
-import Card from "../components/ui/Card";;
-import Button from "../components/ui/Button";
+import Section from "../../components/public_site/Section";
+import Card from "../../components/public_site/Card";
+import Button from "../../components/shared/Button";
 import { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
 

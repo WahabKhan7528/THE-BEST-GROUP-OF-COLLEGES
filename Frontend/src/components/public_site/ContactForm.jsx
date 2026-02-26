@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 import { MessageSquare, Send } from "lucide-react";
 import emailjs from "@emailjs/browser";
-import Card from "./ui/Card";
-import Button from "./ui/Button";
+import Card from "./Card";
+import Button from "../shared/Button";
 
 const ContactForm = () => {
     const formRef = useRef();

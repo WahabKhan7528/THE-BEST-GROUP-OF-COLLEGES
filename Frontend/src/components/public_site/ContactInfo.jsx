@@ -1,6 +1,6 @@
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { motion } from "framer-motion";
-import Card from "./ui/Card";
+import Card from "./Card";
 
 const ContactInfo = () => {
     const contactInfo = [

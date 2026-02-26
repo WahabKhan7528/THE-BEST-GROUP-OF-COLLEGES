@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
+import FormInput from "../../../../components/admin/FormInput";
 import {
   ArrowLeft,
   Calendar,
@@ -142,15 +143,11 @@ const EditNews = () => {
           {/* Details Form */}
           <section className="bg-white/80 backdrop-blur-xl border border-white/20 p-6 rounded-2xl shadow-sm space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Title <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
+              <FormInput
+                label="Title"
                 value={form.title}
-                onChange={(e) => handleChange("title", e.target.value)}
+                onChange={(val) => handleChange("title", val)}
                 placeholder="Enter post title"
-                className="w-full px-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
                 required
               />
             </div>
@@ -214,24 +211,22 @@ const EditNews = () => {
 
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Date</label>
-              <input
+              <FormInput
+                label="Date"
                 type="date"
                 value={form.date}
-                onChange={(e) => handleChange("date", e.target.value)}
-                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
+                onChange={(val) => handleChange("date", val)}
                 required
               />
             </div>
 
             {type === "event" && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Time</label>
-                <input
+                <FormInput
+                  label="Time"
                   type="time"
                   value={form.time}
-                  onChange={(e) => handleChange("time", e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
+                  onChange={(val) => handleChange("time", val)}
                 />
               </div>
             )}

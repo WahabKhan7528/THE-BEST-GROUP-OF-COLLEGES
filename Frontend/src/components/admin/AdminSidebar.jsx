@@ -1,7 +1,43 @@
 import { NavLink } from "react-router-dom";
-import { LogOut } from "lucide-react";
+import {
+  LogOut,
+  LayoutDashboard,
+  Users,
+  GraduationCap,
+  BookOpen,
+  Image,
+  Layers,
+  Megaphone,
+  Building2,
+} from "lucide-react";
+import { useAdminContext } from "../../context/AdminContext";
 
-const Sidebar = ({ items, onClose }) => {
+const adminNavItems = [
+  { to: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  {
+    to: "/admin/campus",
+    label: "Campus Management",
+    icon: Building2,
+    superAdminOnly: true,
+  },
+  { to: "/admin/users", label: "Users", icon: Users },
+  { to: "/admin/classes", label: "Classes", icon: GraduationCap },
+  { to: "/admin/subjects", label: "Subjects", icon: BookOpen },
+  { to: "/admin/cms/news", label: "News & Events", icon: Megaphone },
+  { to: "/admin/cms/gallery", label: "Gallery", icon: Image },
+  { to: "/admin/courses", label: "Courses", icon: Layers },
+];
+
+const AdminSidebar = ({ onClose }) => {
+  const { isSuperAdmin } = useAdminContext();
+
+  const visibleNavItems = adminNavItems.filter((item) => {
+    if (item.superAdminOnly && !isSuperAdmin) {
+      return false;
+    }
+    return true;
+  });
+
   return (
     <aside className="h-full w-72 bg-white/80 backdrop-blur-xl border-r border-white/20 shadow-xl flex flex-col">
       {/* Sidebar Header */}
@@ -26,7 +62,7 @@ const Sidebar = ({ items, onClose }) => {
         <p className="px-4 text-xs font-semibold uppercase tracking-wider text-gray-400 mb-4">
           Main Menu
         </p>
-        {items.map((item) => {
+        {visibleNavItems.map((item) => {
           const Icon = item.icon;
           return (
             <NavLink
@@ -65,4 +101,4 @@ const Sidebar = ({ items, onClose }) => {
   );
 };
 
-export default Sidebar;
+export default AdminSidebar;

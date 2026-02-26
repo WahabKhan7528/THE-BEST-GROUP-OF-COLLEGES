@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useAdminContext } from "../../../context/AdminContext";
 import { Link, useNavigate } from "react-router-dom";
+import FormInput from "../../../components/admin/FormInput";
 import {
   ArrowLeft,
   BookOpen,
-  Clock,
-  GraduationCap,
   FileText,
   Building2,
   CheckCircle2
@@ -75,42 +74,30 @@ const CreateCourse = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Course Title <span className="text-red-500">*</span></label>
-              <input
-                type="text"
+              <FormInput
+                label="Course Title"
                 value={form.title}
-                onChange={(e) => handleChange("title", e.target.value)}
+                onChange={(val) => handleChange("title", val)}
                 placeholder="e.g. BS Computer Science"
-                className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5 flex items-center gap-2">
-                <Clock className="w-4 h-4 text-gray-400" />
-                Duration
-              </label>
-              <input
-                type="text"
+              <FormInput
+                label="Duration"
                 value={form.duration}
-                onChange={(e) => handleChange("duration", e.target.value)}
+                onChange={(val) => handleChange("duration", val)}
                 placeholder="e.g. 4 Years"
-                className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5 flex items-center gap-2">
-                <GraduationCap className="w-4 h-4 text-gray-400" />
-                Eligibility
-              </label>
-              <input
-                type="text"
+              <FormInput
+                label="Eligibility"
                 value={form.eligibility}
-                onChange={(e) => handleChange("eligibility", e.target.value)}
+                onChange={(val) => handleChange("eligibility", val)}
                 placeholder="e.g. Intermediate or A-Level"
-                className="w-full px-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
               />
             </div>
 

@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { useAdminContext } from "../../../context/AdminContext";
 import { useNavigate, Link, useParams } from "react-router-dom";
+import FormInput from "../../../components/admin/FormInput";
 import {
   Building2,
   BookOpen,
-  Users,
   GraduationCap,
-  Layers,
   ArrowLeft,
   CheckCircle2,
   Save,
@@ -157,52 +156,31 @@ const EditClass = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="col-span-1 md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Class Name <span className="text-red-500">*</span>
-              </label>
-              <div className="relative">
-                <BookOpen className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  value={form.name}
-                  onChange={(e) => handleChange("name", e.target.value)}
-                  placeholder="e.g. BSCS - 3rd Semester"
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
-                  required
-                />
-              </div>
+              <FormInput
+                label="Class Name"
+                value={form.name}
+                onChange={(val) => handleChange("name", val)}
+                placeholder="e.g. BSCS - 3rd Semester"
+                required
+              />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Sections
-              </label>
-              <div className="relative">
-                <Layers className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  value={form.sections}
-                  onChange={(e) => handleChange("sections", e.target.value)}
-                  placeholder="e.g. A, B, C (Comma separated)"
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
-                />
-              </div>
+              <FormInput
+                label="Sections"
+                value={form.sections}
+                onChange={(val) => handleChange("sections", val)}
+                placeholder="e.g. A, B, C (Comma separated)"
+              />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Assign Faculty Lead
-              </label>
-              <div className="relative">
-                <Users className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  value={form.faculty}
-                  onChange={(e) => handleChange("faculty", e.target.value)}
-                  placeholder="e.g. Prof. Ahmed Raza"
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
-                />
-              </div>
+              <FormInput
+                label="Assign Faculty Lead"
+                value={form.faculty}
+                onChange={(val) => handleChange("faculty", val)}
+                placeholder="e.g. Prof. Ahmed Raza"
+              />
             </div>
 
             <div className="col-span-1 md:col-span-2">

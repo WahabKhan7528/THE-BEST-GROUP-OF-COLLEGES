@@ -10,16 +10,16 @@ import {
   School,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import Hero from "../components/ui/Hero";
-import Section from "../components/ui/Section";
-import Card from "../components/ui/Card";
-import Button from "../components/ui/Button";
-import Stats from "../components/ui/Stats";
-import TestimonialCard from "../components/ui/TestimonialCard";
-import Badge from "../components/ui/Badge";
-import Faq from "../components/Faq";
-import ContactForm from "../components/ContactForm";
-import ContactInfo from "../components/ContactInfo";
+import Hero from "../../components/public_site/Hero";
+import Section from "../../components/public_site/Section";
+import Card from "../../components/public_site/Card";
+import Button from "../../components/shared/Button";
+import Stats from "../../components/public_site/Stats";
+import TestimonialCard from "../../components/public_site/TestimonialCard";
+import Badge from "../../components/public_site/Badge";
+import Faq from "../../components/public_site/Faq";
+import ContactForm from "../../components/public_site/ContactForm";
+import ContactInfo from "../../components/public_site/ContactInfo";
 
 const Home = () => {
   const [sliderWidth, setSliderWidth] = useState(0);

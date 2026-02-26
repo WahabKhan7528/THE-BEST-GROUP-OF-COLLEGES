@@ -1,9 +1,9 @@
-import Hero from "../../components/ui/Hero";
-import Section from "../../components/ui/Section";
-import Card from "../../components/ui/Card";
-import Badge from "../../components/ui/Badge";
-import Button from "../../components/ui/Button";
-import Stats from "../../components/ui/Stats";
+import Hero from "../../components/public_site/Hero";
+import Section from "../../components/public_site/Section";
+import Card from "../../components/public_site/Card";
+import Badge from "../../components/public_site/Badge";
+import Button from "../../components/shared/Button";
+import Stats from "../../components/public_site/Stats";
 import {
   BookOpen,
   Award,

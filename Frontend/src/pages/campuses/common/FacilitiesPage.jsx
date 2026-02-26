@@ -1,5 +1,5 @@
-import Section from "../../../components/ui/Section";
-import Card from "../../../components/ui/Card";
+import Section from "../../../components/public_site/Section";
+import Card from "../../../components/public_site/Card";
 import { Wifi, Library, Coffee, Stethoscope, Dumbbell, Monitor, FlaskConical, Bus } from "lucide-react";
 import { motion } from "framer-motion";
 

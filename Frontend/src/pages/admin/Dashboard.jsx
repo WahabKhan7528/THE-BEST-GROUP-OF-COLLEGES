@@ -9,7 +9,7 @@ import {
   Book,
 } from "lucide-react";
 import { useAdminContext } from "../../context/AdminContext";
-import StatsCard from "../../components/admin/StatsCard";
+import AdminStatsCard from "../../components/admin/AdminStatsCard";
 
 // Mock data
 const mockAllStats = {
@@ -91,9 +91,9 @@ const Dashboard = () => {
       </div>
 
       {/* Main Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 lg:gap-6">
         {stats.map((item) => (
-          <StatsCard key={item.title} {...item} />
+          <AdminStatsCard key={item.title} {...item} />
         ))}
       </div>
 

@@ -1,9 +1,9 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, GraduationCap, Award } from "lucide-react";
-import Section from "./ui/Section";
-import Card from "./ui/Card";
-import Button from "./ui/Button";
+import Section from "./Section";
+import Card from "./Card";
+import Button from "../shared/Button";
 
 const facultyData = [
     // Main Campus
