@@ -17,77 +17,26 @@ import Section from "../../components/public_site/Section";
 import Card from "../../components/public_site/Card";
 import Button from "../../components/shared/Button";
 import AdmissionForm from "../../components/public_site/AdmissionForm";
+import {
+  admissionSteps,
+  requirements,
+  importantDates,
+} from "../../data/admissionsData";
+
 const Admissions = () => {
-  const admissionSteps = [
-    {
-      title: "Choose Your Program",
-      description: "Browse through our offered programs and select the one that aligns with your career goals.",
-      icon: BookOpen,
-    },
-    {
-      title: "Check Eligibility",
-      description: "Review the admission requirements and ensure you meet the criteria for your chosen program.",
-      icon: ClipboardCheck,
-    },
-    {
-      title: "Submit Application",
-      description: "Fill out the online application form and submit all required documents.",
-      icon: FileText,
-    },
-    {
-      title: "Entrance Test",
-      description: "Take the entrance test for your selected program (if applicable).",
-      icon: Award,
-    },
-    {
-      title: "Interview",
-      description: "Attend an interview with the admission committee (for selected programs).",
-      icon: Users,
-    },
-    {
-      title: "Admission Decision",
-      description: "Receive your admission decision and further instructions if accepted.",
-      icon: GraduationCap,
-    },
-  ];
-
-  const requirements = {
-    documents: [
-      "Completed application form",
-      "Academic transcripts",
-      "CNIC/B-Form copy",
-      "Passport size photographs (4)",
-      "Migration certificate (if applicable)",
-    ],
-    eligibility: [
-      "Minimum 60% marks in previous degree/certificate",
-      "Pass in entrance test (where applicable)",
-      "No third division in academic career",
-      "Good moral character",
-      "Medical fitness certificate",
-    ],
-  };
-
-  const importantDates = [
-    { event: "Applications Open", date: "January 15, 2025" },
-    { event: "Application Deadline", date: "March 31, 2025" },
-    { event: "Entrance Test", date: "April 15, 2025" },
-    { event: "Results Announcement", date: "April 30, 2025" },
-    { event: "Classes Begin", date: "August 1, 2025" },
-  ];
   return (
     <div className="min-h-screen bg-white">
       {/* Admission Process */}
       <Section background="white" spacing="large">
-        <Section.Header
-          title="Admission Process"
-          description="Follow these simple steps to begin your educational journey with us"
-        />
+        <div className="w-full">
+          <Section.Header
+            title="Admission Process"
+            description="Follow these simple steps to begin your educational journey with us"
+          />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {admissionSteps.map((step, index) => (
-            <div
-              key={step.title}
-            >
+            <div key={step.title}>
               <Card hover className="h-full relative overflow-hidden p-6">
                 {/* Step Number */}
                 <div className="flex items-start gap-4">
@@ -99,8 +48,12 @@ const Admissions = () => {
                     </div>
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3">{step.title}</h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">{step.description}</p>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">
+                      {step.title}
+                    </h3>
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      {step.description}
+                    </p>
                   </div>
                 </div>
               </Card>
@@ -111,11 +64,13 @@ const Admissions = () => {
 
       {/* Important Dates */}
       <Section background="gray" spacing="large">
-        <Section.Header
-          title="Important Dates"
-          description="Mark your calendar with these key admission dates"
-          badge="Timeline"
-        />
+        <div className="w-full">
+          <Section.Header
+            title="Important Dates"
+            description="Mark your calendar with these key admission dates"
+            badge="Timeline"
+          />
+        </div>
         <div className="max-w-4xl mx-auto px-4 mt-8 md:mt-12">
           <div className="relative">
             {/* The continuous vertical line */}
@@ -161,23 +116,31 @@ const Admissions = () => {
 
       {/* Requirements Section */}
       <Section background="white" spacing="large">
-        <Section.Header
-          title="Admission Requirements"
-          description="Ensure you have all the necessary documents and meet the eligibility criteria"
-          badge="Requirements"
-        />
+        <div className="w-full">
+          <Section.Header
+            title="Admission Requirements"
+            description="Ensure you have all the necessary documents and meet the eligibility criteria"
+            badge="Requirements"
+          />
+        </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Required Documents */}
-          <div
-          >
+          <div>
             <Card hover className="h-full p-6 md:p-8">
               <div className="mb-8 border-b border-border pb-4">
-                <h3 className="text-2xl font-bold text-primary-900 mb-2">Required Documents</h3>
-                <p className="text-sm text-text-secondary">What you need to submit</p>
+                <h3 className="text-2xl font-bold text-primary-900 mb-2">
+                  Required Documents
+                </h3>
+                <p className="text-sm text-text-secondary">
+                  What you need to submit
+                </p>
               </div>
               <ul className="space-y-4">
                 {requirements.documents.map((doc, idx) => (
-                  <li key={doc} className="flex items-start gap-4 text-text-secondary group">
+                  <li
+                    key={doc}
+                    className="flex items-start gap-4 text-text-secondary group"
+                  >
                     <div className="flex-shrink-0 w-7 h-7 rounded-full bg-primary-50 border border-primary-200 text-primary-600 flex items-center justify-center text-sm font-semibold group-hover:bg-primary-600 group-hover:text-white group-hover:border-primary-600 transition-colors mt-0.5">
                       {idx + 1}
                     </div>
@@ -189,16 +152,22 @@ const Admissions = () => {
           </div>
 
           {/* Eligibility Criteria */}
-          <div
-          >
+          <div>
             <Card hover className="h-full p-6 md:p-8">
               <div className="mb-8 border-b border-border pb-4">
-                <h3 className="text-2xl font-bold text-primary-900 mb-2">Eligibility Criteria</h3>
-                <p className="text-sm text-text-secondary">Requirements you must meet</p>
+                <h3 className="text-2xl font-bold text-primary-900 mb-2">
+                  Eligibility Criteria
+                </h3>
+                <p className="text-sm text-text-secondary">
+                  Requirements you must meet
+                </p>
               </div>
               <ul className="space-y-4">
                 {requirements.eligibility.map((criterion, idx) => (
-                  <li key={criterion} className="flex items-start gap-4 text-text-secondary group">
+                  <li
+                    key={criterion}
+                    className="flex items-start gap-4 text-text-secondary group"
+                  >
                     <div className="flex-shrink-0 w-7 h-7 rounded-full bg-primary-50 border border-primary-200 text-primary-600 flex items-center justify-center text-sm font-semibold group-hover:bg-primary-600 group-hover:text-white group-hover:border-primary-600 transition-colors mt-0.5">
                       {idx + 1}
                     </div>
@@ -213,12 +182,16 @@ const Admissions = () => {
 
       {/* Application Form */}
       <Section background="gradient" spacing="large">
-        <Section.Header
-          title="Apply Now"
-          description="Fill out the form below to start your application"
-          badge="Application Form"
-        />
-        <AdmissionForm />
+        <div className="w-full">
+          <Section.Header
+            title="Apply Now"
+            description="Fill out the form below to start your application"
+            badge="Application Form"
+          />
+        </div>
+        <div>
+          <AdmissionForm />
+        </div>
       </Section>
 
       {/* Contact CTA */}
@@ -228,27 +201,30 @@ const Admissions = () => {
             Need Help with Your Application?
           </h2>
           <p className="text-gray-600 mb-8">
-            Our admissions team is here to assist you. Feel free to reach out with any questions.
+            Our admissions team is here to assist you. Feel free to reach out
+            with any questions.
           </p>
           <div className="flex flex-wrap justify-center gap-6 mb-8">
-            <a href="tel:+92511234567" className="flex items-center gap-2 text-gray-600 hover:text-primary-600 transition-colors">
+            <a
+              href="tel:+92511234567"
+              className="flex items-center gap-2 text-gray-600 hover:text-primary-600 transition-colors"
+            >
               <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
                 <Phone className="w-5 h-5 text-primary-600" />
               </div>
               <span>+92 51 1234 567</span>
             </a>
-            <a href="mailto:admissions@bestcolleges.edu.pk" className="flex items-center gap-2 text-gray-600 hover:text-primary-600 transition-colors">
+            <a
+              href="mailto:admissions@bestcolleges.edu.pk"
+              className="flex items-center gap-2 text-gray-600 hover:text-primary-600 transition-colors"
+            >
               <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
                 <Mail className="w-5 h-5 text-primary-600" />
               </div>
               <span>admissions@bestcolleges.edu.pk</span>
             </a>
           </div>
-          <Button
-            variant="outline"
-            icon={ArrowRight}
-            to="/contact"
-          >
+          <Button variant="outline" icon={ArrowRight} to="/contact">
             Visit Contact Page
           </Button>
         </div>

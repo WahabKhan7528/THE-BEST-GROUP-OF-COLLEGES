@@ -9,8 +9,8 @@ import {
   Users,
   UserPlus,
   Shield,
-  Building2
 } from "lucide-react";
+import { adminUsers } from "../../../data/adminData";
 
 const UsersList = () => {
   const navigate = useNavigate();
@@ -19,90 +19,7 @@ const UsersList = () => {
   const [selectedRole, setSelectedRole] = useState("");
   const [selectedCampus, setSelectedCampus] = useState("");
 
-  // Mock data with campus allocations
-  const mockData = [
-    {
-      id: "U-001",
-      name: "System Admin",
-      email: "admin@best.edu",
-      role: "Super Admin",
-      adminRole: "Super Admin",
-      department: "Administration",
-      allocatedCampuses: ["main", "law", "hala"],
-    },
-    {
-      id: "U-002",
-      name: "Ahmed Khan",
-      email: "ahmed.khan@best.edu",
-      role: "Sub-Admin",
-      adminRole: "Sub-Admin",
-      department: "Administration",
-      allocatedCampuses: ["law"],
-    },
-    {
-      id: "U-003",
-      name: "Fatima Ali",
-      email: "fatima.ali@best.edu",
-      role: "Sub-Admin",
-      adminRole: "Sub-Admin",
-      department: "Administration",
-      allocatedCampuses: ["main", "hala"],
-    },
-    {
-      id: "F-102",
-      name: "Prof. Ahmed Raza",
-      email: "ahmed.raza@best.edu",
-      role: "Faculty",
-      adminRole: null,
-      department: "CS",
-      allocatedCampuses: ["main"],
-    },
-    {
-      id: "F-103",
-      name: "Dr. Sarah Ahmed",
-      email: "sarah.ahmed@best.edu",
-      role: "Faculty",
-      adminRole: null,
-      department: "Law",
-      allocatedCampuses: ["law"],
-    },
-    {
-      id: "F-104",
-      name: "Prof. Hassan Raza",
-      email: "hassan.raza@best.edu",
-      role: "Faculty",
-      adminRole: null,
-      department: "Business",
-      allocatedCampuses: ["main", "hala"],
-    },
-    {
-      id: "S-220",
-      name: "Ayesha Khan",
-      email: "ayesha.khan@best.edu",
-      role: "Student",
-      adminRole: null,
-      department: "BSCS-5A",
-      allocatedCampuses: ["main"],
-    },
-    {
-      id: "S-221",
-      name: "Ali Hassan",
-      email: "ali.hassan@best.edu",
-      role: "Student",
-      adminRole: null,
-      department: "LLB-3A",
-      allocatedCampuses: ["law"],
-    },
-    {
-      id: "S-222",
-      name: "Maria Ahmed",
-      email: "maria.ahmed@best.edu",
-      role: "Student",
-      adminRole: null,
-      department: "BBA-2A",
-      allocatedCampuses: ["hala"],
-    },
-  ];
+  const mockData = adminUsers;
 
   // Filter data based on user role and selected filters
   let filteredData = mockData;

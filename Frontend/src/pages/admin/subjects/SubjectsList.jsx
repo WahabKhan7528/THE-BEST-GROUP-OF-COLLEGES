@@ -8,8 +8,8 @@ import {
   Filter,
   BookOpen,
   Building2,
-  Hash,
 } from "lucide-react";
+import { adminSubjects } from "../../../data/adminData";
 
 const SubjectsList = () => {
   const navigate = useNavigate();
@@ -17,49 +17,7 @@ const SubjectsList = () => {
   const [selectedCampus, setSelectedCampus] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Mock data with campuses where subject is offered (Subjects are global but assigned to campuses)
-  const mockData = [
-    {
-      id: "s1",
-      name: "Operating Systems",
-      code: "CS-312",
-      class: "BSCS - 3rd",
-      faculty: "Prof. Ahmed",
-      offeredAt: ["main", "law"],
-    },
-    {
-      id: "s2",
-      name: "Database Systems",
-      code: "CS-215",
-      class: "BSCS - 3rd",
-      faculty: "Prof. Sara",
-      offeredAt: ["main"],
-    },
-    {
-      id: "s3",
-      name: "Linear Algebra",
-      code: "MTH-205",
-      class: "BSCS - 3rd",
-      faculty: "Prof. Bilal",
-      offeredAt: ["main", "hala"],
-    },
-    {
-      id: "s4",
-      name: "Constitutional Law",
-      code: "LAW-101",
-      class: "LLB - 1st",
-      faculty: "Dr. Fatima",
-      offeredAt: ["law"],
-    },
-    {
-      id: "s5",
-      name: "Business Ethics",
-      code: "BBA-305",
-      class: "BBA - 3rd",
-      faculty: "Prof. Hassan",
-      offeredAt: ["hala"],
-    },
-  ];
+  const mockData = adminSubjects;
 
   // Filter data based on user and selected campus
   let filteredData = mockData;

@@ -4,6 +4,7 @@ import Card from "../../components/public_site/Card";
 import Badge from "../../components/public_site/Badge";
 import Button from "../../components/shared/Button";
 import Stats from "../../components/public_site/Stats";
+
 import {
   Scale,
   Gavel,
@@ -12,67 +13,22 @@ import {
   ArrowRight,
   CheckCircle,
   Landmark,
-  Library
+  Library,
 } from "lucide-react";
 
 import { programsData } from "../../data/programsData";
 
+import {
+  lawCampusStats as stats,
+  lawFacilities as facilities,
+} from "../../data/campusData";
+
 const LawCampus = () => {
-  const stats = [
-    {
-      icon: Users,
-      value: "800+",
-      label: "Law Students",
-    },
-    {
-      icon: Gavel,
-      value: "50+",
-      label: "Moot Court Wins",
-    },
-    {
-      icon: Award,
-      value: "100%",
-      label: "Bar Council Recognized",
-    },
-    {
-      icon: Scale,
-      value: "20+",
-      label: "Legal Experts",
-    },
-  ];
-
   const programs = programsData.law[0].items;
-
-  const facilities = [
-    {
-      icon: Gavel,
-      title: "Moot Court Room",
-      description: "A realistic courtroom setting for students to practice advocacy, case presentation, and trial procedures.",
-    },
-    {
-      icon: Library,
-      title: "Law Library",
-      description: "Extensive collection of legal manuscripts, law journals, case files, and digital legal databases.",
-    },
-    {
-      icon: Landmark,
-      title: "Legal Aid Clinic",
-      description: "A community service initiative where senior students provide free legal guidance under faculty supervision.",
-    },
-    {
-      icon: Users,
-      title: "Seminar Hall",
-      description: "Dedicated space for guest lectures by senior judges, lawyers, and legal scholars.",
-    },
-  ];
 
   return (
     <div className="min-h-screen bg-white">
-      <Hero
-        image="/Law.webp"
-        centered
-        className="rounded-3xl"
-      />
+      <Hero image="/Law.webp" centered className="rounded-3xl" />
 
       {/* Stats Bar */}
       <Section
@@ -80,21 +36,22 @@ const LawCampus = () => {
         className="-mt-16 relative z-20"
         spacing="default"
       >
-        <div
-          className="container mx-auto"
-        >
+        <div className="container mx-auto">
           <Stats items={stats} variant="dark" />
         </div>
       </Section>
 
       <Section spacing="large">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-          <div
-          >
+          <div>
             <Badge className="mb-4">Dean's Message</Badge>
-            <h2 className="text-4xl font-bold mb-6 text-gray-900">Excellence in Legal Education</h2>
+            <h2 className="text-4xl font-bold mb-6 text-gray-900">
+              Excellence in Legal Education
+            </h2>
             <p className="text-gray-600 text-lg leading-relaxed mb-6">
-              "Law is not just a profession; it is a calling to serve justice. At our Law College, we ensure that every student is equipped with the knowledge and moral courage to make a difference."
+              "Law is not just a profession; it is a calling to serve justice.
+              At our Law College, we ensure that every student is equipped with
+              the knowledge and moral courage to make a difference."
             </p>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
@@ -102,8 +59,12 @@ const LawCampus = () => {
                   <CheckCircle size={16} />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-900">Practical Training</h4>
-                  <p className="text-sm text-gray-500">Regular court visits and moot court sessions.</p>
+                  <h4 className="font-semibold text-gray-900">
+                    Practical Training
+                  </h4>
+                  <p className="text-sm text-gray-500">
+                    Regular court visits and moot court sessions.
+                  </p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -111,23 +72,34 @@ const LawCampus = () => {
                   <CheckCircle size={16} />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-900">Expert Faculty</h4>
-                  <p className="text-sm text-gray-500">Learn from serving judges and senior advocates.</p>
+                  <h4 className="font-semibold text-gray-900">
+                    Expert Faculty
+                  </h4>
+                  <p className="text-sm text-gray-500">
+                    Learn from serving judges and senior advocates.
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div
-            className="relative"
-          >
+          <div className="relative">
             <div className="absolute inset-0 bg-primary-600/10 rounded-3xl transform rotate-3 opacity-10"></div>
             <Card className="relative border-0 shadow-xl bg-white/50 backdrop-blur-sm rounded-3xl">
               <div className="p-6">
-                <Badge variant="soft" className="mb-4 border-primary-200 text-primary-700 rounded-full">Our Vision</Badge>
-                <h3 className="text-2xl font-bold mb-4 text-gray-900">Upholding the Rule of Law</h3>
+                <Badge
+                  variant="soft"
+                  className="mb-4 border-primary-200 text-primary-700 rounded-full"
+                >
+                  Our Vision
+                </Badge>
+                <h3 className="text-2xl font-bold mb-4 text-gray-900">
+                  Upholding the Rule of Law
+                </h3>
                 <p className="text-gray-600 mb-6">
-                  To be a premier center of legal learning that produces competent professionals capable of interpreting and applying the law for the betterment of society.
+                  To be a premier center of legal learning that produces
+                  competent professionals capable of interpreting and applying
+                  the law for the betterment of society.
                 </p>
               </div>
             </Card>
@@ -136,26 +108,35 @@ const LawCampus = () => {
       </Section>
 
       <Section className="bg-gray-50" spacing="large">
-        <Section.Header
-          title="Legal Programs"
-          description="Approved by HEC and Pakistan Bar Council."
-          badge="Admissions Open"
-        />
+        <div>
+          <Section.Header
+            title="Legal Programs"
+            description="Approved by HEC and Pakistan Bar Council."
+            badge="Admissions Open"
+          />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {programs.map((program, idx) => (
-            <div
-              key={program.title}
-            >
-              <Card hover className="h-full border-t-4 border-t-primary-600 rounded-3xl">
+            <div key={program.title}>
+              <Card
+                hover
+                className="h-full border-t-4 border-t-primary-600 rounded-3xl"
+              >
                 <div className="flex flex-col h-full">
                   <div className="flex items-start justify-between mb-4">
                     <div className="p-3 rounded-2xl bg-primary-50 text-primary-600">
                       <program.icon size={24} />
                     </div>
-                    <Badge variant="soft" className="rounded-full">{program.duration}</Badge>
+                    <Badge variant="soft" className="rounded-full">
+                      {program.duration}
+                    </Badge>
                   </div>
-                  <h3 className="text-xl font-bold mb-3 text-gray-900">{program.title}</h3>
-                  <p className="text-gray-600 mb-6 flex-grow">{program.description}</p>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900">
+                    {program.title}
+                  </h3>
+                  <p className="text-gray-600 mb-6 flex-grow">
+                    {program.description}
+                  </p>
 
                   <div className="mt-auto pt-6 border-t border-gray-100 flex items-center justify-end">
                     <Button size="sm" to="/admissions">
@@ -176,16 +157,19 @@ const LawCampus = () => {
         />
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {facilities.map((facility, idx) => (
-            <div
-              key={facility.title}
-            >
-              <Card hover className="h-full text-center bg-white border border-gray-100 rounded-3xl">
+            <div key={facility.title}>
+              <Card
+                hover
+                className="h-full text-center bg-white border border-gray-100 rounded-3xl"
+              >
                 <div className="flex justify-center mb-4">
                   <div className="w-16 h-16 rounded-full bg-primary-50 flex items-center justify-center text-primary-600 group-hover:scale-110 transition-transform duration-300">
                     <facility.icon size={28} />
                   </div>
                 </div>
-                <h3 className="text-lg font-bold mb-2 text-gray-900">{facility.title}</h3>
+                <h3 className="text-lg font-bold mb-2 text-gray-900">
+                  {facility.title}
+                </h3>
                 <p className="text-sm text-gray-500">{facility.description}</p>
               </Card>
             </div>
@@ -194,12 +178,11 @@ const LawCampus = () => {
       </Section>
 
       <Section className="text-center">
-        <div
-          className="max-w-3xl mx-auto"
-        >
+        <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl font-bold mb-6">Pursue a Career in Law</h2>
           <p className="text-lg text-gray-600 mb-8">
-            Become a part of our prestigious legal community. Apply now for the upcoming session.
+            Become a part of our prestigious legal community. Apply now for the
+            upcoming session.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" icon={ArrowRight} to="/admissions">

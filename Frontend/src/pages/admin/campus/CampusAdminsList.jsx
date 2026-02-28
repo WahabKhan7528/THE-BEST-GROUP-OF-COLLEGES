@@ -7,8 +7,8 @@ import {
     Users,
     UserPlus,
     Shield,
-    ArrowLeft
 } from "lucide-react";
+import { adminUsers } from "../../../data/adminData";
 
 const CampusAdminsList = () => {
     const { id } = useParams();
@@ -17,37 +17,7 @@ const CampusAdminsList = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const campus = campuses.find(c => c.id === id);
 
-    // Mock data - In real app, fetch from API filtering by campus and role='Sub-Admin'
-    const mockData = [
-        {
-            id: "U-001",
-            name: "System Admin",
-            email: "admin@best.edu",
-            role: "Super Admin",
-            allocatedCampuses: ["main", "law", "hala"],
-        },
-        {
-            id: "U-002",
-            name: "Ahmed Khan",
-            email: "ahmed.khan@best.edu",
-            role: "Sub-Admin",
-            allocatedCampuses: ["law"],
-        },
-        {
-            id: "U-003",
-            name: "Fatima Ali",
-            email: "fatima.ali@best.edu",
-            role: "Sub-Admin",
-            allocatedCampuses: ["main", "hala"],
-        },
-        {
-            id: "U-004",
-            name: "Zainab Bibi",
-            email: "zainab@best.edu",
-            role: "Sub-Admin",
-            allocatedCampuses: ["main"],
-        },
-    ];
+    const mockData = adminUsers;
 
     // Filter for admins of this specific campus
     const filteredData = mockData.filter(user =>

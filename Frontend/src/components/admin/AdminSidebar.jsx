@@ -1,32 +1,9 @@
 import { NavLink } from "react-router-dom";
 import {
   LogOut,
-  LayoutDashboard,
-  Users,
-  GraduationCap,
-  BookOpen,
-  Image,
-  Layers,
-  Megaphone,
-  Building2,
 } from "lucide-react";
 import { useAdminContext } from "../../context/AdminContext";
-
-const adminNavItems = [
-  { to: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  {
-    to: "/admin/campus",
-    label: "Campus Management",
-    icon: Building2,
-    superAdminOnly: true,
-  },
-  { to: "/admin/users", label: "Users", icon: Users },
-  { to: "/admin/classes", label: "Classes", icon: GraduationCap },
-  { to: "/admin/subjects", label: "Subjects", icon: BookOpen },
-  { to: "/admin/cms/news", label: "News & Events", icon: Megaphone },
-  { to: "/admin/cms/gallery", label: "Gallery", icon: Image },
-  { to: "/admin/courses", label: "Courses", icon: Layers },
-];
+import { adminNavItems } from "../../data/navigationData";
 
 const AdminSidebar = ({ onClose }) => {
   const { isSuperAdmin } = useAdminContext();

@@ -1,5 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, ChevronDown, School, BookOpen, Building, LayoutGrid } from "lucide-react";
+import {
+  Menu,
+  X,
+  ChevronDown,
+  School,
+  BookOpen,
+  Building,
+  LayoutGrid,
+} from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import PortalSelector from "./PortalSelector";
 
@@ -11,6 +19,8 @@ const Navbar = () => {
 
   const location = useLocation();
   const dropdownRef = useRef(null);
+  const mobileMenuRef = useRef(null);
+  const mobileMenuContentRef = useRef(null);
 
   useEffect(() => {
     setIsOpen(false);
@@ -63,7 +73,7 @@ const Navbar = () => {
     <nav className="sticky top-0 w-full z-50 bg-surface border-b border-border shadow-sm">
       <div className="flex items-center justify-between h-24 px-6">
         {/* Logo */}
-        <Link to="/" className="block group flex items-center gap-2">
+        <Link to="/" className=" group flex items-center gap-2">
           <img
             src="/LOGO-1-WHITE-NO-BACKGROUND.webp"
             alt="Logo"
@@ -82,10 +92,11 @@ const Navbar = () => {
             <Link
               key={link.name}
               to={link.path}
-              className={`relative px-3 py-2 text-sm font-semibold rounded-lg transition-all duration-200 ${isActive(link.path)
-                ? "text-primary-700 bg-primary-50"
-                : "text-secondary hover:text-primary-600 hover:bg-slate-50"
-                }`}
+              className={`relative px-3 py-2 text-sm font-semibold rounded-lg transition-all duration-200 ${
+                isActive(link.path)
+                  ? "text-primary-700 bg-primary-50"
+                  : "text-secondary hover:text-primary-600 hover:bg-slate-50"
+              }`}
             >
               {link.name}
               {isActive(link.path) && (
@@ -108,7 +119,9 @@ const Navbar = () => {
               aria-haspopup="true"
             >
               Campuses
-              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isCampusOpen ? "rotate-180" : ""}`} />
+              <ChevronDown
+                className={`w-4 h-4 transition-transform duration-200 ${isCampusOpen ? "rotate-180" : ""}`}
+              />
             </button>
 
             {isCampusOpen && (
@@ -158,17 +171,18 @@ const Navbar = () => {
 
       {/* Mobile Navigation */}
       {isOpen && (
-        <div className="md:hidden overflow-hidden border-t border-gray-100">
-          <div className="py-4 space-y-2 bg-surface">
+        <div ref={mobileMenuRef} className="md:hidden border-t border-gray-100">
+          <div ref={mobileMenuContentRef} className="py-4 space-y-2 bg-surface">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 to={link.path}
                 onClick={() => setIsOpen(false)}
-                className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all ${isActive(link.path)
-                  ? "text-primary-600 bg-primary-50 font-semibold shadow-sm"
-                  : "text-secondary hover:text-primary-700 hover:bg-white hover:shadow-sm"
-                  }`}
+                className={`mobile-nav-item flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                  isActive(link.path)
+                    ? "text-primary-600 bg-primary-50 font-semibold shadow-sm"
+                    : "text-secondary hover:text-primary-700 hover:bg-white hover:shadow-sm"
+                }`}
               >
                 {link.name}
                 {isActive(link.path) && (
@@ -178,7 +192,7 @@ const Navbar = () => {
             ))}
 
             {/* Mobile Campuses Dropdown */}
-            <div className="pt-2">
+            <div className="mobile-nav-item pt-2">
               <button
                 onClick={() => setIsMobileCampusOpen(!isMobileCampusOpen)}
                 className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-text-primary hover:bg-white hover:shadow-sm transition-all"
@@ -187,7 +201,9 @@ const Navbar = () => {
                   <School className="w-4 h-4 text-primary-600" />
                   Campuses
                 </span>
-                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isMobileCampusOpen ? "rotate-180" : ""}`} />
+                <ChevronDown
+                  className={`w-4 h-4 transition-transform duration-200 ${isMobileCampusOpen ? "rotate-180" : ""}`}
+                />
               </button>
 
               {isMobileCampusOpen && (
@@ -213,7 +229,7 @@ const Navbar = () => {
             </div>
 
             {/* Mobile Portals Button */}
-            <div className="pt-4 pb-2 px-4">
+            <div className="mobile-nav-item pt-4 pb-2 px-4">
               <button
                 onClick={() => {
                   setIsOpen(false);
@@ -229,7 +245,10 @@ const Navbar = () => {
         </div>
       )}
 
-      <PortalSelector isOpen={isPortalOpen} onClose={() => setIsPortalOpen(false)} />
+      <PortalSelector
+        isOpen={isPortalOpen}
+        onClose={() => setIsPortalOpen(false)}
+      />
     </nav>
   );
 };

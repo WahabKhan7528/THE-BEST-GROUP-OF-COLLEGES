@@ -8,15 +8,9 @@ import {
   Pencil
 } from 'lucide-react';
 import { useState } from 'react';
+import { adminGalleryImages as images } from "../../../../data/adminData";
 
-const images = [
-  { id: 'g1', title: 'Campus lawn', date: 'Sept 5, 2025', album: 'Campus Life', url: 'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&q=80&w=1000' },
-  { id: 'g2', title: 'Computer lab', date: 'Sept 2, 2025', album: 'Facilities', url: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=1000' },
-  { id: 'g3', title: 'Library hall', date: 'Aug 30, 2025', album: 'Facilities', url: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&q=80&w=1000' },
-  { id: 'g4', title: 'Annual Sports Day', date: 'Aug 25, 2025', album: 'Events', url: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&q=80&w=1000' },
-  { id: 'g5', title: 'Convocation Ceremony', date: 'Aug 20, 2025', album: 'Events', url: 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&q=80&w=1000' },
-  { id: 'g6', title: 'Science Exhibition', date: 'Aug 15, 2025', album: 'Academic', url: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&q=80&w=1000' },
-];
+
 
 const Gallery = () => {
   const navigate = useNavigate();

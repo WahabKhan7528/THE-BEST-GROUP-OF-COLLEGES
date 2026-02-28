@@ -1,20 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { LogOut, X, LayoutDashboard, ClipboardList, PlusCircle, FolderOpen, Upload, BarChart3, Megaphone } from "lucide-react";
-
-const navItems = [
-    { to: "/faculty/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { to: "/faculty/assignments", label: "Assignments", icon: ClipboardList },
-    {
-        to: "/faculty/assignments/create",
-        label: "Create Assignment",
-        icon: PlusCircle,
-    },
-    { to: "/faculty/submissions/123", label: "Submissions", icon: ClipboardList },
-    { to: "/faculty/materials", label: "Materials", icon: FolderOpen },
-    { to: "/faculty/materials/upload", label: "Upload Material", icon: Upload },
-    { to: "/faculty/results", label: "Results", icon: BarChart3 },
-    { to: "/faculty/announcements", label: "Announcements", icon: Megaphone },
-];
+import { facultyNavItems as navItems } from "../../data/navigationData";
 
 const FacultySidebar = ({ isSidebarOpen, onClose }) => {
     return (

@@ -10,53 +10,15 @@ import {
   GraduationCap,
   DollarSign,
   Building2,
-  ChevronDown
 } from "lucide-react";
+import { adminCourses } from "../../../data/adminData";
 
 const CourseList = () => {
   const { campuses, isSuperAdmin, currentAdmin } = useAdminContext();
   const [selectedCampus, setSelectedCampus] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Mock data with campuses where course is offered (Courses are global but assigned to campuses)
-  const mockData = [
-    {
-      id: "c101",
-      title: "BS Computer Science",
-      duration: "4 years",
-      eligibility: "Intermediate",
-      fee: "$1200",
-      type: "semester",
-      offeredAt: ["main", "law"],
-    },
-    {
-      id: "c102",
-      title: "BS Information Technology",
-      duration: "4 years",
-      eligibility: "Intermediate",
-      fee: "$1100",
-      type: "semester",
-      offeredAt: ["main"],
-    },
-    {
-      id: "c103",
-      title: "Bachelor of Law (LLB)",
-      duration: "5 years",
-      eligibility: "Intermediate",
-      fee: "$900",
-      type: "semester",
-      offeredAt: ["law"],
-    },
-    {
-      id: "c104",
-      title: "Bachelor of Business Admin",
-      duration: "4 years",
-      eligibility: "Intermediate",
-      fee: "$800",
-      type: "semester",
-      offeredAt: ["hala"],
-    },
-  ];
+  const mockData = adminCourses;
 
   // Filter data based on user and selected campus
   let filteredData = mockData;

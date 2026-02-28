@@ -17,14 +17,14 @@ const Hero = ({ title, image, announcements = [], className, ...props }) => {
           <img
             src={image}
             alt={title || "Hero Background"}
-            className="w-full h-full object-cover opacity-40"
+            className="hero-bg w-full h-full object-cover"
             loading="eager"
             fetchpriority="high"
             sizes="100vw"
           />
         )}
         {/* Overlay - simplified */}
-        <div className="absolute inset-0 " />
+        <div className="absolute inset-0 bg-primary-950/60" />
       </div>
 
       {/* Content */}
@@ -32,13 +32,11 @@ const Hero = ({ title, image, announcements = [], className, ...props }) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Column - Title */}
           {title && (
-            <div
-              className="space-y-6 text-center md:text-left"
-            >
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight">
+            <div className="space-y-6 text-center md:text-left">
+              <h1 className="hero-title text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight">
                 {title}
               </h1>
-              <div className="flex flex-col sm:flex-row gap-4 pt-4 items-center md:items-start">
+              <div className="hero-buttons flex flex-col sm:flex-row gap-4 pt-4 items-center md:items-start">
                 <Link
                   to="/admissions"
                   className="w-full sm:w-auto h-12 px-8 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl shadow-md transition-all duration-200 flex items-center justify-center gap-2"
@@ -58,10 +56,8 @@ const Hero = ({ title, image, announcements = [], className, ...props }) => {
 
           {/* Right Column - Announcements */}
           {announcements?.length > 0 && (
-            <div
-              className="space-y-4"
-            >
-              <div className="flex items-center gap-3 mb-6">
+            <div className="space-y-4">
+              <div className="hero-announcements-header flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 rounded-xl bg-primary-800 flex items-center justify-center border border-primary-700">
                   <Bell className="w-5 h-5 text-white" />
                 </div>

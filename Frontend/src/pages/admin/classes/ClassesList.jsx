@@ -8,8 +8,8 @@ import {
   Filter,
   BookOpen,
   Users,
-  Building2,
 } from "lucide-react";
+import { adminClasses } from "../../../data/adminData";
 
 
 const ClassesList = () => {
@@ -18,45 +18,7 @@ const ClassesList = () => {
   const [selectedCampus, setSelectedCampus] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Mock data with campus allocation (Classes are campus-specific)
-  const mockData = [
-    {
-      id: "c1",
-      name: "BSCS - 3rd Semester",
-      sections: ["A", "B"],
-      subjects: ["OS", "DBMS", "DSA"],
-      faculty: "Ahmed, Sara",
-      campus: "main",
-      students: 120
-    },
-    {
-      id: "c2",
-      name: "BSIT - 2nd Semester",
-      sections: ["A"],
-      subjects: ["Programming", "Discrete Math"],
-      faculty: "Bilal",
-      campus: "main",
-      students: 45
-    },
-    {
-      id: "c3",
-      name: "LLB - 1st Semester",
-      sections: ["A", "B"],
-      subjects: ["Constitutional Law", "Intro to Law"],
-      faculty: "Fatima",
-      campus: "law",
-      students: 80
-    },
-    {
-      id: "c4",
-      name: "BBA - 4th Semester",
-      sections: ["A"],
-      subjects: ["Marketing", "Finance"],
-      faculty: "Hassan",
-      campus: "hala",
-      students: 35
-    },
-  ];
+  const mockData = adminClasses;
 
   // Filter data based on user role, selected campus, and search query
   let filteredData = mockData;

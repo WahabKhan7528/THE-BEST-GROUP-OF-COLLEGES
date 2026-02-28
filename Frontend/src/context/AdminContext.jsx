@@ -3,21 +3,7 @@ import React, { createContext, useContext, useState } from "react";
 // Create the context
 const AdminContext = createContext();
 
-// Mock current admin user - will be replaced with real auth data from backend
-const mockAdminUser = {
-  id: "U-001",
-  name: "System Admin",
-  email: "admin@best.edu",
-  adminRole: "Super Admin", // 'Super Admin' | 'Sub-Admin'
-  allocatedCampuses: ["main", "law", "hala"], // Super Admin has all
-};
-
-// Mock campuses data
-const mockCampuses = [
-  { id: "main", name: "Main Campus", code: "MC", location: "Islamabad" },
-  { id: "law", name: "Law Campus", code: "LC", location: "Islamabad" },
-  { id: "hala", name: "Hala Campus", code: "HC", location: "Hala" },
-];
+import { mockAdminUser, mockCampuses } from "../data/adminData";
 
 export const AdminProvider = ({ children }) => {
   // Current logged-in admin user

@@ -5,17 +5,15 @@ import {
   FolderOpen,
   Megaphone,
   BarChart3,
+  BarChart3,
   BookOpen,
   ArrowRight,
 } from "lucide-react";
+
 import { useStudentContext } from "../../context/StudentContext";
 
 
-const campusNames = {
-  main: "Main Campus",
-  law: "Law Campus",
-  hala: "Hala Campus",
-};
+import { campusNames, studentQuickLinks as quickLinks } from "../../data/studentPortalData";
 
 
 
@@ -54,95 +52,64 @@ const Dashboard = () => {
   const displayAnnouncements = realAnnouncements.length > 0 ? realAnnouncements : announcements.recent;
 
 
-  const quickLinks = [
-    {
-      title: "Assignments",
-      description: "View and submit coursework",
-      path: "/student/assignments",
-      icon: ClipboardList,
-      color: "text-primary-600",
-      bgColor: "bg-primary-50",
-    },
-    {
-      title: "Materials",
-      description: "Slides, notes, and videos",
-      path: "/student/materials",
-      icon: FolderOpen,
-      color: "text-primary-600",
-      bgColor: "bg-primary-50",
-    },
-    {
-      title: "Announcements",
-      description: "Class updates and alerts",
-      path: "/student/announcements",
-      icon: Megaphone,
-      color: "text-primary-600",
-      bgColor: "bg-primary-50",
-    },
-    {
-      title: "Results",
-      description: "Marks and transcripts",
-      path: "/student/results",
-      icon: BarChart3,
-      color: "text-primary-600",
-      bgColor: "bg-primary-50",
-    },
-  ];
+
 
   return (
     <div
       className="space-y-8"
     >
       {/* Header Section with Campus Info */}
-      <section className="bg-white border border-border rounded-3xl shadow-sm overflow-hidden relative p-8">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary-50 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none opacity-50"></div>
+      <div>
+        <section className="bg-white border border-border rounded-3xl shadow-sm overflow-hidden relative p-8">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-primary-50 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none opacity-50"></div>
 
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="px-3 py-1 rounded-full bg-primary-50 border border-primary-100 text-primary-700 text-xs font-semibold uppercase tracking-wide">
-                Student Dashboard
-              </span>
-              <span className="px-3 py-1 rounded-full bg-primary-50 border border-primary-100 text-primary-700 text-xs font-semibold uppercase tracking-wide">
-                {campusNames[campus]}
-              </span>
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="px-3 py-1 rounded-full bg-primary-50 border border-primary-100 text-primary-700 text-xs font-semibold uppercase tracking-wide">
+                  Student Dashboard
+                </span>
+                <span className="px-3 py-1 rounded-full bg-primary-50 border border-primary-100 text-primary-700 text-xs font-semibold uppercase tracking-wide">
+                  {campusNames[campus]}
+                </span>
+              </div>
+              <h1 className="text-3xl font-bold text-primary-900">
+                Welcome back, {currentStudent.name.split(" ")[0]}!
+              </h1>
+              <div className="flex flex-wrap gap-4 mt-4 text-sm font-medium text-text-secondary">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-border shadow-sm">
+                  <span className="text-text-disabled">ID:</span>
+                  <span className="text-primary-900">{currentStudent.id}</span>
+                </div>
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-border shadow-sm">
+                  <span className="text-text-disabled">program:</span>
+                  <span className="text-primary-900">{currentStudent.department}</span>
+                </div>
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-border shadow-sm">
+                  <span className="text-text-disabled">semester:</span>
+                  <span className="text-primary-900">{currentStudent.semester}</span>
+                </div>
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-border shadow-sm">
+                  <span className="text-text-disabled">credits:</span>
+                  <span className="text-primary-900">{totalCredits} hrs</span>
+                </div>
+              </div>
             </div>
-            <h1 className="text-3xl font-bold text-primary-900">
-              Welcome back, {currentStudent.name.split(" ")[0]}!
-            </h1>
-            <div className="flex flex-wrap gap-4 mt-4 text-sm font-medium text-text-secondary">
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-border shadow-sm">
-                <span className="text-text-disabled">ID:</span>
-                <span className="text-primary-900">{currentStudent.id}</span>
-              </div>
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-border shadow-sm">
-                <span className="text-text-disabled">program:</span>
-                <span className="text-primary-900">{currentStudent.department}</span>
-              </div>
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-border shadow-sm">
-                <span className="text-text-disabled">semester:</span>
-                <span className="text-primary-900">{currentStudent.semester}</span>
-              </div>
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-border shadow-sm">
-                <span className="text-text-disabled">credits:</span>
-                <span className="text-primary-900">{totalCredits} hrs</span>
+
+            <div className="flex items-center gap-6 bg-primary-50 p-4 rounded-2xl border border-primary-100 shadow-sm">
+              <div className="text-right">
+                <p className="text-sm font-medium text-text-secondary">Overall CGPA</p>
+                <p className="text-3xl font-bold text-primary-700">
+                  {currentStudent.cgpa}
+                </p>
               </div>
             </div>
           </div>
-
-          <div className="flex items-center gap-6 bg-primary-50 p-4 rounded-2xl border border-primary-100 shadow-sm">
-            <div className="text-right">
-              <p className="text-sm font-medium text-text-secondary">Overall CGPA</p>
-              <p className="text-3xl font-bold text-primary-700">
-                {currentStudent.cgpa}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
       {/* Quick Links */}
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
         {quickLinks.map((link) => {
           const Icon = link.icon;
           return (
@@ -166,7 +133,7 @@ const Dashboard = () => {
             </Link>
           );
         })}
-      </section>
+      </div>
 
       {/* Enrolled Courses and Recent Material */}
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -188,11 +155,6 @@ const Dashboard = () => {
 
           {courses.length > 0 ? (
             <div className="space-y-4">
-              {courses.map((course) => (
-                <div
-                  key={course.id}
-                  className="group bg-white border border-border p-4 rounded-2xl hover:bg-primary-50 hover:border-primary-200 transition-all duration-200 flex items-center justify-between"
-                >
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center font-bold text-lg">
                       {course.name.charAt(0)}
@@ -277,7 +239,7 @@ const Dashboard = () => {
           )}
         </div>
       </section>
-    </div>
+    </div >
   );
 };
 

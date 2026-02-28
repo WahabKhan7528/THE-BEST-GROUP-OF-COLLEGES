@@ -1,11 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { ShieldCheck, GraduationCap, Users, ArrowRight } from 'lucide-react';
-
-const portals = [
-  { title: 'Admin Portal', description: 'Manage college system and operations', icon: ShieldCheck, path: '/login/admin' },
-  { title: 'Faculty Portal', description: 'Access teaching resources and manage classes', icon: GraduationCap, path: '/login/faculty' },
-  { title: 'Student Portal', description: 'View courses, grades, and campus resources', icon: Users, path: '/login/student' },
-];
+import { LayoutGrid, GraduationCap, Users, ShieldCheck, ArrowRight } from "lucide-react";
+import { portals } from "../../data/navigationData";
 
 const PortalSelector = ({ isOpen, onClose }) => {
   const navigate = useNavigate();

@@ -1,4 +1,5 @@
 import { useRef } from "react";
+
 import {
   ArrowRight,
   BookOpen,
@@ -8,6 +9,8 @@ import {
   CheckCircle,
   Book,
   School,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 import Hero from "../../components/public_site/Hero";
@@ -21,183 +24,26 @@ import Faq from "../../components/public_site/Faq";
 import ContactForm from "../../components/public_site/ContactForm";
 import ContactInfo from "../../components/public_site/ContactInfo";
 
+import {
+  collegesData,
+  testimonials,
+  homeStats as stats,
+  highlights,
+  announcements,
+} from "../../data/homeData";
+
 const Home = () => {
-  const sliderRef = useRef(null);
+  const containerRef = useRef(null);
 
-  const collegesData = [
-    {
-      name: "Law Campus",
-      icon: GraduationCap,
-      programs: ["Bachelor of Laws (LLB)", "Master of Laws (LLM)"],
-      description:
-        "Our Law Campus provides comprehensive legal education with a focus on both theoretical knowledge and practical skills. Students benefit from mock courts, legal clinics, and expert faculty.",
-      features: [
-        "State-of-the-art Law Library",
-        "Moot Court Facility",
-        "Legal Aid Clinic",
-        "Distinguished Faculty",
-      ],
-      image: "/Law.webp",
-      path: "/campuses/law",
-    },
-    {
-      name: "Main Campus",
-      icon: BookOpen,
-      programs: [
-        "Bachelor of Science (BS)",
-        "Master of Arts (MA)",
-        "Bachelor of Arts (BA)",
-      ],
-      description:
-        "The Main Campus offers a wide range of undergraduate and graduate programs in sciences and arts. Our focus is on providing quality education with modern facilities.",
-      features: [
-        "Well-equipped Laboratories",
-        "Research Facilities",
-        "Digital Library",
-        "Career Counseling",
-      ],
-      image: "/maincampus.webp",
-      path: "/campuses/main",
-    },
-    {
-      name: "Hala Campus",
-      icon: School,
-      programs: [
-        "FSc (Pre-Medical)",
-        "FSc (Pre-Engineering)",
-        "FA (Arts)",
-        "ICS (Computer Science)",
-      ],
-      description:
-        "Our Hala Campus prepares students for higher education with strong foundation in sciences and arts. We focus on both academic excellence and personal growth.",
-      features: [
-        "Modern Science Labs",
-        "Computer Labs",
-        "Sports Facilities",
-        "Experienced Faculty",
-      ],
-      image: "/campus-hala.webp",
-      path: "/campuses/hala",
-    },
-  ];
+  const scrollLeft = () => {
+    if (!containerRef.current) return;
+    containerRef.current.scrollBy({ left: -400, behavior: "smooth" });
+  };
 
-  const testimonials = [
-    {
-      name: "Sarah Ahmed",
-      role: "Law Graduate 2024",
-      content:
-        "The faculty and resources at Best Law College helped me achieve my dream of becoming a lawyer. The practical training was exceptional.",
-      image: "https://placehold.co/100x100?text=SA",
-      rating: 5,
-    },
-    {
-      name: "Muhammad Ali",
-      role: "BS Computer Science Student",
-      content:
-        "The practical approach to education at the Degree College has prepared me well for my career. Amazing learning environment!",
-      image: "https://placehold.co/100x100?text=MA",
-      rating: 5,
-    },
-    {
-      name: "Fatima Khan",
-      role: "FSc Pre-Medical",
-      content:
-        "Outstanding teachers and modern labs make learning engaging and effective. I'm confident about my future in medicine.",
-      image: "https://placehold.co/100x100?text=FK",
-      rating: 4,
-    },
-    {
-      name: "Fatima Khan",
-      role: "FSc Pre-Medical",
-      content:
-        "Outstanding teachers and modern labs make learning engaging and effective. I'm confident about my future in medicine.",
-      image: "https://placehold.co/100x100?text=FK",
-      rating: 4,
-    },
-    {
-      name: "Fatima Khan",
-      role: "FSc Pre-Medical",
-      content:
-        "Outstanding teachers and modern labs make learning engaging and effective. I'm confident about my future in medicine.",
-      image: "https://placehold.co/100x100?text=FK",
-      rating: 4,
-    },
-  ];
-
-  const stats = [
-    {
-      icon: BookOpen,
-      value: "50+",
-      label: "Programs",
-    },
-    {
-      icon: Users,
-      value: "5000+",
-      label: "Students",
-    },
-    {
-      icon: Trophy,
-      value: "95%",
-      label: "Success Rate",
-    },
-    {
-      icon: GraduationCap,
-      value: "200+",
-      label: "Faculty Members",
-    },
-  ];
-
-  const highlights = [
-    { text: "Expert faculty with industry experience", icon: Users },
-    { text: "Modern facilities and laboratories", icon: BookOpen },
-    { text: "International accreditation and partnerships", icon: Trophy },
-    { text: "Career counseling and placement support", icon: GraduationCap },
-  ];
-
-  const announcements = [
-    {
-      id: 1,
-      title: "Admissions Open for Spring 2024",
-      date: "February 10, 2024",
-      description: "Applications are now being accepted for the Spring 2024 semester across all our campuses. Early bird discount available until March 1st."
-    },
-    {
-      id: 2,
-      title: "Annual Sports Gala",
-      date: "February 8, 2024",
-      description: "Join us for our annual inter-campus sports competition featuring cricket, football, and athletics. Registration deadline: February 20th."
-    },
-    {
-      id: 3,
-      title: "Career Fair 2024",
-      date: "February 5, 2024",
-      description: "Top companies will be visiting our Main Campus for recruitment. Prepare your CVs and register through the student portal by February 15th."
-    },
-    {
-      id: 4,
-      title: "Scholarship Program Announced",
-      date: "February 3, 2024",
-      description: "Merit-based scholarships covering up to 100% tuition fee are now available. Apply through our online portal before February 28th."
-    },
-    {
-      id: 5,
-      title: "Science Exhibition 2024",
-      date: "February 1, 2024",
-      description: "Students from all campuses are invited to showcase their innovative projects. Prize money worth Rs. 500,000 for top 3 winners."
-    },
-    {
-      id: 6,
-      title: "Mid-Term Exams Schedule Released",
-      date: "January 28, 2024",
-      description: "Mid-term examinations will commence from March 10th, 2024. Students can download date sheets from the student portal."
-    },
-    {
-      id: 7,
-      title: "Guest Lecture Series",
-      date: "January 25, 2024",
-      description: "Distinguished professionals from various industries will be delivering guest lectures every Friday. Check the events calendar for details."
-    },
-  ];
+  const scrollRight = () => {
+    if (!containerRef.current) return;
+    containerRef.current.scrollBy({ left: 400, behavior: "smooth" });
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -216,9 +62,7 @@ const Home = () => {
         className="-mt-12 relative z-20 border-y border-primary-800"
         spacing="large"
       >
-        <div
-          className="text-center text-white"
-        >
+        <div className="text-center text-white">
           <Stats items={stats} variant="dark" />
         </div>
       </Section>
@@ -226,9 +70,7 @@ const Home = () => {
       {/* About Section */}
       <Section background="white" spacing="large">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
-          <div
-            className="relative"
-          >
+          <div className="relative">
             <div className="absolute -inset-4 bg-primary-100/50 rounded-3xl transform rotate-2" />
             <img
               src="/aboutUs.webp"
@@ -241,7 +83,9 @@ const Home = () => {
             {/* Floating Badge */}
             <div className="absolute -bottom-4 right-0 sm:-bottom-6 sm:-right-6 bg-white p-3 sm:p-4 rounded-xl shadow-lg border border-border">
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-primary-700">18+</div>
+                <div className="text-2xl sm:text-3xl font-bold text-primary-700">
+                  18+
+                </div>
                 <div className="text-xs sm:text-sm text-text-secondary">
                   <span className="sm:hidden">Years</span>
                   <span className="hidden sm:inline">Years of Excellence</span>
@@ -250,12 +94,13 @@ const Home = () => {
             </div>
           </div>
 
-          <div
-            className="px-6 md:px-0"
-          >
-            <Badge variant="solid" className="mb-4">About Us</Badge>
+          <div className="px-6 md:px-0">
+            <Badge variant="solid" className="mb-4">
+              About Us
+            </Badge>
             <h3 className="text-3xl md:text-4xl font-bold text-primary-900 mb-6 leading-tight">
-              Excellence in Education Since <span className="text-primary-600">1985</span>
+              Excellence in Education Since{" "}
+              <span className="text-primary-600">1985</span>
             </h3>
             <div>
               <p className="text-text-secondary mb-4 leading-relaxed text-lg">
@@ -265,8 +110,8 @@ const Home = () => {
                 thousands of successful careers.
               </p>
               <p className="text-text-secondary mb-8 leading-relaxed">
-                With three dynamic campuses offering diverse programs from FSc to
-                postgraduate studies, we provide a comprehensive educational
+                With three dynamic campuses offering diverse programs from FSc
+                to postgraduate studies, we provide a comprehensive educational
                 ecosystem that nurtures talent and builds leaders.
               </p>
             </div>
@@ -277,17 +122,15 @@ const Home = () => {
                   key={highlight.text}
                   className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 hover:bg-primary-50 transition-colors group border border-transparent hover:border-primary-100"
                 >
-                  <span className="text-text-primary font-medium text-sm">{highlight.text}</span>
+                  <span className="text-text-primary font-medium text-sm">
+                    {highlight.text}
+                  </span>
                 </div>
               ))}
             </div>
 
             <div className="flex justify-center md:justify-start">
-              <Button
-                icon={ArrowRight}
-                to="/about"
-                variant="primary"
-              >
+              <Button icon={ArrowRight} to="/about" variant="primary">
                 Learn More About Us
               </Button>
             </div>
@@ -297,21 +140,22 @@ const Home = () => {
 
       {/* Campuses Section */}
       <Section background="gray" spacing="large">
-        <Section.Header
-          title="Our Campuses"
-          description="Explore our three dynamic campuses, each offering unique programs and opportunities"
-          badge="Explore"
-        />
+        <div className="w-full">
+          <Section.Header
+            title="Our Campuses"
+            description="Explore our three dynamic campuses, each offering unique programs and opportunities"
+            badge="Explore"
+          />
+        </div>
 
         <div className="space-y-8">
           {collegesData.map((college, index) => (
-            <div
-              key={college.name}
-            >
+            <div key={college.name}>
               <Card hover className="overflow-hidden p-0 border border-border">
                 <div
-                  className={`flex flex-col lg:flex-row ${index % 2 === 1 ? "lg:flex-row-reverse" : ""
-                    }`}
+                  className={`flex flex-col lg:flex-row ${
+                    index % 2 === 1 ? "lg:flex-row-reverse" : ""
+                  }`}
                 >
                   {/* College Image */}
                   <div className="w-full lg:w-2/5 relative overflow-hidden h-64 lg:h-auto">
@@ -335,7 +179,9 @@ const Home = () => {
                         <h2 className="text-2xl font-bold text-primary-900">
                           {college.name}
                         </h2>
-                        <p className="text-sm text-text-secondary">{college.programs.length} Programs Available</p>
+                        <p className="text-sm text-text-secondary">
+                          {college.programs.length} Programs Available
+                        </p>
                       </div>
                     </div>
 
@@ -348,11 +194,16 @@ const Home = () => {
                       <div className="bg-gray-50 rounded-xl p-4 border border-border">
                         <div className="flex items-center gap-2 mb-3">
                           <Book className="h-4 w-4 text-primary-600" />
-                          <span className="font-semibold text-primary-800 text-sm">Programs</span>
+                          <span className="font-semibold text-primary-800 text-sm">
+                            Programs
+                          </span>
                         </div>
                         <ul className="space-y-2">
                           {college.programs.map((program) => (
-                            <li key={program} className="flex items-center text-text-secondary text-sm">
+                            <li
+                              key={program}
+                              className="flex items-center text-text-secondary text-sm"
+                            >
                               <span className="h-1.5 w-1.5 bg-primary-500 rounded-full mr-2" />
                               {program}
                             </li>
@@ -363,11 +214,16 @@ const Home = () => {
                       <div className="bg-gray-50 rounded-xl p-4 border border-border">
                         <div className="flex items-center gap-2 mb-3">
                           <Trophy className="h-4 w-4 text-primary-600" />
-                          <span className="font-semibold text-primary-800 text-sm">Features</span>
+                          <span className="font-semibold text-primary-800 text-sm">
+                            Features
+                          </span>
                         </div>
                         <ul className="space-y-2">
                           {college.features.slice(0, 3).map((feature) => (
-                            <li key={feature} className="flex items-center text-text-secondary text-sm">
+                            <li
+                              key={feature}
+                              className="flex items-center text-text-secondary text-sm"
+                            >
                               <CheckCircle className="h-3.5 w-3.5 text-primary-600 mr-2 flex-shrink-0" />
                               {feature}
                             </li>
@@ -378,9 +234,7 @@ const Home = () => {
 
                     {/* Actions */}
                     <div className="flex flex-wrap gap-3 pt-2">
-                      <Button to={college.path}>
-                        View Details
-                      </Button>
+                      <Button to={college.path}>View Details</Button>
                       <Button variant="outline" to="/admissions">
                         Apply Now
                       </Button>
@@ -400,15 +254,34 @@ const Home = () => {
           description="Hear from our students and alumni about their experience"
           badge="Testimonials"
         />
-        <div ref={sliderRef} className="cursor-grab overflow-x-auto outline-none">
-          <div
-            className="flex gap-6 pb-4"
-          >
-            {testimonials.map((testimonial, index) => (
-              <div key={index} className="min-w-[300px] md:min-w-[400px]">
-                <TestimonialCard {...testimonial} />
-              </div>
-            ))}
+
+        <div className="relative">
+          {/* Controls */}
+          <div className="flex justify-end gap-3 mb-6 pr-4 relative z-10">
+            <button
+              onClick={scrollLeft}
+              className="p-3 bg-white border border-gray-200 rounded-full hover:bg-gray-50 hover:text-primary-600 transition-colors shadow-sm focus:outline-none"
+              aria-label="Previous testimonials"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button
+              onClick={scrollRight}
+              className="p-3 bg-white border border-gray-200 rounded-full hover:bg-gray-50 hover:text-primary-600 transition-colors shadow-sm focus:outline-none"
+              aria-label="Next testimonials"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+
+          <div ref={containerRef} className="overflow-x-auto no-scrollbar">
+            <div className="flex gap-6 pb-4 w-max">
+              {testimonials.map((testimonial, index) => (
+                <div key={index} className="w-[300px] md:w-[400px] shrink-0">
+                  <TestimonialCard {...testimonial} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </Section>
@@ -423,9 +296,7 @@ const Home = () => {
 
         <ContactInfo />
 
-        <div
-          className="mt-16"
-        >
+        <div className="mt-16">
           <ContactForm />
         </div>
       </Section>

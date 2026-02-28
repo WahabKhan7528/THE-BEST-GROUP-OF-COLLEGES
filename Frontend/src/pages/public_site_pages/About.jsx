@@ -14,68 +14,9 @@ import {
 } from "lucide-react";
 
 
+import { milestones, values, aboutStats as stats } from "../../data/aboutData";
+
 const About = () => {
-
-  const milestones = [
-    {
-      year: "1985",
-      title: "Foundation",
-      description: "Established as a premier educational institution in Pakistan",
-      icon: Building,
-    },
-    {
-      year: "2000",
-      title: "Expansion",
-      description: "Launched degree programs and opened Law Campus",
-      icon: BookOpen,
-    },
-    {
-      year: "2010",
-      title: "Innovation",
-      description: "Introduced modern teaching methodologies and digital labs",
-      icon: Lightbulb,
-    },
-    {
-      year: "2024",
-      title: "Excellence",
-      description: "Recognized as one of the top educational institutions",
-      icon: Award,
-    },
-  ];
-
-  const values = [
-    {
-      title: "Excellence",
-      description: "Commitment to maintaining high academic standards and continuous improvement",
-      icon: Star,
-      color: "from-amber-500 to-orange-500",
-    },
-    {
-      title: "Innovation",
-      description: "Embracing modern teaching methods, technologies, and creative solutions",
-      icon: Lightbulb,
-      color: "from-blue-500 to-cyan-500",
-    },
-    {
-      title: "Integrity",
-      description: "Upholding ethical practices, honesty, and transparency in education",
-      icon: Shield,
-      color: "from-emerald-500 to-green-500",
-    },
-    {
-      title: "Inclusivity",
-      description: "Providing equal opportunities and embracing diversity in learning",
-      icon: Heart,
-      color: "from-pink-500 to-rose-500",
-    },
-  ];
-
-  const stats = [
-    { value: "35+", label: "Years of Excellence" },
-    { value: "5000+", label: "Students Enrolled" },
-    { value: "200+", label: "Expert Faculty" },
-    { value: "95%", label: "Success Rate" },
-  ];
 
   return (
     <div className="min-h-screen bg-white">
@@ -104,11 +45,12 @@ const About = () => {
             </p>
             <div className="flex justify-center md:justify-start">
               <Button
-                icon={ArrowRight}
-                to="/campuses/main"
-              >
-                Explore Our Campuses
-              </Button>
+                  icon={ArrowRight}
+                  to="/campuses/main"
+                >
+                  Explore Our Campuses
+                </Button>
+
             </div>
           </div>
 
@@ -130,11 +72,13 @@ const About = () => {
 
       {/* Core Values */}
       <Section background="white" spacing="large">
-        <Section.Header
-          title="Our Core Values"
-          description="The principles that guide everything we do"
-          badge="Values"
-        />
+        <div className="w-full">
+          <Section.Header
+            title="Our Core Values"
+            description="The principles that guide everything we do"
+            badge="Values"
+          />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {values.map((value, idx) => (
             <div
@@ -154,15 +98,17 @@ const About = () => {
 
       {/* Journey Timeline */}
       <Section background="gradient" spacing="large">
-        <div className="flex justify-center mb-4">
-          <Badge variant="solid">Timeline</Badge>
+        <div className="w-full">
+          <div className="flex justify-center mb-4">
+            <Badge variant="solid">Timeline</Badge>
+          </div>
+          <Section.Header
+            title="Our Journey"
+            description="Key milestones that have shaped our institution"
+          />
         </div>
-        <Section.Header
-          title="Our Journey"
-          description="Key milestones that have shaped our institution"
-        />
 
-        {/* Desktop Timeline */}
+        {/* Desktop Timeline */}}
         <div className="hidden md:block relative">
           {/* Timeline Line */}
           <div className="absolute top-1/2 left-0 right-0 h-1 bg-primary-800 transform -translate-y-1/2 rounded-full" />
@@ -209,9 +155,7 @@ const About = () => {
 
       {/* CTA Section */}
       <Section background="white" spacing="large">
-        <div
-          className="text-center max-w-3xl mx-auto"
-        >
+        <div className="text-center max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">
             Ready to Start Your Journey?
           </h2>

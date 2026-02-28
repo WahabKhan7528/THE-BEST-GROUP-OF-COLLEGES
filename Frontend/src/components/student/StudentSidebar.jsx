@@ -1,13 +1,6 @@
 import { NavLink } from "react-router-dom";
-import { LogOut, X, LayoutDashboard, FolderOpen, ClipboardList, BarChart3, Megaphone } from "lucide-react";
-
-const navItems = [
-    { to: "/student/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { to: "/student/materials", label: "Materials", icon: FolderOpen },
-    { to: "/student/assignments", label: "Assignments", icon: ClipboardList },
-    { to: "/student/results", label: "Results", icon: BarChart3 },
-    { to: "/student/announcements", label: "Class Announcements", icon: Megaphone },
-];
+import { LogOut, LayoutDashboard, FolderOpen, ClipboardList, BarChart3, Megaphone } from "lucide-react";
+import { studentNavItems as navItems } from "../../data/navigationData";
 
 const StudentSidebar = ({ isSidebarOpen, onClose }) => {
     return (

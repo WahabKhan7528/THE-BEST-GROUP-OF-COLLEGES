@@ -1,35 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
-import { useAdminContext } from "../../../context/AdminContext";
 import Button from "../../../components/shared/Button";
+import { mockAllAdmins } from "../../../data/adminData";
 
-// Mock all admins in system (would come from backend)
-const mockAllAdmins = [
-  {
-    id: "U-002",
-    name: "Ahmed Khan",
-    email: "ahmed.khan@best.edu",
-    adminRole: "Sub-Admin",
-  },
-  {
-    id: "U-003",
-    name: "Fatima Ali",
-    email: "fatima.ali@best.edu",
-    adminRole: "Sub-Admin",
-  },
-  {
-    id: "U-004",
-    name: "Hassan Raza",
-    email: "hassan.raza@best.edu",
-    adminRole: "Sub-Admin",
-  },
-  {
-    id: "U-005",
-    name: "Sara Ahmed",
-    email: "sara.ahmed@best.edu",
-    adminRole: "Sub-Admin",
-  },
-];
+
 
 const AllocateAdmin = () => {
   const navigate = useNavigate();

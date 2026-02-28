@@ -11,114 +11,22 @@ import {
   Calendar,
   Users,
   Laptop,
-  ZoomIn
+  ZoomIn,
 } from "lucide-react";
+
+import {
+  galleryFilters as filters,
+  galleryImages as images,
+} from "../../data/galleryData";
 
 const Gallery = () => {
   const [activeFilter, setActiveFilter] = useState("all");
   const [selectedImage, setSelectedImage] = useState(null);
 
-  const filters = [
-    { id: "all", name: "All Photos", icon: Camera, count: 12 },
-    { id: "campus", name: "Campus", icon: Building, count: 3 },
-    { id: "events", name: "Events", icon: Calendar, count: 3 },
-    { id: "students", name: "Students", icon: Users, count: 3 },
-    { id: "facilities", name: "Facilities", icon: Laptop, count: 3 },
-  ];
-
-  const images = [
-    {
-      id: 1,
-      category: "campus",
-      title: "Main Campus Building",
-      description: "The iconic main building of our institution",
-      src: "https://placehold.co/800x600/E0F2FE/E0F2FE", // sky-100
-    },
-    {
-      id: 2,
-      category: "events",
-      title: "Graduation Ceremony 2024",
-      description: "Celebrating the achievements of our graduating class",
-      src: "https://placehold.co/800x600/DBEAFE/DBEAFE", // blue-100
-    },
-    {
-      id: 3,
-      category: "facilities",
-      title: "Law Library",
-      description: "Our extensive law library with thousands of resources",
-      src: "https://placehold.co/800x600/E0F2FE/E0F2FE", // sky-100
-    },
-    {
-      id: 4,
-      category: "students",
-      title: "Student Life",
-      description: "Students enjoying campus activities",
-      src: "https://placehold.co/800x600/EFF6FF/EFF6FF", // blue-50
-    },
-    {
-      id: 5,
-      category: "campus",
-      title: "Sports Ground",
-      description: "State-of-the-art sports facilities",
-      src: "https://placehold.co/800x600/DBEAFE/DBEAFE", // blue-100
-    },
-    {
-      id: 6,
-      category: "facilities",
-      title: "Science Laboratory",
-      description: "Modern equipped science labs",
-      src: "https://placehold.co/800x600/E0F2FE/E0F2FE", // sky-100
-    },
-    {
-      id: 7,
-      category: "events",
-      title: "Annual Sports Day",
-      description: "Annual inter-campus sports competition",
-      src: "https://placehold.co/800x600/EFF6FF/EFF6FF", // blue-50
-    },
-    {
-      id: 8,
-      category: "students",
-      title: "Class Activities",
-      description: "Interactive classroom sessions",
-      src: "https://placehold.co/800x600/DBEAFE/DBEAFE", // blue-100
-    },
-    {
-      id: 9,
-      category: "facilities",
-      title: "Computer Lab",
-      description: "High-tech computer facilities",
-      src: "https://placehold.co/800x600/E0F2FE/E0F2FE", // sky-100
-    },
-    {
-      id: 10,
-      category: "events",
-      title: "Cultural Festival",
-      description: "Celebrating diversity through culture",
-      src: "https://placehold.co/800x600/EFF6FF/EFF6FF", // blue-50
-    },
-    {
-      id: 11,
-      category: "campus",
-      title: "Campus Gardens",
-      description: "Beautiful green spaces around campus",
-      src: "https://placehold.co/800x600/DBEAFE/DBEAFE", // blue-100
-    },
-    {
-      id: 12,
-      category: "students",
-      title: "Study Groups",
-      description: "Collaborative learning sessions",
-      src: "https://placehold.co/800x600/E0F2FE/E0F2FE", // sky-100
-    },
-  ];
-
   const filteredImages =
     activeFilter === "all"
       ? images
       : images.filter((img) => img.category === activeFilter);
-
-
 
   const openLightbox = (image) => {
     setSelectedImage(image);
@@ -130,13 +38,14 @@ const Gallery = () => {
 
   const navigateImage = (direction) => {
     const currentIndex = filteredImages.findIndex(
-      (img) => img.id === selectedImage.id
+      (img) => img.id === selectedImage.id,
     );
     let newIndex;
     if (direction === "next") {
       newIndex = (currentIndex + 1) % filteredImages.length;
     } else {
-      newIndex = (currentIndex - 1 + filteredImages.length) % filteredImages.length;
+      newIndex =
+        (currentIndex - 1 + filteredImages.length) % filteredImages.length;
     }
     setSelectedImage(filteredImages[newIndex]);
   };
@@ -162,8 +71,6 @@ const Gallery = () => {
     }
   }, [selectedImage, filteredImages]);
 
-
-
   return (
     <div className="min-h-screen bg-white">
       {/* Filters */}
@@ -172,7 +79,10 @@ const Gallery = () => {
           <h2 className="text-4xl md:text-8xl font-bold text-gray-900 mb-6 leading-tight">
             <span className="text-gradient">PHOTO GALLERY</span>
           </h2>
-          <p className="text-gray-600">Explore our campus life, events, and facilities through our photo gallery</p>
+          <p className="text-gray-600">
+            Explore our campus life, events, and facilities through our photo
+            gallery
+          </p>
         </div>
         <div className="flex flex-wrap justify-center gap-3">
           {filters.map((filter) => {
@@ -181,15 +91,19 @@ const Gallery = () => {
               <button
                 key={filter.id}
                 onClick={() => setActiveFilter(filter.id)}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-medium transition-all hover:scale-[1.02] active:scale-[0.98] ${isActive
-                  ? "bg-primary-600 text-white shadow-lg"
-                  : "bg-primary-100 text-gray-600 hover:bg-primary-200"
-                  }`}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-medium transition-all hover:scale-[1.02] active:scale-[0.98] ${
+                  isActive
+                    ? "bg-primary-600 text-white shadow-lg"
+                    : "bg-primary-100 text-gray-600 hover:bg-primary-200"
+                }`}
               >
                 <filter.icon className="w-4 h-4" />
                 <span>{filter.name}</span>
-                <span className={`text-xs px-2 py-0.5 rounded-full ${isActive ? "bg-white/20" : "bg-gray-200"
-                  }`}>
+                <span
+                  className={`text-xs px-2 py-0.5 rounded-full ${
+                    isActive ? "bg-white/20" : "bg-gray-200"
+                  }`}
+                >
                   {filter.count}
                 </span>
               </button>
@@ -245,7 +159,9 @@ const Gallery = () => {
         {filteredImages.length === 0 && (
           <div className="text-center py-16">
             <Camera className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-600">No photos found</h3>
+            <h3 className="text-xl font-semibold text-gray-600">
+              No photos found
+            </h3>
             <p className="text-gray-500">Try selecting a different category</p>
           </div>
         )}
@@ -309,9 +225,7 @@ const Gallery = () => {
               <h3 className="text-white text-xl font-bold mb-1">
                 {selectedImage.title}
               </h3>
-              <p className="text-gray-300">
-                {selectedImage.description}
-              </p>
+              <p className="text-gray-300">{selectedImage.description}</p>
             </div>
           </div>
         </div>
