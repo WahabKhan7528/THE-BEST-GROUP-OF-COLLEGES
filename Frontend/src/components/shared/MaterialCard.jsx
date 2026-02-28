@@ -1,12 +1,12 @@
 import { FileText, Play, Image as ImageIcon, File } from 'lucide-react';
 
-/**
- * Shared MaterialCard
- *
- * Accepts a `material` object with: { title, type, uploadDate/date, description, classSection, subject, link }
- *
- * variant="faculty" (default) — shows icon, classSection•subject header, View (anchor) + Download link
- * variant="student"           — shows date, name, type badge, View + Download buttons, "Tap to preview"
+/*
+ Shared MaterialCard
+ 
+ Accepts a `material` object with: { title, type, uploadDate/date, description, classSection, subject, link }
+
+ variant="faculty" (default) — shows icon, classSection•subject header, View (anchor) + Download link
+ variant="student"— shows date, name, type badge, View + Download buttons, "Tap to preview"
  */
 
 const typeBadge = {

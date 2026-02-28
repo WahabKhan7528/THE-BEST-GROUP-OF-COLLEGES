@@ -1,8 +1,8 @@
-/**
- * Shared AnnouncementCard
- *
- * variant="faculty" (default) — shows classSection, attachment link, date on right
- * variant="student"           — simpler layout: date left, title, description only
+/*
+ Shared AnnouncementCard
+ 
+ variant="faculty" (default) — shows classSection, attachment link, date on right
+ variant="student"           — simpler layout: date left, title, description only
  */
 const AnnouncementCard = ({ announcement, role = 'faculty' }) => {
     if (role === 'student') {

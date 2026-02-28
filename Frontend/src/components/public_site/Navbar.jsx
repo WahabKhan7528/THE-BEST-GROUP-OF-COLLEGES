@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ChevronDown, School, BookOpen, Building, LayoutGrid } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PortalSelector from "./PortalSelector";
 
@@ -10,11 +10,31 @@ const Navbar = () => {
   const [isPortalOpen, setIsPortalOpen] = useState(false);
 
   const location = useLocation();
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     setIsOpen(false);
     setIsCampusOpen(false);
   }, [location.pathname]);
+
+  // Handle clicking outside the dropdown to close it
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsCampusOpen(false);
+      }
+    };
+
+    if (isCampusOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isCampusOpen]);
 
   const isActive = (path) => {
     return (
@@ -81,6 +101,7 @@ const Navbar = () => {
           {/* Campus Dropdown */}
           <div
             className="relative ml-2"
+            ref={dropdownRef}
             onMouseEnter={() => setIsCampusOpen(true)}
             onMouseLeave={() => setIsCampusOpen(false)}
           >

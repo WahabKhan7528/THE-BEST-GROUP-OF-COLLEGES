@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, FileText, Pencil, Trash2, ClipboardList } from 'lucide-react';
 
-/**
- * Shared AssignmentCard
- *
- * variant="faculty" (default) — shows Edit / Delete / View Submissions action buttons
- * variant="student"           — shows file upload form + Submit button
+/*
+ Shared AssignmentCard
+
+ variant="faculty" (default) — shows Edit / Delete / View Submissions action buttons
+ variant="student"           — shows file upload form + Submit button
  */
 
 const statusStyles = {
@@ -115,9 +115,6 @@ const AssignmentCard = ({ assignment, role = 'faculty' }) => {
                         )}
                     </div>
                 </div>
-                <span className="text-[10px] md:text-xs font-semibold text-cyan-700 bg-cyan-50 px-2 md:px-3 py-1 rounded-full self-start">
-                    Published
-                </span>
             </div>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 md:gap-3 mt-4">
