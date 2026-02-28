@@ -17,13 +17,13 @@ const CampusLayout = () => {
     { name: "Facilities", path: "facilities" },
   ];
 
-  // 🔧 FIX: detect active link correctly for mobile dropdown
+  // detect active link correctly for mobile dropdown
   const segments = location.pathname.split("/").filter(Boolean);
   const lastSegment = segments[segments.length - 1];
 
   const activeLink =
     navLinks.find((link) => link.path === lastSegment) ||
-    navLinks[0]; // fallback → Overview
+    navLinks[0];
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -32,7 +32,7 @@ const CampusLayout = () => {
           <div className="absolute inset-x-0 top-6 sm:top-8 md:top-10 flex justify-center z-30 px-3 sm:px-4">
             <div className="rounded-xl sm:rounded-2xl border border-neutral-200 bg-white/95 backdrop-blur shadow-[0_10px_40px_rgba(67,56,202,0.08)] px-2 py-2 sm:px-4 sm:py-3 w-full sm:w-auto max-w-full">
 
-              {/* 🖥 Desktop Tabs */}
+              {/* Desktop Tabs */}
               <nav className="hidden sm:flex gap-1 md:gap-2 overflow-x-auto no-scrollbar justify-center">
                 {navLinks.map((link) => (
                   <NavLink
@@ -50,7 +50,7 @@ const CampusLayout = () => {
                 ))}
               </nav>
 
-              {/* 📱 Mobile Dropdown */}
+              {/* Mobile Dropdown */}
               <div className="sm:hidden relative">
                 <button
                   onClick={() => setIsOpen(!isOpen)}
