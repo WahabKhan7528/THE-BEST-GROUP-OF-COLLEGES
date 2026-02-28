@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 
 import { Mail, GraduationCap, Award } from "lucide-react";
 import Section from "./Section";
+import Card from "./Card";
 import Button from "../shared/Button";
 import { facultyData } from "../../data/facultyMembersData";
 
@@ -68,11 +69,10 @@ const FacultyComponent = ({ filterCampus }) => {
                 <button
                   key={campus}
                   onClick={() => setActiveTab(campus)}
-                  className={`px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 ${
-                    activeTab === campus
+                  className={`px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 ${activeTab === campus
                       ? "bg-primary-600 text-white shadow-md"
                       : "text-gray-500 hover:text-primary-600 hover:bg-gray-50"
-                  }`}
+                    }`}
                 >
                   {campus}
                 </button>
