@@ -11,10 +11,10 @@ import {
 
 import { useStudentContext } from "../../context/StudentContext";
 
-
-import { campusNames, studentQuickLinks as quickLinks } from "../../data/studentPortalData";
-
-
+import {
+  campusNames,
+  studentQuickLinks as quickLinks,
+} from "../../data/studentPortalData";
 
 const Dashboard = () => {
   const {
@@ -38,25 +38,21 @@ const Dashboard = () => {
     if (saved) {
       const parsed = JSON.parse(saved);
       const campusAnnouncements = parsed[campus] || [];
-      const courseCodes = courses.map(c => c.code);
+      const courseCodes = courses.map((c) => c.code);
 
-      const relevant = campusAnnouncements.filter(a => {
+      const relevant = campusAnnouncements.filter((a) => {
         if (!a.classSection) return false;
-        return courseCodes.some(code => a.classSection.includes(code));
+        return courseCodes.some((code) => a.classSection.includes(code));
       });
       setRealAnnouncements(relevant);
     }
   }, [campus, courses]);
 
-  const displayAnnouncements = realAnnouncements.length > 0 ? realAnnouncements : announcements.recent;
-
-
-
+  const displayAnnouncements =
+    realAnnouncements.length > 0 ? realAnnouncements : announcements.recent;
 
   return (
-    <div
-      className="space-y-8"
-    >
+    <div className="space-y-8">
       {/* Header Section with Campus Info */}
       <div>
         <section className="bg-white border border-border rounded-3xl shadow-sm overflow-hidden relative p-8">
@@ -82,11 +78,15 @@ const Dashboard = () => {
                 </div>
                 <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-border shadow-sm">
                   <span className="text-text-disabled">program:</span>
-                  <span className="text-primary-900">{currentStudent.department}</span>
+                  <span className="text-primary-900">
+                    {currentStudent.department}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-border shadow-sm">
                   <span className="text-text-disabled">semester:</span>
-                  <span className="text-primary-900">{currentStudent.semester}</span>
+                  <span className="text-primary-900">
+                    {currentStudent.semester}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg border border-border shadow-sm">
                   <span className="text-text-disabled">credits:</span>
@@ -97,7 +97,9 @@ const Dashboard = () => {
 
             <div className="flex items-center gap-6 bg-primary-50 p-4 rounded-2xl border border-primary-100 shadow-sm">
               <div className="text-right">
-                <p className="text-sm font-medium text-text-secondary">Overall CGPA</p>
+                <p className="text-sm font-medium text-text-secondary">
+                  Overall CGPA
+                </p>
                 <p className="text-3xl font-bold text-primary-700">
                   {currentStudent.cgpa}
                 </p>
@@ -117,17 +119,24 @@ const Dashboard = () => {
               key={link.title}
               className="group relative overflow-hidden bg-white border border-border rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
             >
-              <div className={`w-14 h-14 rounded-xl ${link.bgColor} ${link.color} flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110`}>
+              <div
+                className={`w-14 h-14 rounded-xl ${link.bgColor} ${link.color} flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110`}
+              >
                 <Icon size={24} />
               </div>
               <h3 className="text-lg font-bold text-primary-900 mb-1 group-hover:text-primary-600 transition-colors">
                 {link.title}
               </h3>
-              <p className="text-sm text-text-secondary font-medium mb-3">{link.description}</p>
+              <p className="text-sm text-text-secondary font-medium mb-3">
+                {link.description}
+              </p>
 
               <div className="flex items-center text-sm font-bold text-text-disabled group-hover:text-primary-600 transition-colors">
                 <span>Access</span>
-                <ArrowRight size={14} className="ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                <ArrowRight
+                  size={14}
+                  className="ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
+                />
               </div>
             </Link>
           );
@@ -142,7 +151,9 @@ const Dashboard = () => {
               <h2 className="text-xl font-bold text-primary-900">
                 Enrolled Courses
               </h2>
-              <p className="text-sm text-text-secondary">{campusNames[campus]}</p>
+              <p className="text-sm text-text-secondary">
+                {campusNames[campus]}
+              </p>
             </div>
             <Link
               to="/student/materials"
@@ -155,7 +166,10 @@ const Dashboard = () => {
           {courses.length > 0 ? (
             <div className="space-y-4">
               {courses.map((course) => (
-                <div key={course.code} className="group flex items-center justify-between p-4 rounded-2xl border border-border hover:shadow-md hover:border-primary-100 transition-all duration-300">
+                <div
+                  key={course.code}
+                  className="group flex items-center justify-between p-4 rounded-2xl border border-border hover:shadow-md hover:border-primary-100 transition-all duration-300"
+                >
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center font-bold text-lg">
                       {course.name.charAt(0)}
@@ -165,8 +179,12 @@ const Dashboard = () => {
                         {course.name}
                       </h4>
                       <div className="flex items-center gap-2 mt-1">
-                        <span className="text-xs font-medium text-text-secondary bg-gray-100 px-2 py-0.5 rounded-md">{course.code}</span>
-                        <span className="text-xs text-text-secondary">• {course.instructor}</span>
+                        <span className="text-xs font-medium text-text-secondary bg-gray-100 px-2 py-0.5 rounded-md">
+                          {course.code}
+                        </span>
+                        <span className="text-xs text-text-secondary">
+                          • {course.instructor}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -194,7 +212,9 @@ const Dashboard = () => {
               <h2 className="text-xl font-bold text-primary-900">
                 Recent Announcements
               </h2>
-              <p className="text-sm text-text-secondary">Stay updated with latest news</p>
+              <p className="text-sm text-text-secondary">
+                Stay updated with latest news
+              </p>
             </div>
             <Link
               to="/student/announcements"
@@ -217,13 +237,16 @@ const Dashboard = () => {
                     </div>
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs font-semibold text-text-disabled">{item.date}</span>
+                        <span className="text-xs font-semibold text-text-disabled">
+                          {item.date}
+                        </span>
                       </div>
                       <h4 className="font-bold text-primary-900 text-sm mb-1 group-hover:text-primary-700 transition-colors">
                         {item.title}
                       </h4>
                       <p className="text-xs text-text-secondary line-clamp-2">
-                        {item.description || "Click to visit announcements page."}
+                        {item.description ||
+                          "Click to visit announcements page."}
                       </p>
                     </div>
                   </div>
@@ -235,12 +258,14 @@ const Dashboard = () => {
               <div className="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center mb-4">
                 <Megaphone size={24} className="text-primary-300" />
               </div>
-              <p className="text-text-secondary font-medium">No announcements yet</p>
+              <p className="text-text-secondary font-medium">
+                No announcements yet
+              </p>
             </div>
           )}
         </div>
       </section>
-    </div >
+    </div>
   );
 };
 
