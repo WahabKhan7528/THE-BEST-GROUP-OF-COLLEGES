@@ -1,7 +1,7 @@
 import { useStudentContext } from "../../context/StudentContext";
 import AssignmentCard from "../../components/shared/AssignmentCard";
 import { ClipboardList, CheckCircle, Clock } from "lucide-react";
-import { motion } from "framer-motion";
+
 
 // Mock assignments data by campus
 const assignmentsByCampus = {
@@ -114,23 +114,17 @@ const Assignments = () => {
       </div>
 
       {assignments.length > 0 ? (
-        <motion.div
+        <div
           className="space-y-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
         >
           {assignments.map((assignment, index) => (
-            <motion.div
+            <div
               key={assignment.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
             >
               <AssignmentCard assignment={assignment} role="student" />
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       ) : (
         <div className="bg-white/60 backdrop-blur-sm border border-dashed border-gray-300 rounded-3xl p-12 text-center">
           <div className="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-4">

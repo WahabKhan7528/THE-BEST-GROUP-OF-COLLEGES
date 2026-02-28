@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FileText, ArrowLeft, Check } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+
 import FormInput from '../../components/admin/FormInput';
 
 const CreateAssignment = () => {
@@ -33,10 +33,8 @@ const CreateAssignment = () => {
   };
 
   return (
-    <motion.div
+    <div
       className="max-w-4xl mx-auto space-y-6"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
     >
       <div className="flex items-center gap-3 md:gap-4">
         <Link
@@ -148,7 +146,7 @@ const CreateAssignment = () => {
           </button>
         </div>
       </form>
-    </motion.div>
+    </div>
   );
 };
 

@@ -3,7 +3,7 @@ import Card from "../../../components/public_site/Card";
 import Badge from "../../../components/public_site/Badge";
 import Button from "../../../components/shared/Button";
 import { Users, Calendar, MapPin, Activity, Music, Mic, Palette, Dribbble } from "lucide-react";
-import { motion } from "framer-motion";
+
 
 const StudentLifePage = () => {
   const societies = [
@@ -74,12 +74,8 @@ const StudentLifePage = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
           {societies.map((society, idx) => (
-            <motion.div
+            <div
               key={society.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-              viewport={{ once: true }}
             >
               <Card hover className="h-full flex flex-col text-center items-center p-5 md:p-6 border-t-3 md:border-t-4 rounded-2xl md:rounded-3xl border-t-primary-600">
                 <div className="p-3 md:p-4 rounded-full bg-primary-100 text-primary-600 mb-3 md:mb-4 ring-4 md:ring-8 ring-primary-50/50">
@@ -98,7 +94,7 @@ const StudentLifePage = () => {
                   </Badge>
                 </div>
               </Card>
-            </motion.div>
+            </div>
           ))}
         </div>
       </Section>
@@ -130,24 +126,18 @@ const StudentLifePage = () => {
             </Button>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <motion.div
-              initial={{ y: 20 }}
-              whileInView={{ y: 0 }}
-              transition={{ duration: 0.8 }}
+            <div
               className="space-y-4"
             >
               <img src="https://placehold.co/400x400?text=Sports" alt="Campus Sports" className="rounded-3xl shadow-lg" loading="lazy" />
               <img src="https://placehold.co/400x400?text=Hall" alt="Campus hall" className="rounded-3xl shadow-lg" loading="lazy" />
-            </motion.div>
-            <motion.div
-              initial={{ y: -20 }}
-              whileInView={{ y: 0 }}
-              transition={{ duration: 0.8 }}
+            </div>
+            <div
               className="space-y-4 pt-8"
             >
               <img src="https://placehold.co/400x400?text=Cafeteria" alt="Campus Cafeteria" className="rounded-3xl shadow-lg" loading="lazy" />
               <img src="https://placehold.co/400x500?text=Concert" alt="Campus Concert" className="rounded-3xl shadow-lg" loading="lazy" />
-            </motion.div>
+            </div>
           </div>
         </div>
       </Section>

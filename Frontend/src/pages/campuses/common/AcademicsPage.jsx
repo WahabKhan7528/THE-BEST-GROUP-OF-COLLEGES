@@ -3,7 +3,7 @@ import Card from "../../../components/public_site/Card";
 import Badge from "../../../components/public_site/Badge";
 import Button from "../../../components/shared/Button";
 import { BookOpen, CheckCircle, ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
+
 import { useLocation } from "react-router-dom";
 import { programsData } from "../../../data/programsData";
 
@@ -24,12 +24,8 @@ const AcademicsPage = () => {
           />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {category.items.map((program, pIdx) => (
-              <motion.div
+              <div
                 key={program.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: pIdx * 0.1 }}
-                viewport={{ once: true }}
               >
                 <Card hover className="h-full flex flex-col border-t-3 md:border-t-4 border-t-primary-600 rounded-2xl md:rounded-3xl overflow-hidden">
                   <div className="flex items-start justify-between mb-3 md:mb-4">
@@ -58,17 +54,14 @@ const AcademicsPage = () => {
                     </div>
                   </div>
                 </Card>
-              </motion.div>
+              </div>
             ))}
           </div>
         </Section>
       ))}
 
       <Section className="text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+        <div
           className="max-w-3xl mx-auto"
         >
           <h2 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6">Start Your Academic Journey</h2>
@@ -78,7 +71,7 @@ const AcademicsPage = () => {
           <Button size="lg" icon={ArrowRight} to="/admissions">
             View Admissions
           </Button>
-        </motion.div>
+        </div>
       </Section>
     </div>
   );

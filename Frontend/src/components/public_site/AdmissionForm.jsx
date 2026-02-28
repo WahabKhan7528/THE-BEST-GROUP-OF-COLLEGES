@@ -3,7 +3,7 @@ import { Send } from "lucide-react";
 import emailjs from "@emailjs/browser";
 import Card from "./Card";
 import Button from "../shared/Button";
-import { motion } from "framer-motion";
+
 
 const programs = [
     { value: "llb", label: "Bachelor of Laws (LLB)", campus: "Law Campus" },
@@ -44,10 +44,7 @@ const AdmissionForm = () => {
     };
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+        <div
         >
             <Card className="max-w-3xl mx-auto p-8" shadow="xl">
                 <form ref={formRef} onSubmit={handleApplicationSubmit} className="space-y-6">
@@ -161,7 +158,7 @@ const AdmissionForm = () => {
                     </p>
                 </form>
             </Card>
-        </motion.div>
+        </div>
     );
 };
 

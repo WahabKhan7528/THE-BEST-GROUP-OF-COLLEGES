@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+
 import { Mail, GraduationCap, Award } from "lucide-react";
 import Section from "./Section";
 import Card from "./Card";
@@ -244,65 +244,58 @@ const FacultyComponent = ({ filterCampus }) => {
                     )}
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                        <AnimatePresence mode="popLayout">
-                            {members.map((faculty, fIdx) => (
-                                <motion.div
-                                    key={faculty.id}
-                                    layout
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.4, delay: fIdx * 0.1 }}
-                                >
-                                    <Card hover className="h-full flex flex-col items-center text-center p-5 md:p-6 rounded-2xl md:rounded-3xl border-t-3 md:border-t-4 border-t-primary-600">
-                                        <div className="w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden mb-5 md:mb-6 border-3 md:border-4 border-primary-50 shadow-inner">
-                                            <img src={faculty.image} alt={faculty.name} className="w-full h-full object-cover" loading="lazy" />
+                        {members.map((faculty) => (
+                            <div
+                                key={faculty.id}
+                            >
+                                <Card hover className="h-full flex flex-col items-center text-center p-5 md:p-6 rounded-2xl md:rounded-3xl border-t-3 md:border-t-4 border-t-primary-600">
+                                    <div className="w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden mb-5 md:mb-6 border-3 md:border-4 border-primary-50 shadow-inner">
+                                        <img src={faculty.image} alt={faculty.name} className="w-full h-full object-cover" loading="lazy" />
+                                    </div>
+
+                                    <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-1">{faculty.name}</h3>
+                                    <p className="text-sm md:text-base text-primary-600 font-medium mb-4">{faculty.designation}</p>
+
+                                    <div className="w-full border-t border-gray-100 my-4" />
+
+                                    <div className="space-y-2.5 md:space-y-3 w-full text-left flex-grow">
+                                        <div className="flex items-start gap-2.5 md:gap-3">
+                                            <GraduationCap className="w-4 h-4 md:w-5 md:h-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                                            <div>
+                                                <span className="block text-xs md:text-sm font-semibold text-gray-700">Qualification</span>
+                                                <span className="text-xs md:text-sm text-gray-600">{faculty.education}</span>
+                                            </div>
                                         </div>
-
-                                        <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-1">{faculty.name}</h3>
-                                        <p className="text-sm md:text-base text-primary-600 font-medium mb-4">{faculty.designation}</p>
-
-                                        <div className="w-full border-t border-gray-100 my-4" />
-
-                                        <div className="space-y-2.5 md:space-y-3 w-full text-left flex-grow">
+                                        <div className="flex items-start gap-2.5 md:gap-3">
+                                            <Award className="w-4 h-4 md:w-5 md:h-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                                            <div>
+                                                <span className="block text-xs md:text-sm font-semibold text-gray-700">Specialization</span>
+                                                <span className="text-xs md:text-sm text-gray-600">{faculty.subject}</span>
+                                            </div>
+                                        </div>
+                                        {faculty.awards && faculty.awards.length > 0 && (
                                             <div className="flex items-start gap-2.5 md:gap-3">
-                                                <GraduationCap className="w-4 h-4 md:w-5 md:h-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                                                <Award className="w-4 h-4 md:w-5 md:h-5 text-yellow-500 mt-0.5 flex-shrink-0" />
                                                 <div>
-                                                    <span className="block text-xs md:text-sm font-semibold text-gray-700">Qualification</span>
-                                                    <span className="text-xs md:text-sm text-gray-600">{faculty.education}</span>
+                                                    <span className="block text-xs md:text-sm font-semibold text-gray-700">Awards</span>
+                                                    <ul className="list-disc list-inside text-xs md:text-sm text-gray-600">
+                                                        {faculty.awards.map((award, idx) => (
+                                                            <li key={idx}>{award}</li>
+                                                        ))}
+                                                    </ul>
                                                 </div>
                                             </div>
-                                            <div className="flex items-start gap-2.5 md:gap-3">
-                                                <Award className="w-4 h-4 md:w-5 md:h-5 text-gray-400 mt-0.5 flex-shrink-0" />
-                                                <div>
-                                                    <span className="block text-xs md:text-sm font-semibold text-gray-700">Specialization</span>
-                                                    <span className="text-xs md:text-sm text-gray-600">{faculty.subject}</span>
-                                                </div>
-                                            </div>
-                                            {faculty.awards && faculty.awards.length > 0 && (
-                                                <div className="flex items-start gap-2.5 md:gap-3">
-                                                    <Award className="w-4 h-4 md:w-5 md:h-5 text-yellow-500 mt-0.5 flex-shrink-0" />
-                                                    <div>
-                                                        <span className="block text-xs md:text-sm font-semibold text-gray-700">Awards</span>
-                                                        <ul className="list-disc list-inside text-xs md:text-sm text-gray-600">
-                                                            {faculty.awards.map((award, idx) => (
-                                                                <li key={idx}>{award}</li>
-                                                            ))}
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
+                                        )}
+                                    </div>
 
-                                        <div className="mt-5 md:mt-6 flex justify-center gap-3 w-full">
-                                            <Button size="sm" variant="outline" className="w-full text-gray-600 border-gray-200 hover:border-primary-600 hover:text-primary-600 rounded-full text-sm" onClick={() => window.location.href = `mailto:${faculty.email}`}>
-                                                <Mail className="w-3.5 h-3.5 md:w-4 md:h-4 mr-1.5 md:mr-2" /> Contact
-                                            </Button>
-                                        </div>
-                                    </Card>
-                                </motion.div>
-                            ))}
-                        </AnimatePresence>
+                                    <div className="mt-5 md:mt-6 flex justify-center gap-3 w-full">
+                                        <Button size="sm" variant="outline" className="w-full text-gray-600 border-gray-200 hover:border-primary-600 hover:text-primary-600 rounded-full text-sm" onClick={() => window.location.href = `mailto:${faculty.email}`}>
+                                            <Mail className="w-3.5 h-3.5 md:w-4 md:h-4 mr-1.5 md:mr-2" /> Contact
+                                        </Button>
+                                    </div>
+                                </Card>
+                            </div>
+                        ))}
                     </div>
                 </Section>
             ))}

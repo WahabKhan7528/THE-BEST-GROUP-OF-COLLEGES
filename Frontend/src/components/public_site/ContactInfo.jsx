@@ -1,5 +1,5 @@
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
-import { motion } from "framer-motion";
+
 import Card from "./Card";
 
 const ContactInfo = () => {
@@ -33,12 +33,8 @@ const ContactInfo = () => {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {contactInfo.map((info, idx) => (
-                <motion.div
+                <div
                     key={info.title}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: idx * 0.1 }}
-                    viewport={{ once: true }}
                 >
                     <Card hover className="h-full group border border-border p-4 md:p-6">
                         <div className="w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-primary-100 flex items-center justify-center mb-3 md:mb-5 group-hover:bg-primary-600 transition-colors">
@@ -53,7 +49,7 @@ const ContactInfo = () => {
                             ))}
                         </div>
                     </Card>
-                </motion.div>
+                </div>
             ))}
         </div>
     );

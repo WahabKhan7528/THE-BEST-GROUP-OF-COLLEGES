@@ -1,7 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ChevronDown, School, BookOpen, Building, LayoutGrid } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import PortalSelector from "./PortalSelector";
 
 const Navbar = () => {
@@ -16,9 +15,7 @@ const Navbar = () => {
   useEffect(() => {
     setIsOpen(false);
     setIsCampusOpen(false);
-    // Delay resetting the inner mobile menu so it doesn't try to animate out
-    // at the exact same time as the outer menu, which causes rendering bugs on mobile devices.
-    setTimeout(() => setIsMobileCampusOpen(false), 350);
+    setIsMobileCampusOpen(false);
   }, [location.pathname]);
 
   // Handle clicking outside the dropdown to close it
@@ -92,12 +89,7 @@ const Navbar = () => {
             >
               {link.name}
               {isActive(link.path) && (
-                <motion.div
-                  layoutId="navbar-indicator"
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full mx-3"
-                  initial={false}
-                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                />
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-600 rounded-full mx-3" />
               )}
             </Link>
           ))}
@@ -119,33 +111,25 @@ const Navbar = () => {
               <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isCampusOpen ? "rotate-180" : ""}`} />
             </button>
 
-            <AnimatePresence>
-              {isCampusOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute right-0 top-full pt-4 w-56 z-50"
-                >
-                  <div className="bg-surface rounded-xl shadow-lg border border-border p-2 overflow-hidden">
-                    {campuses.map((campus) => (
-                      <Link
-                        key={campus.name}
-                        to={campus.path}
-                        onClick={() => setIsCampusOpen(false)}
-                        className="group flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-50 text-sm text-secondary hover:text-primary-600 transition-colors"
-                      >
-                        <div className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center text-primary-600 group-hover:bg-white transition-colors">
-                          <campus.icon className="w-4 h-4" />
-                        </div>
-                        <span className="font-medium">{campus.name}</span>
-                      </Link>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {isCampusOpen && (
+              <div className="absolute right-0 top-full pt-4 w-56 z-50 transition-all duration-200">
+                <div className="bg-surface rounded-xl shadow-lg border border-border p-2 overflow-hidden">
+                  {campuses.map((campus) => (
+                    <Link
+                      key={campus.name}
+                      to={campus.path}
+                      onClick={() => setIsCampusOpen(false)}
+                      className="group flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-50 text-sm text-secondary hover:text-primary-600 transition-colors"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center text-primary-600 group-hover:bg-white transition-colors">
+                        <campus.icon className="w-4 h-4" />
+                      </div>
+                      <span className="font-medium">{campus.name}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Portals Button */}
@@ -173,98 +157,80 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Navigation */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="md:hidden overflow-hidden border-t border-gray-100"
-          >
-            <div className="py-4 space-y-2 bg-surface">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.path}
-                  onClick={() => setIsOpen(false)}
-                  className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all ${isActive(link.path)
-                    ? "text-primary-600 bg-primary-50 font-semibold shadow-sm"
-                    : "text-secondary hover:text-primary-700 hover:bg-white hover:shadow-sm"
-                    }`}
-                >
-                  {link.name}
-                  {isActive(link.path) && (
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary-600" />
-                  )}
-                </Link>
-              ))}
+      {isOpen && (
+        <div className="md:hidden overflow-hidden border-t border-gray-100">
+          <div className="py-4 space-y-2 bg-surface">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                to={link.path}
+                onClick={() => setIsOpen(false)}
+                className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all ${isActive(link.path)
+                  ? "text-primary-600 bg-primary-50 font-semibold shadow-sm"
+                  : "text-secondary hover:text-primary-700 hover:bg-white hover:shadow-sm"
+                  }`}
+              >
+                {link.name}
+                {isActive(link.path) && (
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary-600" />
+                )}
+              </Link>
+            ))}
 
-              {/* Mobile Campuses Dropdown */}
-              <div className="pt-2">
-                <button
-                  onClick={() => setIsMobileCampusOpen(!isMobileCampusOpen)}
-                  className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-text-primary hover:bg-white hover:shadow-sm transition-all"
-                >
-                  <span className="flex items-center gap-2">
-                    <School className="w-4 h-4 text-primary-600" />
-                    Campuses
-                  </span>
-                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isMobileCampusOpen ? "rotate-180" : ""}`} />
-                </button>
+            {/* Mobile Campuses Dropdown */}
+            <div className="pt-2">
+              <button
+                onClick={() => setIsMobileCampusOpen(!isMobileCampusOpen)}
+                className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-text-primary hover:bg-white hover:shadow-sm transition-all"
+              >
+                <span className="flex items-center gap-2">
+                  <School className="w-4 h-4 text-primary-600" />
+                  Campuses
+                </span>
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isMobileCampusOpen ? "rotate-180" : ""}`} />
+              </button>
 
-                <AnimatePresence>
-                  {isMobileCampusOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="overflow-hidden"
+              {isMobileCampusOpen && (
+                <div className="px-2 pb-2 space-y-1">
+                  {campuses.map((campus) => (
+                    <Link
+                      key={campus.name}
+                      to={campus.path}
+                      onClick={() => {
+                        setIsOpen(false);
+                        setIsMobileCampusOpen(false);
+                      }}
+                      className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-colors text-secondary hover:text-primary-600 hover:bg-primary-50/50"
                     >
-                      <div className="px-2 pb-2 space-y-1">
-                        {campuses.map((campus) => (
-                          <Link
-                            key={campus.name}
-                            to={campus.path}
-                            onClick={() => {
-                              setIsOpen(false);
-                              setTimeout(() => setIsMobileCampusOpen(false), 350);
-                            }}
-                            className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-colors text-secondary hover:text-primary-600 hover:bg-primary-50/50"
-                          >
-                            <div className="w-6 h-6 rounded-md bg-slate-100 flex items-center justify-center group-hover:bg-white">
-                              <campus.icon className="w-3 h-3" />
-                            </div>
-                            {campus.name}
-                          </Link>
-                        ))}
+                      <div className="w-6 h-6 rounded-md bg-slate-100 flex items-center justify-center group-hover:bg-white">
+                        <campus.icon className="w-3 h-3" />
                       </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {/* Mobile Portals Button */}
-              <div className="pt-4 pb-2 px-4">
-                <button
-                  onClick={() => {
-                    setIsOpen(false);
-                    setIsPortalOpen(true);
-                  }}
-                  className="flex items-center justify-center w-full gap-2 px-4 py-3.5 text-sm font-bold text-white bg-primary-600 rounded-xl shadow-sm hover:bg-primary-700 transition-all duration-200"
-                >
-                  <LayoutGrid className="w-4 h-4" />
-                  Portals
-                </button>
-              </div>
+                      {campus.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence >
+
+            {/* Mobile Portals Button */}
+            <div className="pt-4 pb-2 px-4">
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  setIsPortalOpen(true);
+                }}
+                className="flex items-center justify-center w-full gap-2 px-4 py-3.5 text-sm font-bold text-white bg-primary-600 rounded-xl shadow-sm hover:bg-primary-700 transition-all duration-200"
+              >
+                <LayoutGrid className="w-4 h-4" />
+                Portals
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <PortalSelector isOpen={isPortalOpen} onClose={() => setIsPortalOpen(false)} />
-    </nav >
+    </nav>
   );
 };
 

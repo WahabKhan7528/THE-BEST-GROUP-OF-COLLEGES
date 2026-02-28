@@ -1,7 +1,7 @@
 import { useStudentContext } from "../../context/StudentContext";
 import AnnouncementCard from "../../components/shared/AnnouncementCard";
 import { Megaphone } from "lucide-react";
-import { motion } from "framer-motion";
+
 
 // Mock announcements/news data by campus
 const announcementsByCampus = {
@@ -91,23 +91,17 @@ const News = () => {
       </div>
 
       {announcements.length > 0 ? (
-        <motion.div
+        <div
           className="space-y-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
         >
           {announcements.map((announcement, index) => (
-            <motion.div
+            <div
               key={announcement.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
             >
               <AnnouncementCard announcement={announcement} role="student" />
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       ) : (
         <div className="bg-white/60 backdrop-blur-sm border border-dashed border-gray-300 rounded-3xl p-12 text-center">
           <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">

@@ -9,7 +9,7 @@ import {
   GraduationCap
 } from "lucide-react";
 import { useFacultyContext } from "../../context/FacultyContext";
-import { motion } from "framer-motion";
+
 
 const campusNames = {
   main: "Main Campus",
@@ -67,31 +67,14 @@ const Dashboard = () => {
     { title: "Project milestone feedback posted", date: "Sept 10, 2025" },
   ];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 },
-  };
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
-      variants={containerVariants}
-      initial="hidden"
-      animate="show"
     >
       {/* Header Section with Campus Info */}
-      <motion.section
-        variants={itemVariants}
+      <section
         className="relative overflow-hidden bg-white border border-border rounded-3xl shadow-sm p-6 md:p-8"
       >
         <div className="absolute top-0 right-0 p-4 opacity-[0.03] pointer-events-none">
@@ -135,10 +118,10 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Quick Actions */}
-      <motion.section variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
         {quickActions.map((action) => {
           const Icon = action.icon;
           return (
@@ -160,10 +143,10 @@ const Dashboard = () => {
             </Link>
           );
         })}
-      </motion.section>
+      </section>
 
       {/* Announcements Section - Expanded */}
-      <motion.section variants={itemVariants} className="bg-white border border-border rounded-3xl shadow-sm p-6 md:p-8">
+      <section className="bg-white border border-border rounded-3xl shadow-sm p-6 md:p-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
           <div>
             <h2 className="text-xl font-bold text-primary-900">Recent Announcements</h2>
@@ -206,8 +189,8 @@ const Dashboard = () => {
             <span>Create New Announcement</span>
           </button>
         </div>
-      </motion.section>
-    </motion.div>
+      </section>
+    </div>
   );
 };
 

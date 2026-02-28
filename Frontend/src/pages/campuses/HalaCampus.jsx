@@ -14,7 +14,7 @@ import {
   FlaskConical,
   GraduationCap
 } from "lucide-react";
-import { motion } from "framer-motion";
+
 import { programsData } from "../../data/programsData";
 
 const HalaCampus = () => {
@@ -81,23 +81,16 @@ const HalaCampus = () => {
         className="-mt-16 relative z-20"
         spacing="default"
       >
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+        <div
           className="container mx-auto"
         >
           <Stats items={stats} variant="dark" />
-        </motion.div>
+        </div>
       </Section>
 
       <Section spacing="large">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
+          <div
           >
             <Badge className="mb-4">Our Vision</Badge>
             <h2 className="text-4xl font-bold mb-6 text-gray-900">Foundations for Success</h2>
@@ -124,13 +117,9 @@ const HalaCampus = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
+          <div
             className="relative"
           >
             <div className="absolute inset-0 bg-primary-600/10 rounded-3xl transform -rotate-3 opacity-10"></div>
@@ -146,7 +135,7 @@ const HalaCampus = () => {
                 </Button>
               </div>
             </Card>
-          </motion.div>
+          </div>
         </div>
       </Section>
 
@@ -161,12 +150,8 @@ const HalaCampus = () => {
             const colors = { border: "border-t-primary-600", bg: "bg-primary-50", text: "text-primary-600" };
 
             return (
-              <motion.div
+              <div
                 key={program.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                viewport={{ once: true }}
               >
                 <Card hover className={`h-full border-t-4 ${colors.border} rounded-3xl`}>
                   <div className="flex flex-col h-full">
@@ -190,7 +175,7 @@ const HalaCampus = () => {
                     </div>
                   </div>
                 </Card>
-              </motion.div>
+              </div>
             );
           })}
         </div>
@@ -203,12 +188,8 @@ const HalaCampus = () => {
         />
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {facilities.map((facility, idx) => (
-            <motion.div
+            <div
               key={facility.title}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-              viewport={{ once: true }}
             >
               <Card hover className="h-full text-center bg-white border border-gray-100 rounded-3xl">
                 <div className="flex justify-center mb-4">
@@ -219,16 +200,13 @@ const HalaCampus = () => {
                 <h3 className="text-lg font-bold mb-2 text-gray-900">{facility.title}</h3>
                 <p className="text-sm text-gray-500">{facility.description}</p>
               </Card>
-            </motion.div>
+            </div>
           ))}
         </div>
       </Section>
 
       <Section background="gradient" className="text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+        <div
           className="max-w-3xl mx-auto"
         >
           <h2 className="text-3xl font-bold mb-6">Invest in Your Future</h2>
@@ -243,7 +221,7 @@ const HalaCampus = () => {
               Visit Campus
             </Button>
           </div>
-        </motion.div>
+        </div>
       </Section>
     </div>
   );

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+
 import Section from "../../components/public_site/Section";
 import Badge from "../../components/public_site/Badge";
 import {
@@ -178,12 +178,10 @@ const Gallery = () => {
           {filters.map((filter) => {
             const isActive = activeFilter === filter.id;
             return (
-              <motion.button
+              <button
                 key={filter.id}
                 onClick={() => setActiveFilter(filter.id)}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-medium transition-all ${isActive
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-medium transition-all hover:scale-[1.02] active:scale-[0.98] ${isActive
                   ? "bg-primary-600 text-white shadow-lg"
                   : "bg-primary-100 text-gray-600 hover:bg-primary-200"
                   }`}
@@ -194,7 +192,7 @@ const Gallery = () => {
                   }`}>
                   {filter.count}
                 </span>
-              </motion.button>
+              </button>
             );
           })}
         </div>
@@ -202,55 +200,47 @@ const Gallery = () => {
 
       {/* Gallery Grid */}
       <Section background="gray" spacing="large">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeFilter}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-          >
-            {filteredImages.map((image, idx) => (
-              <motion.div
-                key={image.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, delay: idx * 0.05 }}
-                className="group flex flex-col overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 bg-white cursor-pointer border border-gray-100"
-                onClick={() => openLightbox(image)}
-              >
-                {/* Image Section */}
-                <div className="relative aspect-[4/3] overflow-hidden">
-                  <img
-                    src={image.src}
-                    alt={image.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  {/* Hover Overlay with Zoom Icon */}
-                  <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <div className="w-12 h-12 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center transform scale-50 group-hover:scale-100 transition-transform duration-300 shadow-lg">
-                      <ZoomIn className="w-6 h-6 text-white" />
-                    </div>
-                  </div>
-                  {/* Category Badge */}
-                  <div className="absolute top-4 left-4 px-3 py-1.5 rounded-full text-xs font-bold text-gray-700 bg-white/95 backdrop-blur-sm capitalize shadow-md">
-                    {image.category}
+        <div
+          key={activeFilter}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+        >
+          {filteredImages.map((image, idx) => (
+            <div
+              key={image.id}
+              className="group flex flex-col overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 bg-white cursor-pointer border border-gray-100"
+              onClick={() => openLightbox(image)}
+            >
+              {/* Image Section */}
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <img
+                  src={image.src}
+                  alt={image.title}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                {/* Hover Overlay with Zoom Icon */}
+                <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center transform scale-50 group-hover:scale-100 transition-transform duration-300 shadow-lg">
+                    <ZoomIn className="w-6 h-6 text-white" />
                   </div>
                 </div>
+                {/* Category Badge */}
+                <div className="absolute top-4 left-4 px-3 py-1.5 rounded-full text-xs font-bold text-gray-700 bg-white/95 backdrop-blur-sm capitalize shadow-md">
+                  {image.category}
+                </div>
+              </div>
 
-                {/* Content Section */}
-                <div className="p-5 flex flex-col flex-grow bg-blue-50/50 z-10 border-t-2 border-primary-100/30 group-hover:bg-blue-100/50 transition-colors duration-300">
-                  <h3 className="text-gray-900 text-lg font-bold mb-2 group-hover:text-primary-600 transition-colors">
-                    {image.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm line-clamp-2">
-                    {image.description}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </AnimatePresence>
+              {/* Content Section */}
+              <div className="p-5 flex flex-col flex-grow bg-blue-50/50 z-10 border-t-2 border-primary-100/30 group-hover:bg-blue-100/50 transition-colors duration-300">
+                <h3 className="text-gray-900 text-lg font-bold mb-2 group-hover:text-primary-600 transition-colors">
+                  {image.title}
+                </h3>
+                <p className="text-gray-600 text-sm line-clamp-2">
+                  {image.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
 
         {filteredImages.length === 0 && (
           <div className="text-center py-16">
@@ -262,79 +252,70 @@ const Gallery = () => {
       </Section>
 
       {/* Lightbox */}
-      <AnimatePresence>
-        {selectedImage && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4"
+      {selectedImage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4"
+          onClick={closeLightbox}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Image Lightbox"
+        >
+          {/* Close Button */}
+          <button
             onClick={closeLightbox}
-            role="dialog"
-            aria-modal="true"
-            aria-label="Image Lightbox"
+            className="absolute top-4 right-4 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors z-10"
           >
-            {/* Close Button */}
-            <button
-              onClick={closeLightbox}
-              className="absolute top-4 right-4 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors z-10"
-            >
-              <X className="w-6 h-6" />
-            </button>
+            <X className="w-6 h-6" />
+          </button>
 
-            {/* Navigation Buttons */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                navigateImage("prev");
-              }}
-              className="absolute left-4 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors z-10"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
+          {/* Navigation Buttons */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              navigateImage("prev");
+            }}
+            className="absolute left-4 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors z-10"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
 
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                navigateImage("next");
-              }}
-              className="absolute right-4 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors z-10"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              navigateImage("next");
+            }}
+            className="absolute right-4 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors z-10"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
 
-            {/* Image */}
-            <motion.div
-              key={selectedImage.id}
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="max-w-5xl max-h-[80vh] relative"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <img
-                src={selectedImage.src}
-                alt={selectedImage.title}
-                className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
-              />
+          {/* Image */}
+          <div
+            key={selectedImage.id}
+            className="max-w-5xl max-h-[80vh] relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={selectedImage.src}
+              alt={selectedImage.title}
+              className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
+            />
 
-              {/* Image Info */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent rounded-b-lg">
-                <Badge variant="solid" className="mb-2 bg-gray-900 capitalize">
-                  {selectedImage.category}
-                </Badge>
-                <h3 className="text-white text-xl font-bold mb-1">
-                  {selectedImage.title}
-                </h3>
-                <p className="text-gray-300">
-                  {selectedImage.description}
-                </p>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            {/* Image Info */}
+            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent rounded-b-lg">
+              <Badge variant="solid" className="mb-2 bg-gray-900 capitalize">
+                {selectedImage.category}
+              </Badge>
+              <h3 className="text-white text-xl font-bold mb-1">
+                {selectedImage.title}
+              </h3>
+              <p className="text-gray-300">
+                {selectedImage.description}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

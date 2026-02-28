@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useRef } from "react";
 import {
   ArrowRight,
   BookOpen,
@@ -9,7 +9,7 @@ import {
   Book,
   School,
 } from "lucide-react";
-import { motion } from "framer-motion";
+
 import Hero from "../../components/public_site/Hero";
 import Section from "../../components/public_site/Section";
 import Card from "../../components/public_site/Card";
@@ -22,14 +22,7 @@ import ContactForm from "../../components/public_site/ContactForm";
 import ContactInfo from "../../components/public_site/ContactInfo";
 
 const Home = () => {
-  const [sliderWidth, setSliderWidth] = useState(0);
   const sliderRef = useRef(null);
-
-  useEffect(() => {
-    if (sliderRef.current) {
-      setSliderWidth(sliderRef.current.scrollWidth - sliderRef.current.offsetWidth);
-    }
-  }, []);
 
   const collegesData = [
     {
@@ -223,24 +216,17 @@ const Home = () => {
         className="-mt-12 relative z-20 border-y border-primary-800"
         spacing="large"
       >
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+        <div
           className="text-center text-white"
         >
           <Stats items={stats} variant="dark" />
-        </motion.div>
+        </div>
       </Section>
 
       {/* About Section */}
       <Section background="white" spacing="large">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+          <div
             className="relative"
           >
             <div className="absolute -inset-4 bg-primary-100/50 rounded-3xl transform rotate-2" />
@@ -262,13 +248,9 @@ const Home = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+          <div
             className="px-6 md:px-0"
           >
             <Badge variant="solid" className="mb-4">About Us</Badge>
@@ -291,16 +273,12 @@ const Home = () => {
 
             <div className="grid sm:grid-cols-2 gap-4 mb-8">
               {highlights.map((highlight, index) => (
-                <motion.div
+                <div
                   key={highlight.text}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.2 }}
                   className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 hover:bg-primary-50 transition-colors group border border-transparent hover:border-primary-100"
                 >
                   <span className="text-text-primary font-medium text-sm">{highlight.text}</span>
-                </motion.div>
+                </div>
               ))}
             </div>
 
@@ -313,7 +291,7 @@ const Home = () => {
                 Learn More About Us
               </Button>
             </div>
-          </motion.div>
+          </div>
         </div>
       </Section>
 
@@ -327,12 +305,8 @@ const Home = () => {
 
         <div className="space-y-8">
           {collegesData.map((college, index) => (
-            <motion.div
+            <div
               key={college.name}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true }}
             >
               <Card hover className="overflow-hidden p-0 border border-border">
                 <div
@@ -414,7 +388,7 @@ const Home = () => {
                   </div>
                 </div>
               </Card>
-            </motion.div>
+            </div>
           ))}
         </div>
       </Section>
@@ -426,20 +400,17 @@ const Home = () => {
           description="Hear from our students and alumni about their experience"
           badge="Testimonials"
         />
-        <motion.div ref={sliderRef} className="cursor-grab overflow-hidden outline-none">
-          <motion.div
-            drag="x"
-            dragConstraints={{ right: 0, left: -sliderWidth }}
-            whileTap={{ cursor: "grabbing" }}
+        <div ref={sliderRef} className="cursor-grab overflow-x-auto outline-none">
+          <div
             className="flex gap-6 pb-4"
           >
             {testimonials.map((testimonial, index) => (
-              <motion.div key={index} className="min-w-[300px] md:min-w-[400px]">
+              <div key={index} className="min-w-[300px] md:min-w-[400px]">
                 <TestimonialCard {...testimonial} />
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </Section>
 
       {/* Contact Section */}
@@ -452,14 +423,11 @@ const Home = () => {
 
         <ContactInfo />
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+        <div
           className="mt-16"
         >
           <ContactForm />
-        </motion.div>
+        </div>
       </Section>
 
       {/* FAQ Section */}

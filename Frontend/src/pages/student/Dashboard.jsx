@@ -9,7 +9,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { useStudentContext } from "../../context/StudentContext";
-import { motion } from "framer-motion";
+
 
 const campusNames = {
   main: "Main Campus",
@@ -17,20 +17,7 @@ const campusNames = {
   hala: "Hala Campus",
 };
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
 
 const Dashboard = () => {
   const {
@@ -103,14 +90,11 @@ const Dashboard = () => {
   ];
 
   return (
-    <motion.div
+    <div
       className="space-y-8"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
     >
       {/* Header Section with Campus Info */}
-      <motion.section variants={itemVariants} className="bg-white border border-border rounded-3xl shadow-sm overflow-hidden relative p-8">
+      <section className="bg-white border border-border rounded-3xl shadow-sm overflow-hidden relative p-8">
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary-50 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none opacity-50"></div>
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -155,10 +139,10 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Quick Links */}
-      <motion.section variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
         {quickLinks.map((link) => {
           const Icon = link.icon;
           return (
@@ -182,10 +166,10 @@ const Dashboard = () => {
             </Link>
           );
         })}
-      </motion.section>
+      </section>
 
       {/* Enrolled Courses and Recent Material */}
-      <motion.section variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white border border-border rounded-3xl shadow-sm p-6 flex flex-col h-full">
           <div className="flex items-center justify-between mb-6">
             <div>
@@ -292,8 +276,8 @@ const Dashboard = () => {
             </div>
           )}
         </div>
-      </motion.section>
-    </motion.div>
+      </section>
+    </div>
   );
 };
 

@@ -1,5 +1,4 @@
 import { clsx } from "clsx";
-import { motion } from "framer-motion";
 import { Bell } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -33,10 +32,7 @@ const Hero = ({ title, image, announcements = [], className, ...props }) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Column - Title */}
           {title && (
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
+            <div
               className="space-y-6 text-center md:text-left"
             >
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight">
@@ -57,15 +53,12 @@ const Hero = ({ title, image, announcements = [], className, ...props }) => {
                   More Info
                 </Link>
               </div>
-            </motion.div>
+            </div>
           )}
 
           {/* Right Column - Announcements */}
           {announcements?.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+            <div
               className="space-y-4"
             >
               <div className="flex items-center gap-3 mb-6">
@@ -79,11 +72,8 @@ const Hero = ({ title, image, announcements = [], className, ...props }) => {
 
               <div className="space-y-4 max-h-[500px] overflow-y-auto no-scrollbar">
                 {announcements.map((announcement, index) => (
-                  <motion.div
+                  <div
                     key={announcement.id || index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 * index }}
                     className="bg-white rounded-xl p-5 shadow-sm border border-gray-200 hover:border-primary-300 transition-all duration-200"
                   >
                     <div>
@@ -97,10 +87,10 @@ const Hero = ({ title, image, announcements = [], className, ...props }) => {
                         {announcement.description}
                       </p>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
-            </motion.div>
+            </div>
           )}
         </div>
       </div>

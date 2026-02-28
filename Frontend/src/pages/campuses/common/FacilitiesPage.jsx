@@ -2,7 +2,7 @@ import Section from "../../../components/public_site/Section";
 import Card from "../../../components/public_site/Card";
 import Button from "../../../components/shared/Button";
 import { Wifi, Library, Coffee, Stethoscope, Dumbbell, Monitor, FlaskConical, Bus, ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
+
 
 const FacilitiesPage = () => {
   const facilities = [
@@ -87,12 +87,8 @@ const FacilitiesPage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             {category.items.map((facility, idx) => (
-              <motion.div
+              <div
                 key={facility.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                viewport={{ once: true }}
               >
                 <Card hover className="h-full overflow-hidden p-0 rounded-2xl md:rounded-3xl">
                   <div className="h-56 md:h-64 overflow-hidden relative group">
@@ -116,17 +112,14 @@ const FacilitiesPage = () => {
                     </p>
                   </div>
                 </Card>
-              </motion.div>
+              </div>
             ))}
           </div>
         </Section>
       ))}
 
       <Section className="text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+        <div
           className="max-w-3xl mx-auto"
         >
           <h2 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6">Experience It Yourself</h2>
@@ -136,7 +129,7 @@ const FacilitiesPage = () => {
           <Button size="lg" variant="primary" className="border-white hover:bg-primary-50" to="/contact">
             Schedule a Visit <ArrowRight />
           </Button>
-        </motion.div>
+        </div>
       </Section>
     </div>
   );

@@ -1,7 +1,7 @@
 import { useStudentContext } from "../../context/StudentContext";
 import MaterialCard from "../../components/shared/MaterialCard";
 import { FolderOpen } from "lucide-react";
-import { motion } from "framer-motion";
+
 
 // Mock subjects and materials data by campus
 const subjectsByCampus = {
@@ -179,12 +179,9 @@ const Materials = () => {
       {subjects.length > 0 ? (
         <div className="space-y-8">
           {subjects.map((subject, index) => (
-            <motion.section
+            <section
               key={subject.code}
               className="space-y-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-2">
                 <div>
@@ -210,7 +207,7 @@ const Materials = () => {
                   />
                 ))}
               </div>
-            </motion.section>
+            </section>
           ))}
         </div>
       ) : (

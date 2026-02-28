@@ -6,7 +6,7 @@ import {
   Instagram,
   Linkedin
 } from "lucide-react";
-import { motion } from "framer-motion";
+
 import Section from "../../components/public_site/Section";
 import Card from "../../components/public_site/Card";
 import Faq from "../../components/public_site/Faq";
@@ -37,21 +37,13 @@ const Contact = () => {
       <Section background="gray" spacing="large">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
           {/* Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
+          <div
           >
             <ContactForm />
-          </motion.div>
+          </div>
 
           {/* Map & Social */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
+          <div
             className="space-y-6"
           >
             <Card shadow="xl" className="p-5 md:p-8">
@@ -95,7 +87,7 @@ const Contact = () => {
                 ))}
               </div>
             </Card>
-          </motion.div>
+          </div>
         </div>
       </Section>
 

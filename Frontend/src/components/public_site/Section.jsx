@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { motion } from 'framer-motion';
+
 
 const BACKGROUNDS = {
   white: 'bg-white text-text-primary',
@@ -52,11 +52,7 @@ Section.Header = function SectionHeader({
   ...props
 }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
+    <div
       className={clsx(
         'mb-10 md:mb-16',
         center && 'text-center',
@@ -80,7 +76,7 @@ Section.Header = function SectionHeader({
       {description && (
         <p className={clsx("text-lg md:text-xl leading-relaxed", center && "mx-auto max-w-3xl", light ? 'text-primary-50/80' : 'text-text-secondary')}>{description}</p>
       )}
-    </motion.div>
+    </div>
   );
 };
 

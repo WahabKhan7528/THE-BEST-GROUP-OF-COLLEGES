@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+
 import Section from "./Section";
 import Card from "./Card";
 
@@ -46,12 +46,8 @@ const Faq = ({ limit }) => {
 
             <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
                 {displayedFaqs.map((faq, idx) => (
-                    <motion.div
+                    <div
                         key={idx}
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: idx * 0.1 }}
-                        viewport={{ once: true }}
                     >
                         <Card hover className="h-full">
                             <div className="flex items-start gap-2 md:gap-4">
@@ -70,7 +66,7 @@ const Faq = ({ limit }) => {
                                 </div>
                             </div>
                         </Card>
-                    </motion.div>
+                    </div>
                 ))}
             </div>
         </Section>

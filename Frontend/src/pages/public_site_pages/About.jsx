@@ -12,7 +12,7 @@ import {
   Building,
   ArrowRight
 } from "lucide-react";
-import { motion } from "framer-motion";
+
 
 const About = () => {
 
@@ -82,11 +82,7 @@ const About = () => {
       {/* Our Story */}
       <Section background="gray" spacing="large">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+          <div
             className="text-center md:text-left"
           >
             <Badge variant="solid" className="mb-4">Our Story</Badge>
@@ -114,13 +110,9 @@ const About = () => {
                 Explore Our Campuses
               </Button>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+          <div
             className="relative"
           >
             <div className="absolute -inset-4 bg-gradient-to-r from-primary-100 to-accent-100 rounded-3xl transform rotate-3" />
@@ -132,7 +124,7 @@ const About = () => {
               srcSet="/our-story.webp 800w"
               sizes="(max-width: 768px) 100vw, 50vw"
             />
-          </motion.div>
+          </div>
         </div>
       </Section>
 
@@ -145,12 +137,8 @@ const About = () => {
         />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {values.map((value, idx) => (
-            <motion.div
+            <div
               key={value.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-              viewport={{ once: true }}
             >
               <Card hover className="h-full text-center">
                 <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center mx-auto mb-6 group-hover:bg-primary-600 transition-colors">
@@ -159,7 +147,7 @@ const About = () => {
                 <h3 className="text-xl font-bold mb-3 text-gray-900">{value.title}</h3>
                 <p className="text-gray-600 text-sm leading-relaxed">{value.description}</p>
               </Card>
-            </motion.div>
+            </div>
           ))}
         </div>
       </Section>
@@ -181,12 +169,8 @@ const About = () => {
 
           <div className="grid grid-cols-4 gap-8 relative">
             {milestones.map((milestone, idx) => (
-              <motion.div
+              <div
                 key={milestone.year}
-                initial={{ opacity: 0, y: idx % 2 === 0 ? -30 : 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: idx * 0.15 }}
-                viewport={{ once: true }}
                 className={`flex flex-col ${idx % 2 === 0 ? 'items-center' : 'items-center'}`}
               >
                 <Card hover className="w-full text-center relative">
@@ -197,7 +181,7 @@ const About = () => {
                   <h3 className="text-xl font-bold mb-3 text-gray-900">{milestone.title}</h3>
                   <p className="text-gray-600 text-sm leading-relaxed">{milestone.description}</p>
                 </Card>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -205,12 +189,8 @@ const About = () => {
         {/* Mobile Timeline */}
         <div className="md:hidden space-y-6">
           {milestones.map((milestone, idx) => (
-            <motion.div
+            <div
               key={milestone.year}
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-              viewport={{ once: true }}
             >
               <Card hover className="flex items-start gap-4">
                 <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center flex-shrink-0 group-hover:bg-primary-600 transition-colors">
@@ -222,17 +202,14 @@ const About = () => {
                   <p className="text-gray-600 text-sm leading-relaxed">{milestone.description}</p>
                 </div>
               </Card>
-            </motion.div>
+            </div>
           ))}
         </div>
       </Section>
 
       {/* CTA Section */}
       <Section background="white" spacing="large">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+        <div
           className="text-center max-w-3xl mx-auto"
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">
@@ -259,7 +236,7 @@ const About = () => {
               Contact Us
             </Button>
           </div>
-        </motion.div>
+        </div>
       </Section>
     </div>
   );
