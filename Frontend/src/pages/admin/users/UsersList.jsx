@@ -10,7 +10,7 @@ import {
   UserPlus,
   Shield,
 } from "lucide-react";
-import { adminUsers } from "../../../data/adminData";
+import { mockUsersData as adminUsers } from "../../../data/adminData";
 
 const UsersList = () => {
   const navigate = useNavigate();

@@ -14,7 +14,7 @@ import { useFacultyContext } from "../../context/FacultyContext";
 import {
   campusNames,
   facultyQuickActions as quickActions,
-  facultyDashboardAnnouncements as recentAnnouncements,
+  recentAnnouncements,
 } from "../../data/facultyPortalData";
 
 const Dashboard = () => {

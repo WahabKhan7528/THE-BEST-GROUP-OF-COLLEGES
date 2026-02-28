@@ -9,7 +9,7 @@ import {
   BookOpen,
   Users,
 } from "lucide-react";
-import { adminClasses } from "../../../data/adminData";
+import { mockClassesData as adminClasses } from "../../../data/adminData";
 
 
 const ClassesList = () => {

@@ -12,7 +12,7 @@ import {
 import { useStudentContext } from "../../context/StudentContext";
 
 import {
-  campusNames,
+  studentCampusNames as campusNames,
   studentQuickLinks as quickLinks,
 } from "../../data/studentPortalData";
 

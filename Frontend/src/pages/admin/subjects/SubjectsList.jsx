@@ -9,7 +9,7 @@ import {
   BookOpen,
   Building2,
 } from "lucide-react";
-import { adminSubjects } from "../../../data/adminData";
+import { mockSubjectsData as adminSubjects } from "../../../data/adminData";
 
 const SubjectsList = () => {
   const navigate = useNavigate();

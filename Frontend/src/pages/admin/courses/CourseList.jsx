@@ -11,7 +11,7 @@ import {
   DollarSign,
   Building2,
 } from "lucide-react";
-import { adminCourses } from "../../../data/adminData";
+import { mockCoursesData as adminCourses } from "../../../data/adminData";
 
 const CourseList = () => {
   const { campuses, isSuperAdmin, currentAdmin } = useAdminContext();

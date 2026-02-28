@@ -8,7 +8,7 @@ import {
     UserPlus,
     Shield,
 } from "lucide-react";
-import { adminUsers } from "../../../data/adminData";
+import { mockCampusAdminsData as adminUsers } from "../../../data/adminData";
 
 const CampusAdminsList = () => {
     const { id } = useParams();
