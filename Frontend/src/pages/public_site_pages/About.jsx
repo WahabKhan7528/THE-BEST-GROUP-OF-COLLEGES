@@ -108,7 +108,7 @@ const About = () => {
           />
         </div>
 
-        {/* Desktop Timeline */}}
+        {/* Desktop Timeline */}
         <div className="hidden md:block relative">
           {/* Timeline Line */}
           <div className="absolute top-1/2 left-0 right-0 h-1 bg-primary-800 transform -translate-y-1/2 rounded-full" />
