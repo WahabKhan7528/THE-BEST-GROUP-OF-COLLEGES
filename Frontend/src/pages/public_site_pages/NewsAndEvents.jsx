@@ -15,9 +15,9 @@ import Button from "../../components/shared/Button";
 
 import { X } from "lucide-react";
 import {
-  newsEventsTabs as tabs,
+  tabs,
   newsItems,
-  eventsData as events,
+  events,
 } from "../../data/newsEventsData";
 
 const NewsAndEvents = () => {
@@ -58,11 +58,10 @@ const NewsAndEvents = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all hover:scale-[1.02] active:scale-[0.98] outline-none focus:outline-none focus:ring-0 ${
-                  isActive
+                className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all hover:scale-[1.02] active:scale-[0.98] outline-none focus:outline-none focus:ring-0 ${isActive
                     ? "bg-primary-600 text-white shadow-lg"
                     : "bg-primary-100 text-gray-600 hover:bg-primary-200"
-                }`}
+                  }`}
               >
                 {tab.name}
               </button>
