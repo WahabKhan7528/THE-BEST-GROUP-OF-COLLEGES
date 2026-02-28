@@ -13,7 +13,7 @@ import { useAdminContext } from "../../context/AdminContext";
 import AdminStatsCard from "../../components/admin/AdminStatsCard";
 
 import {
-  adminDashboardStats as mockAllStats,
+  mockAllStats,
   adminQuickActions as quickActions,
 } from "../../data/adminData";
 
