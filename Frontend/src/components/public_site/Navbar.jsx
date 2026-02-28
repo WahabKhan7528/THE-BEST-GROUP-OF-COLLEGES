@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ChevronDown, School, BookOpen, Building, LayoutGrid } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PortalSelector from "./PortalSelector";
 
@@ -10,6 +10,11 @@ const Navbar = () => {
   const [isPortalOpen, setIsPortalOpen] = useState(false);
 
   const location = useLocation();
+
+  useEffect(() => {
+    setIsOpen(false);
+    setIsCampusOpen(false);
+  }, [location.pathname]);
 
   const isActive = (path) => {
     return (
@@ -74,7 +79,11 @@ const Navbar = () => {
           ))}
 
           {/* Campus Dropdown */}
-          <div className="relative group ml-2">
+          <div
+            className="relative ml-2"
+            onMouseEnter={() => setIsCampusOpen(true)}
+            onMouseLeave={() => setIsCampusOpen(false)}
+          >
             <button
               className="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-secondary hover:text-primary-700 rounded-lg hover:bg-slate-50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500/20"
               onClick={() => setIsCampusOpen(!isCampusOpen)}
@@ -82,26 +91,36 @@ const Navbar = () => {
               aria-haspopup="true"
             >
               Campuses
-              <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />
+              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isCampusOpen ? "rotate-180" : ""}`} />
             </button>
 
-            <div className="absolute right-0 top-full pt-4 w-56 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:translate-y-0 group-focus-within:pointer-events-auto transition-all duration-200 z-50">
-              <div className="bg-surface rounded-xl shadow-lg border border-border p-2 overflow-hidden">
-                {campuses.map((campus) => (
-                  <Link
-                    key={campus.name}
-                    to={campus.path}
-                    className="group flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-50 text-sm text-secondary hover:text-primary-600 transition-colors"
-                  >
-
-                    <div className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center text-primary-600 group-hover:bg-white transition-colors">
-                      <campus.icon className="w-4 h-4" />
-                    </div>
-                    <span className="font-medium">{campus.name}</span>
-                  </Link>
-                ))}
-              </div>
-            </div>
+            <AnimatePresence>
+              {isCampusOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute right-0 top-full pt-4 w-56 z-50"
+                >
+                  <div className="bg-surface rounded-xl shadow-lg border border-border p-2 overflow-hidden">
+                    {campuses.map((campus) => (
+                      <Link
+                        key={campus.name}
+                        to={campus.path}
+                        onClick={() => setIsCampusOpen(false)}
+                        className="group flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-50 text-sm text-secondary hover:text-primary-600 transition-colors"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center text-primary-600 group-hover:bg-white transition-colors">
+                          <campus.icon className="w-4 h-4" />
+                        </div>
+                        <span className="font-medium">{campus.name}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Portals Button */}
@@ -217,10 +236,10 @@ const Navbar = () => {
             </div>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence >
 
       <PortalSelector isOpen={isPortalOpen} onClose={() => setIsPortalOpen(false)} />
-    </nav>
+    </nav >
   );
 };
 

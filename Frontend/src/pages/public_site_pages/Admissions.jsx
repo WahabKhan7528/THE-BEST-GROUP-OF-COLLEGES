@@ -4,7 +4,6 @@ import {
   FileText,
   ClipboardCheck,
   GraduationCap,
-  Send,
   Phone,
   Mail,
   Calendar,
@@ -17,10 +16,7 @@ import { motion } from "framer-motion";
 import Section from "../../components/public_site/Section";
 import Card from "../../components/public_site/Card";
 import Button from "../../components/shared/Button";
-import { useRef, useState } from "react";
-import emailjs from "@emailjs/browser";
-
-
+import AdmissionForm from "../../components/public_site/AdmissionForm";
 const Admissions = () => {
   const admissionSteps = [
     {
@@ -61,7 +57,6 @@ const Admissions = () => {
       "Academic transcripts",
       "CNIC/B-Form copy",
       "Passport size photographs (4)",
-      "Character certificate",
       "Migration certificate (if applicable)",
     ],
     eligibility: [
@@ -73,18 +68,6 @@ const Admissions = () => {
     ],
   };
 
-  const programs = [
-    { value: "llb", label: "Bachelor of Laws (LLB)", campus: "Law Campus" },
-    { value: "llm", label: "Master of Laws (LLM)", campus: "Law Campus" },
-    { value: "bs", label: "Bachelor of Science (BS)", campus: "Main Campus" },
-    { value: "ba", label: "Bachelor of Arts (BA)", campus: "Main Campus" },
-    { value: "ma", label: "Master of Arts (MA)", campus: "Main Campus" },
-    { value: "fsc-pre-med", label: "FSc (Pre-Medical)", campus: "Hala Campus" },
-    { value: "fsc-pre-eng", label: "FSc (Pre-Engineering)", campus: "Hala Campus" },
-    { value: "ics", label: "ICS (Computer Science)", campus: "Hala Campus" },
-    { value: "fa", label: "FA (Arts)", campus: "Hala Campus" },
-  ];
-
   const importantDates = [
     { event: "Applications Open", date: "January 15, 2025" },
     { event: "Application Deadline", date: "March 31, 2025" },
@@ -92,33 +75,6 @@ const Admissions = () => {
     { event: "Results Announcement", date: "April 30, 2025" },
     { event: "Classes Begin", date: "August 1, 2025" },
   ];
-
-  const formRef = useRef();
-  const [loading, setLoading] = useState(false);
-
-  const handleApplicationSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      await emailjs.sendForm(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID,
-        import.meta.env.VITE_EMAILJS_APPLICATION_TEMPLATE,
-        formRef.current,
-        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-      );
-
-      alert("Application submitted successfully 🎓");
-      e.target.reset();
-    } catch (error) {
-      console.error(error);
-      alert("Application submission failed ❌");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-
   return (
     <div className="min-h-screen bg-white">
       {/* Admission Process */}
@@ -226,21 +182,18 @@ const Admissions = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <Card hover className="h-full p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center group-hover:bg-primary-600 transition-colors">
-                  <FileText className="h-8 w-8 text-primary-600 group-hover:text-white transition-colors" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900">Required Documents</h3>
-                  <p className="text-sm text-gray-500">What you need to submit</p>
-                </div>
+            <Card hover className="h-full p-6 md:p-8">
+              <div className="mb-8 border-b border-border pb-4">
+                <h3 className="text-2xl font-bold text-primary-900 mb-2">Required Documents</h3>
+                <p className="text-sm text-text-secondary">What you need to submit</p>
               </div>
-              <ul className="space-y-3">
-                {requirements.documents.map((doc) => (
-                  <li key={doc} className="flex items-center gap-3 text-gray-600">
-                    <CheckCircle className="h-5 w-5 text-primary-600 flex-shrink-0" />
-                    <span>{doc}</span>
+              <ul className="space-y-4">
+                {requirements.documents.map((doc, idx) => (
+                  <li key={doc} className="flex items-start gap-4 text-text-secondary group">
+                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-primary-50 border border-primary-200 text-primary-600 flex items-center justify-center text-sm font-semibold group-hover:bg-primary-600 group-hover:text-white group-hover:border-primary-600 transition-colors mt-0.5">
+                      {idx + 1}
+                    </div>
+                    <span className="leading-relaxed">{doc}</span>
                   </li>
                 ))}
               </ul>
@@ -254,21 +207,18 @@ const Admissions = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <Card hover className="h-full">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center group-hover:bg-primary-600 transition-colors">
-                  <ClipboardCheck className="h-8 w-8 text-primary-600 group-hover:text-white transition-colors" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900">Eligibility Criteria</h3>
-                  <p className="text-sm text-gray-500">Requirements you must meet</p>
-                </div>
+            <Card hover className="h-full p-6 md:p-8">
+              <div className="mb-8 border-b border-border pb-4">
+                <h3 className="text-2xl font-bold text-primary-900 mb-2">Eligibility Criteria</h3>
+                <p className="text-sm text-text-secondary">Requirements you must meet</p>
               </div>
-              <ul className="space-y-3">
-                {requirements.eligibility.map((criterion) => (
-                  <li key={criterion} className="flex items-center gap-3 text-gray-600">
-                    <AlertCircle className="h-5 w-5 text-primary-500 flex-shrink-0" />
-                    <span>{criterion}</span>
+              <ul className="space-y-4">
+                {requirements.eligibility.map((criterion, idx) => (
+                  <li key={criterion} className="flex items-start gap-4 text-text-secondary group">
+                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-primary-50 border border-primary-200 text-primary-600 flex items-center justify-center text-sm font-semibold group-hover:bg-primary-600 group-hover:text-white group-hover:border-primary-600 transition-colors mt-0.5">
+                      {idx + 1}
+                    </div>
+                    <span className="leading-relaxed">{criterion}</span>
                   </li>
                 ))}
               </ul>
@@ -284,130 +234,7 @@ const Admissions = () => {
           description="Fill out the form below to start your application"
           badge="Application Form"
         />
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <Card className="max-w-3xl mx-auto p-8" shadow="xl">
-            <form
-              ref={formRef}
-              onSubmit={handleApplicationSubmit}
-              className="space-y-6"
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Full Name *
-                  </label>
-                  <input
-                    name="fullname"
-                    type="text"
-                    required
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
-                    placeholder="Enter your full name"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Email Address *
-                  </label>
-                  <input
-                    name="email"
-                    type="email"
-                    required
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
-                    placeholder="Enter your email"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Phone Number *
-                  </label>
-                  <input
-                    name="phone"
-                    type="tel"
-                    required
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
-                    placeholder="+92 300 1234567"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    CNIC Number
-                  </label>
-                  <input
-                    name="cnic"
-                    type="text"
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
-                    placeholder="12345-1234567-1"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Select Program *
-                </label>
-                <select
-                  name="program"
-                  required
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
-                >
-                  <option value="">Choose a program</option>
-                  {programs.map((program) => (
-                    <option key={program.value} value={program.value}>
-                      {program.label} - {program.campus}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Previous Education
-                </label>
-                <input
-                  name="previous_education"
-                  type="text"
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-gray-50 hover:bg-white"
-                  placeholder="e.g., Matric with 85% marks"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Additional Message
-                </label>
-                <textarea
-                  name="message"
-                  rows="4"
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition resize-none bg-gray-50 hover:bg-white"
-                  placeholder="Any additional information you'd like to share..."
-                />
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full"
-                size="lg"
-                variant="gradient"
-                icon={Send}
-                disabled={loading}
-              >
-                {loading ? "Submitting..." : "Submit Application"}
-              </Button>
-
-
-              <p className="text-center text-sm text-gray-500">
-                By submitting this form, you agree to our terms and conditions.
-              </p>
-            </form>
-          </Card>
-        </motion.div>
+        <AdmissionForm />
       </Section>
 
       {/* Contact CTA */}

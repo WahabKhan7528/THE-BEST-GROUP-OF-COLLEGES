@@ -24,7 +24,7 @@ const Footer = () => {
                 Best Group of Colleges
               </h3>
               <p className="text-gray-300 text-sm leading-relaxed mb-4">
-                Empowering futures through quality education since 1985. Three
+                Empowering futures through quality education since 2008. Three
                 dynamic campuses, exceptional faculty, and comprehensive
                 programs.
               </p>
@@ -125,7 +125,7 @@ const Footer = () => {
                 <li className="flex items-start gap-3">
                   <MapPin className="h-5 w-5 text-white flex-shrink-0 mt-0.5" />
                   <span className="text-gray-300 text-sm">
-                    123 Education Street, Islamabad, Pakistan
+                    Main Campus: Younus Shaheed Road, Model Town A, Bahawalpur.
                   </span>
                 </li>
                 <li className="flex items-center gap-3">
@@ -134,7 +134,7 @@ const Footer = () => {
                     href="tel:+92511234567"
                     className="text-gray-300 hover:text-white text-sm transition"
                   >
-                    +92 51 1234 567
+                    +92 62 9201016
                   </a>
                 </li>
                 <li className="flex items-center gap-3">
