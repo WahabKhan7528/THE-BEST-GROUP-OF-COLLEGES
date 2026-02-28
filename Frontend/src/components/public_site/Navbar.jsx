@@ -7,6 +7,7 @@ import PortalSelector from "./PortalSelector";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isCampusOpen, setIsCampusOpen] = useState(false);
+  const [isMobileCampusOpen, setIsMobileCampusOpen] = useState(false);
   const [isPortalOpen, setIsPortalOpen] = useState(false);
 
   const location = useLocation();
@@ -15,6 +16,7 @@ const Navbar = () => {
   useEffect(() => {
     setIsOpen(false);
     setIsCampusOpen(false);
+    setIsMobileCampusOpen(false);
   }, [location.pathname]);
 
   // Handle clicking outside the dropdown to close it
@@ -159,7 +161,7 @@ const Navbar = () => {
           <button
             onClick={() => {
               setIsOpen(!isOpen);
-              setIsCampusOpen(false);
+              setIsMobileCampusOpen(false);
             }}
             className="p-2.5 rounded-xl bg-slate-50 text-secondary hover:text-primary-600 hover:bg-primary-50 transition-all border border-transparent hover:border-primary-100"
           >
@@ -199,18 +201,18 @@ const Navbar = () => {
               {/* Mobile Campuses Dropdown */}
               <div className="pt-2">
                 <button
-                  onClick={() => setIsCampusOpen(!isCampusOpen)}
+                  onClick={() => setIsMobileCampusOpen(!isMobileCampusOpen)}
                   className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-text-primary hover:bg-white hover:shadow-sm transition-all"
                 >
                   <span className="flex items-center gap-2">
                     <School className="w-4 h-4 text-primary-600" />
                     Campuses
                   </span>
-                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isCampusOpen ? "rotate-180" : ""}`} />
+                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isMobileCampusOpen ? "rotate-180" : ""}`} />
                 </button>
 
                 <AnimatePresence>
-                  {isCampusOpen && (
+                  {isMobileCampusOpen && (
                     <motion.div
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
@@ -225,7 +227,7 @@ const Navbar = () => {
                             to={campus.path}
                             onClick={() => {
                               setIsOpen(false);
-                              setIsCampusOpen(false);
+                              setIsMobileCampusOpen(false);
                             }}
                             className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-colors text-secondary hover:text-primary-600 hover:bg-primary-50/50"
                           >
