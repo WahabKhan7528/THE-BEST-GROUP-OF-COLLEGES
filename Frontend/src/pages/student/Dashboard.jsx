@@ -5,7 +5,6 @@ import {
   FolderOpen,
   Megaphone,
   BarChart3,
-  BarChart3,
   BookOpen,
   ArrowRight,
 } from "lucide-react";
@@ -155,6 +154,8 @@ const Dashboard = () => {
 
           {courses.length > 0 ? (
             <div className="space-y-4">
+              {courses.map((course) => (
+                <div key={course.code} className="group flex items-center justify-between p-4 rounded-2xl border border-border hover:shadow-md hover:border-primary-100 transition-all duration-300">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-xl bg-primary-100 text-primary-600 flex items-center justify-center font-bold text-lg">
                       {course.name.charAt(0)}
