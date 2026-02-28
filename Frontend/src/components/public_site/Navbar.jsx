@@ -16,7 +16,9 @@ const Navbar = () => {
   useEffect(() => {
     setIsOpen(false);
     setIsCampusOpen(false);
-    setIsMobileCampusOpen(false);
+    // Delay resetting the inner mobile menu so it doesn't try to animate out
+    // at the exact same time as the outer menu, which causes rendering bugs on mobile devices.
+    setTimeout(() => setIsMobileCampusOpen(false), 350);
   }, [location.pathname]);
 
   // Handle clicking outside the dropdown to close it
@@ -227,7 +229,7 @@ const Navbar = () => {
                             to={campus.path}
                             onClick={() => {
                               setIsOpen(false);
-                              setIsMobileCampusOpen(false);
+                              setTimeout(() => setIsMobileCampusOpen(false), 350);
                             }}
                             className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-colors text-secondary hover:text-primary-600 hover:bg-primary-50/50"
                           >
