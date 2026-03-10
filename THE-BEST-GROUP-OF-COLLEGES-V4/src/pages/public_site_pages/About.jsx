@@ -120,7 +120,7 @@ const About = () => {
             >
               <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden flex-shrink-0 border-4 border-college-gold/20">
                 <img src={leader.image}
-                  // alt={leader.role}
+                  alt={leader.name}
                   className="w-full h-full object-cover" />
               </div>
               <div className="flex-grow text-center md:text-left">

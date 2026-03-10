@@ -1,27 +1,32 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import PublicButton from "../../../components/shared/PublicButton";
 import { useAdminContext } from "../../../context/AdminContext";
+import { useToast } from "../../../context/ToastContext";
+import { useConfirm } from "../../../context/ConfirmContext";
 import PortalForms from "../../../components/shared/PortalForms";
 import { Building2, CheckCircle2, Trash2, Save } from "lucide-react";
+import { courseSchema } from "../../../schemas/courseSchema";
 
 const EditCourse = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { campuses, isDarkMode } = useAdminContext();
-  const [form, setForm] = useState({
-    title: "BS Computer Science",
-    duration: "4 years",
-    eligibility: "Intermediate",
-    examSystem: "semester",
-    description: "A four-year program focusing on computing fundamentals.",
-    offeredAt: ["main", "law"],
+  const toast = useToast();
+  const confirmDialog = useConfirm();
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+    resolver: zodResolver(courseSchema),
+    defaultValues: {
+      title: "BS Computer Science",
+      duration: "4 years",
+      eligibility: "Intermediate",
+      examSystem: "semester",
+      description: "A four-year program focusing on computing fundamentals.",
+    },
   });
-  const [selectedCampuses, setSelectedCampuses] = useState(form.offeredAt);
-
-  const handleChange = (key, value) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
-  };
+  const [selectedCampuses, setSelectedCampuses] = useState(["main", "law"]);
 
   const handleCampusToggle = (campusId) => {
     setSelectedCampuses((prev) =>
@@ -31,10 +36,9 @@ const EditCourse = () => {
     );
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const onSubmit = () => {
     if (selectedCampuses.length === 0) {
-      alert("Please select at least one campus where this course will be offered");
+      toast.warning("Please select at least one campus where this course will be offered");
       return;
     }
     navigate("/admin/courses");
@@ -45,16 +49,17 @@ const EditCourse = () => {
       title="Edit Course"
       subtitle="Update course details and availability"
       backPath="/admin/courses"
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       onCancel={() => navigate("/admin/courses")}
       submitLabel="Save Changes"
       submitIcon={Save}
+      submitting={isSubmitting}
       headerActions={
         <PublicButton
           type="button"
           variant="danger"
           size="sm"
-          onClick={() => { if (confirm("Delete this course?")) alert("Deleted"); }}
+          onClick={async () => { const confirmed = await confirmDialog({ title: "Delete Course", message: "Delete this course?", confirmText: "Delete", variant: "danger" }); if (confirmed) toast.success("Course deleted"); }}
           icon={Trash2}
         >
           Delete
@@ -71,8 +76,8 @@ const EditCourse = () => {
         <div className="md:col-span-2 -mt-6">
           <PortalForms.Input
             label="Course Title"
-            value={form.title}
-            onChange={(val) => handleChange("title", val)}
+            registration={register("title")}
+            error={errors.title?.message}
             placeholder="e.g. BS Computer Science"
             required
           />
@@ -81,8 +86,7 @@ const EditCourse = () => {
         <div>
           <PortalForms.Input
             label="Duration"
-            value={form.duration}
-            onChange={(val) => handleChange("duration", val)}
+            registration={register("duration")}
             placeholder="e.g. 4 Years"
           />
         </div>
@@ -90,8 +94,7 @@ const EditCourse = () => {
         <div>
           <PortalForms.Input
             label="Eligibility"
-            value={form.eligibility}
-            onChange={(val) => handleChange("eligibility", val)}
+            registration={register("eligibility")}
             placeholder="e.g. Intermediate or A-Level"
           />
         </div>
@@ -101,8 +104,7 @@ const EditCourse = () => {
             Exam System
           </label>
           <select
-            value={form.examSystem}
-            onChange={(e) => handleChange("examSystem", e.target.value)}
+            {...register("examSystem")}
             className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none dark:text-white"
           >
             <option value="annual">Annual</option>
@@ -115,8 +117,7 @@ const EditCourse = () => {
             Course Description
           </label>
           <textarea
-            value={form.description}
-            onChange={(e) => handleChange("description", e.target.value)}
+            {...register("description")}
             className="w-full px-4 py-3 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all resize-y min-h-[100px] dark:text-white dark:placeholder-gray-500"
             placeholder="Write a brief overview of the course..."
           />

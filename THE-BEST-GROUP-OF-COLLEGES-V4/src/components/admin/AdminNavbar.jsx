@@ -47,6 +47,7 @@ const AdminNavbar = ({ onMenuToggle }) => {
             onClick={() => navigate("/")}
             className="p-2 sm:p-2.5 rounded-xl text-gray-500 hover:bg-college-navy/10 hover:text-college-navy dark:hover:bg-college-gold/10 dark:hover:text-college-gold transition-all duration-200"
             title="Back to Home"
+            aria-label="Back to Home"
           >
             <Home size={18} className="sm:w-5 sm:h-5" />
           </button>

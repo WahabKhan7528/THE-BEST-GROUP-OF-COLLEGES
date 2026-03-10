@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import PageLoader from "./components/shared/PageLoader";
+import ErrorBoundary from "./components/shared/ErrorBoundary";
 
 // All time neccessary imports
 import RootLayout from "./layouts/RootLayout";
@@ -27,11 +28,10 @@ const Gallery = lazy(() => import("./pages/public_site_pages/Gallery"));
 const Contact = lazy(() => import("./pages/public_site_pages/Contact"));
 const NewsAndEvents = lazy(() => import("./pages/public_site_pages/NewsAndEvents"));
 const Login = lazy(() => import("./pages/public_site_pages/Login"));
+const NotFound = lazy(() => import("./pages/public_site_pages/NotFound"));
 
 // Campus pages 
-const MainCampus = lazy(() => import("./pages/campuses/MainCampus"));
-const LawCampus = lazy(() => import("./pages/campuses/LawCampus"));
-const HalaCampus = lazy(() => import("./pages/campuses/HalaCampus"));
+const CampusPage = lazy(() => import("./pages/campuses/CampusPage"));
 const AcademicsPage = lazy(() => import("./pages/campuses/common/AcademicsPage"));
 const FacultyPage = lazy(() => import("./pages/campuses/common/FacultyPage"));
 const StudentLifePage = lazy(() => import("./pages/campuses/common/StudentLifePage"));
@@ -87,124 +87,117 @@ function App() {
   return (
     <ThemeProvider>
       <Router>
-        <Suspense fallback={<PageLoader />}>
-          <Routes>
-            {/* Public Website Routes */}
-            <Route path="/" element={<RootLayout />}>
-              <Route index element={<Home />} />
-              <Route path="about" element={<About />} />
-              <Route path="admissions" element={<Admissions />} />
-              <Route path="faculty-info" element={<Faculty />} />
-              <Route path="gallery" element={<Gallery />} />
-              <Route path="news-events" element={<NewsAndEvents />} />
-              <Route path="contact" element={<Contact />} />
+        <ErrorBoundary>
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              {/* Public Website Routes */}
+              <Route path="/" element={<RootLayout />}>
+                <Route index element={<Home />} />
+                <Route path="about" element={<About />} />
+                <Route path="admissions" element={<Admissions />} />
+                <Route path="faculty-info" element={<Faculty />} />
+                <Route path="gallery" element={<Gallery />} />
+                <Route path="news-events" element={<NewsAndEvents />} />
+                <Route path="contact" element={<Contact />} />
 
-              {/* Campus Routes */}
-              <Route path="campuses" element={<CampusLayout />}>
-                <Route path="main" element={<MainCampus />} />
-                <Route path="main/academics" element={<AcademicsPage />} />
-                <Route path="main/faculty" element={<FacultyPage />} />
-                <Route path="main/student-life" element={<StudentLifePage />} />
-                <Route path="main/facilities" element={<FacilitiesPage />} />
-
-                <Route path="law" element={<LawCampus />} />
-                <Route path="law/academics" element={<AcademicsPage />} />
-                <Route path="law/faculty" element={<FacultyPage />} />
-                <Route path="law/student-life" element={<StudentLifePage />} />
-                <Route path="law/facilities" element={<FacilitiesPage />} />
-
-                <Route path="hala" element={<HalaCampus />} />
-                <Route path="hala/academics" element={<AcademicsPage />} />
-                <Route path="hala/faculty" element={<FacultyPage />} />
-                <Route path="hala/student-life" element={<StudentLifePage />} />
-                <Route path="hala/facilities" element={<FacilitiesPage />} />
+                {/* Campus Routes */}
+                <Route path="campuses" element={<CampusLayout />}>
+                  <Route path=":campus" element={<CampusPage />} />
+                  <Route path=":campus/academics" element={<AcademicsPage />} />
+                  <Route path=":campus/faculty" element={<FacultyPage />} />
+                  <Route path=":campus/student-life" element={<StudentLifePage />} />
+                  <Route path=":campus/facilities" element={<FacilitiesPage />} />
+                </Route>
               </Route>
-            </Route>
 
-            {/* Login Route (outside RootLayout — no navbar/footer) */}
-            <Route path="/login/:type" element={<Login />} />
+              {/* Login Route (outside RootLayout) */}
+              <Route path="/login/:type" element={<Login />} />
 
-            {/* Admin Portal Routes */}
-            <Route
-              path="/admin/*"
-              element={
-                <AdminProvider>
-                  <AdminLayout />
-                </AdminProvider>
-              }
-            >
-              <Route index element={<AdminDashboard />} />
-              <Route path="dashboard" element={<AdminDashboard />} />
-              <Route path="users" element={<UsersList />} />
-              <Route path="users/create" element={<CreateUser />} />
-              <Route path="users/edit/:id" element={<EditUser />} />
-              <Route path="courses" element={<CourseList />} />
-              <Route path="courses/create" element={<CreateCourse />} />
-              <Route path="courses/edit/:id" element={<EditCourse />} />
+              {/* Admin Portal Routes */}
+              <Route
+                path="/admin/*"
+                element={
+                  <AdminProvider>
+                    <AdminLayout />
+                  </AdminProvider>
+                }
+              >
+                <Route index element={<AdminDashboard />} />
+                <Route path="dashboard" element={<AdminDashboard />} />
+                <Route path="users" element={<UsersList />} />
+                <Route path="users/create" element={<CreateUser />} />
+                <Route path="users/edit/:id" element={<EditUser />} />
+                <Route path="courses" element={<CourseList />} />
+                <Route path="courses/create" element={<CreateCourse />} />
+                <Route path="courses/edit/:id" element={<EditCourse />} />
 
-              {/* Campus Management */}
-              <Route path="campus" element={<CampusManagement />} />
-              <Route path="campus/create" element={<CreateCampus />} />
-              <Route path="campus/:id/edit" element={<EditCampus />} />
-              <Route path="campus/:id/admins" element={<CampusAdminsList />} />
-              <Route path="campus/allocate" element={<AllocateAdmin />} />
+                {/* Campus Management */}
+                <Route path="campus" element={<CampusManagement />} />
+                <Route path="campus/create" element={<CreateCampus />} />
+                <Route path="campus/:id/edit" element={<EditCampus />} />
+                <Route path="campus/:id/admins" element={<CampusAdminsList />} />
+                <Route path="campus/allocate" element={<AllocateAdmin />} />
 
-              {/* Academic Management */}
-              <Route path="classes" element={<ClassesList />} />
-              <Route path="classes/create" element={<CreateClass />} />
-              <Route path="classes/edit/:id" element={<EditClass />} />
-              <Route path="subjects" element={<SubjectsList />} />
-              <Route path="subjects/create" element={<CreateSubject />} />
-              <Route path="subjects/edit/:id" element={<EditSubject />} />
+                {/* Academic Management */}
+                <Route path="classes" element={<ClassesList />} />
+                <Route path="classes/create" element={<CreateClass />} />
+                <Route path="classes/edit/:id" element={<EditClass />} />
+                <Route path="subjects" element={<SubjectsList />} />
+                <Route path="subjects/create" element={<CreateSubject />} />
+                <Route path="subjects/edit/:id" element={<EditSubject />} />
 
-              {/* CMS Management */}
-              <Route path="cms/news" element={<NewsList />} />
-              <Route path="cms/news/create" element={<CreateNews />} />
-              <Route path="cms/news/edit/:id" element={<EditNews />} />
-              <Route path="cms/gallery" element={<GalleryManager />} />
-              <Route path="cms/gallery/upload" element={<UploadImage />} />
-              <Route path="cms/gallery/edit/:id" element={<EditGalleryImage />} />
-            </Route>
+                {/* CMS Management */}
+                <Route path="cms/news" element={<NewsList />} />
+                <Route path="cms/news/create" element={<CreateNews />} />
+                <Route path="cms/news/edit/:id" element={<EditNews />} />
+                <Route path="cms/gallery" element={<GalleryManager />} />
+                <Route path="cms/gallery/upload" element={<UploadImage />} />
+                <Route path="cms/gallery/edit/:id" element={<EditGalleryImage />} />
+              </Route>
 
-            {/* Faculty Portal Routes */}
-            <Route
-              path="/faculty/*"
-              element={
-                <FacultyProvider>
-                  <FacultyLayout />
-                </FacultyProvider>
-              }
-            >
-              <Route index element={<Navigate to="dashboard" replace />} />
-              <Route path="dashboard" element={<FacultyDashboard />} />
-              <Route path="assignments" element={<FacultyAssignments />} />
-              <Route path="assignments/create" element={<CreateAssignment />} />
-              <Route path="assignments/edit/:id" element={<EditAssignment />} />
-              <Route path="submissions/:assignmentId" element={<FacultySubmissions />} />
-              <Route path="materials" element={<FacultyMaterials />} />
-              <Route path="materials/upload" element={<UploadMaterial />} />
-              <Route path="results" element={<FacultyResults />} />
-              <Route path="announcements" element={<FacultyAnnouncements />} />
-            </Route>
+              {/* Faculty Portal Routes */}
+              <Route
+                path="/faculty/*"
+                element={
+                  <FacultyProvider>
+                    <FacultyLayout />
+                  </FacultyProvider>
+                }
+              >
+                <Route index element={<Navigate to="dashboard" replace />} />
+                <Route path="dashboard" element={<FacultyDashboard />} />
+                <Route path="assignments" element={<FacultyAssignments />} />
+                <Route path="assignments/create" element={<CreateAssignment />} />
+                <Route path="assignments/edit/:id" element={<EditAssignment />} />
+                <Route path="submissions/:assignmentId" element={<FacultySubmissions />} />
+                <Route path="materials" element={<FacultyMaterials />} />
+                <Route path="materials/upload" element={<UploadMaterial />} />
+                <Route path="results" element={<FacultyResults />} />
+                <Route path="announcements" element={<FacultyAnnouncements />} />
+              </Route>
 
-            {/* Student Portal Routes */}
-            <Route
-              path="/student/*"
-              element={
-                <StudentProvider>
-                  <StudentLayout />
-                </StudentProvider>
-              }
-            >
-              <Route index element={<Navigate to="dashboard" replace />} />
-              <Route path="dashboard" element={<StudentDashboard />} />
-              <Route path="assignments" element={<StudentAssignments />} />
-              <Route path="materials" element={<StudentMaterials />} />
-              <Route path="results" element={<StudentResults />} />
-              <Route path="announcements" element={<StudentAnnouncements />} />
-            </Route>
-          </Routes>
-        </Suspense>
+              {/* Student Portal Routes */}
+              <Route
+                path="/student/*"
+                element={
+                  <StudentProvider>
+                    <StudentLayout />
+                  </StudentProvider>
+                }
+              >
+                <Route index element={<Navigate to="dashboard" replace />} />
+                <Route path="dashboard" element={<StudentDashboard />} />
+                <Route path="assignments" element={<StudentAssignments />} />
+                <Route path="materials" element={<StudentMaterials />} />
+                <Route path="results" element={<StudentResults />} />
+                <Route path="announcements" element={<StudentAnnouncements />} />
+              </Route>
+
+              {/* 404 Catch-all */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </ErrorBoundary>
       </Router>
     </ThemeProvider>
   );

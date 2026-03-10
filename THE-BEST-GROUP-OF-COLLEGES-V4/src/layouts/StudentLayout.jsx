@@ -1,12 +1,19 @@
-import { useState, useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { useState, useEffect, Suspense } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import StudentNavbar from "../components/student/StudentNavbar";
 import StudentSidebar from "../components/student/StudentSidebar";
 import { useStudentContext } from "../context/StudentContext";
+import PageLoader from "../components/shared/PageLoader";
 
 const StudentLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { isDarkMode } = useStudentContext();
+  const { pathname } = useLocation();
+
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   // Re-apply theme on mount to fix overrides from public layout/login pages
   useEffect(() => {
@@ -42,7 +49,9 @@ const StudentLayout = () => {
 
         {/* Main Content Area */}
         <main className="flex-1 p-4 md:p-6 lg:p-8 w-full max-w-[1600px] mx-auto">
-          <Outlet />
+          <Suspense fallback={<PageLoader />}>
+            <Outlet />
+          </Suspense>
         </main>
       </div>
     </div>

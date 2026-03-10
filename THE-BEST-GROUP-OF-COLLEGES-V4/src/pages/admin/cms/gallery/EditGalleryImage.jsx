@@ -1,33 +1,35 @@
 import { useState, useRef, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { gallerySchema } from '../../../../schemas/gallerySchema';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useToast } from '../../../../context/ToastContext';
+import { useConfirm } from '../../../../context/ConfirmContext';
 import PublicButton from '../../../../components/shared/PublicButton';
 import PortalForms from '../../../../components/shared/PortalForms';
 import { Upload, Image as ImageIcon, CheckCircle2, Save, Trash2 } from 'lucide-react';
-import { useAdminContext } from '../../../../context/AdminContext';
 import { adminGalleryImages as mockImages } from "../../../../data/adminData";
 
 const EditGalleryImage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { isDarkMode } = useAdminContext();
+    const toast = useToast();
+    const confirmDialog = useConfirm();
     const fileInputRef = useRef(null);
 
-    const [loading, setLoading] = useState(false);
-    const [form, setForm] = useState({
-        title: "",
-        album: "",
-        tags: "",
-        description: "",
-        date: ""
-    });
     const [file, setFile] = useState(null);
     const [preview, setPreview] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
 
+    const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({
+        resolver: zodResolver(gallerySchema),
+        defaultValues: { title: "", album: "", tags: "", description: "", date: "" }
+    });
+
     useEffect(() => {
         const foundImage = mockImages.find(img => img.id === id);
         if (foundImage) {
-            setForm({
+            reset({
                 title: foundImage.title,
                 album: foundImage.album,
                 tags: "",
@@ -36,11 +38,7 @@ const EditGalleryImage = () => {
             });
             setPreview(foundImage.url);
         }
-    }, [id]);
-
-    const handleChange = (key, value) => {
-        setForm((prev) => ({ ...prev, [key]: value }));
-    };
+    }, [id, reset]);
 
     const handleFileSelect = (selectedFile) => {
         if (selectedFile && selectedFile.type.startsWith('image/')) {
@@ -71,19 +69,15 @@ const EditGalleryImage = () => {
         setIsDragging(false);
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
-            alert("Image details updated successfully!");
-            navigate("/admin/cms/gallery");
-        }, 1000);
+    const onSubmit = () => {
+        toast.success("Image details updated successfully");
+        navigate("/admin/cms/gallery");
     };
 
-    const handleDelete = () => {
-        if (window.confirm("Are you sure you want to delete this image?")) {
-            alert("Image deleted successfully");
+    const handleDelete = async () => {
+        const confirmed = await confirmDialog({ title: "Delete Image", message: "Are you sure you want to delete this image?", confirmText: "Delete", variant: "danger" });
+        if (confirmed) {
+            toast.success("Image deleted successfully");
             navigate("/admin/cms/gallery");
         }
     };
@@ -93,10 +87,11 @@ const EditGalleryImage = () => {
             title="Edit Media"
             subtitle="Update gallery image details"
             backPath="/admin/cms/gallery"
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit(onSubmit)}
             onCancel={() => navigate("/admin/cms/gallery")}
-            submitLabel={loading ? "Saving..." : "Save Changes"}
-            submitIcon={loading ? null : Save}
+            submitLabel="Save Changes"
+            submitIcon={Save}
+            submitting={isSubmitting}
             headerActions={
                 <PublicButton
                     onClick={handleDelete}
@@ -186,8 +181,8 @@ const EditGalleryImage = () => {
                         <div className="col-span-1 md:col-span-2">
                             <PortalForms.Input
                                 label="Image Title"
-                                value={form.title}
-                                onChange={(val) => handleChange("title", val)}
+                                registration={register("title")}
+                                error={errors.title?.message}
                                 placeholder="e.g. Orientation Ceremony 2025"
                                 required
                             />
@@ -198,8 +193,7 @@ const EditGalleryImage = () => {
                                 Album Collection <span className="text-red-500">*</span>
                             </label>
                             <select
-                                value={form.album}
-                                onChange={(e) => handleChange('album', e.target.value)}
+                                {...register("album")}
                                 className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-college-gold/20 bg-white dark:bg-college-navy/50 dark:text-white focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm md:text-base mt-2"
                                 required
                             >
@@ -215,8 +209,7 @@ const EditGalleryImage = () => {
                         <div className="col-span-1 md:col-span-2">
                             <PortalForms.Input
                                 label="Date"
-                                value={form.date}
-                                onChange={(val) => handleChange("date", val)}
+                                registration={register("date")}
                                 placeholder="e.g. Sept 5, 2025"
                             />
                         </div>
@@ -226,8 +219,7 @@ const EditGalleryImage = () => {
                                 Description
                             </label>
                             <textarea
-                                value={form.description}
-                                onChange={(e) => handleChange('description', e.target.value)}
+                                {...register("description")}
                                 placeholder="Write a short description..."
                                 rows="3"
                                 className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-college-gold/20 bg-white dark:bg-college-navy/50 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all resize-none text-sm md:text-base shadow-sm"
@@ -237,8 +229,7 @@ const EditGalleryImage = () => {
                         <div className="col-span-1 md:col-span-2">
                             <PortalForms.Input
                                 label="Tags (Optional)"
-                                value={form.tags}
-                                onChange={(val) => handleChange("tags", val)}
+                                registration={register("tags")}
                                 placeholder="e.g. students, auditorium, celebration"
                                 helper="Comma separated"
                             />

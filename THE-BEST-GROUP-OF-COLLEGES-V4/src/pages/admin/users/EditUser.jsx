@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { userSchema } from "../../../schemas/userSchema";
 import { useNavigate, useParams } from "react-router-dom";
+import { useToast } from "../../../context/ToastContext";
+import { useConfirm } from "../../../context/ConfirmContext";
 import PublicButton from "../../../components/shared/PublicButton";
 import PortalForms from "../../../components/shared/PortalForms";
 import { useAdminContext } from "../../../context/AdminContext";
@@ -8,50 +13,44 @@ import { Save, Trash2, X } from "lucide-react";
 const EditUser = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { campuses, isDarkMode } = useAdminContext();
+  const { campuses } = useAdminContext();
+  const toast = useToast();
+  const confirmDialog = useConfirm();
   const [role, setRole] = useState("Faculty");
 
-  // Mock fetching user data based on ID
+  const { register, handleSubmit, watch, reset, formState: { errors, isSubmitting } } = useForm({
+    resolver: zodResolver(userSchema),
+    defaultValues: {
+      name: "", email: "", id: "", subjects: "",
+      contact: "", password: "", confirmPassword: "",
+      course: "", semester: "", class: "", academicSystem: "Semester", enrollmentYear: "",
+      designation: "", qualification: ""
+    }
+  });
+
+  const academicSystem = watch("academicSystem");
+
   useEffect(() => {
     if (id.startsWith("S-")) setRole("Student");
     else if (id.startsWith("F-")) setRole("Faculty");
     else if (id.startsWith("U-")) setRole("Sub-Admin");
 
-    setForm({
+    reset({
       name: "Mock User Name",
       email: "mock@best.edu",
       id: id,
-      department: "Computer Science",
       subjects: "Introduction to Programming",
       contact: "+92-300-1234567",
-      campuses: ["main"],
-      program: "BSCS",
+      course: "BSCS",
+      academicSystem: "Semester",
       semester: "5th",
-      section: "A",
+      class: "A",
       enrollmentYear: "2023",
       designation: "Lecturer",
       qualification: "MSCS",
     });
     setSelectedCampuses(["main"]);
-  }, [id]);
-
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    id: "",
-    department: "",
-    subjects: "",
-    contact: "",
-    password: "",
-    confirmPassword: "",
-    campuses: [],
-    program: "",
-    semester: "",
-    section: "",
-    enrollmentYear: "",
-    designation: "",
-    qualification: "",
-  });
+  }, [id, reset]);
 
   const [allocations, setAllocations] = useState([{ class: "BSCS-5A", subject: "Operating Systems" }]);
 
@@ -70,28 +69,23 @@ const EditUser = () => {
   };
   const [selectedCampuses, setSelectedCampuses] = useState([]);
 
-  const handleChange = (key, value) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
-  };
-
   const handleCampusToggle = (campusId) => {
     setSelectedCampuses((prev) =>
       prev.includes(campusId)
-        ? prev.filter((id) => id !== campusId)
-        : [...prev, campusId],
+        ? prev.filter((cid) => cid !== campusId)
+        : [...prev, campusId]
     );
-    setForm((prev) => ({ ...prev, campuses: selectedCampuses }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert(`User ${id} updated successfully!`);
+  const onSubmit = () => {
+    toast.success(`User ${id} updated successfully`);
     navigate("/admin/users");
   };
 
-  const handleDelete = () => {
-    if (confirm("Are you sure you want to delete this user? This action cannot be undone.")) {
-      alert(`User ${id} deleted.`);
+  const handleDelete = async () => {
+    const confirmed = await confirmDialog({ title: "Delete User", message: "Are you sure you want to delete this user? This action cannot be undone.", confirmText: "Delete", variant: "danger" });
+    if (confirmed) {
+      toast.success(`User ${id} deleted`);
       navigate("/admin/users");
     }
   };
@@ -104,10 +98,11 @@ const EditUser = () => {
       title="Edit User"
       subtitle={`Update details for ${id}`}
       backPath="/admin/users"
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       onCancel={() => navigate("/admin/users")}
       submitLabel="Save Changes"
       submitIcon={Save}
+      submitting={isSubmitting}
       headerActions={
         <PublicButton
           onClick={handleDelete}
@@ -134,27 +129,26 @@ const EditUser = () => {
       <PortalForms.Section title="Personal Identity">
         <PortalForms.Input
           label="Full Name"
-          value={form.name}
-          onChange={(v) => handleChange("name", v)}
+          registration={register("name")}
+          error={errors.name?.message}
           required
         />
         <PortalForms.Input
           label="Email Address"
           type="email"
-          value={form.email}
-          onChange={(v) => handleChange("email", v)}
+          registration={register("email")}
+          error={errors.email?.message}
           required
         />
         <PortalForms.Input
           label="System ID"
-          value={form.id}
+          registration={register("id")}
           disabled
           helper="Cannot be modified"
         />
         <PortalForms.Input
           label="Contact Number"
-          value={form.contact}
-          onChange={(v) => handleChange("contact", v)}
+          registration={register("contact")}
         />
       </PortalForms.Section>
 
@@ -164,27 +158,39 @@ const EditUser = () => {
           {role === "Student" && (
             <>
               <PortalForms.Input
-                label="Program / Department"
-                value={form.program}
-                onChange={(v) => handleChange("program", v)}
+                label="Course"
+                registration={register("course")}
+                required
+              />
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-200">Academic System</label>
+                <div className="flex gap-4 p-2 bg-gray-50/50 dark:bg-college-navy/30 rounded-xl border border-college-navy/10 dark:border-college-gold/10">
+                  {["Semester", "Annual"].map((sys) => (
+                    <label key={sys} className="flex items-center gap-2 cursor-pointer px-3 py-1.5 rounded-lg hover:bg-college-navy/5 dark:hover:bg-college-gold/5 transition-colors">
+                      <input
+                        type="radio"
+                        value={sys}
+                        {...register("academicSystem")}
+                        className="w-4 h-4 text-college-navy focus:ring-college-navy dark:focus:ring-college-gold border-gray-300 dark:border-white/20"
+                      />
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{sys}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              <PortalForms.Input
+                label={academicSystem === "Annual" ? "Year" : "Semester"}
+                registration={register("semester")}
                 required
               />
               <PortalForms.Input
-                label="Semester"
-                value={form.semester}
-                onChange={(v) => handleChange("semester", v)}
-                required
-              />
-              <PortalForms.Input
-                label="Section"
-                value={form.section}
-                onChange={(v) => handleChange("section", v)}
+                label="Class"
+                registration={register("class")}
                 required
               />
               <PortalForms.Input
                 label="Enrollment Year"
-                value={form.enrollmentYear || ""}
-                onChange={(v) => handleChange("enrollmentYear", v)}
+                registration={register("enrollmentYear")}
               />
             </>
           )}
@@ -192,21 +198,13 @@ const EditUser = () => {
           {role === "Faculty" && (
             <>
               <PortalForms.Input
-                label="Department"
-                value={form.department}
-                onChange={(v) => handleChange("department", v)}
-                required
-              />
-              <PortalForms.Input
                 label="Designation"
-                value={form.designation}
-                onChange={(v) => handleChange("designation", v)}
+                registration={register("designation")}
                 required
               />
               <PortalForms.Input
                 label="Qualification"
-                value={form.qualification}
-                onChange={(v) => handleChange("qualification", v)}
+                registration={register("qualification")}
               />
               <div className="md:col-span-2 space-y-3">
                 <label className="text-sm font-medium text-gray-700 dark:text-gray-200 flex justify-between items-center">
@@ -259,8 +257,7 @@ const EditUser = () => {
           {(role === "Sub-Admin" || role === "Super Admin") && (
             <PortalForms.Input
               label="Designation / Role Title"
-              value={form.designation}
-              onChange={(v) => handleChange("designation", v)}
+              registration={register("designation")}
             />
           )}
         </PortalForms.Section>

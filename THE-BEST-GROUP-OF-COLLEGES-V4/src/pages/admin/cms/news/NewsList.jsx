@@ -3,6 +3,8 @@ import { useState } from "react";
 import Table from "../../../../components/admin/Table";
 import PublicButton from "../../../../components/shared/PublicButton";
 import { useAdminContext } from "../../../../context/AdminContext";
+import { useToast } from "../../../../context/ToastContext";
+import { useConfirm } from "../../../../context/ConfirmContext";
 import {
   Plus,
   Search,
@@ -14,6 +16,8 @@ import {
 const NewsList = () => {
   const navigate = useNavigate();
   const { isDarkMode } = useAdminContext();
+  const toast = useToast();
+  const confirm = useConfirm();
   const [activeFilter, setActiveFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -176,26 +180,49 @@ const NewsList = () => {
       </div>
 
       {/* Table Section */}
-      <Table
-        columns={columns}
-        data={filteredData}
-        actionButtons={(row) => [
-          {
-            label: "Edit",
-            onClick: () => navigate(`/admin/cms/news/edit/${row.id}`),
-            className: "text-emerald-600 hover:text-emerald-700 font-medium bg-emerald-50 border border-emerald-100 dark:bg-emerald-900 dark:border-transparent dark:text-gray-300 dark:hover:bg-emerald-800",
-          },
-          {
-            label: "Delete",
-            onClick: () => {
-              if (window.confirm("Are you sure you want to delete this post?")) {
-                alert(`Post ${row.id} deleted (mock)`);
-              }
+      {filteredData.length > 0 ? (
+        <Table
+          columns={columns}
+          data={filteredData}
+          actionButtons={(row) => [
+            {
+              label: "Edit",
+              onClick: () => navigate(`/admin/cms/news/edit/${row.id}`),
+              className: "text-emerald-600 hover:text-emerald-700 font-medium bg-emerald-50 border border-emerald-100 dark:bg-emerald-900 dark:border-transparent dark:text-gray-300 dark:hover:bg-emerald-800",
             },
-            className: "text-red-600 hover:text-red-700 font-medium bg-red-50 border border-red-100 dark:bg-red-900 dark:border-transparent dark:text-gray-300 dark:hover:bg-red-800",
-          },
-        ]}
-      />
+            {
+              label: "Delete",
+              onClick: async () => {
+                const confirmed = await confirm({ title: "Delete Post", message: "Are you sure you want to delete this post?", confirmText: "Delete", variant: "danger" });
+                if (confirmed) {
+                  toast.success(`Post ${row.id} deleted`);
+                }
+              },
+              className: "text-red-600 hover:text-red-700 font-medium bg-red-50 border border-red-100 dark:bg-red-900 dark:border-transparent dark:text-gray-300 dark:hover:bg-red-800",
+            },
+          ]}
+        />
+      ) : (
+        <div className="flex flex-col items-center justify-center py-12 bg-white/50 dark:bg-college-navy/50 backdrop-blur-sm rounded-2xl border border-dashed border-gray-300 dark:border-college-gold/20">
+          <div className="w-16 h-16 bg-gray-50 dark:bg-college-gold/10 rounded-full flex items-center justify-center mb-4">
+            <Newspaper className="w-8 h-8 text-gray-400 dark:text-college-gold/40" />
+          </div>
+          <h3 className="text-lg font-medium text-college-navy dark:text-white">No posts found</h3>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 mb-4 max-w-sm text-center">
+            {searchQuery || activeFilter !== "all"
+              ? "Try adjusting your search or filters to find what you're looking for."
+              : "Get started by creating a new post."}
+          </p>
+          {(searchQuery || activeFilter !== "all") && (
+            <button
+              onClick={() => { setSearchQuery(""); setActiveFilter("all"); }}
+              className="text-college-navy dark:text-college-gold text-sm font-medium hover:underline"
+            >
+              Clear all filters
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 };

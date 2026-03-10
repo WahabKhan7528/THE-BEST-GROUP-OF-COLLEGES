@@ -3,6 +3,7 @@ import SubmissionCard from '../../components/faculty/SubmissionCard';
 import PortalPageHeader from '../../components/shared/PortalPageHeader';
 import Badge from '../../components/public_site/Badge';
 import { useFacultyContext } from '../../context/FacultyContext';
+import { useToast } from '../../context/ToastContext';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
 
 import { mockSubmissions } from "../../data/facultyPortalData";
@@ -11,6 +12,7 @@ import PublicButton from '../../components/shared/PublicButton';
 const Submissions = () => {
   const { assignmentId } = useParams();
   const { isDarkMode } = useFacultyContext();
+  const toast = useToast();
 
   return (
     <div className="space-y-6 pb-10">
@@ -35,7 +37,7 @@ const Submissions = () => {
               Assignments
             </PublicButton>
             <PublicButton
-              onClick={() => alert('Grading process finalized (mock)')}
+              onClick={() => toast.success('Grading process finalized')}
               variant="secondary"
               shape="slanted"
               className="w-full"

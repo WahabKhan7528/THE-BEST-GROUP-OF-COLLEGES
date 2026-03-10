@@ -99,9 +99,6 @@ const StudentResults = () => {
                   <option key={sem.id} value={sem.id}>{sem.name}</option>
                 ))}
               </select>
-              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-college-navy dark:text-college-gold transition-transform group-hover:scale-110">
-                <ChevronDown size={20} strokeWidth={3} />
-              </div>
             </div>
 
             {/* CGPA Display - Bottom */}
@@ -163,9 +160,7 @@ const StudentResults = () => {
           {selectedSemester && (
             <div className="bg-white dark:bg-college-navy rounded-3xl p-8 text-college-navy dark:text-white shadow-xl relative overflow-hidden border border-college-navy/5 dark:border-college-gold/20">
               <div className="absolute -top-10 -right-10 w-64 h-64 bg-college-gold/10 rounded-full mix-blend-multiply dark:mix-blend-screen opacity-50 blur-2xl"></div>
-              <div className="absolute top-0 right-0 p-8 opacity-5 dark:opacity-10">
-                <BarChart3 size={120} />
-              </div>
+              
               <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
                 <div>
                   <h2 className="text-xl sm:text-2xl md:text-3xl font-bold">{selectedSemester.name}</h2>
@@ -218,7 +213,7 @@ const StudentResults = () => {
                           <td className="p-5 text-sm text-college-navy/70 dark:text-white/70 text-center font-bold">{sub.credits}</td>
                           <td className="p-5 text-sm font-black text-college-navy dark:text-white text-center bg-slate-50/50 dark:bg-white/5">{sub.marks}</td>
                           <td className="p-5 text-center">
-                            <span className={`inline-flex items-center justify-center w-10 h-10 rounded-xl text-sm font-black shadow-lg bg-college-navy dark:bg-college-gold text-white dark:text-college-navy transform group-hover:rotate-12 transition-transform`}>
+                            <span className={`inline-flex items-center justify-center w-8 h-8 rounded-xl text-sm font-black bg-college-navy dark:bg-college-gold text-white dark:text-college-navy`}>
                               {grade}
                             </span>
                           </td>

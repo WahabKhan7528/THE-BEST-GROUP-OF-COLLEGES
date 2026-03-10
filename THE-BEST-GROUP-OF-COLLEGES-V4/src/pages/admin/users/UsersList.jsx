@@ -1,6 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAdminContext } from "../../../context/AdminContext";
+import { useToast } from "../../../context/ToastContext";
+import { useConfirm } from "../../../context/ConfirmContext";
 import PublicButton from "../../../components/shared/PublicButton";
 import Table from "../../../components/admin/Table";
 import {
@@ -17,6 +19,8 @@ import { mockUsersData as adminUsers } from "../../../data/adminData";
 const UsersList = () => {
   const navigate = useNavigate();
   const { campuses, isSuperAdmin, currentAdmin, isDarkMode } = useAdminContext();
+  const toast = useToast();
+  const confirm = useConfirm();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
   const [selectedCampus, setSelectedCampus] = useState("");
@@ -89,7 +93,7 @@ const UsersList = () => {
       )
     },
     { key: "id", label: "ID" },
-    { key: "department", label: "Department / Class" },
+    { key: "department", label: "Department / Subject / Course" },
     {
       key: "allocatedCampuses",
       label: "Campuses",
@@ -109,7 +113,12 @@ const UsersList = () => {
     },
     {
       label: "Disable",
-      onClick: () => alert("Disable user"),
+      onClick: async () => {
+        const confirmed = await confirm({ title: "Disable User", message: "Are you sure you want to disable this user?", confirmText: "Disable", variant: "danger" });
+        if (confirmed) {
+          toast.success("User disabled");
+        }
+      },
       className: "text-red-600 hover:text-red-700 font-medium bg-red-50 border border-red-100 dark:bg-red-900 dark:border-transparent dark:text-gray-300 dark:hover:bg-red-800",
     }
   ];

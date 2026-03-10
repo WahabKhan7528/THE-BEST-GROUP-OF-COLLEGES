@@ -2,7 +2,7 @@ import { School } from "lucide-react";
 
 const PageLoader = () => {
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gray-50 w-full h-full min-h-screen">
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-transparent w-full h-full min-h-screen">
       <div className="relative flex items-center justify-center">
         {/* Outer pulsing ring */}
         <div className="absolute w-24 h-24 rounded-full border-2 border-college-gold/30 animate-ping-slow" />

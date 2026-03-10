@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminContext } from "../../../context/AdminContext";
+import { useToast } from "../../../context/ToastContext";
+import { useConfirm } from "../../../context/ConfirmContext";
 import PublicButton from "../../../components/shared/PublicButton";
 import Table from "../../../components/admin/Table";
 import {
@@ -15,6 +17,8 @@ import {
 const CampusManagement = () => {
   const navigate = useNavigate();
   const { campuses, isSuperAdmin, isDarkMode } = useAdminContext();
+  const toast = useToast();
+  const confirmDialog = useConfirm();
   const [searchTerm, setSearchTerm] = useState("");
 
   if (!isSuperAdmin) {
@@ -73,10 +77,9 @@ const CampusManagement = () => {
     },
     {
       label: "Delete",
-      onClick: () => {
-        if (window.confirm(`Delete campus "${row.name}"?`)) {
-          alert("Delete functionality will be connected to backend");
-        }
+      onClick: async () => {
+        const confirmed = await confirmDialog({ title: "Delete Campus", message: `Delete campus "${row.name}"?`, confirmText: "Delete", variant: "danger" });
+        if (confirmed) toast.success("Campus deleted");
       },
       className: "text-red-600 hover:text-red-700 font-medium bg-red-50 border border-red-100 dark:bg-red-900 dark:border-transparent dark:text-gray-300 dark:hover:bg-red-800",
     },

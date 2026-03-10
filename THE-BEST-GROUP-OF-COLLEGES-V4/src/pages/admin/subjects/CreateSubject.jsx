@@ -1,46 +1,37 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useAdminContext } from "../../../context/AdminContext";
+import { useToast } from "../../../context/ToastContext";
 import { useNavigate } from "react-router-dom";
 import PortalForms from "../../../components/shared/PortalForms";
 import { Building2, CheckCircle2, Plus } from "lucide-react";
+import { subjectSchema } from "../../../schemas/subjectSchema";
 
 const CreateSubject = () => {
   const { campuses, isDarkMode } = useAdminContext();
+  const toast = useToast();
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    name: "",
-    code: "",
-    class: "",
-    faculty: "",
-    offeredAt: [],
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+    resolver: zodResolver(subjectSchema),
   });
 
-  const handleChange = (key, value) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
-  };
+  const [offeredAt, setOfferedAt] = useState([]);
 
   const handleCampusToggle = (campusId) => {
-    setForm((prev) => {
-      const isSelected = prev.offeredAt.includes(campusId);
-      return {
-        ...prev,
-        offeredAt: isSelected
-          ? prev.offeredAt.filter((id) => id !== campusId)
-          : [...prev.offeredAt, campusId],
-      };
-    });
+    setOfferedAt((prev) =>
+      prev.includes(campusId)
+        ? prev.filter((id) => id !== campusId)
+        : [...prev, campusId],
+    );
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (form.offeredAt.length === 0) {
-      alert("Please select at least one campus where this subject will be offered");
+  const onSubmit = () => {
+    if (offeredAt.length === 0) {
+      toast.warning("Please select at least one campus where this subject will be offered");
       return;
     }
-    const campusNames = form.offeredAt
-      .map((cId) => campuses.find((c) => c.id === cId)?.name)
-      .join(", ");
     navigate("/admin/subjects");
   };
 
@@ -49,18 +40,19 @@ const CreateSubject = () => {
       title="Create New Subject"
       subtitle="Add a new subject to the curriculum and assign to campuses"
       backPath="/admin/subjects"
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       onCancel={() => navigate("/admin/subjects")}
       submitLabel="Create Subject"
       submitIcon={Plus}
+      submitting={isSubmitting}
     >
       {/* Subject Details Section */}
       <PortalForms.Section title="Subject Details">
         <div className="col-span-1 md:col-span-2">
           <PortalForms.Input
             label="Subject Name"
-            value={form.name}
-            onChange={(val) => handleChange("name", val)}
+            registration={register("name")}
+            error={errors.name?.message}
             required
             placeholder="e.g. Operating Systems"
           />
@@ -69,8 +61,8 @@ const CreateSubject = () => {
         <div>
           <PortalForms.Input
             label="Subject Code"
-            value={form.code}
-            onChange={(val) => handleChange("code", val)}
+            registration={register("code")}
+            error={errors.code?.message}
             required
             placeholder="e.g. CS-312"
           />
@@ -78,19 +70,17 @@ const CreateSubject = () => {
 
         <div>
           <PortalForms.Input
-            label="Target Class"
-            value={form.class}
-            onChange={(val) => handleChange("class", val)}
-            placeholder="e.g. BSCS - 3rd Semester"
+            label="Target Course ID"
+            registration={register("course")}
+            placeholder="e.g. C-101"
           />
         </div>
 
         <div className="col-span-1 md:col-span-2">
           <PortalForms.Input
-            label="Assign Faculty"
-            value={form.faculty}
-            onChange={(val) => handleChange("faculty", val)}
-            placeholder="e.g. Prof. Ahmed Raza"
+            label="Assign Faculty ID"
+            registration={register("faculty")}
+            placeholder="e.g. F-201"
           />
         </div>
       </PortalForms.Section>
@@ -103,7 +93,7 @@ const CreateSubject = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 col-span-1 md:col-span-2">
           {campuses.map((campus) => {
-            const isSelected = form.offeredAt.includes(campus.id);
+            const isSelected = offeredAt.includes(campus.id);
             return (
               <label
                 key={campus.id}

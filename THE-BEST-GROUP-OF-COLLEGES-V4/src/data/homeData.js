@@ -82,22 +82,6 @@ export const testimonials = [
         image: "https://placehold.co/100x100?text=FK",
         rating: 4,
     },
-    {
-        name: "Fatima Khan",
-        role: "FSc Pre-Medical",
-        content:
-            "Outstanding teachers and modern labs make learning engaging and effective. I'm confident about my future in medicine.",
-        image: "https://placehold.co/100x100?text=FK",
-        rating: 4,
-    },
-    {
-        name: "Fatima Khan",
-        role: "FSc Pre-Medical",
-        content:
-            "Outstanding teachers and modern labs make learning engaging and effective. I'm confident about my future in medicine.",
-        image: "https://placehold.co/100x100?text=FK",
-        rating: 4,
-    },
 ];
 
 export const homeStats = [

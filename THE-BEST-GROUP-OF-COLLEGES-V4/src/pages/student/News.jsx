@@ -103,12 +103,12 @@ const News = () => {
           ))}
         </div>
       ) : (
-        <div className="bg-white/60 backdrop-blur-sm border border-dashed border-gray-300 rounded-3xl p-12 text-center">
-          <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Megaphone size={30} className="text-gray-400" />
+        <div className="bg-white/60 dark:bg-college-navy/40 backdrop-blur-sm border border-dashed border-gray-300 dark:border-college-gold/30 rounded-3xl p-12 text-center">
+          <div className="w-16 h-16 bg-gray-50 dark:bg-college-gold/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Megaphone size={30} className="text-gray-400 dark:text-college-gold/40" />
           </div>
-          <h3 className="text-lg font-semibold text-college-navy">No announcements found</h3>
-          <p className="text-gray-500 mt-2 max-w-sm mx-auto">
+          <h3 className="text-lg font-semibold text-college-navy dark:text-white">No announcements found</h3>
+          <p className="text-gray-500 dark:text-gray-400 mt-2 max-w-sm mx-auto">
             There are no new announcements for {campusNames[campus]} at this time.
           </p>
         </div>

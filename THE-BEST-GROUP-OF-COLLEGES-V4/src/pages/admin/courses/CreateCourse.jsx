@@ -1,25 +1,22 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useAdminContext } from "../../../context/AdminContext";
+import { useToast } from "../../../context/ToastContext";
 import { useNavigate } from "react-router-dom";
 import PortalForms from "../../../components/shared/PortalForms";
 import { Building2, CheckCircle2, Plus } from "lucide-react";
+import { courseSchema } from "../../../schemas/courseSchema";
 
 const CreateCourse = () => {
   const navigate = useNavigate();
   const { campuses, isDarkMode } = useAdminContext();
-  const [form, setForm] = useState({
-    title: "",
-    duration: "",
-    eligibility: "",
-    examSystem: "annual",
-    description: "",
-    offeredAt: [],
+  const toast = useToast();
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+    resolver: zodResolver(courseSchema),
+    defaultValues: { examSystem: "annual" },
   });
   const [selectedCampuses, setSelectedCampuses] = useState([]);
-
-  const handleChange = (key, value) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
-  };
 
   const handleCampusToggle = (campusId) => {
     setSelectedCampuses((prev) =>
@@ -29,10 +26,9 @@ const CreateCourse = () => {
     );
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const onSubmit = () => {
     if (selectedCampuses.length === 0) {
-      alert("Please select at least one campus where this course will be offered");
+      toast.warning("Please select at least one campus where this course will be offered");
       return;
     }
     navigate("/admin/courses");
@@ -43,18 +39,19 @@ const CreateCourse = () => {
       title="Add New Course"
       subtitle="Create a new academic program or course"
       backPath="/admin/courses"
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       onCancel={() => navigate("/admin/courses")}
       submitLabel="Create Course"
       submitIcon={Plus}
+      submitting={isSubmitting}
     >
       {/* Basic Info Section */}
       <PortalForms.Section title="Course Information">
         <div className="md:col-span-2">
           <PortalForms.Input
             label="Course Title"
-            value={form.title}
-            onChange={(val) => handleChange("title", val)}
+            registration={register("title")}
+            error={errors.title?.message}
             placeholder="e.g. BS Computer Science"
             required
           />
@@ -63,8 +60,7 @@ const CreateCourse = () => {
         <div>
           <PortalForms.Input
             label="Duration"
-            value={form.duration}
-            onChange={(val) => handleChange("duration", val)}
+            registration={register("duration")}
             placeholder="e.g. 4 Years"
           />
         </div>
@@ -72,8 +68,7 @@ const CreateCourse = () => {
         <div>
           <PortalForms.Input
             label="Eligibility"
-            value={form.eligibility}
-            onChange={(val) => handleChange("eligibility", val)}
+            registration={register("eligibility")}
             placeholder="e.g. Intermediate or A-Level"
           />
         </div>
@@ -83,8 +78,7 @@ const CreateCourse = () => {
             Exam System
           </label>
           <select
-            value={form.examSystem}
-            onChange={(e) => handleChange("examSystem", e.target.value)}
+            {...register("examSystem")}
             className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none dark:text-white"
           >
             <option value="annual">Annual</option>
@@ -95,8 +89,7 @@ const CreateCourse = () => {
         <div className="md:col-span-2">
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Description</label>
           <textarea
-            value={form.description}
-            onChange={(e) => handleChange("description", e.target.value)}
+            {...register("description")}
             rows={4}
             className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all resize-none dark:text-white dark:placeholder-gray-500"
             placeholder="Enter a brief description of the course..."

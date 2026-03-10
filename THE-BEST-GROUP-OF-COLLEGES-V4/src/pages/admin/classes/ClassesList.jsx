@@ -1,6 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAdminContext } from "../../../context/AdminContext";
+import { useToast } from "../../../context/ToastContext";
+import { useConfirm } from "../../../context/ConfirmContext";
 import Table from "../../../components/admin/Table";
 import PublicButton from "../../../components/shared/PublicButton";
 import {
@@ -16,6 +18,8 @@ import { mockClassesData as adminClasses } from "../../../data/adminData";
 const ClassesList = () => {
   const navigate = useNavigate();
   const { campuses, isSuperAdmin, currentAdmin, isDarkMode } = useAdminContext();
+  const toast = useToast();
+  const confirm = useConfirm();
   const [selectedCampus, setSelectedCampus] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -187,9 +191,10 @@ const ClassesList = () => {
             },
             {
               label: "Delete",
-              onClick: () => {
-                if (window.confirm("Are you sure you want to delete this class?")) {
-                  alert(`Class ${row.id} deleted (mock)`);
+              onClick: async () => {
+                const confirmed = await confirm({ title: "Delete Class", message: "Are you sure you want to delete this class?", confirmText: "Delete", variant: "danger" });
+                if (confirmed) {
+                  toast.success(`Class ${row.id} deleted`);
                 }
               },
               className: "text-red-600 hover:text-red-700 font-medium bg-red-50 border border-red-100 dark:bg-red-900 dark:border-transparent dark:text-gray-300 dark:hover:bg-red-800",

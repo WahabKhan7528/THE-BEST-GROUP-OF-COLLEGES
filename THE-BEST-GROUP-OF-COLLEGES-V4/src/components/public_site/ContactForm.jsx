@@ -1,16 +1,24 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { MessageSquare, Send } from "lucide-react";
 import emailjs from "@emailjs/browser";
 import PublicButton from "../shared/PublicButton";
+import { useToast } from "../../context/ToastContext";
+import { contactSchema } from "../../schemas/contactSchema";
+
+const inputBase = "w-full px-4 py-3.5 rounded border bg-gray-50 focus:bg-white focus:border-college-navy focus:ring-2 focus:ring-college-navy/30 dark:focus:ring-college-gold/30 outline-none transition-all";
+const inputOk = `${inputBase} border-gray-200`;
+const inputErr = `${inputBase} border-red-400`;
 
 export default function ContactForm({ className }) {
     const formRef = useRef();
-    const [loading, setLoading] = useState(false);
+    const toast = useToast();
+    const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({
+        resolver: zodResolver(contactSchema),
+    });
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-
+    const onSubmit = async () => {
         try {
             await emailjs.sendForm(
                 import.meta.env.VITE_EMAILJS_SERVICE_ID,
@@ -19,13 +27,10 @@ export default function ContactForm({ className }) {
                 import.meta.env.VITE_EMAILJS_PUBLIC_KEY
             );
 
-            alert("Message sent successfully");
-            e.target.reset();
-        } catch (error) {
-            console.error(error);
-            alert("Failed to send message");
-        } finally {
-            setLoading(false);
+            toast.success("Message sent successfully");
+            reset();
+        } catch {
+            toast.error("Failed to send message");
         }
     };
 
@@ -46,7 +51,7 @@ export default function ContactForm({ className }) {
                     </div>
                 </div>
 
-                <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+                <form ref={formRef} onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                     <input type="hidden" name="_subject" value="New Contact Form Submission" />
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -57,11 +62,11 @@ export default function ContactForm({ className }) {
                             <input
                                 id="name"
                                 type="text"
-                                name="name"
-                                required
-                                className="w-full px-4 py-3.5 rounded border border-gray-200 bg-gray-50 focus:bg-white focus:border-college-navy focus:ring-2 focus:ring-college-navy/30 dark:focus:ring-college-gold/30 outline-none transition-all"
+                                {...register("name")}
+                                className={errors.name ? inputErr : inputOk}
                                 placeholder="Your name"
                             />
+                            {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
                         </div>
                         <div>
                             <label htmlFor="email" className="block text-sm font-bold text-college-navy mb-2 tracking-wide">
@@ -70,11 +75,11 @@ export default function ContactForm({ className }) {
                             <input
                                 id="email"
                                 type="email"
-                                name="email"
-                                required
-                                className="w-full px-4 py-3.5 rounded border border-gray-200 bg-gray-50 focus:bg-white focus:border-college-navy focus:ring-2 focus:ring-college-navy/30 dark:focus:ring-college-gold/30 outline-none transition-all"
+                                {...register("email")}
+                                className={errors.email ? inputErr : inputOk}
                                 placeholder="your@email.com"
                             />
+                            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
                         </div>
                     </div>
 
@@ -85,8 +90,8 @@ export default function ContactForm({ className }) {
                         <input
                             id="phone"
                             type="tel"
-                            name="phone"
-                            className="w-full px-4 py-3.5 rounded border border-gray-200 bg-gray-50 focus:bg-white focus:border-college-navy focus:ring-2 focus:ring-college-navy/30 dark:focus:ring-college-gold/30 outline-none transition-all"
+                            {...register("phone")}
+                            className={inputOk}
                             placeholder="+92 XXX XXXXXXX"
                         />
                     </div>
@@ -97,9 +102,8 @@ export default function ContactForm({ className }) {
                         </label>
                         <select
                             id="subject"
-                            name="subject"
-                            required
-                            className="w-full px-4 py-3.5 rounded border border-gray-200 bg-gray-50 focus:bg-white focus:border-college-navy focus:ring-2 focus:ring-college-navy/30 dark:focus:ring-college-gold/30 outline-none transition-all text-gray-700"
+                            {...register("subject")}
+                            className={errors.subject ? inputErr + " text-gray-700" : inputOk + " text-gray-700"}
                         >
                             <option value="">Select a subject</option>
                             <option value="admissions">Admissions Inquiry</option>
@@ -108,6 +112,7 @@ export default function ContactForm({ className }) {
                             <option value="scholarships">Scholarships</option>
                             <option value="other">Other</option>
                         </select>
+                        {errors.subject && <p className="text-red-500 text-xs mt-1">{errors.subject.message}</p>}
                     </div>
 
                     <div>
@@ -117,23 +122,23 @@ export default function ContactForm({ className }) {
                         <textarea
                             id="message"
                             rows="5"
-                            name="message"
-                            required
-                            className="w-full px-4 py-3.5 rounded border border-gray-200 bg-gray-50 focus:bg-white focus:border-college-navy focus:ring-2 focus:ring-college-navy/30 dark:focus:ring-college-gold/30 outline-none transition-all resize-none"
+                            {...register("message")}
+                            className={errors.message ? inputErr + " resize-none" : inputOk + " resize-none"}
                             placeholder="How can we help you?"
                         />
+                        {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message.message}</p>}
                     </div>
 
                     <PublicButton
                         type="submit"
-                        disabled={loading}
+                        disabled={isSubmitting}
                         variant="primary"
                         size="lg"
                         className="w-full transition-all shadow-md uppercase tracking-wider text-sm font-bold py-4 rounded"
                         icon={Send}
                         shape="slanted"
                     >
-                        {loading ? "Sending..." : "Contact Us"}
+                        {isSubmitting ? "Sending..." : "Contact Us"}
                     </PublicButton>
                 </form>
             </div>

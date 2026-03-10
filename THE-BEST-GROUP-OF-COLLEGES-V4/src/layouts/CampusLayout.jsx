@@ -1,6 +1,7 @@
 import { Outlet, NavLink, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { ChevronDown } from "lucide-react";
+import PageLoader from "../components/shared/PageLoader";
 
 const CampusLayout = () => {
   const location = useLocation();
@@ -91,7 +92,9 @@ const CampusLayout = () => {
 
       {/* Page Content */}
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 pb-6 sm:pb-8 md:pb-12">
-        <Outlet />
+        <Suspense fallback={<PageLoader />}>
+          <Outlet />
+        </Suspense>
       </div>
     </div>
   );

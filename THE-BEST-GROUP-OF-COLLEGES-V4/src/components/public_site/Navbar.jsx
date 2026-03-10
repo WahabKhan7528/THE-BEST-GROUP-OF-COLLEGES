@@ -77,7 +77,7 @@ export default function Navbar() {
     ];
 
     return (
-        <nav className="sticky top-0 w-full z-50 bg-white border-b border-gray-200 shadow-sm">
+        <nav aria-label="Main navigation" className="sticky top-0 w-full z-50 bg-white border-b border-gray-200 shadow-sm">
             <div className="flex items-center justify-between h-14 md:h-20 lg:h-24 px-4 sm:px-6 lg:px-12">
                 {/* Logo */}
                 <Link to="/" className="group flex items-center gap-2">
@@ -88,6 +88,11 @@ export default function Navbar() {
                         loading="eager"
                         fetchpriority="high"
                     />
+                    {/* Mobile Text */}
+                    <span className="block sm:hidden text-lg font-serif font-black tracking-wider text-college-navy">
+                        THE BEST GROUP
+                    </span>
+                    {/* Desktop Text */}
                     <span className="hidden sm:block text-lg sm:text-2xl md:text-3xl font-serif font-black tracking-wider text-college-navy">
                         THE BEST GROUP
                     </span>
@@ -221,6 +226,8 @@ export default function Navbar() {
                             setIsMobileCampusOpen(false);
                         }}
                         className="p-2.5 rounded text-college-navy hover:text-college-gold transition-all"
+                        aria-label={isOpen ? "Close menu" : "Open menu"}
+                        aria-expanded={isOpen}
                     >
                         {isOpen ? <X size={20} /> : <Menu size={20} />}
                     </PublicButton>

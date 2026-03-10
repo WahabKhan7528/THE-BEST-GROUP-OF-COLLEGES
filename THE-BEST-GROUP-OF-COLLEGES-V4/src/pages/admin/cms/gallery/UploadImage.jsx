@@ -1,26 +1,25 @@
 import { useState, useRef } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { gallerySchema } from '../../../../schemas/gallerySchema';
 import { useNavigate } from 'react-router-dom';
-import { useAdminContext } from '../../../../context/AdminContext';
+import { useToast } from '../../../../context/ToastContext';
 import PortalForms from "../../../../components/shared/PortalForms";
 import { Upload, Image as ImageIcon, X, CheckCircle2 } from 'lucide-react';
 
 const UploadImage = () => {
   const navigate = useNavigate();
-  const { isDarkMode } = useAdminContext();
+  const toast = useToast();
   const fileInputRef = useRef(null);
 
-  const [form, setForm] = useState({
-    title: "",
-    album: "",
-    tags: "",
-  });
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleChange = (key, value) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
-  };
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+    resolver: zodResolver(gallerySchema),
+    defaultValues: { title: "", album: "", tags: "" }
+  });
 
   const handleFileSelect = (selectedFile) => {
     if (selectedFile && selectedFile.type.startsWith('image/')) {
@@ -59,12 +58,12 @@ const UploadImage = () => {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const onSubmit = () => {
     if (!file) {
-      alert("Please select an image to upload");
+      toast.warning("Please select an image to upload");
       return;
     }
+    toast.success("Image uploaded successfully");
     navigate("/admin/cms/gallery");
   };
 
@@ -73,10 +72,11 @@ const UploadImage = () => {
       title="Upload Media"
       subtitle="Add new photos to your campus gallery"
       backPath="/admin/cms/gallery"
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       onCancel={() => navigate("/admin/cms/gallery")}
       submitLabel="Upload Image"
       submitIcon={Upload}
+      submitting={isSubmitting}
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left Column: Upload Area */}
@@ -153,8 +153,8 @@ const UploadImage = () => {
             <div className="col-span-1 md:col-span-2">
               <PortalForms.Input
                 label="Image Title"
-                value={form.title}
-                onChange={(val) => handleChange("title", val)}
+                registration={register("title")}
+                error={errors.title?.message}
                 placeholder="e.g. Orientation Ceremony 2025"
                 required
               />
@@ -163,8 +163,7 @@ const UploadImage = () => {
             <div className="col-span-1 md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Album / Category <span className="text-red-500">*</span></label>
               <select
-                value={form.album}
-                onChange={(e) => handleChange("album", e.target.value)}
+                {...register("album")}
                 className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none dark:text-white"
                 required
               >
@@ -180,8 +179,7 @@ const UploadImage = () => {
             <div className="col-span-1 md:col-span-2">
               <PortalForms.Input
                 label="Tags (Optional)"
-                value={form.tags}
-                onChange={(val) => handleChange("tags", val)}
+                registration={register("tags")}
                 placeholder="e.g. students, auditorium, celebration"
                 helper="Comma separated"
               />

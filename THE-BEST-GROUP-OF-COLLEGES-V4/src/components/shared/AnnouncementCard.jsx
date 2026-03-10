@@ -4,7 +4,7 @@ import Card from '../public_site/Card';
 const AnnouncementCard = ({ announcement, role = 'faculty' }) => {
     if (role === 'student') {
         return (
-            <Card hover={false} className="p-5 border border-transparent dark:border-college-gold/50 shadow-sm">
+            <Card hover={false} className="p-5 border border-transparent dark:border-college-gold/60 shadow-sm">
                 <div className="flex items-start justify-between gap-3">
                     <div>
                         <p className="text-xs text-gray-500 dark:text-gray-400">{announcement.date}</p>
@@ -21,7 +21,7 @@ const AnnouncementCard = ({ announcement, role = 'faculty' }) => {
 
     // faculty variant (default)
     return (
-        <Card hover={false} className="p-5 border border-transparent dark:border-college-gold/50 shadow-sm">
+        <Card hover={false} className="p-5 border border-transparent dark:border-college-gold/60 shadow-sm">
             <div className="flex items-start justify-between gap-3">
                 <div className="flex-1">
                     <p className="text-xs text-gray-400 dark:text-gray-500 font-bold uppercase tracking-widest leading-none mb-2">

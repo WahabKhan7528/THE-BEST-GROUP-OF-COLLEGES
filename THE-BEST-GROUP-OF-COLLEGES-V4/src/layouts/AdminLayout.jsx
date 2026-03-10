@@ -1,12 +1,19 @@
-import { useState, useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { useState, useEffect, Suspense } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import AdminSidebar from "../components/admin/AdminSidebar";
 import AdminNavbar from "../components/admin/AdminNavbar";
 import { useAdminContext } from "../context/AdminContext";
+import PageLoader from "../components/shared/PageLoader";
 
 const AdminLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { isDarkMode } = useAdminContext();
+  const { pathname } = useLocation();
+
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   // Re-apply theme on mount to fix overrides from public layout/login pages
   useEffect(() => {
@@ -40,7 +47,9 @@ const AdminLayout = () => {
         <AdminNavbar onMenuToggle={() => setIsSidebarOpen((prev) => !prev)} />
         <main className="flex-1 p-3 sm:p-4 md:p-6 lg:p-10">
           <div className="max-w-7xl mx-auto w-full">
-            <Outlet />
+            <Suspense fallback={<PageLoader />}>
+              <Outlet />
+            </Suspense>
           </div>
         </main>
       </div>

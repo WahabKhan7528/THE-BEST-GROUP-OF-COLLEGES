@@ -1,5 +1,9 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useAdminContext } from "../../../context/AdminContext";
+import { useToast } from "../../../context/ToastContext";
+import { useConfirm } from "../../../context/ConfirmContext";
 import { useNavigate, useParams } from "react-router-dom";
 import PublicButton from "../../../components/shared/PublicButton";
 import PortalForms from "../../../components/shared/PortalForms";
@@ -9,48 +13,40 @@ import {
   Save,
   Trash2
 } from "lucide-react";
+import { classSchema } from "../../../schemas/classSchema";
 
 const EditClass = () => {
   const { id } = useParams();
   const { campuses, currentAdmin, isSuperAdmin } = useAdminContext();
+  const toast = useToast();
+  const confirmDialog = useConfirm();
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    name: "",
-    sections: "",
-    subjects: "",
-    faculty: "",
-    campus: "",
+  const { register, handleSubmit, reset, watch, formState: { errors, isSubmitting } } = useForm({
+    resolver: zodResolver(classSchema),
   });
 
+  const campusValue = watch("campus");
+
   useEffect(() => {
-    // Mock fetch data
-    setForm({
+    reset({
       name: "BSCS - 3rd Semester",
       sections: "A, B",
       subjects: "OS, DBMS, DSA",
       faculty: "Ahmed, Sara",
       campus: "main",
     });
-  }, [id]);
+  }, [id, reset]);
 
-  const handleChange = (key, value) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!form.campus) {
-      alert("Please select a campus");
-      return;
-    }
-    alert(`Class ${id} updated successfully!`);
+  const onSubmit = () => {
+    toast.success(`Class ${id} updated successfully!`);
     navigate("/admin/classes");
   };
 
-  const handleDelete = () => {
-    if (confirm("Are you sure you want to delete this class?")) {
-      alert(`Class ${id} deleted.`);
+  const handleDelete = async () => {
+    const confirmed = await confirmDialog({ title: "Delete Class", message: "Are you sure you want to delete this class?", confirmText: "Delete", variant: "danger" });
+    if (confirmed) {
+      toast.success(`Class ${id} deleted.`);
       navigate("/admin/classes");
     }
   };
@@ -67,10 +63,11 @@ const EditClass = () => {
       title="Edit Class"
       subtitle="Update class details and assignments"
       backPath="/admin/classes"
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       onCancel={() => navigate("/admin/classes")}
       submitLabel="Save Changes"
       submitIcon={Save}
+      submitting={isSubmitting}
       headerActions={
         <PublicButton
           onClick={handleDelete}
@@ -96,7 +93,7 @@ const EditClass = () => {
                   key={campus.id}
                   className={`
                     relative flex flex-col items-center justify-center p-4 rounded-xl border-2 cursor-pointer transition-all duration-200
-                    ${form.campus === campus.id
+                    ${campusValue === campus.id
                       ? "bg-college-navy/5 border-college-navy dark:bg-college-gold/10 dark:border-college-gold shadow-sm"
                       : "bg-white border-gray-100 hover:bg-gray-50 dark:bg-college-navy/50 dark:border-college-gold/20 dark:hover:bg-college-navy/80"
                     }
@@ -104,14 +101,12 @@ const EditClass = () => {
                 >
                   <input
                     type="radio"
-                    name="campus"
                     value={campus.id}
-                    checked={form.campus === campus.id}
-                    onChange={(e) => handleChange("campus", e.target.value)}
+                    {...register("campus")}
                     className="sr-only"
                   />
-                  <Building2 className={`w-6 h-6 mb-2 ${form.campus === campus.id ? 'text-college-navy dark:text-college-gold' : 'text-gray-400'}`} />
-                  <span className={`text-sm font-bold text-center ${form.campus === campus.id ? 'text-college-navy dark:text-college-gold' : 'text-gray-600 dark:text-gray-400'}`}>
+                  <Building2 className={`w-6 h-6 mb-2 ${campusValue === campus.id ? 'text-college-navy dark:text-college-gold' : 'text-gray-400'}`} />
+                  <span className={`text-sm font-bold text-center ${campusValue === campus.id ? 'text-college-navy dark:text-college-gold' : 'text-gray-600 dark:text-gray-400'}`}>
                     {campus.name}
                   </span>
                   <div className="absolute top-2 right-2 text-college-navy dark:text-college-gold">
@@ -135,8 +130,8 @@ const EditClass = () => {
         <div className="col-span-1 md:col-span-2">
           <PortalForms.Input
             label="Class Name"
-            value={form.name}
-            onChange={(val) => handleChange("name", val)}
+            registration={register("name")}
+            error={errors.name?.message}
             placeholder="e.g. BSCS - 3rd Semester"
             required
           />
@@ -145,8 +140,7 @@ const EditClass = () => {
         <div>
           <PortalForms.Input
             label="Sections"
-            value={form.sections}
-            onChange={(val) => handleChange("sections", val)}
+            registration={register("sections")}
             placeholder="e.g. A, B, C (Comma separated)"
           />
         </div>
@@ -154,8 +148,7 @@ const EditClass = () => {
         <div>
           <PortalForms.Input
             label="Assign Faculty Lead"
-            value={form.faculty}
-            onChange={(val) => handleChange("faculty", val)}
+            registration={register("faculty")}
             placeholder="e.g. Prof. Ahmed Raza"
           />
         </div>
@@ -166,8 +159,7 @@ const EditClass = () => {
           </label>
           <div className="relative">
             <textarea
-              value={form.subjects}
-              onChange={(e) => handleChange("subjects", e.target.value)}
+              {...register("subjects")}
               placeholder="e.g. Operating Systems, Data Structures, Linear Algebra..."
               rows="3"
               className="w-full pr-4 py-3 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all resize-none dark:text-white dark:placeholder-gray-500"

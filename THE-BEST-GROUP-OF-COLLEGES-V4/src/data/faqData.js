@@ -27,16 +27,4 @@ export const faqs = [
         question: "What are the campus facilities?",
         answer: "All campuses feature modern laboratories, libraries, computer labs, sports facilities, and recreational areas for student development.",
     },
-    {
-        question: "What are the campus facilities?",
-        answer: "All campuses feature modern laboratories, libraries, computer labs, sports facilities, and recreational areas for student development.",
-    },
-    {
-        question: "What are the campus facilities?",
-        answer: "All campuses feature modern laboratories, libraries, computer labs, sports facilities, and recreational areas for student development.",
-    },
-    {
-        question: "What are the campus facilities?",
-        answer: "All campuses feature modern laboratories, libraries, computer labs, sports facilities, and recreational areas for student development.",
-    },
 ];

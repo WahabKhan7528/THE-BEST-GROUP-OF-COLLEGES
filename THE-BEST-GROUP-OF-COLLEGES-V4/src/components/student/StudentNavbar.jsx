@@ -1,9 +1,18 @@
 import { Menu, Home, GraduationCap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useStudentContext } from "../../context/StudentContext";
 import DarkModeToggle from "../shared/DarkModeToggle";
 
 const StudentNavbar = ({ onMenuToggle }) => {
     const navigate = useNavigate();
+    const { currentStudent } = useStudentContext();
+
+    const initials =
+        currentStudent?.name
+            ?.split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase() || "S";
 
     return (
         <header className="h-20 bg-white/70 dark:bg-college-navy backdrop-blur-xl border-b border-gray-200/50 dark:border-college-gold/15 sticky top-0 z-20 px-4 lg:px-8 shadow-sm transition-colors duration-300">
@@ -32,6 +41,7 @@ const StudentNavbar = ({ onMenuToggle }) => {
                         onClick={() => navigate("/")}
                         className="p-2 sm:p-2.5 rounded-xl text-gray-500 hover:bg-college-navy/10 hover:text-college-navy dark:hover:bg-college-gold/10 dark:hover:text-college-gold transition-all duration-200"
                         title="Back to Home"
+                        aria-label="Back to Home"
                     >
                         <Home size={18} className="sm:w-5 sm:h-5" />
                     </button>
@@ -41,14 +51,14 @@ const StudentNavbar = ({ onMenuToggle }) => {
                     <div className="flex items-center gap-2 sm:gap-3 p-1 sm:p-1.5 sm:pl-2 rounded-xl group cursor-default">
                         <div className="hidden sm:block text-right">
                             <p className="text-sm font-semibold text-college-navy dark:text-gray-200 leading-none">
-                                Ayesha Khan
+                                {currentStudent?.name || "Student User"}
                             </p>
                             <p className="text-xs text-gray-500 mt-1 leading-none">
-                                CS • Semester 5
+                                {currentStudent?.department || "Student"} • Semester {currentStudent?.semester || ""}
                             </p>
                         </div>
                         <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-college-navy text-white flex items-center justify-center text-xs sm:text-sm font-bold shadow-sm ring-2 ring-college-gold/30">
-                            AK
+                            {initials}
                         </div>
                     </div>
                 </div>

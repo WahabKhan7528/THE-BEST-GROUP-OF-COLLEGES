@@ -18,6 +18,7 @@ const PortalForms = ({
     submitIcon: SubmitIcon,
     cancelLabel = "Cancel",
     headerActions,
+    submitting = false,
     children
 }) => {
     return (
@@ -70,8 +71,9 @@ const PortalForms = ({
                         size="md"
                         className="px-6 md:px-8 font-bold shadow-md transform hover:-translate-y-0.5"
                         icon={SubmitIcon}
+                        disabled={submitting}
                     >
-                        {submitLabel}
+                        {submitting ? "Saving..." : submitLabel}
                     </PublicButton>
                 </div>
             </form>

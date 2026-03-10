@@ -1,5 +1,10 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { editCampusSchema } from "../../../schemas/campusSchema";
 import { useAdminContext } from "../../../context/AdminContext";
+import { useToast } from "../../../context/ToastContext";
+import { useConfirm } from "../../../context/ConfirmContext";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import PublicButton from "../../../components/shared/PublicButton";
 import PortalForms from "../../../components/shared/PortalForms";
@@ -9,84 +14,45 @@ const EditCampus = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { campuses, isDarkMode } = useAdminContext();
-  const [loading, setLoading] = useState(false);
+  const { campuses } = useAdminContext();
+  const toast = useToast();
+  const confirmDialog = useConfirm();
 
-  const [form, setForm] = useState({
-    name: "",
-    code: "",
-    location: "",
-    contact: {
-      phone: "",
-      email: "",
-      website: ""
-    },
-    dean: "",
-    established: ""
+  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({
+    resolver: zodResolver(editCampusSchema),
+    defaultValues: {
+      name: "", code: "", location: "", dean: "", established: "",
+      contact: { phone: "", email: "", website: "" }
+    }
   });
 
   useEffect(() => {
-    if (location.state?.campus) {
-      const { campus } = location.state;
-      setForm({
+    const campus = location.state?.campus || campuses.find(c => c.id === id);
+    if (campus) {
+      reset({
         name: campus.name || "",
         code: campus.code || "",
         location: campus.location || "",
+        dean: campus.dean || "",
+        established: campus.established || "",
         contact: {
           phone: campus.contact?.phone || "",
           email: campus.contact?.email || "",
           website: campus.contact?.website || ""
-        },
-        dean: campus.dean || "",
-        established: campus.established || ""
-      });
-    } else {
-      const foundCampus = campuses.find(c => c.id === id);
-      if (foundCampus) {
-        setForm({
-          name: foundCampus.name || "",
-          code: foundCampus.code || "",
-          location: foundCampus.location || "",
-          contact: {
-            phone: foundCampus.contact?.phone || "",
-            email: foundCampus.contact?.email || "",
-            website: foundCampus.contact?.website || ""
-          },
-          dean: foundCampus.dean || "",
-          established: foundCampus.established || ""
-        });
-      }
-    }
-  }, [id, location.state, campuses]);
-
-  const handleChange = (key, value) => {
-    if (key.includes('.')) {
-      const [parent, child] = key.split('.');
-      setForm(prev => ({
-        ...prev,
-        [parent]: {
-          ...prev[parent],
-          [child]: value
         }
-      }));
-    } else {
-      setForm(prev => ({ ...prev, [key]: value }));
+      });
     }
+  }, [id, location.state, campuses, reset]);
+
+  const onSubmit = () => {
+    toast.success("Campus updated successfully");
+    navigate("/admin/campus");
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      alert(`Campus ${form.name} updated successfully!`);
-      navigate("/admin/campus");
-    }, 1000);
-  };
-
-  const handleDelete = () => {
-    if (window.confirm(`Are you sure you want to delete ${form.name}? This cannot be undone.`)) {
-      alert("Campus deleted successfully");
+  const handleDelete = async () => {
+    const confirmed = await confirmDialog({ title: "Delete Campus", message: `Are you sure you want to delete ${form.name}? This cannot be undone.`, confirmText: "Delete", variant: "danger" });
+    if (confirmed) {
+      toast.success("Campus deleted successfully");
       navigate("/admin/campus");
     }
   };
@@ -96,10 +62,11 @@ const EditCampus = () => {
       title="Edit Campus"
       subtitle="Update campus details and configuration"
       backPath="/admin/campus"
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       onCancel={() => navigate("/admin/campus")}
       submitLabel="Save Changes"
       submitIcon={Save}
+      submitting={isSubmitting}
       headerActions={
         <PublicButton
           onClick={handleDelete}
@@ -117,8 +84,8 @@ const EditCampus = () => {
         <div className="col-span-1 md:col-span-2">
           <PortalForms.Input
             label="Campus Name"
-            value={form.name}
-            onChange={(val) => handleChange("name", val)}
+            registration={register("name")}
+            error={errors.name?.message}
             required
           />
         </div>
@@ -126,8 +93,8 @@ const EditCampus = () => {
         <div>
           <PortalForms.Input
             label="Campus Code"
-            value={form.code}
-            onChange={(val) => handleChange("code", val)}
+            registration={register("code")}
+            error={errors.code?.message}
             required
           />
         </div>
@@ -135,8 +102,7 @@ const EditCampus = () => {
         <div>
           <PortalForms.Input
             label="Established Year"
-            value={form.established}
-            onChange={(val) => handleChange("established", val)}
+            registration={register("established")}
             placeholder="e.g. 1995"
           />
         </div>
@@ -147,8 +113,8 @@ const EditCampus = () => {
         <div className="col-span-1 md:col-span-2">
           <PortalForms.Input
             label="Address / Location"
-            value={form.location}
-            onChange={(val) => handleChange("location", val)}
+            registration={register("location")}
+            error={errors.location?.message}
           />
         </div>
 
@@ -156,8 +122,7 @@ const EditCampus = () => {
           <PortalForms.Input
             label="Phone Number"
             type="tel"
-            value={form.contact.phone}
-            onChange={(val) => handleChange("contact.phone", val)}
+            registration={register("contact.phone")}
           />
         </div>
 
@@ -165,8 +130,8 @@ const EditCampus = () => {
           <PortalForms.Input
             label="Email Address"
             type="email"
-            value={form.contact.email}
-            onChange={(val) => handleChange("contact.email", val)}
+            registration={register("contact.email")}
+            error={errors.contact?.email?.message}
           />
         </div>
       </PortalForms.Section>

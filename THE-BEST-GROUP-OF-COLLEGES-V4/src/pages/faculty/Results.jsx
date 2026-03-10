@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useFacultyContext } from "../../context/FacultyContext";
+import { useToast } from "../../context/ToastContext";
 import ResultEntryTable from "../../components/faculty/ResultEntryTable";
 import PortalPageHeader from "../../components/shared/PortalPageHeader";
 import Badge from "../../components/public_site/Badge";
@@ -198,6 +199,7 @@ const campusNames = {
 
 const Results = () => {
   const { getCurrentCampus, getClassesByCurrentCampus, isDarkMode } = useFacultyContext();
+  const toast = useToast();
   const campus = getCurrentCampus();
   const classes = getClassesByCurrentCampus();
   const studentsByClass = studentByClassByCampus[campus] || {};
@@ -228,7 +230,7 @@ const Results = () => {
       : 0;
 
   const handleSaveMarks = () => {
-    alert("Marks saved successfully! (This is a mock action)");
+    toast.success("Marks saved successfully!");
   };
 
   return (

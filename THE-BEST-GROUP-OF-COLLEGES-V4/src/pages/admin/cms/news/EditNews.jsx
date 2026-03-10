@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { newsSchema } from "../../../../schemas/newsSchema";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAdminContext } from "../../../../context/AdminContext";
+import { useToast } from "../../../../context/ToastContext";
+import { useConfirm } from "../../../../context/ConfirmContext";
 import PublicButton from "../../../../components/shared/PublicButton";
 import PortalForms from "../../../../components/shared/PortalForms";
 import {
@@ -11,31 +16,30 @@ import {
   Save,
   Trash2,
   Upload,
-  MapPin,
-  Clock
+  MapPin
 } from "lucide-react";
 
 const EditNews = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { isDarkMode } = useAdminContext();
+  const toast = useToast();
+  const confirmDialog = useConfirm();
   const [type, setType] = useState("news");
-  const [form, setForm] = useState({
-    title: "",
-    date: "",
-    time: "",
-    location: "",
-    description: "",
-    category: "",
-    status: "Published",
-    image: null,
+  const [image, setImage] = useState(null);
+
+  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({
+    resolver: zodResolver(newsSchema),
+    defaultValues: {
+      title: "", date: "", time: "", location: "",
+      description: "", category: "", status: "Published"
+    }
   });
 
   useEffect(() => {
     if (id === 'n1' || id === 'n4') setType('event');
     else setType('news');
 
-    setForm({
+    reset({
       title: id === 'n1' ? "Convocation 2025" : "Best Group Achieves Higher Accreditation",
       date: "2026-01-30",
       time: "10:00",
@@ -43,30 +47,24 @@ const EditNews = () => {
       description: "Detailed description of the event...",
       category: "Academic",
       status: "Published",
-      image: { name: "banner.jpg" },
     });
-  }, [id]);
-
-  const handleChange = (key, value) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
-  };
+    setImage({ name: "banner.jpg" });
+  }, [id, reset]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      handleChange("image", file);
-    }
+    if (file) setImage(file);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert(`${type === "news" ? "News" : "Event"} ${id} updated successfully!`);
+  const onSubmit = () => {
+    toast.success(`${type === "news" ? "News" : "Event"} updated successfully`);
     navigate("/admin/cms/news");
   };
 
-  const handleDelete = () => {
-    if (confirm("Are you sure you want to delete this post?")) {
-      alert(`Post ${id} deleted.`);
+  const handleDelete = async () => {
+    const confirmed = await confirmDialog({ title: "Delete Post", message: "Are you sure you want to delete this post?", confirmText: "Delete", variant: "danger" });
+    if (confirmed) {
+      toast.success(`Post ${id} deleted`);
       navigate("/admin/cms/news");
     }
   };
@@ -76,10 +74,11 @@ const EditNews = () => {
       title="Edit Post"
       subtitle="Update communication details"
       backPath="/admin/cms/news"
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       onCancel={() => navigate("/admin/cms/news")}
       submitLabel="Save Changes"
       submitIcon={Save}
+      submitting={isSubmitting}
       headerActions={
         <PublicButton
           onClick={handleDelete}
@@ -117,11 +116,10 @@ const EditNews = () => {
               </div>
             </div>
 
-            <div className="col-span-1">
+            <div className="col-span-1 md:col-span-2">
               <label className="block text-sm font-bold text-college-navy dark:text-gray-200 mb-2">Subject Category</label>
               <select
-                value={form.category}
-                onChange={(e) => handleChange("category", e.target.value)}
+                {...register("category")}
                 className="w-full px-5 py-3.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/10 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold transition-all text-base appearance-none dark:text-white"
               >
                 <option value="" disabled>Select category</option>
@@ -133,18 +131,7 @@ const EditNews = () => {
               </select>
             </div>
 
-            <div className="col-span-1">
-              <label className="block text-sm font-bold text-college-navy dark:text-gray-200 mb-2">Publishing Status</label>
-              <select
-                value={form.status}
-                onChange={(e) => handleChange("status", e.target.value)}
-                className="w-full px-5 py-3.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/10 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold transition-all text-base appearance-none dark:text-white"
-              >
-                <option value="Draft">Draft</option>
-                <option value="Published">Published</option>
-                <option value="Archived">Archived</option>
-              </select>
-            </div>
+
           </PortalForms.Section>
 
           {/* Section 2: Content Details */}
@@ -152,8 +139,8 @@ const EditNews = () => {
             <div className="col-span-1 md:col-span-2">
               <PortalForms.Input
                 label="Headline / Title"
-                value={form.title}
-                onChange={(val) => handleChange("title", val)}
+                registration={register("title")}
+                error={errors.title?.message}
                 placeholder="Enter a compelling title"
                 required
               />
@@ -161,8 +148,7 @@ const EditNews = () => {
             <div className="col-span-1 md:col-span-2">
               <label className="block text-sm font-bold text-college-navy dark:text-gray-200 mb-2">Main Content <span className="text-red-500 font-bold ml-0.5">*</span></label>
               <textarea
-                value={form.description}
-                onChange={(e) => handleChange("description", e.target.value)}
+                {...register("description")}
                 rows={8}
                 placeholder="Draft the article or announcement details here..."
                 className="w-full px-5 py-3.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/10 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold transition-all text-base resize-none leading-relaxed dark:text-white dark:placeholder-gray-500 shadow-inner"
@@ -181,8 +167,7 @@ const EditNews = () => {
               <PortalForms.Input
                 label="Date"
                 type="date"
-                value={form.date}
-                onChange={(val) => handleChange("date", val)}
+                registration={register("date")}
                 required
               />
             </div>
@@ -192,8 +177,7 @@ const EditNews = () => {
                 <PortalForms.Input
                   label="Time"
                   type="time"
-                  value={form.time}
-                  onChange={(val) => handleChange("time", val)}
+                  registration={register("time")}
                 />
               </div>
             )}
@@ -205,8 +189,7 @@ const EditNews = () => {
                   <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-college-gold w-4 h-4" />
                   <input
                     type="text"
-                    value={form.location}
-                    onChange={(e) => handleChange("location", e.target.value)}
+                    {...register("location")}
                     placeholder="Event Venue"
                     className="w-full pl-10 pr-5 py-3.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/10 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm dark:text-white dark:placeholder-gray-500 shadow-sm"
                   />
@@ -233,12 +216,12 @@ const EditNews = () => {
                   <span className="text-[10px] text-gray-400 mt-2 uppercase tracking-widest font-bold">SVG, PNG, JPG (max 2MB)</span>
                 </label>
               </div>
-              {form.image && (
+              {image && (
                 <div className="mt-4 bg-college-navy/5 dark:bg-college-gold/5 text-college-navy dark:text-college-gold px-4 py-3 rounded-xl text-xs flex items-center gap-3 border border-college-navy/10 dark:border-college-gold/10 animate-in fade-in slide-in-from-top-2 duration-300">
                   <div className="p-1.5 bg-white dark:bg-college-navy rounded-lg shadow-sm">
                     <ImageIcon className="w-3.5 h-3.5" />
                   </div>
-                  <span className="truncate flex-1 font-medium">{form.image.name}</span>
+                  <span className="truncate flex-1 font-medium">{image.name}</span>
                 </div>
               )}
             </div>

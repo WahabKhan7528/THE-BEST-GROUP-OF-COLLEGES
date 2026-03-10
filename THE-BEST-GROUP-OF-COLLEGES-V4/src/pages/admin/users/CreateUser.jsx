@@ -1,32 +1,32 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { userSchema } from "../../../schemas/userSchema";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "../../../context/ToastContext";
 import PortalForms from "../../../components/shared/PortalForms";
 import { useAdminContext } from "../../../context/AdminContext";
-import { UserPlus, Building2, Shield, User, X } from "lucide-react";
+import { UserPlus, X } from "lucide-react";
 
 const CreateUser = () => {
   const navigate = useNavigate();
-  const { campuses, isDarkMode } = useAdminContext();
+  const { campuses } = useAdminContext();
+  const toast = useToast();
   const [role, setRole] = useState("Faculty");
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    id: "",
-    department: "",
-    subjects: "",
-    contact: "",
-    password: "",
-    confirmPassword: "",
-    campuses: [],
-    // New fields
-    program: "",
-    semester: "",
-    section: "",
-    designation: "",
-    qualification: "",
-  });
-  // Allocations for Faculty: Array of { class: "", subject: "" }
   const [allocations, setAllocations] = useState([{ class: "", subject: "" }]);
+  const [selectedCampuses, setSelectedCampuses] = useState([]);
+
+  const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm({
+    resolver: zodResolver(userSchema),
+    defaultValues: {
+      name: "", email: "", id: "", subjects: "",
+      contact: "", password: "", confirmPassword: "",
+      course: "", semester: "", class: "", academicSystem: "Semester",
+      designation: "", qualification: ""
+    }
+  });
+
+  const academicSystem = watch("academicSystem");
 
   const handleAllocationChange = (index, field, value) => {
     const newAllocations = [...allocations];
@@ -41,50 +41,21 @@ const CreateUser = () => {
   const removeAllocation = (index) => {
     setAllocations(allocations.filter((_, i) => i !== index));
   };
-  const [selectedCampuses, setSelectedCampuses] = useState([]);
-
-  const handleChange = (key, value) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
-  };
 
   const handleCampusToggle = (campusId) => {
-    setSelectedCampuses((prev) => {
-      const updated = prev.includes(campusId)
+    setSelectedCampuses((prev) =>
+      prev.includes(campusId)
         ? prev.filter((id) => id !== campusId)
-        : [...prev, campusId];
-      // Sync with form state immediately
-      setForm((prevForm) => ({ ...prevForm, campuses: updated }));
-      return updated;
-    });
+        : [...prev, campusId]
+    );
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    // Validation
-    if (!form.name.trim() || !form.email.trim()) {
-      alert("Name and Email are required");
-      return;
-    }
-
+  const onSubmit = (data) => {
     if (role !== "Super Admin" && selectedCampuses.length === 0) {
-      alert(`Please allocate at least one campus for ${role}`);
+      toast.warning(`Please allocate at least one campus for ${role}`);
       return;
     }
-
-    const userData = {
-      ...form,
-      role,
-      allocatedCampuses: selectedCampuses,
-      teachingAllocations: role === "Faculty" ? allocations : []
-    };
-
-    let alertMessage = `User created as ${role} (mock)`;
-    if (role === "Faculty") {
-      alertMessage += `\nClasses Assigned: ${allocations.length}`;
-      allocations.forEach(a => alertMessage += `\n- ${a.subject} to ${a.class}`);
-    }
-    alert(alertMessage);
+    toast.success(`User created as ${role} (mock)`);
     navigate("/admin/users");
   };
 
@@ -98,10 +69,11 @@ const CreateUser = () => {
       title="Create New User"
       subtitle="Add a new administrator, faculty member, or student"
       backPath="/admin/users"
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       onCancel={() => navigate("/admin/users")}
       submitLabel="Create User"
       submitIcon={UserPlus}
+      submitting={isSubmitting}
     >
       {/* Role Selection Section */}
       <PortalForms.Section title="Role & Permissions">
@@ -138,30 +110,28 @@ const CreateUser = () => {
       <PortalForms.Section title="Personal Identity">
         <PortalForms.Input
           label="Full Name"
-          value={form.name}
-          onChange={(v) => handleChange("name", v)}
+          registration={register("name")}
+          error={errors.name?.message}
           required
           placeholder="e.g. John Doe"
         />
         <PortalForms.Input
           label="Email Address"
           type="email"
-          value={form.email}
-          onChange={(v) => handleChange("email", v)}
+          registration={register("email")}
+          error={errors.email?.message}
           required
           placeholder="e.g. john@best.edu"
         />
         <PortalForms.Input
           label={role === "Student" ? "Roll Number / Student ID" : "Employee ID"}
-          value={form.id}
-          onChange={(v) => handleChange("id", v)}
+          registration={register("id")}
           helper="Unique system identifier"
           placeholder="e.g. S-2024-001"
         />
         <PortalForms.Input
           label="Contact Number"
-          value={form.contact}
-          onChange={(v) => handleChange("contact", v)}
+          registration={register("contact")}
           placeholder="+92-xxx-xxxxxxx"
         />
       </PortalForms.Section>
@@ -172,30 +142,42 @@ const CreateUser = () => {
           {role === "Student" && (
             <>
               <PortalForms.Input
-                label="Program / Department"
-                value={form.program}
-                onChange={(v) => handleChange("program", v)}
+                label="Course"
+                registration={register("course")}
                 placeholder="e.g. BSCS, BBA, LLB"
                 required
               />
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Academic System</label>
+                <div className="flex gap-4 p-2 bg-gray-50/50 dark:bg-college-navy/30 rounded-xl border border-college-navy/10 dark:border-college-gold/10">
+                  {["Semester", "Annual"].map((sys) => (
+                    <label key={sys} className="flex items-center gap-2 cursor-pointer px-3 py-1.5 rounded-lg hover:bg-college-navy/5 dark:hover:bg-college-gold/5 transition-colors">
+                      <input
+                        type="radio"
+                        value={sys}
+                        {...register("academicSystem")}
+                        className="w-4 h-4 text-college-navy focus:ring-college-navy dark:focus:ring-college-gold border-gray-300 dark:border-white/20"
+                      />
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{sys}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
               <PortalForms.Input
-                label="Semester"
-                value={form.semester}
-                onChange={(v) => handleChange("semester", v)}
-                placeholder="e.g. 1st, 5th"
+                label={academicSystem === "Annual" ? "Year" : "Semester"}
+                registration={register("semester")}
+                placeholder={academicSystem === "Annual" ? "e.g. 1st Year, 2nd Year" : "e.g. 1st, 5th"}
                 required
               />
               <PortalForms.Input
-                label="Section"
-                value={form.section}
-                onChange={(v) => handleChange("section", v)}
+                label="Class"
+                registration={register("class")}
                 placeholder="e.g. A, Morning"
                 required
               />
               <PortalForms.Input
-                label="Enrollment Year" // Extra useful field
-                value={form.enrollmentYear || ""}
-                onChange={(v) => handleChange("enrollmentYear", v)}
+                label="Enrollment Year"
+                registration={register("enrollmentYear")}
                 placeholder="e.g. 2024"
               />
             </>
@@ -204,23 +186,14 @@ const CreateUser = () => {
           {role === "Faculty" && (
             <>
               <PortalForms.Input
-                label="Department"
-                value={form.department}
-                onChange={(v) => handleChange("department", v)}
-                placeholder="e.g. Computer Science"
-                required
-              />
-              <PortalForms.Input
                 label="Designation"
-                value={form.designation}
-                onChange={(v) => handleChange("designation", v)}
+                registration={register("designation")}
                 placeholder="e.g. Lecturer, Assistant Professor"
                 required
               />
               <PortalForms.Input
                 label="Qualification"
-                value={form.qualification}
-                onChange={(v) => handleChange("qualification", v)}
+                registration={register("qualification")}
                 placeholder="e.g. PhD, MSCS"
               />
               <div className="md:col-span-2 space-y-3">
@@ -274,8 +247,7 @@ const CreateUser = () => {
           {(role === "Sub-Admin" || role === "Super Admin") && (
             <PortalForms.Input
               label="Designation / Role Title"
-              value={form.designation}
-              onChange={(v) => handleChange("designation", v)}
+              registration={register("designation")}
               placeholder="e.g. Campus Manager, Registrar"
             />
           )}
@@ -357,16 +329,15 @@ const CreateUser = () => {
         <PortalForms.Input
           label="Password"
           type="password"
-          value={form.password}
-          onChange={(v) => handleChange("password", v)}
+          registration={register("password")}
           helper="Leave blank to auto-generate secure password"
           placeholder="••••••••"
         />
         <PortalForms.Input
           label="Confirm Password"
           type="password"
-          value={form.confirmPassword}
-          onChange={(v) => handleChange("confirmPassword", v)}
+          registration={register("confirmPassword")}
+          error={errors.confirmPassword?.message}
           placeholder="••••••••"
         />
       </PortalForms.Section>

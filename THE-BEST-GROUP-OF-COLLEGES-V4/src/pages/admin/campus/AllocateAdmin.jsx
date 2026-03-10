@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import PublicButton from "../../../components/shared/PublicButton";
 import { useAdminContext } from "../../../context/AdminContext";
+import { useToast } from "../../../context/ToastContext";
 import { mockAllAdmins } from "../../../data/adminData";
 
 
@@ -12,6 +13,7 @@ const AllocateAdmin = () => {
   const location = useLocation();
   const { campuses, adminCampusAllocations, updateAdminAllocations, isDarkMode } =
     useAdminContext();
+  const toast = useToast();
 
   const [campus, setCampus] = useState(null);
   const [selectedAdmins, setSelectedAdmins] = useState([]);
@@ -74,7 +76,7 @@ const AllocateAdmin = () => {
       updateAdminAllocations(adminId, campuses);
     });
 
-    alert("Admin allocations updated! (Mock - will be connected to backend)");
+    toast.success("Admin allocations updated!");
     navigate("/admin/campus");
   };
 

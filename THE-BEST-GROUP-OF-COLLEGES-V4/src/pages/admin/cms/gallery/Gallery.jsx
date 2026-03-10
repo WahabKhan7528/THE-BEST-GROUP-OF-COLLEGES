@@ -1,6 +1,8 @@
 import { useNavigate, Link } from 'react-router-dom';
 import PublicButton from '../../../../components/shared/PublicButton';
 import { useAdminContext } from '../../../../context/AdminContext';
+import { useToast } from '../../../../context/ToastContext';
+import { useConfirm } from '../../../../context/ConfirmContext';
 import {
   Plus,
   Image,
@@ -17,6 +19,8 @@ import { adminGalleryImages as images } from "../../../../data/adminData";
 const Gallery = () => {
   const navigate = useNavigate();
   const { isDarkMode } = useAdminContext();
+  const toast = useToast();
+  const confirmDialog = useConfirm();
   const [activeFilter, setActiveFilter] = useState("All");
   const albums = ["All", ...new Set(images.map(img => img.album))];
 
@@ -78,6 +82,28 @@ const Gallery = () => {
       </div>
 
       {/* Gallery Grid */}
+      {filteredImages.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-12 bg-white/50 dark:bg-college-navy/50 backdrop-blur-sm rounded-2xl border border-dashed border-gray-300 dark:border-college-gold/20 mb-6">
+          <div className="w-16 h-16 bg-gray-50 dark:bg-college-gold/10 rounded-full flex items-center justify-center mb-4">
+            <Image className="w-8 h-8 text-gray-400 dark:text-college-gold/40" />
+          </div>
+          <h3 className="text-lg font-medium text-college-navy dark:text-white">No images found</h3>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 mb-4 max-w-sm text-center">
+            {activeFilter !== "All"
+              ? "Try selecting a different album filter."
+              : "Get started by uploading a new image."}
+          </p>
+          {activeFilter !== "All" && (
+            <button
+              onClick={() => setActiveFilter("All")}
+              className="text-college-navy dark:text-college-gold text-sm font-medium hover:underline"
+            >
+              Clear filter
+            </button>
+          )}
+        </div>
+      )}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {filteredImages.map((img) => (
           <div
@@ -103,10 +129,9 @@ const Gallery = () => {
                   <Pencil className="w-4 h-4" />
                 </button>
                 <button
-                  onClick={() => {
-                    if (window.confirm(`Delete image "${img.title}"?`)) {
-                      alert("Image deleted (mock)");
-                    }
+                  onClick={async () => {
+                    const confirmed = await confirmDialog({ title: "Delete Image", message: `Delete image "${img.title}"?`, confirmText: "Delete", variant: "danger" });
+                    if (confirmed) toast.success("Image deleted");
                   }}
                   className="p-2 bg-white/90 backdrop-blur-sm rounded-full text-gray-700 hover:text-rose-600 hover:bg-white transition-colors shadow-sm"
                   title="Delete"

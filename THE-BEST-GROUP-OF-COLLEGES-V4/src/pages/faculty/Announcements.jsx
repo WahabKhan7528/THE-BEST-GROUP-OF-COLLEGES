@@ -1,5 +1,9 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { announcementSchema } from "../../schemas/announcementSchema";
 import { useFacultyContext } from "../../context/FacultyContext";
+import { useToast } from "../../context/ToastContext";
 import AnnouncementCard from "../../components/shared/AnnouncementCard";
 import PortalPageHeader from "../../components/shared/PortalPageHeader";
 import Badge from "../../components/public_site/Badge";
@@ -62,23 +66,26 @@ const announcementsByCampus = {
 
 
 const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const toast = useToast();
   const [selectedClasses, setSelectedClasses] = useState([]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!title || !description || selectedClasses.length === 0) {
-      alert("Please fill all fields and select at least one class.");
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(announcementSchema),
+    defaultValues: { title: "", description: "" }
+  });
+
+  const onSubmitForm = (data) => {
+    if (selectedClasses.length === 0) {
+      toast.warning("Please select at least one class.");
       return;
     }
 
     const newAnnouncement = {
-      title,
-      description,
+      title: data.title,
+      description: data.description,
       date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
       classSection: selectedClasses.map(id => classes.find(c => c.id === id)?.code).join(", "),
-      classes: selectedClasses // Store IDs for logic if needed
+      classes: selectedClasses
     };
 
     onPost(newAnnouncement);
@@ -101,16 +108,16 @@ const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
             <input
               type="text"
               className="w-full px-4 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold outline-none dark:text-white"
               placeholder="e.g. Quiz on Monday"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              {...register("title")}
             />
+            {errors.title && <p className="text-xs text-red-500 mt-1">{errors.title.message}</p>}
           </div>
 
           <div>
@@ -119,9 +126,9 @@ const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
               rows={4}
               className="w-full px-4 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold outline-none resize-none dark:text-white"
               placeholder="Details about the announcement..."
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              {...register("description")}
             />
+            {errors.description && <p className="text-xs text-red-500 mt-1">{errors.description.message}</p>}
           </div>
 
           <div>

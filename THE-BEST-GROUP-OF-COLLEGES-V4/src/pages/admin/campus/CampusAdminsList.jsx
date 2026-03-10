@@ -3,11 +3,12 @@ import { useState } from "react";
 import PublicButton from "../../../components/shared/PublicButton";
 import Table from "../../../components/admin/Table";
 import { useAdminContext } from "../../../context/AdminContext";
+import { useToast } from "../../../context/ToastContext";
+import { useConfirm } from "../../../context/ConfirmContext";
 import {
     Search,
     Users,
     UserPlus,
-    Shield,
     ArrowLeft,
 } from "lucide-react";
 import { mockCampusAdminsData as adminUsers } from "../../../data/adminData";
@@ -16,6 +17,8 @@ const CampusAdminsList = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { campuses, isDarkMode } = useAdminContext();
+    const toast = useToast();
+    const confirmDialog = useConfirm();
     const [searchTerm, setSearchTerm] = useState("");
     const campus = campuses.find(c => c.id === id);
 
@@ -63,10 +66,9 @@ const CampusAdminsList = () => {
         },
         {
             label: "Remove",
-            onClick: () => {
-                if (window.confirm(`Remove ${row.name} from ${campus?.name}?`)) {
-                    alert("User removed from campus (mock)");
-                }
+            onClick: async () => {
+                const confirmed = await confirmDialog({ title: "Remove Admin", message: `Remove ${row.name} from ${campus?.name}?`, confirmText: "Remove", variant: "danger" });
+                if (confirmed) toast.success("User removed from campus");
             },
             className: "text-red-600 hover:text-red-700 font-medium bg-red-50 border border-red-100 dark:bg-red-900 dark:border-transparent dark:text-gray-300 dark:hover:bg-red-800",
         }

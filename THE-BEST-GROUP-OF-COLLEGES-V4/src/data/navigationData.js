@@ -53,11 +53,11 @@ export const adminNavItems = [
         superAdminOnly: true,
     },
     { to: "/admin/users", label: "Users", icon: Users },
-    { to: "/admin/classes", label: "Classes", icon: GraduationCap },
+    { to: "/admin/courses", label: "Courses", icon: Layers },
     { to: "/admin/subjects", label: "Subjects", icon: BookOpen },
+    { to: "/admin/classes", label: "Classes", icon: GraduationCap },
     { to: "/admin/cms/news", label: "News & Events", icon: Megaphone },
     { to: "/admin/cms/gallery", label: "Gallery", icon: Image },
-    { to: "/admin/courses", label: "Courses", icon: Layers },
 ];
 
 // Faculty sidebar navigation items

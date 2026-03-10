@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import { useParams, Navigate } from "react-router-dom";
 import PublicButton from "../../components/shared/PublicButton";
 import CampusHero from "../../components/public_site/CampusHero";
 import StatsGrid from "../../components/public_site/StatsGrid";
@@ -10,14 +11,20 @@ import FacilityCard from "../../components/public_site/FacilityCard";
 import CampusCta from "../../components/public_site/CampusCta";
 
 import { programsData } from "../../data/programsData";
-import { halaCampusStats as stats, halaFacilities as facilities } from "../../data/campusData";
+import { campusPageConfig } from "../../data/campusData";
 
-const HalaCampus = () => {
-  const programs = programsData.hala[0].items;
+const CampusPage = () => {
+  const { campus } = useParams();
+  const config = campusPageConfig[campus];
+
+  if (!config) return <Navigate to="/" replace />;
+
+  const programs = programsData[campus]?.[0]?.items || [];
+  const { hero, stats, facilities, vision, programs: progSection, facilitiesSection, cta } = config;
 
   return (
     <div className="min-h-screen bg-white font-sans overflow-x-hidden">
-      <CampusHero title="Best Hala Campus" image="/halacampus.webp" />
+      <CampusHero title={hero.title} image={hero.image} />
 
       {/* Stats Overlay */}
       <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 mt-4 sm:-mt-8 md:-mt-16 lg:-mt-24">
@@ -31,20 +38,16 @@ const HalaCampus = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
             <div className="mb-4">
-              <Badge variant="outline" className="bg-college-navy/5 px-4 py-2">Regional Excellence</Badge>
+              <Badge variant="outline" className="bg-college-navy/5 px-4 py-2">{vision.badge}</Badge>
             </div>
             <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-serif font-bold mb-4 md:mb-6 text-college-navy leading-tight uppercase tracking-wide">
-              Innovation & <span className="text-college-gold underline decoration-college-gold/30 underline-offset-8">Growth</span>
+              {vision.heading} <span className="text-college-gold underline decoration-college-gold/30 underline-offset-8">{vision.headingHighlight}</span>
             </h2>
             <p className="text-gray-600 text-lg leading-relaxed mb-6 font-sans border-l-4 border-college-gold pl-6 py-2">
-              Empowering the youth of Hala with world-class education and modern skills
-              to drive regional development and personal success.
+              {vision.paragraph}
             </p>
             <div className="space-y-5">
-              {[
-                { title: "Modern Pedagogy", desc: "Interactive learning models tailored for the evolving job market." },
-                { title: "Career Readiness", desc: "Focused mentorship and internship programs for every student." },
-              ].map((item) => (
+              {vision.items.map((item) => (
                 <div key={item.title} className="group">
                   <h4 className="font-serif font-bold text-xl text-college-navy mb-1">{item.title}</h4>
                   <p className="text-gray-500 leading-relaxed text-sm">{item.desc}</p>
@@ -54,24 +57,27 @@ const HalaCampus = () => {
           </div>
 
           <div className="relative">
-
             <div className="relative border border-gray-100 shadow-xl bg-white/95 backdrop-blur-md rounded-2xl p-5 sm:p-8 md:p-10 overflow-hidden group">
               <div className="relative z-10">
                 <div className="mb-6">
-                  <Badge variant="gold" className="bg-college-navy text-college-gold px-4 py-1.5">Our Vision</Badge>
+                  <Badge variant="gold" className="bg-college-navy text-college-gold px-4 py-1.5">{vision.card.badge}</Badge>
                 </div>
                 <h3 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold mb-4 md:mb-6 text-college-navy leading-tight">
-                  Bridging Gaps, <br />Building <span className="text-college-gold">Futures</span>
+                  {vision.card.headingLine1} <br />{vision.card.headingLine2} <span className="text-college-gold">{vision.card.headingHighlight}</span>
                 </h3>
                 <p className="text-gray-600 mb-6 leading-relaxed text-base font-sans">
-                  To be a beacon of light in the region, providing accessible yet
-                  premium education that transforms lives and communities.
+                  {vision.card.description}
                 </p>
                 <div className="flex justify-start">
-                  <PublicButton to="/campuses/hala/academics" variant="primary" size="lg" icon={ArrowRight} className="rounded shadow-xl"
-                    shape="slanted"
+                  <PublicButton
+                    to={`/campuses/${campus}/academics`}
+                    variant="primary"
+                    size="lg"
+                    icon={ArrowRight}
+                    className="rounded shadow-xl"
+                    {...(vision.card.buttonShape ? { shape: vision.card.buttonShape } : {})}
                   >
-                    Explore Academics
+                    {vision.card.buttonText}
                   </PublicButton>
                 </div>
               </div>
@@ -80,12 +86,12 @@ const HalaCampus = () => {
         </div>
       </Section>
 
-      {/* Programs */}
+      {/* Programs Section */}
       <Section variant="gray" className="py-12 md:py-16">
         <SectionHeader
-          badge="Programs"
-          title="Academic Excellence"
-          description="Explore our specialized programs designed to meet the unique needs of the Hala campus."
+          badge={progSection.badge}
+          title={progSection.title}
+          description={progSection.description}
           variant="light"
           centered
         />
@@ -99,9 +105,9 @@ const HalaCampus = () => {
       {/* Facilities */}
       <Section variant="white" className="py-12 md:py-16">
         <SectionHeader
-          badge="Facilities"
-          title="Regional Hub"
-          description="State-of-the-art facilities that bring city-standard education to the heart of Hala."
+          badge={facilitiesSection.badge}
+          title={facilitiesSection.title}
+          description={facilitiesSection.description}
           variant="light"
           centered
         />
@@ -113,16 +119,16 @@ const HalaCampus = () => {
       </Section>
 
       <CampusCta
-        badge="ADMISSIONS OPEN FOR ALL"
-        title={<>Elevate Your <br /></>}
-        highlightedWord="Potential"
-        description="Experience premium education in your own city. Join Hala Campus and let's build a brighter future for the region together."
-        image="/halacampus.webp"
-        primaryButton={{ text: "JOIN US", to: "/admissions" }}
-        secondaryButton={{ text: "TALK TO US", to: "/contact" }}
+        badge={cta.badge}
+        title={<>{cta.title} <br /></>}
+        highlightedWord={cta.highlightedWord}
+        description={cta.description}
+        image={cta.image}
+        primaryButton={cta.primaryButton}
+        secondaryButton={cta.secondaryButton}
       />
     </div>
   );
 };
 
-export default HalaCampus;
+export default CampusPage;

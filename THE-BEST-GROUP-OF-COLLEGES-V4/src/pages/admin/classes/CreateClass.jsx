@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useAdminContext } from "../../../context/AdminContext";
+import { useToast } from "../../../context/ToastContext";
 import { useNavigate } from "react-router-dom";
 import PortalForms from "../../../components/shared/PortalForms";
 import {
@@ -7,31 +9,27 @@ import {
   CheckCircle2,
   Plus
 } from "lucide-react";
+import { classSchema } from "../../../schemas/classSchema";
 
 const CreateClass = () => {
   const { campuses, currentAdmin, isSuperAdmin } = useAdminContext();
+  const toast = useToast();
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    name: "",
-    sections: "",
-    subjects: "",
-    faculty: "",
-    campus: isSuperAdmin ? "" : currentAdmin?.allocatedCampuses?.[0] || "",
+  const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm({
+    resolver: zodResolver(classSchema),
+    defaultValues: {
+      name: "",
+      sections: "",
+      subjects: "",
+      faculty: "",
+      campus: isSuperAdmin ? "" : currentAdmin?.allocatedCampuses?.[0] || "",
+    },
   });
 
-  const handleChange = (key, value) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
-  };
+  const campusValue = watch("campus");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!form.campus) {
-      alert("Please select a campus");
-      return;
-    }
-    const campusName = campuses.find((c) => c.id === form.campus)?.name;
-    // alert(`Class created for ${ campusName }(mock)`);
+  const onSubmit = () => {
     navigate("/admin/classes");
   };
 
@@ -47,10 +45,11 @@ const CreateClass = () => {
       title="Create New Class"
       subtitle="Add a new class and assign subjects and faculty"
       backPath="/admin/classes"
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       onCancel={() => navigate("/admin/classes")}
       submitLabel="Create Class"
       submitIcon={Plus}
+      submitting={isSubmitting}
     >
       {/* Campus Selection Section */}
       <PortalForms.Section title="Campus Allocation" className="!space-y-4">
@@ -66,7 +65,7 @@ const CreateClass = () => {
                   key={campus.id}
                   className={`
                     relative flex flex-col items-center justify-center p-6 rounded-xl border-2 cursor-pointer transition-all duration-200
-                    ${form.campus === campus.id
+                    ${campusValue === campus.id
                       ? "bg-college-navy/5 border-college-navy dark:bg-college-gold/10 dark:border-college-gold shadow-sm"
                       : "bg-white border-gray-100 hover:border-college-navy/50 hover:bg-gray-50 dark:bg-college-navy/50 dark:border-college-gold/20 dark:hover:bg-college-navy/80"
                     }
@@ -74,17 +73,15 @@ const CreateClass = () => {
                 >
                   <input
                     type="radio"
-                    name="campus"
                     value={campus.id}
-                    checked={form.campus === campus.id}
-                    onChange={(e) => handleChange("campus", e.target.value)}
+                    {...register("campus")}
                     className="sr-only"
                   />
-                  <Building2 className={`w-6 h-6 mb-2 ${form.campus === campus.id ? 'text-college-navy dark:text-college-gold' : 'text-gray-400'} `} />
-                  <span className={`text-sm font-bold text-center ${form.campus === campus.id ? 'text-college-navy dark:text-college-gold' : 'text-gray-600 dark:text-gray-300'} `}>
+                  <Building2 className={`w-6 h-6 mb-2 ${campusValue === campus.id ? 'text-college-navy dark:text-college-gold' : 'text-gray-400'} `} />
+                  <span className={`text-sm font-bold text-center ${campusValue === campus.id ? 'text-college-navy dark:text-college-gold' : 'text-gray-600 dark:text-gray-300'} `}>
                     {campus.name}
                   </span>
-                  {form.campus === campus.id && (
+                  {campusValue === campus.id && (
                     <div className="absolute top-2 right-2 text-college-gold">
                       <CheckCircle2 className="w-4 h-4" />
                     </div>
@@ -110,8 +107,8 @@ const CreateClass = () => {
         <div className="col-span-1 md:col-span-2">
           <PortalForms.Input
             label="Class Name"
-            value={form.name}
-            onChange={(val) => handleChange("name", val)}
+            registration={register("name")}
+            error={errors.name?.message}
             placeholder="e.g. BSCS - 3rd Semester"
             required
           />
@@ -120,8 +117,7 @@ const CreateClass = () => {
         <div>
           <PortalForms.Input
             label="Sections"
-            value={form.sections}
-            onChange={(val) => handleChange("sections", val)}
+            registration={register("sections")}
             placeholder="e.g. A, B, C (Comma separated)"
             helper="Separate multiple sections with commas"
           />
@@ -130,8 +126,7 @@ const CreateClass = () => {
         <div>
           <PortalForms.Input
             label="Assign Faculty Lead"
-            value={form.faculty}
-            onChange={(val) => handleChange("faculty", val)}
+            registration={register("faculty")}
             placeholder="e.g. Prof. Ahmed Raza"
           />
         </div>
@@ -142,8 +137,7 @@ const CreateClass = () => {
           </label>
           <div className="relative">
             <textarea
-              value={form.subjects}
-              onChange={(e) => handleChange("subjects", e.target.value)}
+              {...register("subjects")}
               placeholder="e.g. Operating Systems, Data Structures, Linear Algebra..."
               rows="3"
               className="w-full pr-4 py-3.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all resize-none dark:text-white dark:placeholder-gray-500"

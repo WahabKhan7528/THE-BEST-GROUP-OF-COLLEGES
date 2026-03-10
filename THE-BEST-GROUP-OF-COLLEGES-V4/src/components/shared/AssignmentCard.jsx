@@ -29,7 +29,7 @@ const AssignmentCard = ({ assignment, role = 'faculty' }) => {
     if (role === 'student') {
         const badge = statusStyles[assignment.status] || 'bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-100 dark:border-gray-700';
         return (
-            <Card hover={false} className="p-4 md:p-5 border border-transparent dark:border-college-gold/50 shadow-sm hover:shadow-md transition-all duration-300 space-y-4">
+            <Card hover={false} className="p-4 md:p-5 border border-transparent dark:border-college-gold/60 shadow-sm hover:shadow-md transition-all duration-300 space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                     <div className="flex-1">
                         <p className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
@@ -91,7 +91,7 @@ const AssignmentCard = ({ assignment, role = 'faculty' }) => {
 
     // faculty variant (default)
     return (
-        <Card hover={false} className="p-4 md:p-5 border border-transparent dark:border-college-gold/50 shadow-sm hover:shadow-md transition-all duration-300">
+        <Card hover={false} className="p-4 md:p-5 border border-transparent dark:border-college-gold/60 shadow-sm hover:shadow-md transition-all duration-300">
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                 <div className="flex-1">
                     <p className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">

@@ -1,4 +1,5 @@
 import { FileText, Play, Image as ImageIcon, File } from 'lucide-react';
+import { useToast } from '../../context/ToastContext';
 
 /*
  Shared MaterialCard
@@ -34,6 +35,7 @@ const iconForType = {
 };
 
 const MaterialCard = ({ material, role = 'faculty' }) => {
+    const toast = useToast();
     if (role === 'student') {
         const badgeClass = badgeColors[material.type] || 'text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 border-gray-100 dark:border-gray-700';
         return (
@@ -97,7 +99,7 @@ const MaterialCard = ({ material, role = 'faculty' }) => {
                 </a>
                 <span className="text-gray-400 dark:text-gray-600">•</span>
                 <button
-                    onClick={() => alert(`Starting download for: ${material.title}`)}
+                    onClick={() => toast.info(`Starting download for: ${material.title}`)}
                     className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
                 >
                     Download
