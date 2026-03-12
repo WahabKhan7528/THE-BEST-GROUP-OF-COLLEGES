@@ -4,7 +4,7 @@ import PublicButton from "../../components/shared/PublicButton";
 import StatsGrid from "../../components/public_site/StatsGrid";
 import Section from "../../components/public_site/Section";
 import SectionHeader from "../../components/public_site/SectionHeader";
-import Badge from "../../components/public_site/Badge";
+import Badge from "../../components/shared/Badge";
 import CampusCard from "../../components/public_site/CampusCard";
 import TestimonialSlider from "../../components/public_site/TestimonialSlider";
 import ContactForm from "../../components/public_site/ContactForm";

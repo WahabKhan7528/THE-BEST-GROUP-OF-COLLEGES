@@ -33,7 +33,7 @@ export const ToastProvider = ({ children }) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  const addToast = useCallback((message, type = "info", duration = 4000) => {
+  const addToast = useCallback((message, type = "info", duration = 2000) => {
     const id = ++toastId;
     setToasts((prev) => [...prev, { id, message, type }]);
     if (duration > 0) {

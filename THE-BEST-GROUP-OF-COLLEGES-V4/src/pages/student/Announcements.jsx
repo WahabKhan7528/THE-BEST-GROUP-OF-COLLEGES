@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useStudentContext } from "../../context/StudentContext";
 import AnnouncementCard from "../../components/shared/AnnouncementCard";
 import PortalPageHeader from "../../components/shared/PortalPageHeader";
-import Badge from "../../components/public_site/Badge";
+import Badge from "../../components/shared/Badge";
 import { Bell } from "lucide-react";
 
 const StudentAnnouncements = () => {

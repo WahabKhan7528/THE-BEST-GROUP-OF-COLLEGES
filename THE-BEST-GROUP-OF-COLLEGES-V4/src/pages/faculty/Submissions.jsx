@@ -1,7 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import SubmissionCard from '../../components/faculty/SubmissionCard';
 import PortalPageHeader from '../../components/shared/PortalPageHeader';
-import Badge from '../../components/public_site/Badge';
+import Badge from '../../components/shared/Badge';
 import { useFacultyContext } from '../../context/FacultyContext';
 import { useToast } from '../../context/ToastContext';
 import { ArrowLeft, CheckCircle } from 'lucide-react';

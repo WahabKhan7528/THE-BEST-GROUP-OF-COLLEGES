@@ -6,7 +6,7 @@ import PageHero from "../../components/public_site/PageHero";
 import NewsCard from "../../components/public_site/NewsCard";
 import EventCard from "../../components/public_site/EventCard";
 import CTASection from "../../components/public_site/CTASection";
-import Card from "../../components/public_site/Card";
+import Card from "../../components/shared/Card";
 
 import { newsItems, events } from "../../data/newsEventsData";
 import Pagination from "../../components/public_site/Pagination";

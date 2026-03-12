@@ -13,8 +13,8 @@ import {
 import { useAdminContext } from "../../context/AdminContext";
 import PortalStatsCard from "../../components/shared/PortalStatsCard";
 import PortalPageHeader from "../../components/shared/PortalPageHeader";
-import Badge from "../../components/public_site/Badge";
-import Card from "../../components/public_site/Card";
+import Badge from "../../components/shared/Badge";
+import Card from "../../components/shared/Card";
 
 import {
   mockAllStats,

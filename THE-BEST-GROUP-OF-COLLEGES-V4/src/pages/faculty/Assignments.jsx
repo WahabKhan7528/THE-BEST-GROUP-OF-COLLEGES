@@ -1,12 +1,12 @@
 import { useFacultyContext } from "../../context/FacultyContext";
 import AssignmentCard from "../../components/shared/AssignmentCard";
 import PortalPageHeader from "../../components/shared/PortalPageHeader";
-import Badge from "../../components/public_site/Badge";
+import Badge from "../../components/shared/Badge";
 import { PlusCircle, Search, Filter, BookOpen } from "lucide-react";
 import PublicButton from "../../components/shared/PublicButton";
 import FormInput from "../../components/shared/FormInput";
 import Button from "../../components/shared/Button";
-import Card from "../../components/public_site/Card";
+import Card from "../../components/shared/Card";
 
 
 // Mock assignments data by campus

@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { ArrowRight, Lock, Mail, Home, Key } from "lucide-react";
 import PublicButton from "../../components/shared/PublicButton";
 import GSAPReveal from "../../components/shared/GSAPReveal";
-import Card from "../../components/public_site/Card";
+import Card from "../../components/shared/Card";
 
 const Login = () => {
   const { type } = useParams();

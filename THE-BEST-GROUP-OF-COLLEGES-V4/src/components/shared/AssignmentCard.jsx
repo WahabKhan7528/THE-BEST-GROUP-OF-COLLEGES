@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Calendar, FileText, Pencil, Trash2, ClipboardList } from 'lucide-react';
-import Card from '../public_site/Card';
+import Card from './Card';
 import Button from './Button';
 import PublicButton from './PublicButton';
 

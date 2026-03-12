@@ -11,7 +11,7 @@ import {
 import PublicButton from "../../components/shared/PublicButton";
 import Section from "../../components/public_site/Section";
 import SectionHeader from "../../components/public_site/SectionHeader";
-import Card from "../../components/public_site/Card";
+import Card from "../../components/shared/Card";
 import ContactForm from "../../components/public_site/ContactForm";
 import FAQ from "../../components/public_site/FAQ";
 

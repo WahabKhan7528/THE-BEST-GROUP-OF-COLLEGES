@@ -2,8 +2,8 @@ import { Phone, Mail, CheckSquare, Send, ArrowRight } from "lucide-react";
 import PublicButton from "../../components/shared/PublicButton";
 import Section from "../../components/public_site/Section";
 import SectionHeader from "../../components/public_site/SectionHeader";
-import Badge from "../../components/public_site/Badge";
-import Card from "../../components/public_site/Card";
+import Badge from "../../components/shared/Badge";
+import Card from "../../components/shared/Card";
 import CTASection from "../../components/public_site/CTASection";
 import AdmissionForm from "../../components/public_site/AdmissionForm";
 import {

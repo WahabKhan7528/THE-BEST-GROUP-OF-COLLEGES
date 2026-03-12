@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useFacultyContext } from "../../context/FacultyContext";
 import MaterialCard from "../../components/shared/MaterialCard";
 import PortalPageHeader from "../../components/shared/PortalPageHeader";
-import Badge from "../../components/public_site/Badge";
+import Badge from "../../components/shared/Badge";
 import { UploadCloud } from "lucide-react";
 import PublicButton from "../../components/shared/PublicButton";
 

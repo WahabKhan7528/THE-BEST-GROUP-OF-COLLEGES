@@ -1,5 +1,5 @@
 import { FileText, CheckCircle2, Clock } from 'lucide-react';
-import Card from '../public_site/Card';
+import Card from '../shared/Card';
 import PublicButton from '../shared/PublicButton';
 import { useFacultyContext } from '../../context/FacultyContext';
 

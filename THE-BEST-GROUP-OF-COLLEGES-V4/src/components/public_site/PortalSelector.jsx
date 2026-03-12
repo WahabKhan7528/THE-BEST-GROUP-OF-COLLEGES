@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { portals } from "../../data/navigationData";
-import Badge from "./Badge";
-import Card from "./Card";
+import Badge from "../../components/shared/Badge";
+import Card from "../shared/Card";
 
 export default function PortalSelector({ isOpen, onClose }) {
     const navigate = useNavigate();

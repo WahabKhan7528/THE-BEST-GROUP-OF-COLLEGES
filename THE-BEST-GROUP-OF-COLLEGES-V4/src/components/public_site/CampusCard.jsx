@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import Card from "./Card";
+import Card from "../shared/Card";
 import PublicButton from "../shared/PublicButton";
 
 export default function CampusCard({ college }) {

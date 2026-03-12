@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { clsx } from "clsx";
 import PublicButton from "../shared/PublicButton";
-import Badge from "./Badge";
+import Badge from "../shared/Badge";
 import { faqs } from "../../data/faqData";
 
 export default function FAQ({ limit, className, centered = false, description }) {

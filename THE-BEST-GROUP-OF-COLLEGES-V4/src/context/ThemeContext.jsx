@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
+    // Here lazy state initialization is used to prevent the re-rendering of the component on every render
     const [isDarkMode, setIsDarkMode] = useState(() => {
         if (typeof window !== "undefined") {
             const savedTheme = localStorage.getItem("portal-theme");

@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import Badge from "./Badge";
+import Badge from "../shared/Badge";
 
 export default function CTASection({
     badge,

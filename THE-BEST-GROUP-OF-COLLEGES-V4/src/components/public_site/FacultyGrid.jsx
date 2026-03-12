@@ -4,7 +4,7 @@ import { clsx } from "clsx";
 import { facultyData } from "../../data/facultyMembersData";
 import FilterBar from "./FilterBar";
 import Pagination from "./Pagination";
-import Card from "./Card";
+import Card from "../shared/Card";
 
 export default function FacultyGrid({ filterCampus }) {
     const [searchQuery, setSearchQuery] = useState("");

@@ -1,7 +1,7 @@
 import { useStudentContext } from "../../context/StudentContext";
 import AssignmentCard from "../../components/shared/AssignmentCard";
 import PortalPageHeader from "../../components/shared/PortalPageHeader";
-import Badge from "../../components/public_site/Badge";
+import Badge from "../../components/shared/Badge";
 import { CheckCircle, Clock } from "lucide-react";
 
 

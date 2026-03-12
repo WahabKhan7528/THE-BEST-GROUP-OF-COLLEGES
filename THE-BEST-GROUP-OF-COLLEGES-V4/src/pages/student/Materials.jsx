@@ -1,7 +1,7 @@
 import { useStudentContext } from "../../context/StudentContext";
 import MaterialCard from "../../components/shared/MaterialCard";
 import PortalPageHeader from "../../components/shared/PortalPageHeader";
-import Badge from "../../components/public_site/Badge";
+import Badge from "../../components/shared/Badge";
 import { FolderOpen } from "lucide-react";
 
 // Mock subjects and materials data by campus

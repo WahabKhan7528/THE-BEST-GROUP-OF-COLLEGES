@@ -8,7 +8,7 @@ import {
 
 import { useStudentContext } from "../../context/StudentContext";
 import PortalPageHeader from "../../components/shared/PortalPageHeader";
-import Badge from "../../components/public_site/Badge";
+import Badge from "../../components/shared/Badge";
 import PortalStatsCard from "../../components/shared/PortalStatsCard";
 
 import {

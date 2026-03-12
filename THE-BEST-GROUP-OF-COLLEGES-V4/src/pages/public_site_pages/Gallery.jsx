@@ -2,7 +2,7 @@ import { useState } from "react";
 import PublicButton from "../../components/shared/PublicButton";
 import PageHero from "../../components/public_site/PageHero";
 import FilterBar from "../../components/public_site/FilterBar";
-import Badge from "../../components/public_site/Badge";
+import Badge from "../../components/shared/Badge";
 import CTASection from "../../components/public_site/CTASection";
 
 import { Calendar, Tag } from "lucide-react";

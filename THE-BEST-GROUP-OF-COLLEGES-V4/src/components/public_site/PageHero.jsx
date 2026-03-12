@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import Badge from "./Badge";
+import Badge from "../shared/Badge";
 
 export default function PageHero({ badge, title, highlightedWord, description, className }) {
     return (

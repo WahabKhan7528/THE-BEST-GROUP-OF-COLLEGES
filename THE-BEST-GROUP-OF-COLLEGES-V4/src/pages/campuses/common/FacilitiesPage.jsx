@@ -1,7 +1,7 @@
 import PublicButton from "../../../components/shared/PublicButton";
 import GSAPReveal from "../../../components/shared/GSAPReveal";
 import SectionHeader from "../../../components/public_site/SectionHeader";
-import Card from "../../../components/public_site/Card";
+import Card from "../../../components/shared/Card";
 import CampusCta from "../../../components/public_site/CampusCta";
 
 const facilitiesData = [

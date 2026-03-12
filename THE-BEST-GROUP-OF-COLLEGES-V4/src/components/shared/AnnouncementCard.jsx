@@ -1,5 +1,5 @@
 
-import Card from '../public_site/Card';
+import Card from './Card';
 
 const AnnouncementCard = ({ announcement, role = 'faculty' }) => {
     if (role === 'student') {

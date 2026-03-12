@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useStudentContext } from "../../context/StudentContext";
 import PortalPageHeader from "../../components/shared/PortalPageHeader";
-import Badge from "../../components/public_site/Badge";
+import Badge from "../../components/shared/Badge";
 import { BarChart3, TrendingUp, Award, ChevronDown, ChevronRight } from "lucide-react";
 
 // Grading Logic

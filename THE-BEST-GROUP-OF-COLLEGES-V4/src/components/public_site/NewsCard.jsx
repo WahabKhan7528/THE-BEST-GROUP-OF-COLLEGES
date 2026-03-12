@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Calendar, ArrowRight } from "lucide-react";
 import { clsx } from "clsx";
-import Card from "./Card";
-import Badge from "./Badge";
+import Card from "../shared/Card";
+import Badge from "../shared/Badge";
 import NewsEventPopover from "./NewsEventPopover";
 
 export default function NewsCard({ news, className }) {

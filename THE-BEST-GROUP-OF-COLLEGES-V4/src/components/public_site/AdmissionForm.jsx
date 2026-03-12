@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import emailjs from "@emailjs/browser";
 import { Send } from "lucide-react";
-import Card from "./Card";
+import Card from "../shared/Card";
 import PublicButton from "../shared/PublicButton";
 import { useToast } from "../../context/ToastContext";
 import { admissionSchema } from "../../schemas/admissionSchema";

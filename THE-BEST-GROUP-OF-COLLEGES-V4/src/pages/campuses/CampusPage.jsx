@@ -5,7 +5,7 @@ import CampusHero from "../../components/public_site/CampusHero";
 import StatsGrid from "../../components/public_site/StatsGrid";
 import Section from "../../components/public_site/Section";
 import SectionHeader from "../../components/public_site/SectionHeader";
-import Badge from "../../components/public_site/Badge";
+import Badge from "../../components/shared/Badge";
 import ProgramCard from "../../components/public_site/ProgramCard";
 import FacilityCard from "../../components/public_site/FacilityCard";
 import CampusCta from "../../components/public_site/CampusCta";
