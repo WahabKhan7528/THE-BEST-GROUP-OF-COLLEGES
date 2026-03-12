@@ -1,13 +1,19 @@
 import { useState, useEffect, Suspense } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import StudentNavbar from "../components/student/StudentNavbar";
-import StudentSidebar from "../components/student/StudentSidebar";
+import PortalNavbar from "../components/portal-shared/PortalNavbar";
+import PortalSidebar from "../components/portal-shared/PortalSidebar";
 import { useStudentContext } from "../context/StudentContext";
+import { studentNavItems } from "../data/navigationData";
 import PageLoader from "../components/shared/PageLoader";
 
 const StudentLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { isDarkMode } = useStudentContext();
+  const { currentStudent, isDarkMode } = useStudentContext();
+
+  const user = {
+    name: currentStudent?.name || "Student User",
+    line2: `${currentStudent?.department || "Student"} • Semester ${currentStudent?.semester || ""}`,
+  };
   const { pathname } = useLocation();
 
   // Scroll to top on route change
@@ -35,17 +41,28 @@ const StudentLayout = () => {
       )}
 
       {/* Sidebar - Sticky on desktop, fixed on mobile */}
-      <div className={`fixed lg:sticky lg:top-0 lg:h-screen lg:z-0 z-40`}>
-        <StudentSidebar
-          isSidebarOpen={isSidebarOpen}
+      <div
+        className={`fixed inset-y-0 left-0 lg:sticky lg:top-0 lg:h-screen lg:z-0 transform transition-transform duration-300 z-40 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        }`}
+      >
+        <PortalSidebar
+          portalLabel="Student Portal"
+          navItems={studentNavItems}
           onClose={() => setIsSidebarOpen(false)}
+          loginPath="/login/student"
         />
       </div>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col w-full min-w-0 relative z-10">
         {/* Header */}
-        <StudentNavbar onMenuToggle={() => setIsSidebarOpen(true)} />
+        <PortalNavbar
+          role="student"
+          badgeLabel="Student Panel"
+          user={user}
+          onMenuToggle={() => setIsSidebarOpen((prev) => !prev)}
+        />
 
         {/* Main Content Area */}
         <main className="flex-1 p-4 md:p-6 lg:p-8 w-full max-w-[1600px] mx-auto">

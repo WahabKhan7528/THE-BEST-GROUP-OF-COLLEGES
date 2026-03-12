@@ -1,10 +1,8 @@
-import React, { createContext, useContext, useState } from "react";
-
-// Create the context
-const AdminContext = createContext();
-
+import { createContext, useContext, useState } from "react";
 import { mockAdminUser, mockCampuses } from "../data/adminData";
 import { useThemeContext } from "./ThemeContext";
+
+const AdminContext = createContext();
 
 export const AdminProvider = ({ children }) => {
   // Current logged-in admin user
@@ -29,60 +27,50 @@ export const AdminProvider = ({ children }) => {
 
   // Get visible campuses based on current admin role
   const getVisibleCampuses = () => {
-    if (isSuperAdmin) {
-      return campuses;
-    }
-    // Sub-Admin sees only their allocated campuses
-    return campuses.filter((c) =>
-      currentAdmin?.allocatedCampuses?.includes(c.id),
-    );
+    if (isSuperAdmin) return campuses;
+    return campuses.filter(c => currentAdmin?.allocatedCampuses?.includes(c.id));
   };
 
   // Get currently selected campus object
   const getCurrentCampusContext = () => {
-    if (selectedCampusFilter === "all" || !isSuperAdmin) {
-      return null; // No specific campus context
-    }
-    return campuses.find((c) => c.id === selectedCampusFilter);
+    if (selectedCampusFilter === "all" || !isSuperAdmin) return null;
+    return campuses.find(c => c.id === selectedCampusFilter);
   };
 
-  // Get admin allocations for a specific sub-admin
-  const getAdminAllocations = (adminId) => {
-    return adminCampusAllocations[adminId] || [];
-  };
+  const getAdminAllocations = (adminId) => adminCampusAllocations[adminId] || [];
 
   // Update sub-admin campus allocation
   const updateAdminAllocations = (adminId, newCampuses) => {
-    setAdminCampusAllocations({
-      ...adminCampusAllocations,
+    setAdminCampusAllocations(prev => ({
+      ...prev,
       [adminId]: newCampuses,
-    });
+    }));
   };
 
   // Add new campus
   const addCampus = (newCampus) => {
-    setCampuses([
-      ...campuses,
+    setCampuses(prev => [
+      ...prev,
       { ...newCampus, id: newCampus.id || Date.now() },
     ]);
   };
 
   // Update campus
   const updateCampus = (campusId, updatedCampus) => {
-    setCampuses(
-      campuses.map((c) => (c.id === campusId ? { ...c, ...updatedCampus } : c)),
+    setCampuses(prev =>
+      prev.map(c => (c.id === campusId ? { ...c, ...updatedCampus } : c))
     );
   };
 
   // Delete campus
   const deleteCampus = (campusId) => {
-    setCampuses(campuses.filter((c) => c.id !== campusId));
+    setCampuses(prev => prev.filter(c => c.id !== campusId));
   };
 
   // Mock: Switch admin user (for testing purposes)
   const switchAdminUser = (adminData) => {
     setCurrentAdmin(adminData);
-    setSelectedCampusFilter("all"); // Reset filter when switching users
+    setSelectedCampusFilter("all");
   };
 
   const value = {
@@ -110,7 +98,9 @@ export const AdminProvider = ({ children }) => {
   };
 
   return (
-    <AdminContext.Provider value={value}>{children}</AdminContext.Provider>
+    <AdminContext.Provider value={value}>
+      {children}
+    </AdminContext.Provider>
   );
 };
 

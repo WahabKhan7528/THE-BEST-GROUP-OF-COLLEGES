@@ -1,22 +1,40 @@
-import { Menu, Home, User, ChevronDown } from "lucide-react";
+import { Menu, Home, User, GraduationCap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useAdminContext } from "../../context/AdminContext";
-import CampusFilter from "./CampusFilter";
 import DarkModeToggle from "../shared/DarkModeToggle";
-import Badge from "../shared/Badge";
+import CampusFilter from "../admin/CampusFilter";
 
-// receiving onMenuToggle as a prop from AdminLayout.jsx
-const AdminNavbar = ({ onMenuToggle }) => {
+const ROLE_ICONS = {
+  admin: User,
+  faculty: User,
+  student: GraduationCap,
+};
+
+/**
+ * Unified portal navbar used by Admin, Faculty, and Student layouts.
+ *
+ * Props:
+ *   role           – "admin" | "faculty" | "student"
+ *   badgeLabel     – text shown in the role badge (e.g. "Super Admin", "Faculty Panel")
+ *   user           – { name, line2 }  where line2 is email / department info
+ *   onMenuToggle   – called when the hamburger button is clicked
+ *   showCampusFilter – render the CampusFilter widget (admin only)
+ */
+const PortalNavbar = ({
+  role = "admin",
+  badgeLabel,
+  user,
+  onMenuToggle,
+  showCampusFilter = false,
+}) => {
   const navigate = useNavigate();
-  const { currentAdmin, isSuperAdmin } = useAdminContext();
+  const RoleIcon = ROLE_ICONS[role] || User;
 
-  const adminRoleDisplay = isSuperAdmin ? "Super Admin" : "Sub-Admin";
   const initials =
-    currentAdmin?.name
+    user?.name
       ?.split(" ")
       .map((n) => n[0])
       .join("")
-      .toUpperCase() || "SA";
+      .toUpperCase() || role[0].toUpperCase();
 
   return (
     <header className="h-20 bg-white/70 dark:bg-college-navy backdrop-blur-xl border-b border-gray-200/50 dark:border-college-gold/15 sticky top-0 z-20 px-4 lg:px-8 shadow-sm transition-colors duration-300">
@@ -32,16 +50,16 @@ const AdminNavbar = ({ onMenuToggle }) => {
           </button>
 
           <div className="hidden lg:flex items-center gap-4">
-            <Badge variant="gold"className="gap-1.5">
-              <User size={12} />
-              {adminRoleDisplay}
-            </Badge>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-college-navy/10 text-college-navy border border-college-navy/20 dark:bg-college-gold/10 dark:text-college-gold dark:border-college-gold/30">
+              <RoleIcon size={12} />
+              {badgeLabel}
+            </span>
           </div>
         </div>
 
         {/* Right Section: Actions & Profile */}
         <div className="flex items-center gap-1.5 sm:gap-4">
-          <CampusFilter />
+          {showCampusFilter && <CampusFilter />}
 
           <DarkModeToggle />
 
@@ -54,21 +72,21 @@ const AdminNavbar = ({ onMenuToggle }) => {
             <Home size={18} className="sm:w-5 sm:h-5" />
           </button>
 
-          <div className="h-6 sm:h-8 w-px bg-gray-200 mx-0.5 sm:mx-1"></div>
+          <div className="h-6 sm:h-8 w-px bg-gray-200 mx-0.5 sm:mx-1" />
 
           <div className="flex items-center gap-3 sm:gap-4 p-1.5 sm:p-2 sm:pl-3 pr-2.5 sm:pr-3 rounded-2xl bg-gray-50/50 dark:bg-college-gold/5 border border-gray-100 dark:border-college-gold/10 hover:border-college-gold/30 dark:hover:border-college-gold/40 transition-all duration-300 group cursor-pointer shadow-sm min-w-[160px] sm:min-w-[200px]">
             <div className="hidden sm:block text-right flex-grow">
               <p className="text-sm font-bold text-college-navy dark:text-gray-100 leading-tight">
-                {currentAdmin?.name || "Admin User"}
+                {user?.name || "Portal User"}
               </p>
               <p className="text-[11px] font-medium text-gray-500 dark:text-college-gold/70 mt-0.5 leading-tight">
-                {currentAdmin?.email || "admin@example.com"}
+                {user?.line2 || ""}
               </p>
             </div>
             <div className="relative">
               <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-college-navy dark:bg-college-gold text-white dark:text-college-navy flex items-center justify-center text-xs sm:text-base font-bold shadow-md ring-2 ring-college-gold/20 dark:ring-white/10 group-hover:scale-105 transition-transform duration-300">
                 {initials}
-              </div> 
+              </div>
             </div>
           </div>
         </div>
@@ -77,4 +95,4 @@ const AdminNavbar = ({ onMenuToggle }) => {
   );
 };
 
-export default AdminNavbar;
+export default PortalNavbar;

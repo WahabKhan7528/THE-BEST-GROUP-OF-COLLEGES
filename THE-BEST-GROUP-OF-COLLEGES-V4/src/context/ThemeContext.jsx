@@ -1,37 +1,23 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
     // Here lazy state initialization is used to prevent the re-rendering of the component on every render
     const [isDarkMode, setIsDarkMode] = useState(() => {
-        if (typeof window !== "undefined") {
-            const savedTheme = localStorage.getItem("portal-theme");
-            if (savedTheme !== null) {
-                return savedTheme === "dark";
-            }
-            return true;
-        }
-        return true;
+        const saved = localStorage.getItem("portal-theme");
+        return saved ? saved === "dark" : true;
     });
 
     useEffect(() => {
         const root = document.documentElement;
-        if (isDarkMode) {
-            root.classList.add("dark");
-            localStorage.setItem("portal-theme", "dark");
-        } else {
-            root.classList.remove("dark");
-            localStorage.setItem("portal-theme", "light");
-        }
+        root.classList.toggle("dark", isDarkMode);
+        localStorage.setItem("portal-theme", isDarkMode ? "dark" : "light");
     }, [isDarkMode]);
 
     const toggleDarkMode = () => setIsDarkMode((prev) => !prev);
 
-    const value = {
-        isDarkMode,
-        toggleDarkMode,
-    };
+    const value = { isDarkMode, toggleDarkMode };
 
     return (
         <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
@@ -45,3 +31,4 @@ export const useThemeContext = () => {
     }
     return context;
 };
+

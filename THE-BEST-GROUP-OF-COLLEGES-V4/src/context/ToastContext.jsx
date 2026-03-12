@@ -3,25 +3,27 @@ import { CheckCircle, XCircle, AlertTriangle, Info, X } from "lucide-react";
 
 const ToastContext = createContext();
 
-const ICONS = {
-  success: CheckCircle,
-  error: XCircle,
-  warning: AlertTriangle,
-  info: Info,
-};
-
-const STYLES = {
-  success: "bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-700/50 text-green-800 dark:text-green-300",
-  error: "bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-700/50 text-red-800 dark:text-red-300",
-  warning: "bg-yellow-50 dark:bg-yellow-900/30 border-yellow-200 dark:border-yellow-700/50 text-yellow-800 dark:text-yellow-300",
-  info: "bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700/50 text-blue-800 dark:text-blue-300",
-};
-
-const ICON_STYLES = {
-  success: "text-green-500 dark:text-green-400",
-  error: "text-red-500 dark:text-red-400",
-  warning: "text-yellow-500 dark:text-yellow-400",
-  info: "text-blue-500 dark:text-blue-400",
+const TOAST_CONFIG = {
+  success: {
+    Icon: CheckCircle,
+    styles: "bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-700/50 text-green-800 dark:text-green-300",
+    iconStyles: "text-green-500 dark:text-green-400",
+  },
+  error: {
+    Icon: XCircle,
+    styles: "bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-700/50 text-red-800 dark:text-red-300",
+    iconStyles: "text-red-500 dark:text-red-400",
+  },
+  warning: {
+    Icon: AlertTriangle,
+    styles: "bg-yellow-50 dark:bg-yellow-900/30 border-yellow-200 dark:border-yellow-700/50 text-yellow-800 dark:text-yellow-300",
+    iconStyles: "text-yellow-500 dark:text-yellow-400",
+  },
+  info: {
+    Icon: Info,
+    styles: "bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700/50 text-blue-800 dark:text-blue-300",
+    iconStyles: "text-blue-500 dark:text-blue-400",
+  },
 };
 
 let toastId = 0;
@@ -55,13 +57,13 @@ export const ToastProvider = ({ children }) => {
       {/* Toast Container */}
       <div className="fixed top-4 right-4 z-[100] flex flex-col gap-2 max-w-sm w-full pointer-events-none">
         {toasts.map((t) => {
-          const Icon = ICONS[t.type];
+          const { Icon, styles, iconStyles } = TOAST_CONFIG[t.type] || TOAST_CONFIG.info;
           return (
             <div
               key={t.id}
-              className={`pointer-events-auto flex items-start gap-3 px-4 py-3 rounded-xl border shadow-lg backdrop-blur-sm animate-slideIn ${STYLES[t.type]}`}
+              className={`pointer-events-auto flex items-start gap-3 px-4 py-3 rounded-xl border shadow-lg backdrop-blur-sm animate-slideIn ${styles}`}
             >
-              <Icon size={18} className={`flex-shrink-0 mt-0.5 ${ICON_STYLES[t.type]}`} />
+              <Icon size={18} className={`flex-shrink-0 mt-0.5 ${iconStyles}`} />
               <p className="text-sm font-medium flex-1">{t.message}</p>
               <button
                 onClick={() => removeToast(t.id)}
@@ -84,3 +86,4 @@ export const useToast = () => {
   }
   return context;
 };
+

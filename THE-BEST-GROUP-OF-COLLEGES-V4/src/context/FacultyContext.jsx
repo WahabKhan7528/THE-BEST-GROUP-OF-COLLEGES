@@ -1,10 +1,9 @@
-import React, { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
+import { mockFacultyUser, mockClasses, mockAssignmentStats } from "../data/facultyPortalData";
+import { useThemeContext } from "./ThemeContext";
 
 // Create the context
 const FacultyContext = createContext();
-
-import { mockFacultyUser, mockClasses, mockAssignmentStats, mockFacultyAttendanceStats as mockAttendanceStats } from "../data/facultyPortalData";
-import { useThemeContext } from "./ThemeContext";
 
 export const FacultyProvider = ({ children }) => {
   // Current logged-in faculty user
@@ -16,15 +15,10 @@ export const FacultyProvider = ({ children }) => {
   const { isDarkMode, toggleDarkMode } = useThemeContext();
 
   // Get current campus context
-  const getCurrentCampus = () => {
-    return currentFaculty?.campus || "main";
-  };
+  const getCurrentCampus = () => currentFaculty?.campus || "main";
 
   // Get classes for current campus
-  const getClassesByCurrentCampus = () => {
-    const campus = getCurrentCampus();
-    return classes[campus] || [];
-  };
+  const getClassesByCurrentCampus = () => classes[getCurrentCampus()] || [];
 
   // Get assignment stats for current campus
   const getAssignmentStatsByCurrentCampus = () => {
@@ -32,22 +26,12 @@ export const FacultyProvider = ({ children }) => {
     return mockAssignmentStats[campus] || mockAssignmentStats.main;
   };
 
-  // Get attendance stats for current campus
-  const getAttendanceByCurrentCampus = () => {
-    const campus = getCurrentCampus();
-    return mockAttendanceStats[campus] || "89%";
-  };
-
   // Get all information for current campus context
-  const getCampusContext = () => {
-    const campus = getCurrentCampus();
-    return {
-      campus,
-      classes: getClassesByCurrentCampus(),
-      assignmentStats: getAssignmentStatsByCurrentCampus(),
-      attendance: getAttendanceByCurrentCampus(),
-    };
-  };
+  const getCampusContext = () => ({
+    campus: getCurrentCampus(),
+    classes: getClassesByCurrentCampus(),
+    assignmentStats: getAssignmentStatsByCurrentCampus(),
+  });
 
   // Switch faculty user (for testing)
   const switchFacultyUser = (facultyData) => {
@@ -55,12 +39,7 @@ export const FacultyProvider = ({ children }) => {
   };
 
   // Get total students taught
-  const getTotalStudents = () => {
-    return getClassesByCurrentCampus().reduce(
-      (sum, cls) => sum + cls.students,
-      0,
-    );
-  };
+  const getTotalStudents = () => getClassesByCurrentCampus().reduce((sum, cls) => sum + cls.students, 0);
 
   // Get average class size
   const getAverageClassSize = () => {
@@ -80,7 +59,6 @@ export const FacultyProvider = ({ children }) => {
     getCurrentCampus,
     getClassesByCurrentCampus,
     getAssignmentStatsByCurrentCampus,
-    getAttendanceByCurrentCampus,
     getCampusContext,
     getTotalStudents,
     getAverageClassSize,
@@ -101,3 +79,5 @@ export const useFacultyContext = () => {
   }
   return context;
 };
+
+

@@ -36,19 +36,13 @@ export const mockAssignmentStats = {
     hala: { totalAssignments: 8, pendingSubmissions: 2, reviewed: 6, averageScore: "85%" },
 };
 
-// Mock attendance by campus
-export const mockFacultyAttendanceStats = {
-    main: "89%",
-    law: "92%",
-    hala: "88%",
-};
-
 // Campus name map
 export const campusNames = {
     main: "Main Campus",
     law: "Law Campus",
     hala: "Hala Campus",
 };
+
 
 // Dashboard quick actions
 export const facultyQuickActions = [

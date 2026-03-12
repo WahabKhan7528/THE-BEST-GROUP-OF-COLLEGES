@@ -21,8 +21,8 @@ const Dashboard = () => {
     currentFaculty,
     getClassesByCurrentCampus,
     getAssignmentStatsByCurrentCampus,
-    getAttendanceByCurrentCampus,
     getTotalStudents,
+    getAverageClassSize,
     getCurrentCampus,
     isDarkMode,
   } = useFacultyContext();
@@ -30,8 +30,8 @@ const Dashboard = () => {
   const campus = getCurrentCampus();
   const classes = getClassesByCurrentCampus();
   const assignmentStats = getAssignmentStatsByCurrentCampus();
-  const attendance = getAttendanceByCurrentCampus();
   const totalStudents = getTotalStudents();
+  const avgClassSize = getAverageClassSize();
 
   const stats = [
     {
@@ -45,16 +45,18 @@ const Dashboard = () => {
       hint: "Assigned",
     },
     {
-      title: "Average Attendance",
-      value: attendance + "%",
-      hint: "Current Semester",
+      title: "Avg. Class Size",
+      value: avgClassSize,
+      hint: "Students per class",
     },
     {
       title: "Assignments",
-      value: assignmentStats?.total || 12, // fallback for mock
+      value: assignmentStats?.totalAssignments || 0,
       hint: "Across all classes",
     }
   ];
+
+
 
   return (
     <div className="space-y-8 pb-10">

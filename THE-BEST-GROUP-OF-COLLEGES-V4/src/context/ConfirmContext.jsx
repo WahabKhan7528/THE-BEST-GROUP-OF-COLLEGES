@@ -6,24 +6,35 @@ const ConfirmContext = createContext();
 export const ConfirmProvider = ({ children }) => {
   const [state, setState] = useState(null);
 
-  const confirm = useCallback(({ title = "Are you sure?", message = "", confirmText = "Confirm", cancelText = "Cancel", variant = "danger" } = {}) => {
+  const cancelRef = useRef(null);
+  const previousFocusRef = useRef(null);
+
+  const confirm = useCallback((options = {}) => {
+    const {
+      title = "Are you sure?",
+      message = "",
+      confirmText = "Confirm",
+      cancelText = "Cancel",
+      variant = "danger"
+    } = options;
+
     return new Promise((resolve) => {
       setState({ title, message, confirmText, cancelText, variant, resolve });
     });
   }, []);
 
-  const handleClose = (result) => {
-    state?.resolve(result);
+  const handleClose = useCallback((result) => {
+    if (state?.resolve) {
+      state.resolve(result);
+    }
     setState(null);
-  };
-
-  const cancelRef = useRef(null);
-  const previousFocusRef = useRef(null);
+  }, [state]);
 
   useEffect(() => {
     if (state) {
       previousFocusRef.current = document.activeElement;
-      cancelRef.current?.focus();
+      const timeout = setTimeout(() => cancelRef.current?.focus(), 0);
+      return () => clearTimeout(timeout);
     } else if (previousFocusRef.current) {
       previousFocusRef.current.focus();
       previousFocusRef.current = null;
@@ -43,9 +54,21 @@ export const ConfirmProvider = ({ children }) => {
   return (
     <ConfirmContext.Provider value={confirm}>
       {children}
+      
       {state && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="confirm-dialog-title" onKeyDown={handleKeyDown}>
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => handleClose(false)} aria-hidden="true" />
+        <div 
+          className="fixed inset-0 z-[110] flex items-center justify-center p-4" 
+          role="dialog" 
+          aria-modal="true" 
+          aria-labelledby="confirm-dialog-title" 
+          onKeyDown={handleKeyDown}
+        >
+          <div 
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm" 
+            onClick={() => handleClose(false)} 
+            aria-hidden="true" 
+          />
+          
           <div className="relative bg-white dark:bg-gray-900 rounded-lg shadow-2xl max-w-md w-full p-6 border border-gray-200 dark:border-college-gold/15">
             <button
               onClick={() => handleClose(false)}
@@ -54,17 +77,23 @@ export const ConfirmProvider = ({ children }) => {
             >
               <X size={18} />
             </button>
+
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0 w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
                 <AlertTriangle size={20} className="text-red-600 dark:text-red-400" />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 id="confirm-dialog-title" className="text-lg font-semibold text-gray-900 dark:text-white">{state.title}</h3>
+                <h3 id="confirm-dialog-title" className="text-lg font-semibold text-gray-900 dark:text-white">
+                  {state.title}
+                </h3>
                 {state.message && (
-                  <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">{state.message}</p>
+                  <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                    {state.message}
+                  </p>
                 )}
               </div>
             </div>
+
             <div className="flex justify-end gap-3 mt-6">
               <button
                 ref={cancelRef}
@@ -75,7 +104,7 @@ export const ConfirmProvider = ({ children }) => {
               </button>
               <button
                 onClick={() => handleClose(true)}
-                className={`px-4 py-2 rounded-md font-semibold text-sm transition-all ${variantStyles[state.variant]}`}
+                className={`px-4 py-2 rounded-md font-semibold text-sm transition-all ${variantStyles[state.variant] || variantStyles.danger}`}
               >
                 {state.confirmText}
               </button>

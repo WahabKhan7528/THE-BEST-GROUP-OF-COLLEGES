@@ -1,13 +1,19 @@
 import { useState, useEffect, Suspense } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import FacultyNavbar from "../components/faculty/FacultyNavbar";
-import FacultySidebar from "../components/faculty/FacultySidebar";
+import PortalNavbar from "../components/portal-shared/PortalNavbar";
+import PortalSidebar from "../components/portal-shared/PortalSidebar";
 import { useFacultyContext } from "../context/FacultyContext";
+import { facultyNavItems } from "../data/navigationData";
 import PageLoader from "../components/shared/PageLoader";
 
 const FacultyLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { isDarkMode } = useFacultyContext();
+  const { currentFaculty, isDarkMode } = useFacultyContext();
+
+  const user = {
+    name: currentFaculty?.name || "Faculty User",
+    line2: `${currentFaculty?.department || "Faculty"} • ${currentFaculty?.designation || "Faculty"}`,
+  };
   const { pathname } = useLocation();
 
   // Scroll to top on route change
@@ -35,17 +41,28 @@ const FacultyLayout = () => {
       )}
 
       {/* Sidebar - Sticky on desktop, fixed on mobile */}
-      <div className={`fixed lg:sticky lg:top-0 lg:h-screen lg:z-0 z-40`}>
-        <FacultySidebar
-          isSidebarOpen={isSidebarOpen}
+      <div
+        className={`fixed inset-y-0 left-0 lg:sticky lg:top-0 lg:h-screen lg:z-0 transform transition-transform duration-300 z-40 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        }`}
+      >
+        <PortalSidebar
+          portalLabel="Faculty Portal"
+          navItems={facultyNavItems}
           onClose={() => setIsSidebarOpen(false)}
+          loginPath="/login/faculty"
         />
       </div>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col w-full relative min-w-0">
         {/* Header */}
-        <FacultyNavbar onMenuToggle={() => setIsSidebarOpen(true)} />
+        <PortalNavbar
+          role="faculty"
+          badgeLabel="Faculty Panel"
+          user={user}
+          onMenuToggle={() => setIsSidebarOpen((prev) => !prev)}
+        />
 
         {/* Main Content Area */}
         <main className="flex-1 p-3 sm:p-4 md:p-6 lg:p-10 scroll-smooth">

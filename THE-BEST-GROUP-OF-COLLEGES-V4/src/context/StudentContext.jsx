@@ -1,8 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
-
-// Create the context
-const StudentContext = createContext();
-
+import { createContext, useContext, useState } from "react";
 import {
   mockStudentUser,
   mockEnrolledSubjects,
@@ -10,6 +6,9 @@ import {
   mockDetailedResults,
 } from "../data/studentPortalData";
 import { useThemeContext } from "./ThemeContext";
+
+// Create the context
+const StudentContext = createContext();
 
 export const StudentProvider = ({ children }) => {
   // Current logged-in student user
@@ -37,8 +36,6 @@ export const StudentProvider = ({ children }) => {
     const campus = getCurrentCampus();
     return mockAnnouncementsByStatus[campus] || mockAnnouncementsByStatus.main;
   };
-
-
 
   // Switch student user (for testing)
   const switchStudentUser = (studentData) => {
