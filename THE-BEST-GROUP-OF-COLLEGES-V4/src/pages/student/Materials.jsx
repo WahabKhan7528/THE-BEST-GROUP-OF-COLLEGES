@@ -160,7 +160,7 @@ const Materials = () => {
           </Badge>
         }
         title="Course Material"
-        subtitle="Access lecture slides, videos, notes, and other learning resources for your enrolled courses."
+        subtitle="Access lecture slides, videos, notes, and other learning resources for your enrolled subjects."
       />
 
       {subjects.length > 0 ? (

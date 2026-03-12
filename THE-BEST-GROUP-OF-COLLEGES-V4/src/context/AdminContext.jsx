@@ -18,8 +18,8 @@ export const AdminProvider = ({ children }) => {
 
   // Sub-Admin to Campus allocation mapping
   const [adminCampusAllocations, setAdminCampusAllocations] = useState({
-    "U-003": ["law"], // Example: Sub-Admin allocated to Law Campus
-    "U-004": ["main", "hala"], // Example: Sub-Admin can manage multiple campuses
+    "U-003": ["law"], // Sub-Admin allocated to Law Campus
+    "U-004": ["main"], // Sub-Admin restricted to single campus
   });
 
   const { isDarkMode, toggleDarkMode } = useThemeContext();

@@ -6,15 +6,15 @@ import Badge from "../../components/shared/Badge";
 import { Bell } from "lucide-react";
 
 const StudentAnnouncements = () => {
-    const { getCurrentCampus, getCoursesByCurrentCampus, isDarkMode } = useStudentContext();
+    const { getCurrentCampus, getSubjectsByCurrentCampus, isDarkMode } = useStudentContext();
     const campus = getCurrentCampus();
     const [announcements, setAnnouncements] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // 1. Get enrolled course codes
-        const courses = getCoursesByCurrentCampus() || [];
-        const courseCodes = courses.map((c) => c.code);
+        // 1. Get enrolled subject codes
+        const subjects = getSubjectsByCurrentCampus() || [];
+        const subjectCodes = subjects.map((s) => s.code);
 
         // 2. Fetch announcements from localStorage
         const saved = localStorage.getItem("college_announcements");
@@ -28,12 +28,12 @@ const StudentAnnouncements = () => {
         // 3. Filter announcements relevant to the student
         const relevant = campusAnnouncements.filter((announcement) => {
             if (!announcement.classSection) return false;
-            return courseCodes.some(code => announcement.classSection.includes(code));
+            return subjectCodes.some(code => announcement.classSection.includes(code));
         });
 
         setAnnouncements(relevant);
         setLoading(false);
-    }, [campus, getCoursesByCurrentCampus]);
+    }, [campus, getSubjectsByCurrentCampus]);
 
     const campusNames = {
         main: "Main Campus",

@@ -19,7 +19,7 @@ import {
 const Dashboard = () => {
   const {
     currentStudent,
-    getCoursesByCurrentCampus,
+    getSubjectsByCurrentCampus,
     getAnnouncementsByCurrentCampus,
     getTotalCredits,
     getCurrentCampus,
@@ -27,7 +27,7 @@ const Dashboard = () => {
   } = useStudentContext();
 
   const campus = getCurrentCampus();
-  const courses = getCoursesByCurrentCampus();
+  const subjects = getSubjectsByCurrentCampus();
   const announcements = getAnnouncementsByCurrentCampus();
   const totalCredits = getTotalCredits();
 
@@ -39,28 +39,28 @@ const Dashboard = () => {
     if (saved) {
       const parsed = JSON.parse(saved);
       const campusAnnouncements = parsed[campus] || [];
-      const courseCodes = courses.map((c) => c.code);
+      const subjectCodes = subjects.map((s) => s.code);
 
       const relevant = campusAnnouncements.filter((a) => {
         if (!a.classSection) return false;
-        return courseCodes.some((code) => a.classSection.includes(code));
+        return subjectCodes.some((code) => a.classSection.includes(code));
       });
       setRealAnnouncements(relevant);
     }
-  }, [campus, courses]);
+  }, [campus, subjects]);
 
   const displayAnnouncements =
     realAnnouncements.length > 0 ? realAnnouncements : announcements.recent;
 
   const stats = [
     {
-      title: "Current Program",
+      title: "Current Course",
       value: currentStudent.department,
       hint: `Semester ${currentStudent.semester}`,
     },
     {
-      title: "Enrolled Courses",
-      value: courses.length,
+      title: "Enrolled Subjects",
+      value: subjects.length,
       hint: "Current Term",
     },
     {
@@ -148,7 +148,7 @@ const Dashboard = () => {
           <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="text-xl font-serif font-bold text-college-navy dark:text-white">
-                Enrolled Courses
+                Enrolled Subjects
               </h2>
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 {campusNames[campus]}
@@ -162,11 +162,11 @@ const Dashboard = () => {
             </Link>
           </div>
 
-          {courses.length > 0 ? (
+          {subjects.length > 0 ? (
             <div className="space-y-3">
-              {courses.map((course) => (
+              {subjects.map((subject) => (
                 <div
-                  key={course.code}
+                  key={subject.code}
                   className="group relative overflow-hidden bg-white dark:bg-white/5 border border-gray-200 dark:border-college-gold/10 rounded-2xl flex hover:shadow-xl hover:-translate-y-0.5 hover:bg-college-navy dark:hover:bg-white/10 transition-all duration-300 cursor-default"
                 >
                   {/* Vertical Accent Bar */}
@@ -175,20 +175,20 @@ const Dashboard = () => {
                   <div className="p-4 md:p-5 flex items-center justify-between w-full relative z-10">
                     <div>
                       <h4 className="font-bold text-college-navy dark:text-white transition-colors group-hover:text-white text-base">
-                        {course.name}
+                        {subject.name}
                       </h4>
                       <div className="flex items-center gap-3 mt-1">
                         <span className="text-[10px] font-bold text-college-navy/40 dark:text-college-gold/50 group-hover:text-white/50 uppercase tracking-widest">
-                          {course.code}
+                          {subject.code}
                         </span>
                         <span className="text-[10px] font-medium text-gray-400 dark:text-gray-500 group-hover:text-white/40">
-                          {course.instructor}
+                          {subject.instructor}
                         </span>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="text-[10px] font-bold text-college-navy dark:text-college-gold bg-college-navy/5 dark:bg-college-gold/10 px-2.5 py-1.5 rounded-lg border border-college-navy/10 dark:border-college-gold/20 group-hover:bg-college-gold group-hover:text-college-navy group-hover:border-college-gold transition-all">
-                        {course.credits} Cr
+                        {subject.credits} Cr
                       </span>
                     </div>
                   </div>
@@ -199,7 +199,7 @@ const Dashboard = () => {
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center text-center p-12 border-2 border-dashed border-gray-100 dark:border-college-gold/10 rounded-2xl">
               <p className="text-gray-400 dark:text-gray-500 font-medium text-sm">
-                No active courses enrolled
+                No active subjects enrolled
               </p>
             </div>
           )}

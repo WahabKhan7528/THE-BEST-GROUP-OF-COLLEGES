@@ -65,10 +65,10 @@ export const adminQuickActions = [
 export const mockUsersData = [
     { id: "U-001", name: "System Admin", email: "admin@best.edu", role: "Super Admin", adminRole: "Super Admin", department: "Administration", allocatedCampuses: ["main", "law", "hala"] },
     { id: "U-002", name: "Ahmed Khan", email: "ahmed.khan@best.edu", role: "Sub-Admin", adminRole: "Sub-Admin", department: "Administration", allocatedCampuses: ["law"] },
-    { id: "U-003", name: "Fatima Ali", email: "fatima.ali@best.edu", role: "Sub-Admin", adminRole: "Sub-Admin", department: "Administration", allocatedCampuses: ["main", "hala"] },
+    { id: "U-003", name: "Fatima Ali", email: "fatima.ali@best.edu", role: "Sub-Admin", adminRole: "Sub-Admin", department: "Administration", allocatedCampuses: ["main"] },
     { id: "F-102", name: "Prof. Ahmed Raza", email: "ahmed.raza@best.edu", role: "Faculty", adminRole: null, department: "CS", allocatedCampuses: ["main"] },
     { id: "F-103", name: "Dr. Sarah Ahmed", email: "sarah.ahmed@best.edu", role: "Faculty", adminRole: null, department: "Law", allocatedCampuses: ["law"] },
-    { id: "F-104", name: "Prof. Hassan Raza", email: "hassan.raza@best.edu", role: "Faculty", adminRole: null, department: "Business", allocatedCampuses: ["main", "hala"] },
+    { id: "F-104", name: "Prof. Hassan Raza", email: "hassan.raza@best.edu", role: "Faculty", adminRole: null, department: "Business", allocatedCampuses: ["hala"] },
     { id: "S-220", name: "Ayesha Khan", email: "ayesha.khan@best.edu", role: "Student", adminRole: null, department: "BSCS-5A", allocatedCampuses: ["main"] },
     { id: "S-221", name: "Ali Hassan", email: "ali.hassan@best.edu", role: "Student", adminRole: null, department: "LLB-3A", allocatedCampuses: ["law"] },
     { id: "S-222", name: "Maria Ahmed", email: "maria.ahmed@best.edu", role: "Student", adminRole: null, department: "BBA-2A", allocatedCampuses: ["hala"] },
@@ -103,7 +103,7 @@ export const mockClassesData = [
 export const mockCampusAdminsData = [
     { id: "U-001", name: "System Admin", email: "admin@best.edu", role: "Super Admin", allocatedCampuses: ["main", "law", "hala"] },
     { id: "U-002", name: "Ahmed Khan", email: "ahmed.khan@best.edu", role: "Sub-Admin", allocatedCampuses: ["law"] },
-    { id: "U-003", name: "Fatima Ali", email: "fatima.ali@best.edu", role: "Sub-Admin", allocatedCampuses: ["main", "hala"] },
+    { id: "U-003", name: "Fatima Ali", email: "fatima.ali@best.edu", role: "Sub-Admin", allocatedCampuses: ["main"] },
     { id: "U-004", name: "Zainab Bibi", email: "zainab@best.edu", role: "Sub-Admin", allocatedCampuses: ["main"] },
 ];
 

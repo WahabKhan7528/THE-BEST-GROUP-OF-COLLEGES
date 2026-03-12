@@ -13,8 +13,8 @@ export const mockStudentUser = {
     phoneNumber: "+92-300-XXXX-XXX",
 };
 
-// Mock enrolled courses by campus
-export const mockEnrolledCourses = {
+// Mock enrolled subjects by campus
+export const mockEnrolledSubjects = {
     main: [
         { id: "CS-312", code: "CS-312", name: "Operating Systems", instructor: "Prof. Ahmed Raza", credits: 3, section: "A" },
         { id: "CS-418", code: "CS-418", name: "Data Mining", instructor: "Dr. Hassan Ali", credits: 3, section: "B" },
@@ -30,12 +30,6 @@ export const mockEnrolledCourses = {
     ],
 };
 
-// Mock assignments by campus
-export const mockAssignmentsByStatus = {
-    main: { upcoming: 3, submitted: 15, graded: 12 },
-    law: { upcoming: 2, submitted: 8, graded: 6 },
-    hala: { upcoming: 1, submitted: 5, graded: 4 },
-};
 
 // Mock announcements by campus
 export const mockAnnouncementsByStatus = {
@@ -127,19 +121,7 @@ export const mockDetailedResults = {
     hala: { semesters: [] },
 };
 
-// Mock results summary by campus
-export const mockResultsByStatus = {
-    main: { gpa: "3.68", averageGrade: "A-" },
-    law: { gpa: "3.50", averageGrade: "B+" },
-    hala: { gpa: "3.20", averageGrade: "B" },
-};
 
-// Mock attendance by campus
-export const mockStudentAttendanceStats = {
-    main: "92%",
-    law: "95%",
-    hala: "88%",
-};
 
 // Campus name map
 export const studentCampusNames = {

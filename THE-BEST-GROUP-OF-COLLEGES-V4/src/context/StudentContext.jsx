@@ -5,12 +5,9 @@ const StudentContext = createContext();
 
 import {
   mockStudentUser,
-  mockEnrolledCourses,
-  mockAssignmentsByStatus,
+  mockEnrolledSubjects,
   mockAnnouncementsByStatus,
   mockDetailedResults,
-  mockResultsByStatus,
-  mockStudentAttendanceStats as mockAttendanceStats,
 } from "../data/studentPortalData";
 import { useThemeContext } from "./ThemeContext";
 
@@ -18,8 +15,8 @@ export const StudentProvider = ({ children }) => {
   // Current logged-in student user
   const [currentStudent, setCurrentStudent] = useState(mockStudentUser);
 
-  // Enrolled courses
-  const [enrolledCourses, setEnrolledCourses] = useState(mockEnrolledCourses);
+  // Enrolled subjects
+  const [enrolledSubjects, setEnrolledSubjects] = useState(mockEnrolledSubjects);
 
   const { isDarkMode, toggleDarkMode } = useThemeContext();
 
@@ -28,17 +25,12 @@ export const StudentProvider = ({ children }) => {
     return currentStudent?.campus || "main";
   };
 
-  // Get enrolled courses for current campus
-  const getCoursesByCurrentCampus = () => {
+  // Get enrolled subjects for current campus
+  const getSubjectsByCurrentCampus = () => {
     const campus = getCurrentCampus();
-    return enrolledCourses[campus] || [];
+    return enrolledSubjects[campus] || [];
   };
 
-  // Get assignment stats for current campus
-  const getAssignmentStatsByCurrentCampus = () => {
-    const campus = getCurrentCampus();
-    return mockAssignmentsByStatus[campus] || mockAssignmentsByStatus.main;
-  };
 
   // Get announcements for current campus
   const getAnnouncementsByCurrentCampus = () => {
@@ -46,40 +38,16 @@ export const StudentProvider = ({ children }) => {
     return mockAnnouncementsByStatus[campus] || mockAnnouncementsByStatus.main;
   };
 
-  // Get results for current campus
-  const getResultsByCurrentCampus = () => {
-    const campus = getCurrentCampus();
-    return mockResultsByStatus[campus] || mockResultsByStatus.main;
-  };
 
-  // Get attendance for current campus
-  const getAttendanceByCurrentCampus = () => {
-    const campus = getCurrentCampus();
-    return mockAttendanceStats[campus] || "92%";
-  };
-
-  // Get all information for current campus context
-  const getCampusContext = () => {
-    const campus = getCurrentCampus();
-    return {
-      campus,
-      courses: getCoursesByCurrentCampus(),
-      assignments: getAssignmentStatsByCurrentCampus(),
-      announcements: getAnnouncementsByCurrentCampus(),
-      results: getResultsByCurrentCampus(),
-      attendance: getAttendanceByCurrentCampus(),
-    };
-  };
 
   // Switch student user (for testing)
   const switchStudentUser = (studentData) => {
     setCurrentStudent(studentData);
   };
 
-  // Get total credits for current semester
   const getTotalCredits = () => {
-    return getCoursesByCurrentCampus().reduce(
-      (sum, course) => sum + course.credits,
+    return getSubjectsByCurrentCampus().reduce(
+      (sum, subject) => sum + subject.credits,
       0,
     );
   };
@@ -87,21 +55,17 @@ export const StudentProvider = ({ children }) => {
   const value = {
     // State
     currentStudent,
-    enrolledCourses,
+    enrolledSubjects,
     isDarkMode,
 
     // Methods
     getCurrentCampus,
-    getCoursesByCurrentCampus,
-    getAssignmentStatsByCurrentCampus,
+    getSubjectsByCurrentCampus,
     getAnnouncementsByCurrentCampus,
-    getResultsByCurrentCampus,
     getDetailedResultsByCurrentCampus: () => {
       const campus = getCurrentCampus();
       return mockDetailedResults[campus] || { semesters: [] };
     },
-    getAttendanceByCurrentCampus,
-    getCampusContext,
     getTotalCredits,
     switchStudentUser,
     toggleDarkMode,

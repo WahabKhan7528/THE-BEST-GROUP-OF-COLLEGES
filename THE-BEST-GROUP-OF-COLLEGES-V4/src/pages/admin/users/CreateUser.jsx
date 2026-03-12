@@ -61,8 +61,8 @@ const CreateUser = () => {
 
   // Campus field visibility logic
   const showCampusField = ["Faculty", "Student", "Sub-Admin"].includes(role);
-  const isSingleCampus = role === "Student";
-  const isMultiCampus = ["Faculty", "Sub-Admin"].includes(role);
+  const isSingleCampus = ["Student", "Sub-Admin"].includes(role);
+  const isMultiCampus = role === "Faculty";
 
   return (
     <PortalForms

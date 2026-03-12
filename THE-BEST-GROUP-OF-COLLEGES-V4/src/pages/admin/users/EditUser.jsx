@@ -91,7 +91,7 @@ const EditUser = () => {
   };
 
   const showCampusField = ["Faculty", "Student", "Sub-Admin"].includes(role);
-  const isSingleCampus = role === "Student";
+  const isSingleCampus = ["Student", "Sub-Admin"].includes(role);
 
   return (
     <PortalForms

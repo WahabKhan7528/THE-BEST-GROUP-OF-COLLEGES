@@ -195,8 +195,8 @@ const StudentResults = () => {
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="bg-slate-50 dark:bg-white/5 border-b border-college-navy/10 dark:border-college-gold/20">
-                      <th className="p-5 text-xs font-black text-college-navy dark:text-college-gold uppercase tracking-[0.2em]">Course Code</th>
-                      <th className="p-5 text-xs font-black text-college-navy dark:text-college-gold uppercase tracking-[0.2em]">Course Title</th>
+                      <th className="p-5 text-xs font-black text-college-navy dark:text-college-gold uppercase tracking-[0.2em]">Subject Code</th>
+                      <th className="p-5 text-xs font-black text-college-navy dark:text-college-gold uppercase tracking-[0.2em]">Subject Title</th>
                       <th className="p-5 text-xs font-black text-college-navy dark:text-college-gold uppercase tracking-[0.2em] text-center">Cr. Hrs</th>
                       <th className="p-5 text-xs font-black text-college-navy dark:text-college-gold uppercase tracking-[0.2em] text-center">Obtained Marks</th>
                       <th className="p-5 text-xs font-black text-college-navy dark:text-college-gold uppercase tracking-[0.2em] text-center">Final Grade</th>

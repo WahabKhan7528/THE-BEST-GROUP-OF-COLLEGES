@@ -46,7 +46,7 @@ export const ConfirmProvider = ({ children }) => {
       {state && (
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="confirm-dialog-title" onKeyDown={handleKeyDown}>
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => handleClose(false)} aria-hidden="true" />
-          <div className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full p-6 border border-gray-200 dark:border-college-gold/15">
+          <div className="relative bg-white dark:bg-gray-900 rounded-lg shadow-2xl max-w-md w-full p-6 border border-gray-200 dark:border-college-gold/15">
             <button
               onClick={() => handleClose(false)}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
@@ -69,13 +69,13 @@ export const ConfirmProvider = ({ children }) => {
               <button
                 ref={cancelRef}
                 onClick={() => handleClose(false)}
-                className="px-4 py-2 rounded-xl border border-gray-200 dark:border-college-gold/20 text-gray-700 dark:text-gray-300 font-semibold text-sm hover:bg-gray-50 dark:hover:bg-white/5 transition-all"
+                className="px-4 py-2 rounded-md border border-gray-200 dark:border-college-gold/20 text-gray-700 dark:text-gray-300 font-semibold text-sm hover:bg-gray-50 dark:hover:bg-white/5 transition-all"
               >
                 {state.cancelText}
               </button>
               <button
                 onClick={() => handleClose(true)}
-                className={`px-4 py-2 rounded-xl font-semibold text-sm transition-all ${variantStyles[state.variant]}`}
+                className={`px-4 py-2 rounded-md font-semibold text-sm transition-all ${variantStyles[state.variant]}`}
               >
                 {state.confirmText}
               </button>
