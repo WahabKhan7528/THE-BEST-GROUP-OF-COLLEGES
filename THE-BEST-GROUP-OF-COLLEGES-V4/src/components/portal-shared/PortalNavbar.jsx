@@ -1,7 +1,10 @@
 import { Menu, Home, User, GraduationCap } from "lucide-react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import DarkModeToggle from "../shared/DarkModeToggle";
+import DarkModeToggle from "./DarkModeToggle";
 import CampusFilter from "../admin/CampusFilter";
+import { AdminContext } from "../../context/AdminContext";
+import { mockUsersData } from "../../data/adminData";
 
 const ROLE_ICONS = {
   admin: User,
@@ -27,7 +30,14 @@ const PortalNavbar = ({
   showCampusFilter = false,
 }) => {
   const navigate = useNavigate();
+  const adminCtx = useContext(AdminContext);
+  const switchAdminUser = adminCtx?.switchAdminUser;
+  const currentAdmin = adminCtx?.currentAdmin;
+
   const RoleIcon = ROLE_ICONS[role] || User;
+
+  // Filter only admin users for the switcher
+  const adminUsers = mockUsersData.filter(u => u.adminRole);
 
   const initials =
     user?.name
@@ -60,6 +70,27 @@ const PortalNavbar = ({
         {/* Right Section: Actions & Profile */}
         <div className="flex items-center gap-1.5 sm:gap-4">
           {showCampusFilter && <CampusFilter />}
+
+          {/* Admin Switcher (Developer Tool) only for testing */}
+          {role === "admin" && (
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-900/50 rounded-xl">
+              <span className="text-[10px] font-bold text-amber-700 dark:text-amber-500 uppercase tracking-tight">Switch:</span>
+              <select
+                value={currentAdmin?.id}
+                onChange={(e) => {
+                  const user = adminUsers.find(u => u.id === e.target.value);
+                  if (user) switchAdminUser(user);
+                }}
+                className="bg-transparent text-xs font-bold text-college-navy dark:text-amber-500 focus:outline-none border-none p-0 cursor-pointer"
+              >
+                {adminUsers.map(u => (
+                  <option key={u.id} value={u.id}>
+                    {u.name} ({u.adminRole})
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <DarkModeToggle />
 

@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { gallerySchema } from '../../../../schemas/gallerySchema';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../../../../context/ToastContext';
-import PortalForms from "../../../../components/shared/PortalForms";
+import PortalForm from "../../../../components/portal-shared/PortalForm";
 import { Upload, Image as ImageIcon, X, CheckCircle2 } from 'lucide-react';
 
 const UploadImage = () => {
@@ -68,7 +68,7 @@ const UploadImage = () => {
   };
 
   return (
-    <PortalForms
+    <PortalForm
       title="Upload Media"
       subtitle="Add new photos to your campus gallery"
       backPath="/admin/cms/gallery"
@@ -149,9 +149,9 @@ const UploadImage = () => {
 
         {/* Right Column: Details Form */}
         <div className="h-fit">
-          <PortalForms.Section title="Image Details" className="!p-6 !h-full">
+          <PortalForm.Section title="Image Details" className="!p-6 !h-full">
             <div className="col-span-1 md:col-span-2">
-              <PortalForms.Input
+              <PortalForm.Input
                 label="Image Title"
                 registration={register("title")}
                 error={errors.title?.message}
@@ -177,17 +177,17 @@ const UploadImage = () => {
             </div>
 
             <div className="col-span-1 md:col-span-2">
-              <PortalForms.Input
+              <PortalForm.Input
                 label="Tags (Optional)"
                 registration={register("tags")}
                 placeholder="e.g. students, auditorium, celebration"
                 helper="Comma separated"
               />
             </div>
-          </PortalForms.Section>
+          </PortalForm.Section>
         </div>
       </div>
-    </PortalForms>
+    </PortalForm>
   );
 };
 

@@ -6,17 +6,34 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useToast } from "../../../context/ToastContext";
 import { useConfirm } from "../../../context/ConfirmContext";
 import PublicButton from "../../../components/shared/PublicButton";
-import PortalForms from "../../../components/shared/PortalForms";
+import PortalForm from "../../../components/portal-shared/PortalForm";
 import { useAdminContext } from "../../../context/AdminContext";
 import { Save, Trash2, X } from "lucide-react";
+import { mockUsersData as adminUsers } from "../../../data/adminData";
 
 const EditUser = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { campuses } = useAdminContext();
+  const { campuses, isSuperAdmin, getSubAdminCampus } = useAdminContext();
   const toast = useToast();
   const confirmDialog = useConfirm();
   const [role, setRole] = useState("Faculty");
+  const targetUser = adminUsers.find((user) => user.id === id);
+  const managedCampus = getSubAdminCampus();
+
+  useEffect(() => {
+    if (isSuperAdmin) return;
+
+    const canManageTarget =
+      targetUser &&
+      ["Faculty", "Student"].includes(targetUser.role) &&
+      targetUser.allocatedCampuses?.includes(managedCampus);
+
+    if (!canManageTarget) {
+      toast.error("You can only manage students and faculty from your allocated campus.");
+      navigate("/admin/users", { replace: true });
+    }
+  }, [isSuperAdmin, managedCampus, navigate, targetUser, toast]);
 
   const { register, handleSubmit, watch, reset, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(userSchema),
@@ -49,7 +66,12 @@ const EditUser = () => {
       designation: "Lecturer",
       qualification: "MSCS",
     });
-    setSelectedCampuses(["main"]);
+    if (!isSuperAdmin) {
+      const campus = getSubAdminCampus();
+      setSelectedCampuses(campus ? [campus] : ["main"]);
+    } else {
+      setSelectedCampuses(["main"]);
+    }
   }, [id, reset]);
 
   const [allocations, setAllocations] = useState([{ class: "BSCS-5A", subject: "Operating Systems" }]);
@@ -91,10 +113,11 @@ const EditUser = () => {
   };
 
   const showCampusField = ["Faculty", "Student", "Sub-Admin"].includes(role);
-  const isSingleCampus = ["Student", "Sub-Admin"].includes(role);
+  // Faculty now uses single-campus (one faculty per campus, req 9)
+  const isSingleCampus = ["Student", "Sub-Admin", "Faculty"].includes(role);
 
   return (
-    <PortalForms
+    <PortalForm
       title="Edit User"
       subtitle={`Update details for ${id}`}
       backPath="/admin/users"
@@ -116,48 +139,48 @@ const EditUser = () => {
       }
     >
       {/* Role Display (Read-Only) */}
-      <PortalForms.Section title="Role & Permissions">
+      <PortalForm.Section title="Role & Permissions">
         <div className="col-span-1 md:col-span-2 flex items-center gap-3">
           <span className="px-4 py-2 bg-college-navy/10 text-college-navy dark:text-college-gold dark:border-college-gold/20 rounded-lg font-semibold text-sm border border-college-navy/20">
             {role}
           </span>
           <span className="text-sm text-gray-500">Role cannot be changed after creation.</span>
         </div>
-      </PortalForms.Section>
+      </PortalForm.Section>
 
       {/* Basic Info Section */}
-      <PortalForms.Section title="Personal Identity">
-        <PortalForms.Input
+      <PortalForm.Section title="Personal Identity">
+        <PortalForm.Input
           label="Full Name"
           registration={register("name")}
           error={errors.name?.message}
           required
         />
-        <PortalForms.Input
+        <PortalForm.Input
           label="Email Address"
           type="email"
           registration={register("email")}
           error={errors.email?.message}
           required
         />
-        <PortalForms.Input
+        <PortalForm.Input
           label="System ID"
           registration={register("id")}
           disabled
           helper="Cannot be modified"
         />
-        <PortalForms.Input
+        <PortalForm.Input
           label="Contact Number"
           registration={register("contact")}
         />
-      </PortalForms.Section>
+      </PortalForm.Section>
 
       {/* Academic / Professional Details */}
       {(role === "Student" || role === "Faculty" || role === "Sub-Admin") && (
-        <PortalForms.Section title={role === "Student" ? "Academic Information" : "Professional Details"}>
+        <PortalForm.Section title={role === "Student" ? "Academic Information" : "Professional Details"}>
           {role === "Student" && (
             <>
-              <PortalForms.Input
+              <PortalForm.Input
                 label="Course"
                 registration={register("course")}
                 required
@@ -178,17 +201,17 @@ const EditUser = () => {
                   ))}
                 </div>
               </div>
-              <PortalForms.Input
+              <PortalForm.Input
                 label={academicSystem === "Annual" ? "Year" : "Semester"}
                 registration={register("semester")}
                 required
               />
-              <PortalForms.Input
+              <PortalForm.Input
                 label="Class"
                 registration={register("class")}
                 required
               />
-              <PortalForms.Input
+              <PortalForm.Input
                 label="Enrollment Year"
                 registration={register("enrollmentYear")}
               />
@@ -197,12 +220,12 @@ const EditUser = () => {
 
           {role === "Faculty" && (
             <>
-              <PortalForms.Input
+              <PortalForm.Input
                 label="Designation"
                 registration={register("designation")}
                 required
               />
-              <PortalForms.Input
+              <PortalForm.Input
                 label="Qualification"
                 registration={register("qualification")}
               />
@@ -255,17 +278,17 @@ const EditUser = () => {
           )}
 
           {(role === "Sub-Admin" || role === "Super Admin") && (
-            <PortalForms.Input
+            <PortalForm.Input
               label="Designation / Role Title"
               registration={register("designation")}
             />
           )}
-        </PortalForms.Section>
+        </PortalForm.Section>
       )}
 
       {/* Campus Allocation Section */}
       {showCampusField && (
-        <PortalForms.Section title="Campus Allocation">
+        <PortalForm.Section title="Campus Allocation">
           <div className="col-span-1 md:col-span-2">
             <div className="bg-gray-50/50 dark:bg-college-navy/30 rounded-xl p-4 border border-college-navy/10 dark:border-college-gold/10">
               <h3 className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-3 block">
@@ -281,6 +304,7 @@ const EditUser = () => {
                     }}
                     className="w-full px-4 py-2.5 rounded-xl border border-college-navy/20 dark:border-college-gold/20 bg-white dark:bg-college-navy dark:text-white focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20"
                     required
+                    disabled={!isSuperAdmin}
                   >
                     <option value="">Select a campus...</option>
                     {campuses.map((campus) => (
@@ -330,9 +354,9 @@ const EditUser = () => {
               )}
             </div>
           </div>
-        </PortalForms.Section>
+        </PortalForm.Section>
       )}
-    </PortalForms>
+    </PortalForm>
   );
 };
 

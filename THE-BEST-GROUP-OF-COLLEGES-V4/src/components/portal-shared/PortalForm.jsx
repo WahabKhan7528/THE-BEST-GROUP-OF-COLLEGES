@@ -1,14 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import PublicButton from "./PublicButton";
-import FormInput from "./FormInput";
+import PublicButton from "../shared/PublicButton";
+import FormInput from "../shared/FormInput";
 
 /**
- * PortalForms - A unified wrapper for forms across Admin and Faculty portals.
+ * PortalForm - A unified wrapper for forms across Admin and Faculty portals.
  * Ensures consistent back buttons, headers, container styling, and submit/cancel buttons.
  */
-const PortalForms = ({
+const PortalForm = ({
     title,
     subtitle,
     backPath,
@@ -82,9 +82,9 @@ const PortalForms = ({
 };
 
 /**
- * Section block for grouping fields inside PortalForms
+ * Section block for grouping fields inside PortalForm
  */
-PortalForms.Section = ({ title, children, className = "" }) => (
+PortalForm.Section = ({ title, children, className = "" }) => (
     <section className={`bg-white/80 dark:bg-college-navy backdrop-blur-xl border border-white/20 dark:border-college-gold/20 p-6 md:p-8 rounded-2xl shadow-sm space-y-6 ${className}`}>
         {title && (
             <div className="flex items-center gap-2 mb-2 pb-2 border-b border-gray-100 dark:border-college-gold/20">
@@ -97,7 +97,7 @@ PortalForms.Section = ({ title, children, className = "" }) => (
     </section>
 );
 
-// Alias to FormInput to allow neat imports like <PortalForms.Input />
-PortalForms.Input = FormInput;
+// Alias to FormInput to allow neat imports like <PortalForm.Input />
+PortalForm.Input = FormInput;
 
-export default PortalForms;
+export default PortalForm;

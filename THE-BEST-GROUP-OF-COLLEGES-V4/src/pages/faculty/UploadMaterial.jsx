@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { materialSchema } from '../../schemas/materialSchema';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../../context/ToastContext';
-import PortalForms from '../../components/shared/PortalForms';
+import PortalForm from '../../components/portal-shared/PortalForm';
 import { Upload, Database, FileText } from 'lucide-react';
 
 const UploadMaterial = () => {
@@ -31,7 +31,7 @@ const UploadMaterial = () => {
   };
 
   return (
-    <PortalForms
+    <PortalForm
       title="Upload Course Material"
       subtitle="Share resources, lecture notes, and assignments with your students."
       backPath="/faculty/materials"
@@ -41,9 +41,9 @@ const UploadMaterial = () => {
       submitIcon={Upload}
       submitting={isSubmitting}
     >
-      <PortalForms.Section title="Course Information" icon={<Database size={20} className="text-college-navy dark:text-college-gold" />}>
+      <PortalForm.Section title="Course Information" icon={<Database size={20} className="text-college-navy dark:text-college-gold" />}>
         <div>
-          <PortalForms.Input
+          <PortalForm.Input
             label="Class / Section"
             registration={register('classSection')}
             error={errors.classSection?.message}
@@ -52,7 +52,7 @@ const UploadMaterial = () => {
           />
         </div>
         <div>
-          <PortalForms.Input
+          <PortalForm.Input
             label="Subject"
             registration={register('subject')}
             error={errors.subject?.message}
@@ -60,11 +60,11 @@ const UploadMaterial = () => {
             required
           />
         </div>
-      </PortalForms.Section>
+      </PortalForm.Section>
 
-      <PortalForms.Section title="Material Details" icon={<FileText size={20} className="text-college-navy dark:text-college-gold" />}>
+      <PortalForm.Section title="Material Details" icon={<FileText size={20} className="text-college-navy dark:text-college-gold" />}>
         <div className="md:col-span-2">
-          <PortalForms.Input
+          <PortalForm.Input
             label="Material Title"
             registration={register('title')}
             error={errors.title?.message}
@@ -90,7 +90,7 @@ const UploadMaterial = () => {
         </div>
 
         <div>
-          <PortalForms.Input
+          <PortalForm.Input
             label="Upload Date"
             type="date"
             registration={register('uploadDate')}
@@ -98,9 +98,9 @@ const UploadMaterial = () => {
             required
           />
         </div>
-      </PortalForms.Section>
+      </PortalForm.Section>
 
-      <PortalForms.Section title="Content Upload" icon={<Upload size={20} className="text-college-navy dark:text-college-gold" />}>
+      <PortalForm.Section title="Content Upload" icon={<Upload size={20} className="text-college-navy dark:text-college-gold" />}>
         <div className="md:col-span-2 space-y-2">
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">File Upload</label>
           <div className="relative group">
@@ -118,15 +118,15 @@ const UploadMaterial = () => {
         </div>
 
         <div className="md:col-span-2">
-          <PortalForms.Input
+          <PortalForm.Input
             label="Link (YouTube / Drive) (Optional)"
             type="url"
             registration={register('link')}
             placeholder="https://..."
           />
         </div>
-      </PortalForms.Section>
-    </PortalForms>
+      </PortalForm.Section>
+    </PortalForm>
   );
 };
 

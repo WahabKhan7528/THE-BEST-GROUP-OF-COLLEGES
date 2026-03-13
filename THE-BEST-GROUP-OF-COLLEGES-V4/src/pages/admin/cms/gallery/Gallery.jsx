@@ -11,14 +11,20 @@ import {
   Calendar,
   Pencil
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { adminGalleryImages as images } from "../../../../data/adminData";
 
 
 
 const Gallery = () => {
   const navigate = useNavigate();
-  const { isDarkMode } = useAdminContext();
+  const { isSuperAdmin, isDarkMode } = useAdminContext();
+
+  useEffect(() => {
+    if (!isSuperAdmin) {
+      navigate("/admin/users", { replace: true });
+    }
+  }, [isSuperAdmin, navigate]);
   const toast = useToast();
   const confirmDialog = useConfirm();
   const [activeFilter, setActiveFilter] = useState("All");

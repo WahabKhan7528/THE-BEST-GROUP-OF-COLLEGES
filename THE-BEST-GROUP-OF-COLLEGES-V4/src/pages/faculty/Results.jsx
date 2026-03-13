@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useFacultyContext } from "../../context/FacultyContext";
 import { useToast } from "../../context/ToastContext";
 import ResultEntryTable from "../../components/faculty/ResultEntryTable";
-import PortalPageHeader from "../../components/shared/PortalPageHeader";
+import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
 import PublicButton from "../../components/shared/PublicButton";
 import { UploadCloud } from "lucide-react";

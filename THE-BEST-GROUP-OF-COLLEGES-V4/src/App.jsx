@@ -80,6 +80,7 @@ const StudentAssignments = lazy(() => import("./pages/student/Assignments"));
 const StudentMaterials = lazy(() => import("./pages/student/Materials"));
 const StudentResults = lazy(() => import("./pages/student/Results"));
 const StudentAnnouncements = lazy(() => import("./pages/student/Announcements"));
+const StudentSubmissions = lazy(() => import("./pages/student/Submissions"));
 
 
 
@@ -188,6 +189,7 @@ function App() {
                 <Route index element={<Navigate to="dashboard" replace />} />
                 <Route path="dashboard" element={<StudentDashboard />} />
                 <Route path="assignments" element={<StudentAssignments />} />
+                <Route path="submissions" element={<StudentSubmissions />} />
                 <Route path="materials" element={<StudentMaterials />} />
                 <Route path="results" element={<StudentResults />} />
                 <Route path="announcements" element={<StudentAnnouncements />} />

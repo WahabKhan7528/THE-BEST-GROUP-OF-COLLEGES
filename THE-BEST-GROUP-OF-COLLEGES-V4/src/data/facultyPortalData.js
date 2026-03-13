@@ -46,10 +46,10 @@ export const campusNames = {
 
 // Dashboard quick actions
 export const facultyQuickActions = [
-    { title: "Create Assignment", icon: PlusCircle, path: "/faculty/assignments/create", bgColor: "bg-primary-50 text-primary-600" },
-    { title: "Upload Material", icon: FolderOpen, path: "/faculty/materials/upload", bgColor: "bg-primary-50 text-primary-600" },
-    { title: "View Submissions", icon: ClipboardList, path: "/faculty/assignments", bgColor: "bg-primary-50 text-primary-600" },
-    { title: "Announcements", icon: Megaphone, path: "/faculty/announcements", bgColor: "bg-primary-50 text-primary-600" },
+    { title: "Create Assignment", icon: PlusCircle, path: "/faculty/assignments/create", bgColor: "bg-college-navy/5 text-college-navy" },
+    { title: "Upload Material", icon: FolderOpen, path: "/faculty/materials/upload", bgColor: "bg-college-navy/5 text-college-navy" },
+    { title: "View Submissions", icon: ClipboardList, path: "/faculty/assignments", bgColor: "bg-college-navy/5 text-college-navy" },
+    { title: "Announcements", icon: Megaphone, path: "/faculty/announcements", bgColor: "bg-college-navy/5 text-college-navy" },
 ];
 
 // Recent announcements

@@ -6,9 +6,9 @@ import {
 } from "lucide-react";
 
 import { useFacultyContext } from "../../context/FacultyContext";
-import PortalPageHeader from "../../components/shared/PortalPageHeader";
+import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
-import PortalStatsCard from "../../components/shared/PortalStatsCard";
+import PortalStatsCard from "../../components/portal-shared/PortalStatsCard";
 
 import {
   campusNames,

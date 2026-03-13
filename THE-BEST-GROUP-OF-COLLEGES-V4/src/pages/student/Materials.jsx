@@ -1,6 +1,6 @@
 import { useStudentContext } from "../../context/StudentContext";
-import MaterialCard from "../../components/shared/MaterialCard";
-import PortalPageHeader from "../../components/shared/PortalPageHeader";
+import MaterialCard from "../../components/portal-shared/MaterialCard";
+import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
 import { FolderOpen } from "lucide-react";
 

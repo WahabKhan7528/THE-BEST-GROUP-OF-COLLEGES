@@ -1,5 +1,5 @@
 import { useStudentContext } from "../../context/StudentContext";
-import AnnouncementCard from "../../components/shared/AnnouncementCard";
+import AnnouncementCard from "../../components/portal-shared/AnnouncementCard";
 import { Megaphone } from "lucide-react";
 
 

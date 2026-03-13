@@ -1,8 +1,8 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { mockAdminUser, mockCampuses } from "../data/adminData";
 import { useThemeContext } from "./ThemeContext";
 
-const AdminContext = createContext();
+export const AdminContext = createContext();
 
 export const AdminProvider = ({ children }) => {
   // Current logged-in admin user
@@ -16,14 +16,31 @@ export const AdminProvider = ({ children }) => {
 
   // Sub-Admin to Campus allocation mapping
   const [adminCampusAllocations, setAdminCampusAllocations] = useState({
-    "U-003": ["law"], // Sub-Admin allocated to Law Campus
-    "U-004": ["main"], // Sub-Admin restricted to single campus
+    "U-002": ["law"],  // Ahmed Khan → Law Campus
+    "U-003": ["main"], // Fatima Ali → Main Campus
+    "U-004": ["main"], // Sub-Admin restricted to Main Campus
   });
 
   const { isDarkMode, toggleDarkMode } = useThemeContext();
 
   // Check if current admin is Super Admin
   const isSuperAdmin = currentAdmin?.adminRole === "Super Admin";
+
+  // Get the single allocated campus id for a sub-admin (null for super admin)
+  const getSubAdminCampus = () => {
+    if (isSuperAdmin) return null;
+    const allocations = adminCampusAllocations[currentAdmin?.id];
+    return allocations?.[0] || currentAdmin?.allocatedCampuses?.[0] || null;
+  };
+
+  // Auto-lock campus filter to sub-admin's campus on login/switch
+  useEffect(() => {
+    if (!isSuperAdmin) {
+      const campus = getSubAdminCampus();
+      if (campus) setSelectedCampusFilter(campus);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentAdmin]);
 
   // Get visible campuses based on current admin role
   const getVisibleCampuses = () => {
@@ -33,7 +50,7 @@ export const AdminProvider = ({ children }) => {
 
   // Get currently selected campus object
   const getCurrentCampusContext = () => {
-    if (selectedCampusFilter === "all" || !isSuperAdmin) return null;
+    if (selectedCampusFilter === "all") return null;
     return campuses.find(c => c.id === selectedCampusFilter);
   };
 
@@ -70,7 +87,10 @@ export const AdminProvider = ({ children }) => {
   // Mock: Switch admin user (for testing purposes)
   const switchAdminUser = (adminData) => {
     setCurrentAdmin(adminData);
-    setSelectedCampusFilter("all");
+    // useEffect will auto-set campus filter for sub-admins
+    if (adminData?.adminRole === "Super Admin") {
+      setSelectedCampusFilter("all");
+    }
   };
 
   const value = {
@@ -89,6 +109,7 @@ export const AdminProvider = ({ children }) => {
     getVisibleCampuses,
     getCurrentCampusContext,
     getAdminAllocations,
+    getSubAdminCampus,
     updateAdminAllocations,
     addCampus,
     updateCampus,

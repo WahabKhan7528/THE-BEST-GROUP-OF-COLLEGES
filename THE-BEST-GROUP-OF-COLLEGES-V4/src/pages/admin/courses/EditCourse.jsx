@@ -1,19 +1,19 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import PublicButton from "../../../components/shared/PublicButton";
 import { useAdminContext } from "../../../context/AdminContext";
 import { useToast } from "../../../context/ToastContext";
 import { useConfirm } from "../../../context/ConfirmContext";
-import PortalForms from "../../../components/shared/PortalForms";
+import PortalForm from "../../../components/portal-shared/PortalForm";
 import { Building2, CheckCircle2, Trash2, Save } from "lucide-react";
 import { courseSchema } from "../../../schemas/courseSchema";
 
 const EditCourse = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { campuses, isDarkMode } = useAdminContext();
+  const { campuses, isDarkMode, isSuperAdmin, currentAdmin, getSubAdminCampus } = useAdminContext();
   const toast = useToast();
   const confirmDialog = useConfirm();
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
@@ -27,6 +27,17 @@ const EditCourse = () => {
     },
   });
   const [selectedCampuses, setSelectedCampuses] = useState(["main", "law"]);
+
+  // Guard: redirect sub-admin if course doesn't belong to their campus
+  useEffect(() => {
+    if (!isSuperAdmin) {
+      const managedCampus = getSubAdminCampus();
+      if (!selectedCampuses.includes(managedCampus)) {
+        toast.error("Access denied. This course is not available at your campus.");
+        navigate("/admin/courses", { replace: true });
+      }
+    }
+  }, [isSuperAdmin]);
 
   const handleCampusToggle = (campusId) => {
     setSelectedCampuses((prev) =>
@@ -45,7 +56,7 @@ const EditCourse = () => {
   };
 
   return (
-    <PortalForms
+    <PortalForm
       title="Edit Course"
       subtitle="Update course details and availability"
       backPath="/admin/courses"
@@ -67,14 +78,14 @@ const EditCourse = () => {
       }
     >
       {/* Basic Info Section */}
-      <PortalForms.Section title="Course Information">
+      <PortalForm.Section title="Course Information">
         <div className="md:col-span-2 flex justify-end">
           <span className="px-2.5 py-1 bg-college-navy/10 text-college-navy dark:text-college-gold text-xs font-medium rounded-lg border border-college-gold/20 inline-block w-fit">
             ID: {id}
           </span>
         </div>
         <div className="md:col-span-2 -mt-6">
-          <PortalForms.Input
+          <PortalForm.Input
             label="Course Title"
             registration={register("title")}
             error={errors.title?.message}
@@ -84,7 +95,7 @@ const EditCourse = () => {
         </div>
 
         <div>
-          <PortalForms.Input
+          <PortalForm.Input
             label="Duration"
             registration={register("duration")}
             placeholder="e.g. 4 Years"
@@ -92,7 +103,7 @@ const EditCourse = () => {
         </div>
 
         <div>
-          <PortalForms.Input
+          <PortalForm.Input
             label="Eligibility"
             registration={register("eligibility")}
             placeholder="e.g. Intermediate or A-Level"
@@ -122,18 +133,19 @@ const EditCourse = () => {
             placeholder="Write a brief overview of the course..."
           />
         </div>
-      </PortalForms.Section>
+      </PortalForm.Section>
 
       {/* Campus Availability */}
-      <PortalForms.Section title="Campus Availability">
+      <PortalForm.Section title="Campus Availability">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 col-span-1 md:col-span-2">
-          {campuses.map((campus) => {
+          {(isSuperAdmin ? campuses : campuses.filter(c => currentAdmin?.allocatedCampuses?.includes(c.id))).map((campus) => {
             const isSelected = selectedCampuses.includes(campus.id);
             return (
               <label
                 key={campus.id}
                 className={`
-                    relative flex flex-col items-center justify-center p-4 rounded-xl border-2 cursor-pointer transition-all duration-200
+                    relative flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all duration-200
+                    ${!isSuperAdmin ? 'cursor-not-allowed opacity-80' : 'cursor-pointer'}
                     ${isSelected
                     ? "border-college-navy bg-college-navy/10 pt-6 dark:bg-college-gold/10 dark:border-college-gold"
                     : "border-gray-100 dark:border-college-gold/20 bg-white dark:bg-college-navy hover:bg-gray-50 dark:hover:bg-college-navy/80"
@@ -143,7 +155,8 @@ const EditCourse = () => {
                 <input
                   type="checkbox"
                   checked={isSelected}
-                  onChange={() => handleCampusToggle(campus.id)}
+                  onChange={() => isSuperAdmin && handleCampusToggle(campus.id)}
+                  disabled={!isSuperAdmin}
                   className="sr-only"
                 />
                 <Building2 className={`w-6 h-6 mb-2 ${isSelected ? 'text-college-navy dark:text-college-gold' : 'text-gray-400'}`} />
@@ -159,8 +172,8 @@ const EditCourse = () => {
             );
           })}
         </div>
-      </PortalForms.Section>
-    </PortalForms>
+      </PortalForm.Section>
+    </PortalForm>
   );
 };
 

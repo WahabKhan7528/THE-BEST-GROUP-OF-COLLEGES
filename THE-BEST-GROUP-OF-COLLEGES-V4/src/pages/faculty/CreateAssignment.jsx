@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { assignmentSchema } from '../../schemas/assignmentSchema';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../../context/ToastContext';
-import PortalForms from '../../components/shared/PortalForms';
+import PortalForm from '../../components/portal-shared/PortalForm';
 import { Plus, Database, AlignLeft, Calendar, FileText } from 'lucide-react';
 
 const CreateAssignment = () => {
@@ -31,7 +31,7 @@ const CreateAssignment = () => {
   };
 
   return (
-    <PortalForms
+    <PortalForm
       title="Create New Assignment"
       subtitle="Publish a new assignment for your students"
       backPath="/faculty/assignments"
@@ -41,9 +41,9 @@ const CreateAssignment = () => {
       submitIcon={Plus}
       submitting={isSubmitting}
     >
-      <PortalForms.Section title="Assignment Basic Info" icon={<Database size={20} className="text-college-navy dark:text-college-gold" />}>
+      <PortalForm.Section title="Assignment Basic Info" icon={<Database size={20} className="text-college-navy dark:text-college-gold" />}>
         <div>
-          <PortalForms.Input
+          <PortalForm.Input
             label="Class / Section"
             registration={register('classSection')}
             error={errors.classSection?.message}
@@ -52,7 +52,7 @@ const CreateAssignment = () => {
           />
         </div>
         <div>
-          <PortalForms.Input
+          <PortalForm.Input
             label="Subject"
             registration={register('subject')}
             error={errors.subject?.message}
@@ -61,7 +61,7 @@ const CreateAssignment = () => {
           />
         </div>
         <div className="md:col-span-2">
-          <PortalForms.Input
+          <PortalForm.Input
             label="Assignment Title"
             registration={register('title')}
             error={errors.title?.message}
@@ -69,9 +69,9 @@ const CreateAssignment = () => {
             required
           />
         </div>
-      </PortalForms.Section>
+      </PortalForm.Section>
 
-      <PortalForms.Section title="Instructions & Content" icon={<AlignLeft size={20} className="text-college-navy dark:text-college-gold" />}>
+      <PortalForm.Section title="Instructions & Content" icon={<AlignLeft size={20} className="text-college-navy dark:text-college-gold" />}>
         <div className="md:col-span-2">
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
             Description & Instructions <span className="text-red-500">*</span>
@@ -84,11 +84,11 @@ const CreateAssignment = () => {
             required
           />
         </div>
-      </PortalForms.Section>
+      </PortalForm.Section>
 
-      <PortalForms.Section title="Deadlines & Attachments" icon={<Calendar size={20} className="text-college-navy dark:text-college-gold" />}>
+      <PortalForm.Section title="Deadlines & Attachments" icon={<Calendar size={20} className="text-college-navy dark:text-college-gold" />}>
         <div>
-          <PortalForms.Input
+          <PortalForm.Input
             label="Due Date"
             type="date"
             registration={register('dueDate')}
@@ -97,7 +97,7 @@ const CreateAssignment = () => {
           />
         </div>
         <div>
-          <PortalForms.Input
+          <PortalForm.Input
             label="Maximum Marks"
             type="number"
             registration={register('maxMarks')}
@@ -120,8 +120,8 @@ const CreateAssignment = () => {
             </div>
           </div>
         </div>
-      </PortalForms.Section>
-    </PortalForms>
+      </PortalForm.Section>
+    </PortalForm>
   );
 };
 

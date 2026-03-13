@@ -37,26 +37,91 @@ export const mockAnnouncementsByStatus = {
         unread: 2,
         total: 12,
         recent: [
-            { id: "A-001", title: "Mid-term schedule released", date: "Sept 12, 2025" },
-            { id: "A-002", title: "Library hours extended", date: "Sept 10, 2025" },
-            { id: "A-003", title: "New study materials uploaded", date: "Sept 8, 2025" },
+            { 
+                id: "A-001", 
+                title: "Mid-term schedule released", 
+                description: "The official schedule for the Fall 2025 mid-term examinations is now available on the portal and notice boards.",
+                date: "Sept 12, 2025" 
+            },
+            { 
+                id: "A-002", 
+                title: "Library hours extended", 
+                description: "To support students during the exam season, the main library will remain open until 11:00 PM starting next week.",
+                date: "Sept 10, 2025" 
+            },
+            { 
+                id: "A-003", 
+                title: "New study materials uploaded", 
+                description: "Faculty members have uploaded fresh research papers and case studies for the Advanced Algorithms course.",
+                date: "Sept 8, 2025" 
+            },
         ],
     },
     law: {
         unread: 1,
         total: 8,
         recent: [
-            { id: "A-004", title: "Moot court finals schedule", date: "Sept 11, 2025" },
-            { id: "A-005", title: "Legal research workshop", date: "Sept 9, 2025" },
+            { 
+                id: "A-004", 
+                title: "Moot court finals schedule", 
+                description: "The final round of the inter-campus moot court competition will be held this Saturday in the main auditorium.",
+                date: "Sept 11, 2025" 
+            },
+            { 
+                id: "A-005", 
+                title: "Legal research workshop", 
+                description: "A mandatory workshop on using international legal databases will be conducted for final year students.",
+                date: "Sept 9, 2025" 
+            },
         ],
     },
     hala: {
         unread: 0,
         total: 5,
         recent: [
-            { id: "A-006", title: "Campus event announcement", date: "Sept 10, 2025" },
+            { 
+                id: "A-006", 
+                title: "Campus event announcement", 
+                description: "Join us for the annual cultural festival happening next month! Registrations for performances are now open.",
+                date: "Sept 10, 2025" 
+            },
         ],
     },
+};
+
+// Mock Class-specific announcements for students
+export const mockClassAnnouncements = {
+    main: [
+        {
+            id: "ca-001",
+            title: "Quiz 02 Postponed",
+            description: "Please note that the Operating Systems quiz originally scheduled for Monday has been moved to Wednesday.",
+            date: "Sept 14, 2025",
+            type: "urgent",
+            classSection: "CS-312", // Operating Systems
+            instructor: "Prof. Ahmed Raza"
+        },
+        {
+            id: "ca-002",
+            title: "Lab Manual Uploaded",
+            description: "Dynamic Programming lab manual is now available in the materials section. Please review before coming to the lab.",
+            date: "Sept 13, 2025",
+            type: "update",
+            classSection: "CS-418", // Data Mining
+            instructor: "Dr. Hassan Ali"
+        },
+        {
+            id: "ca-003",
+            title: "Guest Lecture: Industry 4.0",
+            description: "Join us this Friday for a guest lecture on the impact of Data Mining on modern industrial automation.",
+            date: "Sept 11, 2025",
+            type: "event",
+            classSection: "CS-418", // Data Mining
+            instructor: "Dr. Hassan Ali"
+        }
+    ],
+    law: [],
+    hala: []
 };
 
 // Mock detailed results
@@ -132,8 +197,57 @@ export const studentCampusNames = {
 
 // Dashboard quick links
 export const studentQuickLinks = [
-    { title: "Assignments", description: "View and submit coursework", path: "/student/assignments", icon: ClipboardList, color: "text-primary-600", bgColor: "bg-primary-50" },
-    { title: "Materials", description: "Slides, notes, and videos", path: "/student/materials", icon: FolderOpen, color: "text-primary-600", bgColor: "bg-primary-50" },
-    { title: "Announcements", description: "Class updates and alerts", path: "/student/announcements", icon: Megaphone, color: "text-primary-600", bgColor: "bg-primary-50" },
-    { title: "Results", description: "Marks and transcripts", path: "/student/results", icon: BarChart3, color: "text-primary-600", bgColor: "bg-primary-50" },
+    { title: "Assignments", description: "View and submit coursework", path: "/student/assignments", icon: ClipboardList, color: "text-college-navy", bgColor: "bg-college-navy/5" },
+    { title: "Submissions", description: "Track grades and feedback", path: "/student/submissions", icon: ClipboardList, color: "text-college-navy", bgColor: "bg-college-navy/5" },
+    { title: "Materials", description: "Slides, notes, and videos", path: "/student/materials", icon: FolderOpen, color: "text-college-navy", bgColor: "bg-college-navy/5" },
+    { title: "Announcements", description: "Class updates and alerts", path: "/student/announcements", icon: Megaphone, color: "text-college-navy", bgColor: "bg-college-navy/5" },
+    { title: "Results", description: "Marks and transcripts", path: "/student/results", icon: BarChart3, color: "text-college-navy", bgColor: "bg-college-navy/5" },
 ];
+
+// Mock student submissions for the status page
+export const mockStudentSubmissions = [
+    {
+        id: "sub-001",
+        subject: "Operating Systems",
+        title: "Assignment 1 - CPU Scheduling",
+        submittedAt: "Sept 12, 2025 • 9:30 AM",
+        status: "On-time",
+        marks: 85,
+        maxMarks: 100,
+        remarks: "Excellent work on the Gantt charts. The turnaround time calculation is correct.",
+        file: "#",
+    },
+    {
+        id: "sub-002",
+        subject: "Data Mining",
+        title: "Lab Task 03 - Association Rules",
+        submittedAt: "Sept 10, 2025 • 2:15 PM",
+        status: "On-time",
+        marks: 42,
+        maxMarks: 50,
+        remarks: "Good implementation of Apriori algorithm. Try to optimize the support pruning.",
+        file: "#",
+    },
+    {
+        id: "sub-003",
+        subject: "Database Design",
+        title: "Project Milestone 1 - ER Diagram",
+        submittedAt: "Sept 13, 2025 • 8:10 AM",
+        status: "Late",
+        statusNote: "2 hours late",
+        marks: 18,
+        maxMarks: 20,
+        remarks: "Solid entities and relationships. Normalization part was slightly missing.",
+        file: "#",
+    },
+    {
+        id: "sub-004",
+        subject: "Linear Algebra",
+        title: "Weekly Quiz 4",
+        submittedAt: "Sept 14, 2025 • 11:00 AM",
+        status: "Pending",
+        file: "#",
+    },
+];
+
+export default studentQuickLinks;

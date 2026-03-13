@@ -7,7 +7,7 @@ import { useToast } from "../../../context/ToastContext";
 import { useConfirm } from "../../../context/ConfirmContext";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import PublicButton from "../../../components/shared/PublicButton";
-import PortalForms from "../../../components/shared/PortalForms";
+import PortalForm from "../../../components/portal-shared/PortalForm";
 import { Save, Trash2 } from "lucide-react";
 
 const EditCampus = () => {
@@ -58,7 +58,7 @@ const EditCampus = () => {
   };
 
   return (
-    <PortalForms
+    <PortalForm
       title="Edit Campus"
       subtitle="Update campus details and configuration"
       backPath="/admin/campus"
@@ -80,9 +80,9 @@ const EditCampus = () => {
       }
     >
       {/* Basic Information */}
-      <PortalForms.Section title="Basic Information">
+      <PortalForm.Section title="Basic Information">
         <div className="col-span-1 md:col-span-2">
-          <PortalForms.Input
+          <PortalForm.Input
             label="Campus Name"
             registration={register("name")}
             error={errors.name?.message}
@@ -91,7 +91,7 @@ const EditCampus = () => {
         </div>
 
         <div>
-          <PortalForms.Input
+          <PortalForm.Input
             label="Campus Code"
             registration={register("code")}
             error={errors.code?.message}
@@ -100,18 +100,18 @@ const EditCampus = () => {
         </div>
 
         <div>
-          <PortalForms.Input
+          <PortalForm.Input
             label="Established Year"
             registration={register("established")}
             placeholder="e.g. 1995"
           />
         </div>
-      </PortalForms.Section>
+      </PortalForm.Section>
 
       {/* Contact & Location */}
-      <PortalForms.Section title="Contact & Location">
+      <PortalForm.Section title="Contact & Location">
         <div className="col-span-1 md:col-span-2">
-          <PortalForms.Input
+          <PortalForm.Input
             label="Address / Location"
             registration={register("location")}
             error={errors.location?.message}
@@ -119,7 +119,7 @@ const EditCampus = () => {
         </div>
 
         <div>
-          <PortalForms.Input
+          <PortalForm.Input
             label="Phone Number"
             type="tel"
             registration={register("contact.phone")}
@@ -127,15 +127,15 @@ const EditCampus = () => {
         </div>
 
         <div>
-          <PortalForms.Input
+          <PortalForm.Input
             label="Email Address"
             type="email"
             registration={register("contact.email")}
             error={errors.contact?.email?.message}
           />
         </div>
-      </PortalForms.Section>
-    </PortalForms>
+      </PortalForm.Section>
+    </PortalForm>
   );
 };
 

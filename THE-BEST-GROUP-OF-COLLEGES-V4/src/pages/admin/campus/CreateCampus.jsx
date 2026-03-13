@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { useAdminContext } from "../../../context/AdminContext";
-import PortalForms from "../../../components/shared/PortalForms";
+import PortalForm from "../../../components/portal-shared/PortalForm";
 import { createCampusSchema } from "../../../schemas/campusSchema";
 
 const CreateCampus = () => {
@@ -19,7 +19,7 @@ const CreateCampus = () => {
   };
 
   return (
-    <PortalForms
+    <PortalForm
       title="Create New Campus"
       subtitle="Add a new campus to the institution"
       backPath="/admin/campus"
@@ -28,8 +28,8 @@ const CreateCampus = () => {
       submitLabel="Create Campus"
       submitting={isSubmitting}
     >
-      <PortalForms.Section>
-        <PortalForms.Input
+      <PortalForm.Section>
+        <PortalForm.Input
           label="Campus ID"
           registration={register("id")}
           error={errors.id?.message}
@@ -38,7 +38,7 @@ const CreateCampus = () => {
           helper="Unique identifier for the campus (lowercase, no spaces)"
         />
 
-        <PortalForms.Input
+        <PortalForm.Input
           label="Campus Name"
           registration={register("name")}
           error={errors.name?.message}
@@ -46,7 +46,7 @@ const CreateCampus = () => {
           required
         />
 
-        <PortalForms.Input
+        <PortalForm.Input
           label="Campus Code"
           registration={register("code")}
           error={errors.code?.message}
@@ -55,7 +55,7 @@ const CreateCampus = () => {
           helper="Short code for the campus (2-3 characters)"
         />
 
-        <PortalForms.Input
+        <PortalForm.Input
           label="Location"
           registration={register("location")}
           error={errors.location?.message}
@@ -74,8 +74,8 @@ const CreateCampus = () => {
             className="w-full px-3 md:px-4 py-2 md:py-3 text-sm md:text-base border border-gray-300 dark:border-college-gold/20 dark:bg-college-navy/50 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy dark:focus:ring-college-gold"
           />
         </div>
-      </PortalForms.Section>
-    </PortalForms>
+      </PortalForm.Section>
+    </PortalForm>
   );
 };
 

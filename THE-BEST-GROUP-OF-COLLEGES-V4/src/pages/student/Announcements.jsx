@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useStudentContext } from "../../context/StudentContext";
-import AnnouncementCard from "../../components/shared/AnnouncementCard";
-import PortalPageHeader from "../../components/shared/PortalPageHeader";
+import { mockClassAnnouncements } from "../../data/studentPortalData";
+import AnnouncementCard from "../../components/portal-shared/AnnouncementCard";
+import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
 import { Bell } from "lucide-react";
 
@@ -16,20 +17,30 @@ const StudentAnnouncements = () => {
         const subjects = getSubjectsByCurrentCampus() || [];
         const subjectCodes = subjects.map((s) => s.code);
 
-        // 2. Fetch announcements from localStorage
+        // 2. Fetch announcements from localStorage + Mock Data
         const saved = localStorage.getItem("college_announcements");
-        let campusAnnouncements = [];
+        let allCampusAnnouncements = [...(mockClassAnnouncements[campus] || [])];
 
         if (saved) {
             const parsed = JSON.parse(saved);
-            campusAnnouncements = parsed[campus] || [];
+            const savedCampusAnnouncements = parsed[campus] || [];
+            // Merge saved with mock, avoiding duplicates if they share the same ID
+            const savedIds = new Set(savedCampusAnnouncements.map(a => a.id));
+            allCampusAnnouncements = [
+                ...savedCampusAnnouncements,
+                ...allCampusAnnouncements.filter(a => !savedIds.has(a.id))
+            ];
         }
 
         // 3. Filter announcements relevant to the student
-        const relevant = campusAnnouncements.filter((announcement) => {
+        const relevant = allCampusAnnouncements.filter((announcement) => {
             if (!announcement.classSection) return false;
+            // Check if announcement is for a subject the student is enrolled in
             return subjectCodes.some(code => announcement.classSection.includes(code));
         });
+
+        // Sort by date (descending) - mock dates are strings so simple sort works for these dummies
+        relevant.sort((a, b) => new Date(b.date) - new Date(a.date));
 
         setAnnouncements(relevant);
         setLoading(false);

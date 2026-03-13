@@ -48,7 +48,7 @@ export default function PublicButton({
 
     const baseClasses = clsx(
         "inline-flex items-center justify-center transition-all duration-200",
-        "focus:outline-none focus:ring-2 focus:ring-college-navy/50 dark:focus:ring-college-gold/50 focus:ring-offset-1",
+        "focus:outline-none focus:ring-2 focus:ring-college-navy dark:focus:ring-college-gold focus:ring-offset-1",
         variants[variant] ?? variants.primary,
         sizes[size] ?? sizes.md,
         shapeClass,

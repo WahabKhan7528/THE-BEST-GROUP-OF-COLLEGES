@@ -56,8 +56,8 @@ export const adminNavItems = [
     { to: "/admin/courses", label: "Courses", icon: Layers },
     { to: "/admin/subjects", label: "Subjects", icon: BookOpen },
     { to: "/admin/classes", label: "Classes", icon: GraduationCap },
-    { to: "/admin/cms/news", label: "News & Events", icon: Megaphone },
-    { to: "/admin/cms/gallery", label: "Gallery", icon: Image },
+    { to: "/admin/cms/news", label: "News & Events", icon: Megaphone, subAdminHidden: true },
+    { to: "/admin/cms/gallery", label: "Gallery", icon: Image, subAdminHidden: true },
 ];
 
 // Faculty sidebar navigation items
@@ -81,6 +81,7 @@ export const studentNavItems = [
     { to: "/student/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { to: "/student/materials", label: "Materials", icon: FolderOpen },
     { to: "/student/assignments", label: "Assignments", icon: ClipboardList },
+    { to: "/student/submissions", label: "Submissions", icon: ClipboardList },
     { to: "/student/results", label: "Results", icon: BarChart3 },
     { to: "/student/announcements", label: "Class Announcements", icon: Megaphone },
 ];

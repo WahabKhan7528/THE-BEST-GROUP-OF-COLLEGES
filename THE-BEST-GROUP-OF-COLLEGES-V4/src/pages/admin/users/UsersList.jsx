@@ -39,6 +39,13 @@ const UsersList = () => {
     );
   }
 
+  // Sub-Admin can only manage Faculty and Student, not other admins
+  if (!isSuperAdmin) {
+    filteredData = filteredData.filter(
+      (user) => user.role === "Faculty" || user.role === "Student",
+    );
+  }
+
   // Apply role filter
   if (selectedRole) {
     filteredData = filteredData.filter((user) => user.role === selectedRole);
@@ -178,8 +185,8 @@ const UsersList = () => {
               className="w-full pl-10 pr-3 py-2.5 bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm appearance-none dark:text-white"
             >
               <option value="">All Roles</option>
-              <option value="Super Admin">Super Admin</option>
-              <option value="Sub-Admin">Sub-Admin</option>
+              {isSuperAdmin && <option value="Super Admin">Super Admin</option>}
+              {isSuperAdmin && <option value="Sub-Admin">Sub-Admin</option>}
               <option value="Faculty">Faculty</option>
               <option value="Student">Student</option>
             </select>

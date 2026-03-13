@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { newsSchema } from "../../../../schemas/newsSchema";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../../../context/ToastContext";
-import PortalForms from "../../../../components/shared/PortalForms";
+import PortalForm from "../../../../components/portal-shared/PortalForm";
 import {
   Calendar,
   Newspaper,
@@ -34,7 +34,7 @@ const CreateNews = () => {
   };
 
   return (
-    <PortalForms
+    <PortalForm
       title="Create New Post"
       subtitle="Share news, announcements, or schedule events"
       backPath="/admin/cms/news"
@@ -49,7 +49,7 @@ const CreateNews = () => {
         <div className="lg:col-span-2 space-y-8">
 
           {/* Section 1: Categorization */}
-          <PortalForms.Section title="Categorization" className="!p-6 !space-y-6">
+          <PortalForm.Section title="Categorization" className="!p-6 !space-y-6">
             <div className="col-span-1 md:col-span-2 space-y-4">
               <label className="text-sm font-bold text-college-navy dark:text-college-gold uppercase tracking-wider block mb-2">Content Type</label>
               <div className="grid grid-cols-2 gap-4">
@@ -85,12 +85,12 @@ const CreateNews = () => {
             </div>
 
 
-          </PortalForms.Section>
+          </PortalForm.Section>
 
           {/* Section 2: Content Details */}
-          <PortalForms.Section title="Post Content" className="!p-6 !space-y-6">
+          <PortalForm.Section title="Post Content" className="!p-6 !space-y-6">
             <div className="col-span-1 md:col-span-2">
-              <PortalForms.Input
+              <PortalForm.Input
                 label="Headline / Title"
                 registration={register("title")}
                 error={errors.title?.message}
@@ -108,15 +108,15 @@ const CreateNews = () => {
                 required
               />
             </div>
-          </PortalForms.Section>
+          </PortalForm.Section>
         </div>
 
         {/* Sidebar: Logistics & Media */}
         <div className="space-y-8">
           {/* Section 3: Logistics (Date/Time/Location) */}
-          <PortalForms.Section title="Logistics" className="!p-6 !flex !flex-col !gap-6">
+          <PortalForm.Section title="Logistics" className="!p-6 !flex !flex-col !gap-6">
             <div className="col-span-full border-none pb-0">
-              <PortalForms.Input
+              <PortalForm.Input
                 label="Date"
                 type="date"
                 registration={register("date")}
@@ -126,7 +126,7 @@ const CreateNews = () => {
 
             {type === "event" && (
               <div className="col-span-full border-none pt-0">
-                <PortalForms.Input
+                <PortalForm.Input
                   label="Time"
                   type="time"
                   registration={register("time")}
@@ -148,10 +148,10 @@ const CreateNews = () => {
                 </div>
               </div>
             )}
-          </PortalForms.Section>
+          </PortalForm.Section>
 
           {/* Section 4: Media Assets */}
-          <PortalForms.Section title="Media Assets" className="!p-6 !flex !flex-col !gap-6">
+          <PortalForm.Section title="Media Assets" className="!p-6 !flex !flex-col !gap-6">
             <div className="col-span-full">
               <div className="border-2 border-dashed border-gray-200 dark:border-college-gold/20 rounded-2xl p-8 flex flex-col items-center justify-center text-center hover:bg-gray-50 dark:hover:bg-college-navy/40 transition-all duration-300 cursor-pointer group dark:bg-college-navy/30 relative">
                 <input
@@ -177,10 +177,10 @@ const CreateNews = () => {
                 </div>
               )}
             </div>
-          </PortalForms.Section>
+          </PortalForm.Section>
         </div>
       </div>
-    </PortalForms>
+    </PortalForm>
   );
 };
 

@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Table from "../../../../components/admin/Table";
 import PublicButton from "../../../../components/shared/PublicButton";
 import { useAdminContext } from "../../../../context/AdminContext";
@@ -15,7 +15,13 @@ import {
 
 const NewsList = () => {
   const navigate = useNavigate();
-  const { isDarkMode } = useAdminContext();
+  const { isDarkMode, isSuperAdmin } = useAdminContext();
+
+  useEffect(() => {
+    if (!isSuperAdmin) {
+      navigate("/admin/users", { replace: true });
+    }
+  }, [isSuperAdmin, navigate]);
   const toast = useToast();
   const confirm = useConfirm();
   const [activeFilter, setActiveFilter] = useState("all");
@@ -103,7 +109,7 @@ const NewsList = () => {
       render: (row) => (
         <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium border ${row.type === "Event"
           ? "bg-college-navy/5 text-college-navy border-college-navy/10"
-          : "bg-white text-college-navy border-primary-200"
+          : "bg-white text-college-navy border-college-navy/20"
           }`}>
           {row.type}
         </span>

@@ -6,7 +6,7 @@ import { useToast } from "../../../context/ToastContext";
 import { useConfirm } from "../../../context/ConfirmContext";
 import { useNavigate, useParams } from "react-router-dom";
 import PublicButton from "../../../components/shared/PublicButton";
-import PortalForms from "../../../components/shared/PortalForms";
+import PortalForm from "../../../components/portal-shared/PortalForm";
 import {
   Building2,
   CheckCircle2,
@@ -38,6 +38,16 @@ const EditClass = () => {
     });
   }, [id, reset]);
 
+  // Guard: redirect sub-admin if class doesn't belong to their campus
+  useEffect(() => {
+    if (!isSuperAdmin && campusValue) {
+      if (!currentAdmin?.allocatedCampuses?.includes(campusValue)) {
+        toast.error("Access denied. This class is not at your campus.");
+        navigate("/admin/classes", { replace: true });
+      }
+    }
+  }, [isSuperAdmin, campusValue]);
+
   const onSubmit = () => {
     toast.success(`Class ${id} updated successfully!`);
     navigate("/admin/classes");
@@ -59,7 +69,7 @@ const EditClass = () => {
   };
 
   return (
-    <PortalForms
+    <PortalForm
       title="Edit Class"
       subtitle="Update class details and assignments"
       backPath="/admin/classes"
@@ -80,7 +90,7 @@ const EditClass = () => {
       }
     >
       {/* Campus Selection Section */}
-      <PortalForms.Section title="Campus Allocation" className="!space-y-4">
+      <PortalForm.Section title="Campus Allocation" className="!space-y-4">
         <div className="col-span-1 md:col-span-2">
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
             Select Campus <span className="text-red-500">*</span>
@@ -123,12 +133,12 @@ const EditClass = () => {
             </div>
           )}
         </div>
-      </PortalForms.Section>
+      </PortalForm.Section>
 
       {/* Class Details Section */}
-      <PortalForms.Section title="Academic Details">
+      <PortalForm.Section title="Academic Details">
         <div className="col-span-1 md:col-span-2">
-          <PortalForms.Input
+          <PortalForm.Input
             label="Class Name"
             registration={register("name")}
             error={errors.name?.message}
@@ -138,7 +148,7 @@ const EditClass = () => {
         </div>
 
         <div>
-          <PortalForms.Input
+          <PortalForm.Input
             label="Sections"
             registration={register("sections")}
             placeholder="e.g. A, B, C (Comma separated)"
@@ -146,7 +156,7 @@ const EditClass = () => {
         </div>
 
         <div>
-          <PortalForms.Input
+          <PortalForm.Input
             label="Assign Faculty Lead"
             registration={register("faculty")}
             placeholder="e.g. Prof. Ahmed Raza"
@@ -166,8 +176,8 @@ const EditClass = () => {
             />
           </div>
         </div>
-      </PortalForms.Section>
-    </PortalForms>
+      </PortalForm.Section>
+    </PortalForm>
   );
 };
 

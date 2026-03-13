@@ -22,6 +22,7 @@ const CourseList = () => {
   const { campuses, isSuperAdmin, currentAdmin, isDarkMode } = useAdminContext();
   const toast = useToast();
   const confirm = useConfirm();
+
   const [selectedCampus, setSelectedCampus] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 

@@ -1,22 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAdminContext } from "../../../context/AdminContext";
 import { useToast } from "../../../context/ToastContext";
 import { useNavigate } from "react-router-dom";
-import PortalForms from "../../../components/shared/PortalForms";
+import PortalForm from "../../../components/portal-shared/PortalForm";
 import { Building2, CheckCircle2, Plus } from "lucide-react";
 import { courseSchema } from "../../../schemas/courseSchema";
 
 const CreateCourse = () => {
   const navigate = useNavigate();
-  const { campuses, isDarkMode } = useAdminContext();
+  const { campuses, isDarkMode, isSuperAdmin, getSubAdminCampus, currentAdmin } = useAdminContext();
   const toast = useToast();
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(courseSchema),
     defaultValues: { examSystem: "annual" },
   });
   const [selectedCampuses, setSelectedCampuses] = useState([]);
+
+  // Pre-lock campus for sub-admins
+  useEffect(() => {
+    if (!isSuperAdmin) {
+      const campus = getSubAdminCampus();
+      if (campus) setSelectedCampuses([campus]);
+    }
+  }, [isSuperAdmin, getSubAdminCampus]);
 
   const handleCampusToggle = (campusId) => {
     setSelectedCampuses((prev) =>
@@ -35,7 +43,7 @@ const CreateCourse = () => {
   };
 
   return (
-    <PortalForms
+    <PortalForm
       title="Add New Course"
       subtitle="Create a new academic program or course"
       backPath="/admin/courses"
@@ -46,9 +54,9 @@ const CreateCourse = () => {
       submitting={isSubmitting}
     >
       {/* Basic Info Section */}
-      <PortalForms.Section title="Course Information">
+      <PortalForm.Section title="Course Information">
         <div className="md:col-span-2">
-          <PortalForms.Input
+          <PortalForm.Input
             label="Course Title"
             registration={register("title")}
             error={errors.title?.message}
@@ -58,7 +66,7 @@ const CreateCourse = () => {
         </div>
 
         <div>
-          <PortalForms.Input
+          <PortalForm.Input
             label="Duration"
             registration={register("duration")}
             placeholder="e.g. 4 Years"
@@ -66,7 +74,7 @@ const CreateCourse = () => {
         </div>
 
         <div>
-          <PortalForms.Input
+          <PortalForm.Input
             label="Eligibility"
             registration={register("eligibility")}
             placeholder="e.g. Intermediate or A-Level"
@@ -95,19 +103,20 @@ const CreateCourse = () => {
             placeholder="Enter a brief description of the course..."
           />
         </div>
-      </PortalForms.Section>
+      </PortalForm.Section>
 
       {/* Campus Availability */}
-      <PortalForms.Section title={<>Campus Availability <span className="text-red-500 text-sm ml-1">*</span></>} className="!space-y-4">
+      <PortalForm.Section title={<>Campus Availability <span className="text-red-500 text-sm ml-1">*</span></>} className="!space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 col-span-1 md:col-span-2">
-          {campuses.map((campus) => {
+          {(isSuperAdmin ? campuses : campuses.filter(c => currentAdmin?.allocatedCampuses?.includes(c.id))).map((campus) => {
             const isSelected = selectedCampuses.includes(campus.id);
             return (
               <div
                 key={campus.id}
-                onClick={() => handleCampusToggle(campus.id)}
+                onClick={() => isSuperAdmin && handleCampusToggle(campus.id)}
                 className={`
-                    relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 flex items-start gap-3
+                    relative p-4 rounded-xl border-2 transition-all duration-200 flex items-start gap-3
+                    ${!isSuperAdmin ? 'cursor-not-allowed opacity-80' : 'cursor-pointer'}
                     ${isSelected
                     ? 'border-college-navy bg-college-navy/10 shadow-sm dark:bg-college-gold/10 dark:border-college-gold'
                     : 'border-gray-100 bg-white hover:bg-gray-50 dark:bg-college-navy/50 dark:border-college-gold/20 dark:hover:bg-college-navy/80'
@@ -134,8 +143,8 @@ const CreateCourse = () => {
           <CheckCircle2 className="w-3.5 h-3.5" />
           Select the campuses where this course will be offered.
         </p>
-      </PortalForms.Section>
-    </PortalForms>
+      </PortalForm.Section>
+    </PortalForm>
   );
 };
 

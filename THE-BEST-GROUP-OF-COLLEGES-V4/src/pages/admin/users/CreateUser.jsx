@@ -1,20 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { userSchema } from "../../../schemas/userSchema";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../../context/ToastContext";
-import PortalForms from "../../../components/shared/PortalForms";
+import PortalForm from "../../../components/portal-shared/PortalForm";
 import { useAdminContext } from "../../../context/AdminContext";
 import { UserPlus, X } from "lucide-react";
 
 const CreateUser = () => {
   const navigate = useNavigate();
-  const { campuses } = useAdminContext();
+  const { campuses, isSuperAdmin, getSubAdminCampus } = useAdminContext();
   const toast = useToast();
   const [role, setRole] = useState("Faculty");
   const [allocations, setAllocations] = useState([{ class: "", subject: "" }]);
   const [selectedCampuses, setSelectedCampuses] = useState([]);
+
+  // Pre-lock campus to sub-admin's campus on mount
+  useEffect(() => {
+    if (!isSuperAdmin) {
+      const campus = getSubAdminCampus();
+      if (campus) setSelectedCampuses([campus]);
+    }
+  }, [isSuperAdmin, getSubAdminCampus]);
 
   const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(userSchema),
@@ -61,11 +69,11 @@ const CreateUser = () => {
 
   // Campus field visibility logic
   const showCampusField = ["Faculty", "Student", "Sub-Admin"].includes(role);
-  const isSingleCampus = ["Student", "Sub-Admin"].includes(role);
-  const isMultiCampus = role === "Faculty";
+  // Faculty now uses single-campus too (one faculty per campus)
+  const isSingleCampus = ["Student", "Sub-Admin", "Faculty"].includes(role);
 
   return (
-    <PortalForms
+    <PortalForm
       title="Create New User"
       subtitle="Add a new administrator, faculty member, or student"
       backPath="/admin/users"
@@ -76,11 +84,11 @@ const CreateUser = () => {
       submitting={isSubmitting}
     >
       {/* Role Selection Section */}
-      <PortalForms.Section title="Role & Permissions">
+      <PortalForm.Section title="Role & Permissions">
         <div className="col-span-1 md:col-span-2 space-y-2">
           <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Account Type</label>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-            {["Student", "Faculty", "Sub-Admin", "Super Admin"].map((r) => (
+            {["Student", "Faculty", ...(isSuperAdmin ? ["Sub-Admin", "Super Admin"] : [])].map((r) => (
               <button
                 key={r}
                 type="button"
@@ -104,18 +112,18 @@ const CreateUser = () => {
             {role === "Student" && "Access to learning portal and results"}
           </p>
         </div>
-      </PortalForms.Section>
+      </PortalForm.Section>
 
       {/* Basic Info Section */}
-      <PortalForms.Section title="Personal Identity">
-        <PortalForms.Input
+      <PortalForm.Section title="Personal Identity">
+        <PortalForm.Input
           label="Full Name"
           registration={register("name")}
           error={errors.name?.message}
           required
           placeholder="e.g. John Doe"
         />
-        <PortalForms.Input
+        <PortalForm.Input
           label="Email Address"
           type="email"
           registration={register("email")}
@@ -123,25 +131,25 @@ const CreateUser = () => {
           required
           placeholder="e.g. john@best.edu"
         />
-        <PortalForms.Input
+        <PortalForm.Input
           label={role === "Student" ? "Roll Number / Student ID" : "Employee ID"}
           registration={register("id")}
           helper="Unique system identifier"
           placeholder="e.g. S-2024-001"
         />
-        <PortalForms.Input
+        <PortalForm.Input
           label="Contact Number"
           registration={register("contact")}
           placeholder="+92-xxx-xxxxxxx"
         />
-      </PortalForms.Section>
+      </PortalForm.Section>
 
       {/* Academic / Professional Details */}
       {(role === "Student" || role === "Faculty" || role === "Sub-Admin") && (
-        <PortalForms.Section title={role === "Student" ? "Academic Information" : "Professional Details"}>
+        <PortalForm.Section title={role === "Student" ? "Academic Information" : "Professional Details"}>
           {role === "Student" && (
             <>
-              <PortalForms.Input
+              <PortalForm.Input
                 label="Course"
                 registration={register("course")}
                 placeholder="e.g. BSCS, BBA, LLB"
@@ -163,19 +171,19 @@ const CreateUser = () => {
                   ))}
                 </div>
               </div>
-              <PortalForms.Input
+              <PortalForm.Input
                 label={academicSystem === "Annual" ? "Year" : "Semester"}
                 registration={register("semester")}
                 placeholder={academicSystem === "Annual" ? "e.g. 1st Year, 2nd Year" : "e.g. 1st, 5th"}
                 required
               />
-              <PortalForms.Input
+              <PortalForm.Input
                 label="Class"
                 registration={register("class")}
                 placeholder="e.g. A, Morning"
                 required
               />
-              <PortalForms.Input
+              <PortalForm.Input
                 label="Enrollment Year"
                 registration={register("enrollmentYear")}
                 placeholder="e.g. 2024"
@@ -185,13 +193,13 @@ const CreateUser = () => {
 
           {role === "Faculty" && (
             <>
-              <PortalForms.Input
+              <PortalForm.Input
                 label="Designation"
                 registration={register("designation")}
                 placeholder="e.g. Lecturer, Assistant Professor"
                 required
               />
-              <PortalForms.Input
+              <PortalForm.Input
                 label="Qualification"
                 registration={register("qualification")}
                 placeholder="e.g. PhD, MSCS"
@@ -245,18 +253,18 @@ const CreateUser = () => {
           )}
 
           {(role === "Sub-Admin" || role === "Super Admin") && (
-            <PortalForms.Input
+            <PortalForm.Input
               label="Designation / Role Title"
               registration={register("designation")}
               placeholder="e.g. Campus Manager, Registrar"
             />
           )}
-        </PortalForms.Section>
+        </PortalForm.Section>
       )}
 
       {/* Campus Allocation Section */}
       {showCampusField && (
-        <PortalForms.Section title="Campus Allocation">
+        <PortalForm.Section title="Campus Allocation">
           <div className="col-span-1 md:col-span-2">
             <div className="bg-gray-50/50 dark:bg-college-navy/50 rounded-xl p-4 border border-college-navy/10 dark:border-college-gold/20">
               <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 block">
@@ -272,6 +280,7 @@ const CreateUser = () => {
                     }}
                     className="w-full px-4 py-2.5 rounded-xl border border-college-navy/20 dark:border-college-gold/20 bg-white dark:bg-college-navy dark:text-white focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20"
                     required
+                    disabled={!isSuperAdmin}
                   >
                     <option value="">Select a campus...</option>
                     {campuses.map((campus) => (
@@ -321,27 +330,27 @@ const CreateUser = () => {
               )}
             </div>
           </div>
-        </PortalForms.Section>
+        </PortalForm.Section>
       )}
 
       {/* Security Section */}
-      <PortalForms.Section title="Security">
-        <PortalForms.Input
+      <PortalForm.Section title="Security">
+        <PortalForm.Input
           label="Password"
           type="password"
           registration={register("password")}
           helper="Leave blank to auto-generate secure password"
           placeholder="••••••••"
         />
-        <PortalForms.Input
+        <PortalForm.Input
           label="Confirm Password"
           type="password"
           registration={register("confirmPassword")}
           error={errors.confirmPassword?.message}
           placeholder="••••••••"
         />
-      </PortalForms.Section>
-    </PortalForms>
+      </PortalForm.Section>
+    </PortalForm>
   );
 };
 

@@ -6,9 +6,6 @@ import {
   Award,
   Lightbulb,
   Building,
-  Flame,
-  Eye,
-  Columns,
 } from "lucide-react";
 
 export const milestones = [
@@ -71,33 +68,6 @@ export const values = [
   },
 ];
 
-export const aboutStats = [
-  { value: "35+", label: "Years of Excellence" },
-  { value: "5000+", label: "Students Enrolled" },
-  { value: "200+", label: "Expert Faculty" },
-  { value: "95%", label: "Success Rate" },
-];
-
-export const missionVisionValues = [
-  {
-    title: "Mission",
-    description:
-      "To empower futures through rigorous curriculum, to mentorate teachers, and educated to quality education.",
-    icon: Flame,
-  },
-  {
-    title: "Vision",
-    description:
-      "To be a global leader in innovative education in innovation, fostering, and organize with excellence focus and commitment.",
-    icon: Eye,
-  },
-  {
-    title: "Values",
-    description: "Integrity, Excellence, Community, Innovation.",
-    icon: Columns,
-  },
-];
-
 export const leadership = [
   {
     name: "Dr. Arya Sharma",
@@ -119,28 +89,5 @@ export const leadership = [
     image: "/team/member3.jpg",
     description:
       "Dr. Arya Sharma, witnessed the best four interested fixtures and the operational campus and core values, developments, and train joiner for hunters and includess dynamics organizations. program leadership as simple future for the work.",
-  },
-];
-
-export const accreditations = [
-  {
-    title: "Regional Accreditation Commission",
-    image: "/awards/award1.png",
-  },
-  {
-    title: "Excellence in Education Award",
-    image: "/awards/award2.png",
-  },
-  {
-    title: "Top Research Institution 2024",
-    image: "/awards/award3.png",
-  },
-  {
-    title: "Top Research Institution 2024",
-    image: "/awards/award4.png",
-  },
-  {
-    title: "Top Research Institution 2024",
-    image: "/awards/award5.png",
   },
 ];

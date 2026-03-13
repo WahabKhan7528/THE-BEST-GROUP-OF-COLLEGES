@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
-import SubmissionCard from '../../components/faculty/SubmissionCard';
-import PortalPageHeader from '../../components/shared/PortalPageHeader';
+import SubmissionCard from '../../components/portal-shared/SubmissionCard';
+import PortalPageHeader from '../../components/portal-shared/PortalPageHeader';
 import Badge from '../../components/shared/Badge';
 import { useFacultyContext } from '../../context/FacultyContext';
 import { useToast } from '../../context/ToastContext';

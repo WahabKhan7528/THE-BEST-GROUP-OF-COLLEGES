@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../../../../context/ToastContext';
 import { useConfirm } from '../../../../context/ConfirmContext';
 import PublicButton from '../../../../components/shared/PublicButton';
-import PortalForms from '../../../../components/shared/PortalForms';
+import PortalForm from '../../../../components/portal-shared/PortalForm';
 import { Upload, Image as ImageIcon, CheckCircle2, Save, Trash2 } from 'lucide-react';
 import { adminGalleryImages as mockImages } from "../../../../data/adminData";
 
@@ -83,7 +83,7 @@ const EditGalleryImage = () => {
     };
 
     return (
-        <PortalForms
+        <PortalForm
             title="Edit Media"
             subtitle="Update gallery image details"
             backPath="/admin/cms/gallery"
@@ -177,9 +177,9 @@ const EditGalleryImage = () => {
 
                 {/* Right Column: Form Details */}
                 <div className="h-fit">
-                    <PortalForms.Section title="Media Details">
+                    <PortalForm.Section title="Media Details">
                         <div className="col-span-1 md:col-span-2">
-                            <PortalForms.Input
+                            <PortalForm.Input
                                 label="Image Title"
                                 registration={register("title")}
                                 error={errors.title?.message}
@@ -207,7 +207,7 @@ const EditGalleryImage = () => {
                         </div>
 
                         <div className="col-span-1 md:col-span-2">
-                            <PortalForms.Input
+                            <PortalForm.Input
                                 label="Date"
                                 registration={register("date")}
                                 placeholder="e.g. Sept 5, 2025"
@@ -227,17 +227,17 @@ const EditGalleryImage = () => {
                         </div>
 
                         <div className="col-span-1 md:col-span-2">
-                            <PortalForms.Input
+                            <PortalForm.Input
                                 label="Tags (Optional)"
                                 registration={register("tags")}
                                 placeholder="e.g. students, auditorium, celebration"
                                 helper="Comma separated"
                             />
                         </div>
-                    </PortalForms.Section>
+                    </PortalForm.Section>
                 </div>
             </div>
-        </PortalForms>
+        </PortalForm>
     );
 };
 

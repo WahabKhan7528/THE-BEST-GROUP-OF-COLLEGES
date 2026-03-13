@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAdminContext } from "../../../context/AdminContext";
 import { useToast } from "../../../context/ToastContext";
 import { useNavigate } from "react-router-dom";
-import PortalForms from "../../../components/shared/PortalForms";
+import PortalForm from "../../../components/portal-shared/PortalForm";
 import {
   Building2,
   CheckCircle2,
@@ -41,7 +41,7 @@ const CreateClass = () => {
   };
 
   return (
-    <PortalForms
+    <PortalForm
       title="Create New Class"
       subtitle="Add a new class and assign subjects and faculty"
       backPath="/admin/classes"
@@ -52,7 +52,7 @@ const CreateClass = () => {
       submitting={isSubmitting}
     >
       {/* Campus Selection Section */}
-      <PortalForms.Section title="Campus Allocation" className="!space-y-4">
+      <PortalForm.Section title="Campus Allocation" className="!space-y-4">
         <div className="col-span-1 md:col-span-2">
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Select Campus <span className="text-red-500">*</span>
@@ -100,12 +100,12 @@ const CreateClass = () => {
             The class will be created specifically for this campus environment.
           </p>
         </div>
-      </PortalForms.Section>
+      </PortalForm.Section>
 
       {/* Class Details Section */}
-      <PortalForms.Section title="Academic Details">
+      <PortalForm.Section title="Academic Details">
         <div className="col-span-1 md:col-span-2">
-          <PortalForms.Input
+          <PortalForm.Input
             label="Class Name"
             registration={register("name")}
             error={errors.name?.message}
@@ -115,7 +115,7 @@ const CreateClass = () => {
         </div>
 
         <div>
-          <PortalForms.Input
+          <PortalForm.Input
             label="Sections"
             registration={register("sections")}
             placeholder="e.g. A, B, C (Comma separated)"
@@ -124,7 +124,7 @@ const CreateClass = () => {
         </div>
 
         <div>
-          <PortalForms.Input
+          <PortalForm.Input
             label="Assign Faculty Lead"
             registration={register("faculty")}
             placeholder="e.g. Prof. Ahmed Raza"
@@ -145,8 +145,8 @@ const CreateClass = () => {
           </div>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-1.5 ml-1">List the subjects offered to this class</p>
         </div>
-      </PortalForms.Section>
-    </PortalForms>
+      </PortalForm.Section>
+    </PortalForm>
   );
 };
 

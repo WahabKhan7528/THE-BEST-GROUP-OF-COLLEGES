@@ -11,8 +11,14 @@ const AllocateAdmin = () => {
   const navigate = useNavigate();
   const { campusId } = useParams();
   const location = useLocation();
-  const { campuses, adminCampusAllocations, updateAdminAllocations, isDarkMode } =
+  const { campuses, adminCampusAllocations, updateAdminAllocations, isDarkMode, isSuperAdmin } =
     useAdminContext();
+
+  useEffect(() => {
+    if (!isSuperAdmin) {
+      navigate("/admin/dashboard", { replace: true });
+    }
+  }, [isSuperAdmin, navigate]);
   const toast = useToast();
 
   const [campus, setCampus] = useState(null);

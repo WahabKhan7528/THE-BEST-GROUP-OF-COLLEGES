@@ -11,7 +11,9 @@ const AdminLayout = () => {
   const { currentAdmin, isSuperAdmin, isDarkMode } = useAdminContext();
 
   const visibleNavItems = adminNavItems.filter(
-    (item) => !(item.superAdminOnly && !isSuperAdmin)
+    (item) =>
+      !(item.superAdminOnly && !isSuperAdmin) &&
+      !(item.subAdminHidden && !isSuperAdmin)
   );
 
   const user = {

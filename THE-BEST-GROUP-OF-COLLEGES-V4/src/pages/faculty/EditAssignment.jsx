@@ -5,7 +5,7 @@ import { assignmentSchema } from '../../schemas/assignmentSchema';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../../context/ToastContext';
 import { useConfirm } from '../../context/ConfirmContext';
-import PortalForms from '../../components/shared/PortalForms';
+import PortalForm from '../../components/portal-shared/PortalForm';
 import { Save, Database, AlignLeft, Calendar, FileText } from 'lucide-react';
 import { useFacultyContext } from '../../context/FacultyContext';
 
@@ -128,7 +128,7 @@ const EditAssignment = () => {
     }
 
     return (
-        <PortalForms
+        <PortalForm
             title="Edit Assignment"
             subtitle="Update assignment details for your students"
             backPath="/faculty/assignments"
@@ -139,9 +139,9 @@ const EditAssignment = () => {
             submitIcon={Save}
             submitting={isSubmitting}
         >
-            <PortalForms.Section title="Assignment Basic Info" icon={<Database size={20} className="text-college-navy dark:text-college-gold" />}>
+            <PortalForm.Section title="Assignment Basic Info" icon={<Database size={20} className="text-college-navy dark:text-college-gold" />}>
                 <div>
-                    <PortalForms.Input
+                    <PortalForm.Input
                         label="Class / Section"
                         registration={register('classSection')}
                         error={errors.classSection?.message}
@@ -150,7 +150,7 @@ const EditAssignment = () => {
                     />
                 </div>
                 <div>
-                    <PortalForms.Input
+                    <PortalForm.Input
                         label="Subject"
                         registration={register('subject')}
                         error={errors.subject?.message}
@@ -159,7 +159,7 @@ const EditAssignment = () => {
                     />
                 </div>
                 <div className="md:col-span-2">
-                    <PortalForms.Input
+                    <PortalForm.Input
                         label="Assignment Title"
                         registration={register('title')}
                         error={errors.title?.message}
@@ -167,9 +167,9 @@ const EditAssignment = () => {
                         required
                     />
                 </div>
-            </PortalForms.Section>
+            </PortalForm.Section>
 
-            <PortalForms.Section title="Instructions & Content" icon={<AlignLeft size={20} className="text-college-navy dark:text-college-gold" />}>
+            <PortalForm.Section title="Instructions & Content" icon={<AlignLeft size={20} className="text-college-navy dark:text-college-gold" />}>
                 <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
                         Description & Instructions <span className="text-red-500">*</span>
@@ -182,11 +182,11 @@ const EditAssignment = () => {
                         required
                     />
                 </div>
-            </PortalForms.Section>
+            </PortalForm.Section>
 
-            <PortalForms.Section title="Deadlines & Attachments" icon={<Calendar size={20} className="text-college-navy dark:text-college-gold" />}>
+            <PortalForm.Section title="Deadlines & Attachments" icon={<Calendar size={20} className="text-college-navy dark:text-college-gold" />}>
                 <div>
-                    <PortalForms.Input
+                    <PortalForm.Input
                         label="Due Date"
                         type="date"
                         registration={register('dueDate')}
@@ -195,7 +195,7 @@ const EditAssignment = () => {
                     />
                 </div>
                 <div>
-                    <PortalForms.Input
+                    <PortalForm.Input
                         label="Maximum Marks"
                         type="number"
                         registration={register('maxMarks')}
@@ -218,8 +218,8 @@ const EditAssignment = () => {
                         </div>
                     </div>
                 </div>
-            </PortalForms.Section>
-        </PortalForms>
+            </PortalForm.Section>
+        </PortalForm>
     );
 };
 

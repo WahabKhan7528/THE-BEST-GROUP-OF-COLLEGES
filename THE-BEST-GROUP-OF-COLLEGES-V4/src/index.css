@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @layer base {
+  /* --- 1. Global Defaults --- */
   html {
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: #F8FAFC;
@@ -24,43 +25,47 @@
     transition: color 0.15s ease-in-out;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    color: #0F2A52;
-    /* primary-800 */
+  /* --- 2. Typography --- */
+  h1, h2, h3, h4, h5, h6 {
+    color: #0b1a2e; /* college-navy */
     font-weight: 700;
   }
-}
 
-@layer components {
-
-  /* Clean component classes */
-  .btn-primary {
-    @apply bg-primary-600 text-white hover:bg-primary-700 shadow-sm rounded-xl transition-colors duration-200 font-medium px-4 py-2;
+  /* --- 3. Dark Mode Global --- */
+  html.dark {
+    @apply bg-dark-base text-slate-200;
+    color-scheme: dark;
   }
 
-  .btn-secondary {
-    @apply bg-primary-100 text-primary-700 hover:bg-primary-200 rounded-xl transition-colors duration-200 font-medium px-4 py-2;
+  html.dark body {
+    @apply bg-dark-base text-slate-200;
   }
 
-  .btn-outline {
-    @apply border border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white rounded-xl transition-colors duration-200 font-medium px-4 py-2;
+  html.dark h1,
+  html.dark h2,
+  html.dark h3,
+  html.dark h4,
+  html.dark h5,
+  html.dark h6 {
+    @apply text-slate-100;
   }
 
-  .card {
-    @apply bg-white border border-border rounded-xl shadow-sm;
+  /* --- 4. Dark Mode Form Overrides --- */
+  html.dark input,
+  html.dark select,
+  html.dark textarea {
+    @apply bg-dark-surface border-dark-border text-slate-200;
   }
 
-  .input-field {
-    @apply w-full px-4 py-2 rounded-xl border border-border focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all duration-200;
+  html.dark input::placeholder,
+  html.dark select::placeholder,
+  html.dark textarea::placeholder {
+    @apply text-slate-500;
   }
 }
 
 @layer utilities {
+  /* --- 5. Scrollbar Utilities --- */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
@@ -70,6 +75,8 @@
     scrollbar-width: none;
   }
 
+  /* --- 6. Themed Components & Animations --- */
+  
   /* Custom gold styling for built-in date/time picker indicators in dark mode */
   .dark ::-webkit-calendar-picker-indicator {
     filter: invert(72%) sepia(16%) saturate(1001%) hue-rotate(3deg) brightness(91%) contrast(85%);
@@ -90,4 +97,4 @@
   .animate-slideIn {
     animation: slideIn 0.3s ease-out;
   }
-}
+}

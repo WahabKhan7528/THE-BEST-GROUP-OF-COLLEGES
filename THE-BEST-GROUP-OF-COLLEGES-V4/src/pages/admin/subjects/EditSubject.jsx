@@ -6,13 +6,13 @@ import { useToast } from "../../../context/ToastContext";
 import { useConfirm } from "../../../context/ConfirmContext";
 import { useNavigate, useParams } from "react-router-dom";
 import PublicButton from "../../../components/shared/PublicButton";
-import PortalForms from "../../../components/shared/PortalForms";
+import PortalForm from "../../../components/portal-shared/PortalForm";
 import { Building2, CheckCircle2, Save, Trash2 } from "lucide-react";
 import { subjectSchema } from "../../../schemas/subjectSchema";
 
 const EditSubject = () => {
   const { id } = useParams();
-  const { campuses, isDarkMode } = useAdminContext();
+  const { campuses, isDarkMode, isSuperAdmin, currentAdmin, getSubAdminCampus } = useAdminContext();
   const toast = useToast();
   const confirmDialog = useConfirm();
   const navigate = useNavigate();
@@ -33,6 +33,17 @@ const EditSubject = () => {
     });
     setOfferedAt(["main", "law"]);
   }, [id, reset]);
+
+  // Guard: redirect sub-admin if subject doesn't belong to their campus
+  useEffect(() => {
+    if (!isSuperAdmin && offeredAt.length > 0) {
+      const managedCampus = getSubAdminCampus();
+      if (!offeredAt.includes(managedCampus)) {
+        toast.error("Access denied. This subject is not available at your campus.");
+        navigate("/admin/subjects", { replace: true });
+      }
+    }
+  }, [isSuperAdmin, offeredAt]);
 
   const handleCampusToggle = (campusId) => {
     setOfferedAt((prev) =>
@@ -60,7 +71,7 @@ const EditSubject = () => {
   };
 
   return (
-    <PortalForms
+    <PortalForm
       title="Edit Subject"
       subtitle="Update subject details and campus availability"
       backPath="/admin/subjects"
@@ -82,9 +93,9 @@ const EditSubject = () => {
       }
     >
       {/* Subject Details Section */}
-      <PortalForms.Section title="Subject Details">
+      <PortalForm.Section title="Subject Details">
         <div className="col-span-1 md:col-span-2">
-          <PortalForms.Input
+          <PortalForm.Input
             label="Subject Name"
             registration={register("name")}
             error={errors.name?.message}
@@ -94,7 +105,7 @@ const EditSubject = () => {
         </div>
 
         <div>
-          <PortalForms.Input
+          <PortalForm.Input
             label="Subject Code"
             registration={register("code")}
             error={errors.code?.message}
@@ -104,7 +115,7 @@ const EditSubject = () => {
         </div>
 
         <div>
-          <PortalForms.Input
+          <PortalForm.Input
             label="Target Course ID"
             registration={register("course")}
             placeholder="e.g. C-101"
@@ -112,7 +123,7 @@ const EditSubject = () => {
         </div>
 
         <div className="col-span-1 md:col-span-2">
-          <PortalForms.Input
+          <PortalForm.Input
             label="Assign Faculty ID"
             registration={register("faculty")}
             placeholder="e.g. F-201"
@@ -130,22 +141,23 @@ const EditSubject = () => {
             className="w-full p-4 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all resize-none dark:text-white dark:placeholder-gray-500"
           />
         </div>
-      </PortalForms.Section>
+      </PortalForm.Section>
 
       {/* Campus Availability Section */}
-      <PortalForms.Section title="Campus Availability" className="!space-y-4">
+      <PortalForm.Section title="Campus Availability" className="!space-y-4">
         <p className="text-sm text-gray-500 dark:text-gray-400 pb-2 col-span-1 md:col-span-2">
           Select the campuses where this subject will be offered.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 col-span-1 md:col-span-2">
-          {campuses.map((campus) => {
+          {(isSuperAdmin ? campuses : campuses.filter(c => currentAdmin?.allocatedCampuses?.includes(c.id))).map((campus) => {
             const isSelected = offeredAt.includes(campus.id);
             return (
               <label
                 key={campus.id}
                 className={`
-                    relative flex flex-col items-center justify-center p-6 rounded-xl border-2 cursor-pointer transition-all duration-200
+                    relative flex flex-col items-center justify-center p-6 rounded-xl border-2 transition-all duration-200
+                    ${!isSuperAdmin ? 'cursor-not-allowed opacity-80' : 'cursor-pointer'}
                     ${isSelected
                     ? 'border-college-navy bg-college-navy/10 dark:bg-college-gold/10 dark:border-college-gold shadow-sm'
                     : 'border-gray-100 bg-white dark:bg-college-navy dark:border-college-gold/20 hover:bg-gray-50 dark:hover:bg-college-navy/80'
@@ -155,7 +167,8 @@ const EditSubject = () => {
                 <input
                   type="checkbox"
                   checked={isSelected}
-                  onChange={() => handleCampusToggle(campus.id)}
+                  onChange={() => isSuperAdmin && handleCampusToggle(campus.id)}
+                  disabled={!isSuperAdmin}
                   className="sr-only"
                 />
                 <Building2 className={`w-6 h-6 mb-2 ${isSelected ? 'text-college-navy dark:text-college-gold' : 'text-gray-400'}`} />
@@ -171,8 +184,8 @@ const EditSubject = () => {
             );
           })}
         </div>
-      </PortalForms.Section>
-    </PortalForms>
+      </PortalForm.Section>
+    </PortalForm>
   );
 };
 

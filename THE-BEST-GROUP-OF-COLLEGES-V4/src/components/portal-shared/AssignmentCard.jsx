@@ -1,15 +1,8 @@
 import { useState } from 'react';
 import { Calendar, FileText, Pencil, Trash2, ClipboardList } from 'lucide-react';
-import Card from './Card';
-import Button from './Button';
-import PublicButton from './PublicButton';
-
-/*
- Shared AssignmentCard
-
- variant="faculty" (default) — shows Edit / Delete / View Submissions action buttons
- variant="student"           — shows file upload form + Submit button
- */
+import Card from '../shared/Card';
+import Button from '../shared/Button';
+import PublicButton from '../shared/PublicButton';
 
 const statusStyles = {
     Submitted: 'bg-college-navy/5 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border-college-navy/10 dark:border-emerald-700/40',
@@ -44,7 +37,7 @@ const AssignmentCard = ({ assignment, role = 'faculty' }) => {
                                 Due {assignment.dueDate}
                             </span>
                             <span className="text-gray-400 dark:text-gray-600">•</span>
-                            <a href={assignment.attachment} className="text-college-navy dark:text-college-gold hover:text-primary-800 font-medium">
+                            <a href={assignment.attachment} target="_blank" rel="noopener noreferrer" className="text-college-navy dark:text-college-gold hover:text-primary-800 font-medium">
                                 Attached file
                             </a>
                         </div>
@@ -109,7 +102,7 @@ const AssignmentCard = ({ assignment, role = 'faculty' }) => {
                         {assignment.attachment && (
                             <>
                                 <span className="text-gray-400 dark:text-gray-600">•</span>
-                                <a href={assignment.attachment} className="flex items-center gap-1 text-college-gold hover:text-college-gold/80">
+                                <a href={assignment.attachment} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-college-gold hover:text-college-gold/80">
                                     <FileText size={12} className="md:w-[14px] md:h-[14px]" />
                                     Attachment
                                 </a>

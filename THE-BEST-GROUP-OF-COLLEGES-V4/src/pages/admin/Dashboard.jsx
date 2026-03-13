@@ -11,8 +11,8 @@ import {
 } from "lucide-react";
 
 import { useAdminContext } from "../../context/AdminContext";
-import PortalStatsCard from "../../components/shared/PortalStatsCard";
-import PortalPageHeader from "../../components/shared/PortalPageHeader";
+import PortalStatsCard from "../../components/portal-shared/PortalStatsCard";
+import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
 import Card from "../../components/shared/Card";
 
@@ -68,9 +68,9 @@ const Dashboard = () => {
       {/* Header */}
       <PortalPageHeader
         badge={
-          (!isSuperAdmin || selectedCampusFilter !== "all") ? (
+          selectedCampusFilter !== "all" ? (
             <Badge variant={isDarkMode ? "gold" : "navy"}>
-              {isSuperAdmin ? campusLabel : "Allocated Campuses"}
+              {campusLabel}
             </Badge>
           ) : null
         }

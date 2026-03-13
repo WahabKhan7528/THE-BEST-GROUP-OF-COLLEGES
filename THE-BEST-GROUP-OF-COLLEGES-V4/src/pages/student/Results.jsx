@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useStudentContext } from "../../context/StudentContext";
-import PortalPageHeader from "../../components/shared/PortalPageHeader";
+import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
 import { BarChart3, TrendingUp, Award, ChevronDown, ChevronRight } from "lucide-react";
 

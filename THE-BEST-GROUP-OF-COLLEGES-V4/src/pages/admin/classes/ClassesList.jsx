@@ -18,6 +18,7 @@ import { mockClassesData as adminClasses } from "../../../data/adminData";
 const ClassesList = () => {
   const navigate = useNavigate();
   const { campuses, isSuperAdmin, currentAdmin, isDarkMode } = useAdminContext();
+
   const toast = useToast();
   const confirm = useConfirm();
   const [selectedCampus, setSelectedCampus] = useState("");

@@ -1,5 +1,5 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PublicButton from "../../../components/shared/PublicButton";
 import Table from "../../../components/admin/Table";
 import { useAdminContext } from "../../../context/AdminContext";
@@ -16,7 +16,13 @@ import { mockCampusAdminsData as adminUsers } from "../../../data/adminData";
 const CampusAdminsList = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { campuses, isDarkMode } = useAdminContext();
+    const { campuses, isDarkMode, isSuperAdmin } = useAdminContext();
+
+    useEffect(() => {
+        if (!isSuperAdmin) {
+            navigate("/admin/dashboard", { replace: true });
+        }
+    }, [isSuperAdmin, navigate]);
     const toast = useToast();
     const confirmDialog = useConfirm();
     const [searchTerm, setSearchTerm] = useState("");
