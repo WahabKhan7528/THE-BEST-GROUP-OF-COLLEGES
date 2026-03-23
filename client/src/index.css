@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* --- 1. Global Defaults --- */
+  html {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #F8FAFC;
+    color: #1E293B;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    min-height: 100vh;
+    background: #F8FAFC;
+    color: #1E293B;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.15s ease-in-out;
+  }
+
+  /* --- 2. Typography --- */
+  h1, h2, h3, h4, h5, h6 {
+    color: #0b1a2e; /* college-navy */
+    font-weight: 700;
+  }
+
+  /* --- 3. Dark Mode Global --- */
+  html.dark {
+    @apply bg-dark-base text-slate-200;
+    color-scheme: dark;
+  }
+
+  html.dark body {
+    @apply bg-dark-base text-slate-200;
+  }
+
+  html.dark h1,
+  html.dark h2,
+  html.dark h3,
+  html.dark h4,
+  html.dark h5,
+  html.dark h6 {
+    @apply text-slate-100;
+  }
+
+  /* --- 4. Dark Mode Form Overrides --- */
+  html.dark input,
+  html.dark select,
+  html.dark textarea {
+    @apply bg-dark-surface border-dark-border text-slate-200;
+  }
+
+  html.dark input::placeholder,
+  html.dark select::placeholder,
+  html.dark textarea::placeholder {
+    @apply text-slate-500;
+  }
+}
+
+@layer utilities {
+  /* --- 5. Scrollbar Utilities --- */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+
+  /* --- 6. Themed Components & Animations --- */
+  
+  /* Custom gold styling for built-in date/time picker indicators in dark mode */
+  .dark ::-webkit-calendar-picker-indicator {
+    filter: invert(72%) sepia(16%) saturate(1001%) hue-rotate(3deg) brightness(91%) contrast(85%);
+    cursor: pointer;
+  }
+
+  /* Toast slide-in animation */
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  .animate-slideIn {
+    animation: slideIn 0.3s ease-out;
+  }
+}
