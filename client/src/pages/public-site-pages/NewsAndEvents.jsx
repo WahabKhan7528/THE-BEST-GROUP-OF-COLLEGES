@@ -2,14 +2,14 @@ import { useState } from "react";
 import { ArrowRight, User } from "lucide-react";
 import { clsx } from "clsx";
 import PublicButton from "../../components/shared/PublicButton";
-import PageHero from "../../components/public_site/PageHero";
-import NewsCard from "../../components/public_site/NewsCard";
-import EventCard from "../../components/public_site/EventCard";
-import CTASection from "../../components/public_site/CTASection";
+import PageHero from "../../components/public-site/PageHero";
+import NewsCard from "../../components/public-site/NewsCard";
+import EventCard from "../../components/public-site/EventCard";
+import CTASection from "../../components/public-site/CTASection";
 import Card from "../../components/shared/Card";
 
 import { newsItems, events } from "../../data/newsEventsData";
-import Pagination from "../../components/public_site/Pagination";
+import Pagination from "../../components/public-site/Pagination";
 
 const NewsAndEvents = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -118,3 +118,4 @@ const NewsAndEvents = () => {
 };
 
 export default NewsAndEvents;
+

@@ -63,7 +63,7 @@ export const mockSubmissions = [
     {
         studentId: "STU-0145",
         studentName: "Ayesha Khan",
-        submittedAt: "Sept 12, 2025 • 9:30 AM",
+        submittedAt: "Sept 12, 2025 â€¢ 9:30 AM",
         file: "#",
         status: "On-time",
         remarks: "Well structured",
@@ -71,14 +71,14 @@ export const mockSubmissions = [
     {
         studentId: "STU-0172",
         studentName: "Bilal Ahmed",
-        submittedAt: "Sept 12, 2025 • 10:05 AM",
+        submittedAt: "Sept 12, 2025 â€¢ 10:05 AM",
         file: "#",
         status: "On-time",
     },
     {
         studentId: "STU-0198",
         studentName: "Sara Malik",
-        submittedAt: "Sept 13, 2025 • 8:10 AM",
+        submittedAt: "Sept 13, 2025 â€¢ 8:10 AM",
         file: "#",
         status: "Late",
     },

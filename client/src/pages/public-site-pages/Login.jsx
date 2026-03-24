@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "../../schemas/loginSchema";
@@ -22,10 +21,6 @@ const Login = () => {
 
   const portalType = type ? type.toLowerCase() : "";
 
-  useEffect(() => {
-    document.documentElement.classList.remove("dark");
-    // No default value for ID field
-  }, []);
   const portalinfo =
     portalType === "admin"
       ? {
@@ -148,7 +143,7 @@ const Login = () => {
                   type="password"
                   {...register("password")}
                   className="w-full pl-12 pr-4 py-4 rounded-sm border border-white/10 bg-white/5 focus:bg-white/10 focus:ring-2 focus:ring-college-navy/50 focus:border-college-navy outline-none text-white placeholder:text-white/20"
-                  placeholder="••••••••"
+                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                 />
               </div>
               {errors.password && (

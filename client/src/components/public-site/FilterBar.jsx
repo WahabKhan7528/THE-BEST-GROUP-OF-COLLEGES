@@ -18,7 +18,7 @@ export default function FilterBar({
         <div className={clsx("bg-white border-b border-gray-200 shadow-sm", isSticky && "sticky top-0 z-10", className)}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6">
 
-                {/* ─────────────── MOBILE LAYOUT (< md) ─────────────── */}
+                {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ MOBILE LAYOUT (< md) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
                 <div className="flex flex-col gap-3 md:hidden">
 
                     {/* Row 1: Search (full-width) */}
@@ -97,7 +97,7 @@ export default function FilterBar({
                     )}
                 </div>
 
-                {/* ─────────────── DESKTOP LAYOUT (≥ md) ─────────────── */}
+                {/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ DESKTOP LAYOUT (â‰¥ md) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
                 <div className="hidden md:flex items-center justify-between gap-4">
 
                     {/* Search */}

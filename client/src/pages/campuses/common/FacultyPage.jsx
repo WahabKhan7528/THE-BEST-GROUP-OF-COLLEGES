@@ -1,8 +1,8 @@
 import { useLocation } from "react-router-dom";
-import Section from "../../../components/public_site/Section";
-import SectionHeader from "../../../components/public_site/SectionHeader";
-import FacultyGrid from "../../../components/public_site/FacultyGrid";
-import CampusCta from "../../../components/public_site/CampusCta";
+import Section from "../../../components/public-site/Section";
+import SectionHeader from "../../../components/public-site/SectionHeader";
+import FacultyGrid from "../../../components/public-site/FacultyGrid";
+import CampusCta from "../../../components/public-site/CampusCta";
 
 const FacultyPage = () => {
   const location = useLocation();

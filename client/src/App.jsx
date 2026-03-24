@@ -20,17 +20,17 @@ import { StudentProvider } from "./context/StudentContext";
 import { ThemeProvider } from "./context/ThemeContext";
 
 // Public pages
-const Home = lazy(() => import("./pages/public_site_pages/Home"));
-const About = lazy(() => import("./pages/public_site_pages/About"));
-const Admissions = lazy(() => import("./pages/public_site_pages/Admissions"));
-const Faculty = lazy(() => import("./pages/public_site_pages/Faculty"));
-const Gallery = lazy(() => import("./pages/public_site_pages/Gallery"));
-const Contact = lazy(() => import("./pages/public_site_pages/Contact"));
+const Home = lazy(() => import("./pages/public-site-pages/Home"));
+const About = lazy(() => import("./pages/public-site-pages/About"));
+const Admissions = lazy(() => import("./pages/public-site-pages/Admissions"));
+const Faculty = lazy(() => import("./pages/public-site-pages/Faculty"));
+const Gallery = lazy(() => import("./pages/public-site-pages/Gallery"));
+const Contact = lazy(() => import("./pages/public-site-pages/Contact"));
 const NewsAndEvents = lazy(
-  () => import("./pages/public_site_pages/NewsAndEvents"),
+  () => import("./pages/public-site-pages/NewsAndEvents"),
 );
-const Login = lazy(() => import("./pages/public_site_pages/Login"));
-const NotFound = lazy(() => import("./pages/public_site_pages/NotFound"));
+const Login = lazy(() => import("./pages/public-site-pages/Login"));
+const NotFound = lazy(() => import("./pages/public-site-pages/NotFound"));
 
 // Campus pages
 const CampusPage = lazy(() => import("./pages/campuses/CampusPage"));
@@ -105,11 +105,10 @@ const StudentSubmissions = lazy(() => import("./pages/student/Submissions"));
 
 function App() {
   return (
-    <ThemeProvider>
-      <Router>
-        <ErrorBoundary>
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
+    <Router>
+      <ErrorBoundary>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
               {/* Public Website Routes */}
               <Route path="/" element={<RootLayout />}>
                 <Route index element={<Home />} />
@@ -143,9 +142,11 @@ function App() {
               <Route
                 path="/admin/*"
                 element={
-                  <AdminProvider>
-                    <AdminLayout />
-                  </AdminProvider>
+                  <ThemeProvider>
+                    <AdminProvider>
+                      <AdminLayout />
+                    </AdminProvider>
+                  </ThemeProvider>
                 }
               >
                 <Route index element={<AdminDashboard />} />
@@ -191,9 +192,11 @@ function App() {
               <Route
                 path="/faculty/*"
                 element={
-                  <FacultyProvider>
-                    <FacultyLayout />
-                  </FacultyProvider>
+                  <ThemeProvider>
+                    <FacultyProvider>
+                      <FacultyLayout />
+                    </FacultyProvider>
+                  </ThemeProvider>
                 }
               >
                 <Route index element={<Navigate to="dashboard" replace />} />
@@ -225,9 +228,11 @@ function App() {
               <Route
                 path="/student/*"
                 element={
-                  <StudentProvider>
-                    <StudentLayout />
-                  </StudentProvider>
+                  <ThemeProvider>
+                    <StudentProvider>
+                      <StudentLayout />
+                    </StudentProvider>
+                  </ThemeProvider>
                 }
               >
                 <Route index element={<Navigate to="dashboard" replace />} />
@@ -244,12 +249,12 @@ function App() {
 
               {/* 404 Catch-all */}
               <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-        </ErrorBoundary>
-      </Router>
-    </ThemeProvider>
+          </Routes>
+        </Suspense>
+      </ErrorBoundary>
+    </Router>
   );
 }
 
 export default App;
+

@@ -1,14 +1,14 @@
 import { ArrowRight } from "lucide-react";
 import { useParams, Navigate } from "react-router-dom";
 import PublicButton from "../../components/shared/PublicButton";
-import CampusHero from "../../components/public_site/CampusHero";
-import StatsGrid from "../../components/public_site/StatsGrid";
-import Section from "../../components/public_site/Section";
-import SectionHeader from "../../components/public_site/SectionHeader";
+import CampusHero from "../../components/public-site/CampusHero";
+import StatsGrid from "../../components/public-site/StatsGrid";
+import Section from "../../components/public-site/Section";
+import SectionHeader from "../../components/public-site/SectionHeader";
 import Badge from "../../components/shared/Badge";
-import ProgramCard from "../../components/public_site/ProgramCard";
-import FacilityCard from "../../components/public_site/FacilityCard";
-import CampusCta from "../../components/public_site/CampusCta";
+import ProgramCard from "../../components/public-site/ProgramCard";
+import FacilityCard from "../../components/public-site/FacilityCard";
+import CampusCta from "../../components/public-site/CampusCta";
 
 import { programsData } from "../../data/programsData";
 import { campusPageConfig } from "../../data/campusData";
@@ -130,3 +130,4 @@ const CampusPage = () => {
 };
 
 export default CampusPage;
+

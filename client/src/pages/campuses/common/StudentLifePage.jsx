@@ -1,5 +1,5 @@
 import PublicButton from "../../../components/shared/PublicButton";
-import SectionHeader from "../../../components/public_site/SectionHeader";
+import SectionHeader from "../../../components/public-site/SectionHeader";
 import { useParams } from "react-router-dom";
 
 const campusSocieties = {
@@ -233,3 +233,4 @@ const StudentLifePage = () => {
 };
 
 export default StudentLifePage;
+

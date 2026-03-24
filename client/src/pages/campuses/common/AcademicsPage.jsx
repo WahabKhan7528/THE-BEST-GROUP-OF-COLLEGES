@@ -1,10 +1,10 @@
 import { useLocation } from "react-router-dom";
 import PublicButton from "../../../components/shared/PublicButton";
-import SectionHeader from "../../../components/public_site/SectionHeader";
+import SectionHeader from "../../../components/public-site/SectionHeader";
 
 import { programsData } from "../../../data/programsData";
-import ProgramCard from "../../../components/public_site/ProgramCard";
-import CampusCta from "../../../components/public_site/CampusCta";
+import ProgramCard from "../../../components/public-site/ProgramCard";
+import CampusCta from "../../../components/public-site/CampusCta";
 
 const AcademicsPage = () => {
   const location = useLocation();

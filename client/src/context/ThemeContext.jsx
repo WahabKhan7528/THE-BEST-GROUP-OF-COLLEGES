@@ -13,6 +13,10 @@ export const ThemeProvider = ({ children }) => {
         const root = document.documentElement;
         root.classList.toggle("dark", isDarkMode);
         localStorage.setItem("portal-theme", isDarkMode ? "dark" : "light");
+
+        return () => {
+            root.classList.remove("dark");
+        };
     }, [isDarkMode]);
 
     const toggleDarkMode = () => setIsDarkMode((prev) => !prev);

@@ -8,11 +8,11 @@ import PageLoader from "../components/shared/PageLoader";
 
 const FacultyLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { currentFaculty, isDarkMode } = useFacultyContext();
+  const { currentFaculty } = useFacultyContext();
 
   const user = {
     name: currentFaculty?.name || "Faculty User",
-    line2: `${currentFaculty?.department || "Faculty"} • ${currentFaculty?.designation || "Faculty"}`,
+    line2: `${currentFaculty?.department || "Faculty"} â€¢ ${currentFaculty?.designation || "Faculty"}`,
   };
   const { pathname } = useLocation();
 
@@ -20,15 +20,6 @@ const FacultyLayout = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
-
-  // Re-apply theme on mount to fix overrides from public layout/login pages
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [isDarkMode]);
 
   return (
     <div className="min-h-screen bg-neutral-50 dark:bg-dark-base flex flex-col lg:flex-row transition-colors duration-300">

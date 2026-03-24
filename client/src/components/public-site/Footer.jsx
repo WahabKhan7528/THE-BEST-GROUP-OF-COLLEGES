@@ -143,7 +143,7 @@ export default function Footer() {
                     <div className="flex flex-col md:flex-row justify-between items-center gap-6">
                         <div className="order-2 md:order-1">
                             <p className="text-white/50 text-xs text-center md:text-left font-medium">
-                                © {currentYear} Best Group of Colleges. All rights reserved.
+                                Â© {currentYear} Best Group of Colleges. All rights reserved.
                             </p>
                         </div>
                         <div className="order-3 text-center md:text-right">

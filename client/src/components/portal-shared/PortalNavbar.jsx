@@ -96,7 +96,7 @@ const PortalNavbar = ({
               >
                 {adminUsers.map((u) => (
                   <option key={u.id} value={u.id} className="truncate">
-                    {u.name.length > 16 ? u.name.slice(0, 15) + "…" : u.name} (
+                    {u.name.length > 16 ? u.name.slice(0, 15) + "â€¦" : u.name} (
                     {u.adminRole})
                   </option>
                 ))}

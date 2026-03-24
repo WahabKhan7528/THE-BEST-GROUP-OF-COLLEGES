@@ -68,7 +68,7 @@ const Dashboard = () => {
           </Badge>
         }
         title={`Welcome, ${currentFaculty.name}`}
-        subtitle={`${currentFaculty.designation} • ${currentFaculty.department}`}
+        subtitle={`${currentFaculty.designation} â€¢ ${currentFaculty.department}`}
       />
 
       {/* Main Stats Grid */}

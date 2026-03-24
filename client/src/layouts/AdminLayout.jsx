@@ -8,7 +8,7 @@ import PageLoader from "../components/shared/PageLoader";
 
 const AdminLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { currentAdmin, isSuperAdmin, isDarkMode } = useAdminContext();
+  const { currentAdmin, isSuperAdmin } = useAdminContext();
 
   const visibleNavItems = adminNavItems.filter(
     (item) =>
@@ -28,15 +28,6 @@ const AdminLayout = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
-
-  // Re-apply theme on mount to fix overrides from public layout/login pages
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [isDarkMode]);
 
   return (
     <div className="min-h-screen bg-neutral-50 dark:bg-dark-base flex flex-col lg:flex-row transition-colors duration-300">

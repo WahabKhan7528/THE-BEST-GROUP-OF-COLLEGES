@@ -85,7 +85,7 @@ const Dashboard = () => {
           </Badge>
         }
         title={`Welcome back, ${currentStudent.name.split(" ")[0]}!`}
-        subtitle={`ID: ${currentStudent.id} • Student Dashboard`}
+        subtitle={`ID: ${currentStudent.id} â€¢ Student Dashboard`}
       />
 
       {/* Main Stats Grid */}

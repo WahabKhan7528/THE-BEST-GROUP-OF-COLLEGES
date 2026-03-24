@@ -1,7 +1,7 @@
 import PublicButton from "../../../components/shared/PublicButton";
-import SectionHeader from "../../../components/public_site/SectionHeader";
+import SectionHeader from "../../../components/public-site/SectionHeader";
 import Card from "../../../components/shared/Card";
-import CampusCta from "../../../components/public_site/CampusCta";
+import CampusCta from "../../../components/public-site/CampusCta";
 
 const facilitiesData = [
   {
@@ -152,3 +152,4 @@ const FacilitiesPage = () => {
 };
 
 export default FacilitiesPage;
+

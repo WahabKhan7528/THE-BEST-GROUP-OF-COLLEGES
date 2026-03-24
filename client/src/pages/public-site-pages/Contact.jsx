@@ -9,11 +9,11 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-import Section from "../../components/public_site/Section";
-import SectionHeader from "../../components/public_site/SectionHeader";
+import Section from "../../components/public-site/Section";
+import SectionHeader from "../../components/public-site/SectionHeader";
 import Card from "../../components/shared/Card";
-import ContactForm from "../../components/public_site/ContactForm";
-import FAQ from "../../components/public_site/FAQ";
+import ContactForm from "../../components/public-site/ContactForm";
+import FAQ from "../../components/public-site/FAQ";
 
 const Contact = () => {
   const socialLinks = [
@@ -157,3 +157,4 @@ const Contact = () => {
 };
 
 export default Contact;
+

@@ -16,7 +16,7 @@ const announcementsByCampus = {
       title: "AI Club workshop: Building with LangChain",
       date: "Sept 15, 2025",
       description:
-        "Hands-on session this Friday 3 PM in Lab 4. Seats are limited—register via the portal.",
+        "Hands-on session this Friday 3 PM in Lab 4. Seats are limited-register via the portal.",
     },
     {
       title: "Library extends weekend hours",

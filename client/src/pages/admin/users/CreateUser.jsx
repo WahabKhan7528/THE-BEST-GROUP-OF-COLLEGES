@@ -340,14 +340,14 @@ const CreateUser = () => {
           type="password"
           registration={register("password")}
           helper="Leave blank to auto-generate secure password"
-          placeholder="••••••••"
+          placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
         />
         <PortalForm.Input
           label="Confirm Password"
           type="password"
           registration={register("confirmPassword")}
           error={errors.confirmPassword?.message}
-          placeholder="••••••••"
+          placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
         />
       </PortalForm.Section>
     </PortalForm>

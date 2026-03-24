@@ -20,7 +20,7 @@ const Submissions = () => {
         badge={
           <div className="flex items-center gap-2 max-w-full">
             <Badge variant={isDarkMode ? "gold" : "navy"}>
-              BSCS - A • Operating Systems
+              BSCS - A â€¢ Operating Systems
             </Badge>
           </div>
         }

@@ -7,11 +7,11 @@ import { useThemeContext } from "../../context/ThemeContext";
  * Unified portal sidebar used by Admin, Faculty, and Student layouts.
  *
  * Props:
- *   portalLabel      – heading text, e.g. "Admin Portal"
- *   navItems         – array of { to, label, icon } passed from layout
- *   onClose          – called when mobile close button / nav link is clicked
- *   loginPath        – logout destination, e.g. "/login/admin"
- *   menuSectionLabel – label above nav links (default "Navigation")
+ *   portalLabel      â€“ heading text, e.g. "Admin Portal"
+ *   navItems         â€“ array of { to, label, icon } passed from layout
+ *   onClose          â€“ called when mobile close button / nav link is clicked
+ *   loginPath        â€“ logout destination, e.g. "/login/admin"
+ *   menuSectionLabel â€“ label above nav links (default "Navigation")
  */
 const PortalSidebar = ({
   portalLabel,

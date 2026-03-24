@@ -12,7 +12,7 @@ const Submissions = () => {
       <PortalPageHeader
         badge={
           <Badge variant={isDarkMode ? "gold" : "navy"}>
-            Session 2025 • Fall
+            Session 2025 â€¢ Fall
           </Badge>
         }
         title="My Submissions"

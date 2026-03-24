@@ -1,9 +1,9 @@
 import { useState } from "react";
 import PublicButton from "../../components/shared/PublicButton";
-import PageHero from "../../components/public_site/PageHero";
-import FilterBar from "../../components/public_site/FilterBar";
+import PageHero from "../../components/public-site/PageHero";
+import FilterBar from "../../components/public-site/FilterBar";
 import Badge from "../../components/shared/Badge";
-import CTASection from "../../components/public_site/CTASection";
+import CTASection from "../../components/public-site/CTASection";
 
 import { Calendar, Tag } from "lucide-react";
 
@@ -85,7 +85,7 @@ const Gallery = () => {
                 </Badge>
               </div>
 
-              {/* Details — always visible */}
+              {/* Details - always visible */}
               <div className="p-4 sm:p-5 border-t-2 border-college-gold flex flex-col flex-1">
                 <div className="flex-1">
                   <h3 className="font-serif font-bold text-gray-900 text-base sm:text-lg leading-snug mb-1 group-hover:text-college-gold transition-colors duration-200">
@@ -168,3 +168,4 @@ const Gallery = () => {
 };
 
 export default Gallery;
+

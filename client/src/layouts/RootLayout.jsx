@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { useEffect, Suspense } from "react";
-import Navbar from "../components/public_site/Navbar";
-import Footer from "../components/public_site/Footer";
+import Navbar from "../components/public-site/Navbar";
+import Footer from "../components/public-site/Footer";
 import PageLoader from "../components/shared/PageLoader";
 
 const RootLayout = () => {
@@ -9,7 +9,6 @@ const RootLayout = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.documentElement.classList.remove("dark");
   }, [location.pathname]);
 
   return (
@@ -26,3 +25,4 @@ const RootLayout = () => {
 };
 
 export default RootLayout;
+

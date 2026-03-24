@@ -46,7 +46,7 @@ const AssignmentCard = ({ assignment, role = 'faculty' }) => {
                             <span className="font-semibold text-college-navy dark:text-college-gold">
                                 Due {assignment.dueDate}
                             </span>
-                            <span className="text-gray-400 dark:text-gray-600">•</span>
+                            <span className="text-gray-400 dark:text-gray-600">â€¢</span>
                             <a href={assignment.attachment} target="_blank" rel="noopener noreferrer" className="text-college-navy dark:text-college-gold hover:text-primary-800 font-medium">
                                 Attached file
                             </a>
@@ -121,7 +121,7 @@ const AssignmentCard = ({ assignment, role = 'faculty' }) => {
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                 <div className="flex-1">
                     <p className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                        {assignment.classSection} • {assignment.subject}
+                        {assignment.classSection} â€¢ {assignment.subject}
                     </p>
                     <h3 className="text-base md:text-lg font-semibold text-college-navy dark:text-white">{assignment.title}</h3>
                     <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mt-1">{assignment.description}</p>
@@ -130,11 +130,11 @@ const AssignmentCard = ({ assignment, role = 'faculty' }) => {
                             <Calendar size={12} className="md:w-[14px] md:h-[14px]" />
                             Due {assignment.dueDate}
                         </span>
-                        <span className="text-gray-400 dark:text-gray-600">•</span>
+                        <span className="text-gray-400 dark:text-gray-600">â€¢</span>
                         <span>Max {assignment.maxMarks} marks</span>
                         {assignment.attachment && (
                             <>
-                                <span className="text-gray-400 dark:text-gray-600">•</span>
+                                <span className="text-gray-400 dark:text-gray-600">â€¢</span>
                                 <a href={assignment.attachment} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-college-gold hover:text-college-gold/80">
                                     <FileText size={12} className="md:w-[14px] md:h-[14px]" />
                                     Attachment

@@ -177,7 +177,7 @@ const Materials = () => {
                   </h2>
                   <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mt-1 sm:mt-0">
                     <span className="font-medium px-2 py-0.5 bg-gray-100 dark:bg-dark-elevated rounded text-gray-600 dark:text-gray-300 shrink-0">{subject.code}</span>
-                    <span className="hidden sm:inline">•</span>
+                    <span className="hidden sm:inline">â€¢</span>
                     <span className="break-words">PDFs, videos, images, notes</span>
                   </div>
                 </div>

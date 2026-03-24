@@ -16,8 +16,8 @@ export const AdminProvider = ({ children }) => {
 
   // Sub-Admin to Campus allocation mapping
   const [adminCampusAllocations, setAdminCampusAllocations] = useState({
-    "U-002": ["law"],  // Ahmed Khan → Law Campus
-    "U-003": ["main"], // Fatima Ali → Main Campus
+    "U-002": ["law"],  // Ahmed Khan â†’ Law Campus
+    "U-003": ["main"], // Fatima Ali â†’ Main Campus
     "U-004": ["main"], // Sub-Admin restricted to Main Campus
   });
 

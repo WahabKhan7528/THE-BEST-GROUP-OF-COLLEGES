@@ -30,13 +30,13 @@ const AnnouncementCard = ({ announcement, role = "faculty", onDelete }) => {
     >
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
-          {/* Unified Header: Class Section • Date */}
+          {/* Unified Header: Class Section â€¢ Date */}
           <div className="flex flex-wrap items-center gap-2 mb-2">
             <span className="text-[10px] font-bold text-college-navy dark:text-college-gold uppercase tracking-wider">
               {classSection}
             </span>
             <span className="text-[10px] text-gray-300 dark:text-white/20">
-              •
+              â€¢
             </span>
             <p className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">
               {date}

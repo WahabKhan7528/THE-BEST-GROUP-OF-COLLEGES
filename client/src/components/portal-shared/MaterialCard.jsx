@@ -8,8 +8,8 @@ import { useConfirm } from "../../context/ConfirmContext";
  
  Accepts a `material` object with: { title, type, uploadDate/date, description, classSection, subject, link }
 
- variant="faculty" (default) — shows icon, classSection•subject header, View (anchor) + Download link
- variant="student"— shows date, name, type badge, View + Download buttons, "Tap to preview"
+ variant="faculty" (default) - shows icon, classSectionâ€¢subject header, View (anchor) + Download link
+ variant="student"- shows date, name, type badge, View + Download buttons, "Tap to preview"
  */
 
 const typeBadge = {
@@ -120,7 +120,7 @@ const MaterialCard = ({ material, role = "faculty" }) => {
           </div>
           <div className="min-w-0">
             <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide break-words">
-              {material.classSection} • {material.subject}
+              {material.classSection} â€¢ {material.subject}
             </p>
             <h3 className="text-lg font-semibold text-college-navy dark:text-white break-words">
               {material.title}
@@ -143,21 +143,21 @@ const MaterialCard = ({ material, role = "faculty" }) => {
         >
           View
         </a>
-        <span className="text-gray-400 dark:text-gray-600">•</span>
+        <span className="text-gray-400 dark:text-gray-600">â€¢</span>
         <button
           onClick={() => toast.info(`Starting download for: ${material.title}`)}
           className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
         >
           Download
         </button>
-        <span className="text-gray-400 dark:text-gray-600">•</span>
+        <span className="text-gray-400 dark:text-gray-600">â€¢</span>
         <Link
           to={`/faculty/materials/edit/${material.id}`}
           className="text-college-navy dark:text-college-gold font-semibold hover:text-college-navy/80 dark:hover:text-college-gold/80"
         >
           Edit
         </Link>
-        <span className="text-gray-400 dark:text-gray-600">•</span>
+        <span className="text-gray-400 dark:text-gray-600">â€¢</span>
         <button
           onClick={handleDelete}
           className="text-red-600 dark:text-red-400 font-semibold hover:text-red-800 dark:hover:text-red-300"

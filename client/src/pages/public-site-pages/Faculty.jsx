@@ -1,8 +1,8 @@
 import { Mail, ArrowRight } from "lucide-react";
 import PublicButton from "../../components/shared/PublicButton";
-import PageHero from "../../components/public_site/PageHero";
-import FacultyGrid from "../../components/public_site/FacultyGrid";
-import CTASection from "../../components/public_site/CTASection";
+import PageHero from "../../components/public-site/PageHero";
+import FacultyGrid from "../../components/public-site/FacultyGrid";
+import CTASection from "../../components/public-site/CTASection";
 
 const Faculty = ({ filterCampus }) => {
   return (
@@ -47,3 +47,4 @@ const Faculty = ({ filterCampus }) => {
 };
 
 export default Faculty;
+
