@@ -96,7 +96,7 @@ const CreateUser = () => {
                   setRole(r);
                   setSelectedCampuses([]);
                 }}
-                className={`px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 border ${role === r
+                className={`px-4 py-3 rounded-sm text-sm font-medium transition-all duration-200 border ${role === r
                   ? "bg-college-navy/10 border-college-navy text-college-navy shadow-sm dark:bg-college-gold/10 dark:border-college-gold dark:text-college-gold"
                   : "bg-white border-college-navy/10 text-gray-600 hover:bg-gray-50 dark:bg-white/5 dark:border-white/10 dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-gray-200"
                   }`}
@@ -157,9 +157,9 @@ const CreateUser = () => {
               />
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Academic System</label>
-                <div className="flex gap-4 p-2 bg-gray-50/50 dark:bg-college-navy/30 rounded-xl border border-college-navy/10 dark:border-college-gold/10">
+                <div className="flex gap-4 p-2 bg-gray-50/50 dark:bg-college-navy/30 rounded-sm border border-college-navy/10 dark:border-college-gold/10">
                   {["Semester", "Annual"].map((sys) => (
-                    <label key={sys} className="flex items-center gap-2 cursor-pointer px-3 py-1.5 rounded-lg hover:bg-college-navy/5 dark:hover:bg-college-gold/5 transition-colors">
+                    <label key={sys} className="flex items-center gap-2 cursor-pointer px-3 py-1.5 rounded-sm hover:bg-college-navy/5 dark:hover:bg-college-gold/5 transition-colors">
                       <input
                         type="radio"
                         value={sys}
@@ -222,7 +222,7 @@ const CreateUser = () => {
                         <input
                           type="text"
                           placeholder="Class / Section (e.g. BSCS-5A)"
-                          className="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-college-gold/20 bg-white dark:bg-college-navy/50 text-sm focus:outline-none focus:border-college-navy dark:focus:border-college-gold dark:text-white dark:placeholder-gray-500"
+                          className="w-full px-4 py-2 rounded-sm border border-gray-200 dark:border-college-gold/20 bg-white dark:bg-college-navy/50 text-sm focus:outline-none focus:border-college-navy dark:focus:border-college-gold dark:text-white dark:placeholder-gray-500"
                           value={alloc.class}
                           onChange={(e) => handleAllocationChange(idx, 'class', e.target.value)}
                         />
@@ -231,7 +231,7 @@ const CreateUser = () => {
                         <input
                           type="text"
                           placeholder="Subject (e.g. Operating Systems)"
-                          className="w-full px-4 py-2 rounded-xl border border-gray-200 dark:border-college-gold/20 bg-white dark:bg-college-navy/50 text-sm focus:outline-none focus:border-college-navy dark:focus:border-college-gold dark:text-white dark:placeholder-gray-500"
+                          className="w-full px-4 py-2 rounded-sm border border-gray-200 dark:border-college-gold/20 bg-white dark:bg-college-navy/50 text-sm focus:outline-none focus:border-college-navy dark:focus:border-college-gold dark:text-white dark:placeholder-gray-500"
                           value={alloc.subject}
                           onChange={(e) => handleAllocationChange(idx, 'subject', e.target.value)}
                         />
@@ -266,7 +266,7 @@ const CreateUser = () => {
       {showCampusField && (
         <PortalForm.Section title="Campus Allocation">
           <div className="col-span-1 md:col-span-2">
-            <div className="bg-gray-50/50 dark:bg-college-navy/50 rounded-xl p-4 border border-college-navy/10 dark:border-college-gold/20">
+            <div className="bg-gray-50/50 dark:bg-college-navy/50 rounded-sm p-4 border border-college-navy/10 dark:border-college-gold/20">
               <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 block">
                 {isSingleCampus ? "Select Primary Campus" : "Select Allocated Campuses"}
               </h3>
@@ -278,7 +278,7 @@ const CreateUser = () => {
                     onChange={(e) => {
                       setSelectedCampuses(e.target.value ? [e.target.value] : []);
                     }}
-                    className="w-full px-4 py-2.5 rounded-xl border border-college-navy/20 dark:border-college-gold/20 bg-white dark:bg-college-navy dark:text-white focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20"
+                    className="w-full px-4 py-2.5 rounded-sm border border-college-navy/20 dark:border-college-gold/20 bg-white dark:bg-college-navy dark:text-white focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20"
                     required
                     disabled={!isSuperAdmin}
                   >
@@ -295,7 +295,7 @@ const CreateUser = () => {
                   {campuses.map((campus) => (
                     <label
                       key={campus.id}
-                      className={`flex items-center p-3 border rounded-xl cursor-pointer transition-all duration-200 ${selectedCampuses.includes(campus.id)
+                      className={`flex items-center p-3 border rounded-sm cursor-pointer transition-all duration-200 ${selectedCampuses.includes(campus.id)
                         ? "bg-college-navy/10 border-college-navy text-college-navy shadow-sm dark:bg-college-gold/20 dark:border-college-gold dark:text-college-gold dark:shadow-none"
                         : "bg-white border-college-navy/10 hover:bg-gray-50 dark:bg-white/5 dark:border-white/10 dark:hover:bg-white/10"
                         }`}

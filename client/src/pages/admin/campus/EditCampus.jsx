@@ -18,16 +18,25 @@ const EditCampus = () => {
   const toast = useToast();
   const confirmDialog = useConfirm();
 
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm({
     resolver: zodResolver(editCampusSchema),
     defaultValues: {
-      name: "", code: "", location: "", dean: "", established: "",
-      contact: { phone: "", email: "", website: "" }
-    }
+      name: "",
+      code: "",
+      location: "",
+      dean: "",
+      established: "",
+      contact: { phone: "", email: "", website: "" },
+    },
   });
 
   useEffect(() => {
-    const campus = location.state?.campus || campuses.find(c => c.id === id);
+    const campus = location.state?.campus || campuses.find((c) => c.id === id);
     if (campus) {
       reset({
         name: campus.name || "",
@@ -38,8 +47,8 @@ const EditCampus = () => {
         contact: {
           phone: campus.contact?.phone || "",
           email: campus.contact?.email || "",
-          website: campus.contact?.website || ""
-        }
+          website: campus.contact?.website || "",
+        },
       });
     }
   }, [id, location.state, campuses, reset]);
@@ -50,7 +59,12 @@ const EditCampus = () => {
   };
 
   const handleDelete = async () => {
-    const confirmed = await confirmDialog({ title: "Delete Campus", message: `Are you sure you want to delete ${form.name}? This cannot be undone.`, confirmText: "Delete", variant: "danger" });
+    const confirmed = await confirmDialog({
+      title: "Delete Campus",
+      message: `Are you sure you want to delete ${form.name}? This cannot be undone.`,
+      confirmText: "Delete",
+      variant: "danger",
+    });
     if (confirmed) {
       toast.success("Campus deleted successfully");
       navigate("/admin/campus");
@@ -74,8 +88,10 @@ const EditCampus = () => {
           size="sm"
           icon={Trash2}
           type="button"
+          className="px-2 py-1 text-xs sm:text-sm sm:px-3 sm:py-1.5 min-w-0 h-8 sm:h-auto"
+          style={{ lineHeight: 1.1 }}
         >
-          Delete
+          <span className="hidden min-[480px]:inline">Delete</span>
         </PublicButton>
       }
     >

@@ -87,7 +87,7 @@ const CreateCourse = () => {
           </label>
           <select
             {...register("examSystem")}
-            className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none dark:text-white"
+            className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none dark:text-white"
           >
             <option value="annual">Annual</option>
             <option value="semester">Semester</option>
@@ -99,7 +99,7 @@ const CreateCourse = () => {
           <textarea
             {...register("description")}
             rows={4}
-            className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all resize-none dark:text-white dark:placeholder-gray-500"
+            className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all resize-none dark:text-white dark:placeholder-gray-500"
             placeholder="Enter a brief description of the course..."
           />
         </div>
@@ -115,7 +115,7 @@ const CreateCourse = () => {
                 key={campus.id}
                 onClick={() => isSuperAdmin && handleCampusToggle(campus.id)}
                 className={`
-                    relative p-4 rounded-xl border-2 transition-all duration-200 flex items-start gap-3
+                    relative p-4 rounded-sm border-2 transition-all duration-200 flex items-start gap-3
                     ${!isSuperAdmin ? 'cursor-not-allowed opacity-80' : 'cursor-pointer'}
                     ${isSelected
                     ? 'border-college-navy bg-college-navy/10 shadow-sm dark:bg-college-gold/10 dark:border-college-gold'
@@ -123,7 +123,7 @@ const CreateCourse = () => {
                   }
                   `}
               >
-                <div className={`p-2 rounded-lg ${isSelected ? 'bg-college-navy/10 text-college-navy dark:bg-college-gold/10 dark:text-college-gold' : 'bg-gray-100 text-gray-400 dark:bg-college-navy dark:text-gray-400'}`}>
+                <div className={`p-2 rounded-sm ${isSelected ? 'bg-college-navy/10 text-college-navy dark:bg-college-gold/10 dark:text-college-gold' : 'bg-gray-100 text-gray-400 dark:bg-college-navy dark:text-gray-400'}`}>
                   <Building2 className="w-5 h-5" />
                 </div>
                 <div>

@@ -6,8 +6,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../../context/ToastContext';
 import { useConfirm } from '../../context/ConfirmContext';
 import PortalForm from '../../components/portal-shared/PortalForm';
-import { Save, Database, AlignLeft, Calendar, FileText } from 'lucide-react';
+import { Save, Database, AlignLeft, Calendar, FileText, Trash2 } from 'lucide-react';
 import { useFacultyContext } from '../../context/FacultyContext';
+import PublicButton from '../../components/shared/PublicButton';
 
 const assignmentsByCampus = {
     main: [
@@ -134,10 +135,22 @@ const EditAssignment = () => {
             backPath="/faculty/assignments"
             onSubmit={handleSubmit(onSubmit)}
             onCancel={() => navigate('/faculty/assignments')}
-            onDelete={handleDelete}
             submitLabel="Save Changes"
             submitIcon={Save}
             submitting={isSubmitting}
+            headerActions={
+                <PublicButton
+                    onClick={handleDelete}
+                    variant="danger"
+                    size="sm"
+                    icon={Trash2}
+                    type="button"
+                    className="px-2 py-1 text-xs sm:text-sm sm:px-3 sm:py-1.5 min-w-0 h-8 sm:h-auto"
+                    style={{ lineHeight: 1.1 }}
+                >
+                    <span className="hidden min-[480px]:inline">Delete</span>
+                </PublicButton>
+            }
         >
             <PortalForm.Section title="Assignment Basic Info" icon={<Database size={20} className="text-college-navy dark:text-college-gold" />}>
                 <div>
@@ -178,7 +191,7 @@ const EditAssignment = () => {
                         {...register('description')}
                         rows={6}
                         placeholder="Detailed instructions for the assignment..."
-                        className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all resize-none dark:text-white dark:placeholder-gray-500"
+                        className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all resize-none dark:text-white dark:placeholder-gray-500"
                         required
                     />
                 </div>
@@ -212,7 +225,7 @@ const EditAssignment = () => {
                             onChange={handleFile}
                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                         />
-                        <div className="w-full px-4 py-3 rounded-xl border border-dashed border-gray-300 dark:border-college-gold/40 bg-gray-50 dark:bg-college-navy/50 text-gray-500 dark:text-gray-400 group-hover:bg-college-navy/5 dark:group-hover:bg-college-gold/10 group-hover:border-college-navy dark:group-hover:border-college-gold transition-all flex items-center gap-2 truncate">
+                        <div className="w-full px-4 py-3 rounded-sm border border-dashed border-gray-300 dark:border-college-gold/40 bg-gray-50 dark:bg-college-navy/50 text-gray-500 dark:text-gray-400 group-hover:bg-college-navy/5 dark:group-hover:bg-college-gold/10 group-hover:border-college-navy dark:group-hover:border-college-gold transition-all flex items-center gap-2 truncate">
                             <FileText size={18} />
                             <span className="truncate">{attachmentName || "Choose file..."}</span>
                         </div>

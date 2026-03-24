@@ -36,7 +36,7 @@ const PortalSidebar = ({
           </p>
         </div>
         <button
-          className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-white/10 text-gray-400 dark:text-white/50 hover:text-college-navy dark:hover:text-white lg:hidden transition-colors"
+          className="p-2 rounded-sm hover:bg-gray-100 dark:hover:bg-white/10 text-gray-400 dark:text-white/50 hover:text-college-navy dark:hover:text-white lg:hidden transition-colors"
           onClick={onClose}
           aria-label="Close sidebar"
         >
@@ -57,7 +57,7 @@ const PortalSidebar = ({
               to={item.to}
               onClick={() => onClose && onClose()}
               className={({ isActive }) =>
-                `group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+                `group flex items-center gap-3 px-4 py-3 rounded-sm transition-all duration-200 ${
                   isActive
                     ? "bg-college-navy/5 text-college-navy border-l-2 border-college-navy shadow-sm dark:bg-college-gold/15 dark:text-college-gold dark:border-college-gold"
                     : "text-gray-600 hover:bg-gray-50 hover:text-college-navy dark:text-white/60 dark:hover:bg-white/5 dark:hover:text-white"

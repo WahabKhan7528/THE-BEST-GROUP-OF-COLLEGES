@@ -95,7 +95,7 @@ const AllocateAdmin = () => {
   const currentAllocatedAdmins = getCurrentAllocatedAdmins();
 
   return (
-    <div className="w-full mx-auto bg-white/80 dark:bg-college-navy backdrop-blur-xl border border-white/20 dark:border-college-gold/20 p-8 rounded-2xl shadow-sm">
+    <div className="w-full mx-auto bg-white/80 dark:bg-college-navy backdrop-blur-xl border border-white/20 dark:border-college-gold/20 p-8 rounded-sm shadow-sm">
       <h1 className="text-3xl font-bold text-college-navy dark:text-white mb-2">
         Allocate Sub-Admins to {campus.name}
       </h1>
@@ -105,7 +105,7 @@ const AllocateAdmin = () => {
       </p>
 
       {/* Current Allocations Summary */}
-      <div className="bg-college-gold/5 dark:bg-college-gold/10 border border-college-gold/20 rounded-xl p-4 mb-6">
+      <div className="bg-college-gold/5 dark:bg-college-gold/10 border border-college-gold/20 rounded-sm p-4 mb-6">
         <h3 className="font-semibold text-college-navy dark:text-college-gold mb-2">
           Currently Allocated Sub-Admins
         </h3>
@@ -132,7 +132,7 @@ const AllocateAdmin = () => {
           {mockAllAdmins.map((admin) => (
             <label
               key={admin.id}
-              className={`flex items-center p-4 border rounded-xl transition-all cursor-pointer ${currentAllocations[admin.id]
+              className={`flex items-center p-4 border rounded-sm transition-all cursor-pointer ${currentAllocations[admin.id]
                 ? 'bg-college-navy/10 border-college-navy shadow-sm dark:bg-college-gold/10 dark:border-college-gold'
                 : 'bg-white dark:bg-college-navy/50 border-gray-200 dark:border-college-gold/20'
                 }`}
@@ -158,7 +158,7 @@ const AllocateAdmin = () => {
       </div>
 
       {/* Additional Info */}
-      <div className="bg-college-navy/5 dark:bg-college-gold/5 border border-college-navy/10 dark:border-college-gold/10 rounded-xl p-4 mb-6">
+      <div className="bg-college-navy/5 dark:bg-college-gold/5 border border-college-navy/10 dark:border-college-gold/10 rounded-sm p-4 mb-6">
         <p className="text-sm text-college-navy dark:text-gray-300 leading-relaxed">
           <strong className="text-college-navy dark:text-college-gold font-bold italic mr-1">Note:</strong> Sub-Admins who are allocated to this campus can
           manage all users, classes, subjects, courses, and CMS content for this

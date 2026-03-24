@@ -102,7 +102,7 @@ const Dashboard = () => {
             <Link
               to={link.path}
               key={link.title}
-              className="group relative overflow-hidden bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/30 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 hover:bg-college-navy dark:hover:bg-white/5 transition-all duration-300 flex"
+              className="group relative overflow-hidden bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/30 rounded-sm shadow-sm hover:shadow-xl hover:-translate-y-1 hover:bg-college-navy dark:hover:bg-white/5 transition-all duration-300 flex"
             >
               {/* Vertical Accent Bar */}
               <div className="w-1.5 bg-college-navy dark:bg-college-gold opacity-10 dark:opacity-20 group-hover:opacity-100 transition-opacity flex-shrink-0" />
@@ -144,7 +144,7 @@ const Dashboard = () => {
 
       {/* Enrolled Courses and Recent Material */}
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/30 rounded-3xl shadow-sm p-6 flex flex-col h-full overflow-hidden">
+        <div className="bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/30 rounded-sm shadow-sm p-6 flex flex-col h-full overflow-hidden">
           <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="text-xl font-serif font-bold text-college-navy dark:text-white">
@@ -156,7 +156,7 @@ const Dashboard = () => {
             </div>
             <Link
               to="/student/materials"
-              className="px-4 py-2 bg-college-navy/5 dark:bg-college-gold/10 text-college-navy dark:text-college-gold rounded-xl text-[10px] font-bold tracking-widest hover:bg-college-navy dark:hover:bg-college-gold hover:text-white dark:hover:text-college-navy transition-all duration-300"
+              className="px-4 py-2 bg-college-navy/5 dark:bg-college-gold/10 text-college-navy dark:text-college-gold rounded-sm text-[10px] font-bold tracking-widest hover:bg-college-navy dark:hover:bg-college-gold hover:text-white dark:hover:text-college-navy transition-all duration-300"
             >
               VIEW ALL
             </Link>
@@ -167,7 +167,7 @@ const Dashboard = () => {
               {subjects.map((subject) => (
                 <div
                   key={subject.code}
-                  className="group relative overflow-hidden bg-white dark:bg-white/5 border border-gray-200 dark:border-college-gold/10 rounded-2xl flex hover:shadow-xl hover:-translate-y-0.5 hover:bg-college-navy dark:hover:bg-white/10 transition-all duration-300 cursor-default"
+                  className="group relative overflow-hidden bg-white dark:bg-white/5 border border-gray-200 dark:border-college-gold/10 rounded-sm flex hover:shadow-xl hover:-translate-y-0.5 hover:bg-college-navy dark:hover:bg-white/10 transition-all duration-300 cursor-default"
                 >
                   {/* Vertical Accent Bar */}
                   <div className="w-1.5 bg-college-navy dark:bg-college-gold opacity-10 dark:opacity-20 group-hover:opacity-100 transition-opacity flex-shrink-0" />
@@ -187,7 +187,7 @@ const Dashboard = () => {
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-[10px] font-bold text-college-navy dark:text-college-gold bg-college-navy/5 dark:bg-college-gold/10 px-2.5 py-1.5 rounded-lg border border-college-navy/10 dark:border-college-gold/20 group-hover:bg-college-gold group-hover:text-college-navy group-hover:border-college-gold transition-all">
+                      <span className="text-[10px] font-bold text-college-navy dark:text-college-gold bg-college-navy/5 dark:bg-college-gold/10 px-2.5 py-1.5 rounded-sm border border-college-navy/10 dark:border-college-gold/20 group-hover:bg-college-gold group-hover:text-college-navy group-hover:border-college-gold transition-all">
                         {subject.credits} Cr
                       </span>
                     </div>
@@ -197,7 +197,7 @@ const Dashboard = () => {
               ))}
             </div>
           ) : (
-            <div className="flex-1 flex flex-col items-center justify-center text-center p-12 border-2 border-dashed border-gray-100 dark:border-college-gold/10 rounded-2xl">
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-12 border-2 border-dashed border-gray-100 dark:border-college-gold/10 rounded-sm">
               <p className="text-gray-400 dark:text-gray-500 font-medium text-sm">
                 No active subjects enrolled
               </p>
@@ -205,7 +205,7 @@ const Dashboard = () => {
           )}
         </div>
 
-        <div className="bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/30 rounded-3xl shadow-sm p-6 flex flex-col h-full overflow-hidden">
+        <div className="bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/30 rounded-sm shadow-sm p-6 flex flex-col h-full overflow-hidden">
           <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="text-xl font-serif font-bold text-college-navy dark:text-white">
@@ -217,7 +217,7 @@ const Dashboard = () => {
             </div>
             <Link
               to="/student/announcements"
-              className="px-4 py-2 bg-college-navy/5 dark:bg-college-gold/10 text-college-navy dark:text-college-gold rounded-xl text-[10px] font-bold tracking-widest hover:bg-college-navy dark:hover:bg-college-gold hover:text-white dark:hover:text-college-navy transition-all duration-300"
+              className="px-4 py-2 bg-college-navy/5 dark:bg-college-gold/10 text-college-navy dark:text-college-gold rounded-sm text-[10px] font-bold tracking-widest hover:bg-college-navy dark:hover:bg-college-gold hover:text-white dark:hover:text-college-navy transition-all duration-300"
             >
               SEE ALL
             </Link>
@@ -229,7 +229,7 @@ const Dashboard = () => {
                 <Link
                   key={index}
                   to="/student/announcements"
-                  className="group relative overflow-hidden bg-white dark:bg-white/5 border border-gray-200 dark:border-college-gold/10 rounded-2xl flex hover:shadow-xl hover:-translate-y-0.5 hover:bg-college-navy dark:hover:bg-white/10 transition-all duration-300"
+                  className="group relative overflow-hidden bg-white dark:bg-white/5 border border-gray-200 dark:border-college-gold/10 rounded-sm flex hover:shadow-xl hover:-translate-y-0.5 hover:bg-college-navy dark:hover:bg-white/10 transition-all duration-300"
                 >
                   {/* Vertical Accent Bar */}
                   <div className="w-1.5 bg-college-navy dark:bg-college-gold opacity-10 dark:opacity-20 group-hover:opacity-100 transition-opacity flex-shrink-0" />
@@ -254,7 +254,7 @@ const Dashboard = () => {
               ))}
             </div>
           ) : (
-            <div className="flex-1 flex flex-col items-center justify-center text-center p-12 border-2 border-dashed border-gray-100 dark:border-college-gold/10 rounded-2xl">
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-12 border-2 border-dashed border-gray-100 dark:border-college-gold/10 rounded-sm">
               <p className="text-gray-400 dark:text-gray-500 font-medium text-sm">
                 No new announcements to display
               </p>

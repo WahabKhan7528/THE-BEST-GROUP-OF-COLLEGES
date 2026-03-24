@@ -1,7 +1,7 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import PublicButton from "../../../components/shared/PublicButton";
-import Table from "../../../components/admin/Table";
+import Table from "../../../components/portal-shared/Table";
 import { useAdminContext } from "../../../context/AdminContext";
 import { useToast } from "../../../context/ToastContext";
 import { useConfirm } from "../../../context/ConfirmContext";
@@ -112,7 +112,7 @@ const CampusAdminsList = () => {
             </div>
 
             {/* Search */}
-            <div className="bg-white/80 dark:bg-college-navy/60 backdrop-blur-xl border border-white/20 dark:border-college-gold/20 p-4 rounded-2xl shadow-sm">
+            <div className="bg-white/80 dark:bg-college-navy/60 backdrop-blur-xl border border-white/20 dark:border-college-gold/20 p-4 rounded-sm shadow-sm">
                 <div className="relative max-w-md">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <input
@@ -120,7 +120,7 @@ const CampusAdminsList = () => {
                         placeholder="Search admins..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 bg-white dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm dark:text-white"
+                        className="w-full pl-10 pr-4 py-2 bg-white dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm dark:text-white"
                     />
                 </div>
             </div>
@@ -133,9 +133,9 @@ const CampusAdminsList = () => {
                     actionButtons={actionButtons}
                 />
             ) : (
-                <div className="bg-white/50 dark:bg-college-navy/50 backdrop-blur rounded-2xl border border-dashed border-gray-300 dark:border-college-gold/20 p-12 text-center transition-all">
-                    <Users className="w-12 h-12 text-gray-300 dark:text-college-gold/30 mx-auto mb-3" />
-                    <p className="text-gray-500 dark:text-gray-400 font-medium">No admins assigned to this campus.</p>
+                <div className="flex flex-col items-center justify-center py-12 rounded-sm border border-dashed border-gray-300 dark:border-college-gold/20">
+                    <h3 className="text-lg font-medium text-college-navy dark:text-white">No admins found</h3>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 max-w-sm text-center">No admins assigned to this campus.</p>
                 </div>
             )}
         </div>

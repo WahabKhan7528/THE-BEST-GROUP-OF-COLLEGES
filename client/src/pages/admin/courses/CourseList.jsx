@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useAdminContext } from "../../../context/AdminContext";
 import { useToast } from "../../../context/ToastContext";
 import { useConfirm } from "../../../context/ConfirmContext";
-import Table from "../../../components/admin/Table";
+import Table from "../../../components/portal-shared/Table";
 import PublicButton from "../../../components/shared/PublicButton";
 import {
   Plus,
@@ -72,7 +72,7 @@ const CourseList = () => {
       label: "Course Details",
       render: (row) => (
         <div className="flex items-start gap-3">
-          <div className="p-2 bg-college-navy/10 text-college-navy dark:bg-college-gold/10 dark:text-college-gold rounded-lg">
+          <div className="p-2 bg-college-navy/10 text-college-navy dark:bg-college-gold/10 dark:text-college-gold rounded-sm">
             <BookOpen className="w-5 h-5" />
           </div>
           <div>
@@ -140,7 +140,6 @@ const CourseList = () => {
           variant={isDarkMode ? "secondary" : "primary"}
           shape="slanted"
           size="md"
-          className="shadow-md transition-all duration-200"
           icon={Plus}
         >
           Add New Course
@@ -148,7 +147,7 @@ const CourseList = () => {
       </div>
 
       {/* Filters & Actions */}
-      <div className="bg-white/80 dark:bg-college-navy backdrop-blur-xl border border-white/20 dark:border-college-gold/20 p-4 rounded-2xl shadow-sm flex flex-col md:flex-row gap-4 justify-between">
+      <div className="bg-white/80 dark:bg-college-navy backdrop-blur-xl border border-white/20 dark:border-college-gold/20 p-4 rounded-sm shadow-sm flex flex-col md:flex-row gap-4 justify-between">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
           <input
@@ -156,7 +155,7 @@ const CourseList = () => {
             placeholder="Search courses by name..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm dark:text-white dark:placeholder-gray-400"
+            className="w-full pl-10 pr-4 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm dark:text-white dark:placeholder-gray-400"
           />
         </div>
 
@@ -166,7 +165,7 @@ const CourseList = () => {
             <select
               value={selectedCampus}
               onChange={(e) => setSelectedCampus(e.target.value)}
-              className="w-full pl-10 pr-10 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none cursor-pointer text-gray-700 dark:text-gray-300"
+              className="w-full pl-10 pr-10 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm text-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none cursor-pointer text-gray-700 dark:text-gray-300"
             >
               <option value="">All Campuses</option>
               {campuses.map((campus) => (
@@ -206,12 +205,9 @@ const CourseList = () => {
           ]}
         />
       ) : (
-        <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-          <div className="w-16 h-16 bg-college-navy/5 dark:bg-college-gold/10 rounded-full flex items-center justify-center mb-4 transition-transform hover:scale-110">
-            <BookOpen className="w-8 h-8 text-college-navy/30 dark:text-college-gold/40" />
-          </div>
+        <div className="flex flex-col items-center justify-center py-12 rounded-sm border border-dashed border-gray-300 dark:border-college-gold/20">
           <h3 className="text-lg font-medium text-college-navy dark:text-white">No courses found</h3>
-          <p className="text-gray-500 dark:text-gray-400 max-w-sm mt-1">
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 mb-4 max-w-sm text-center">
             There are no courses matching your search criteria. Try adjusting your filters or add a new course.
           </p>
         </div>

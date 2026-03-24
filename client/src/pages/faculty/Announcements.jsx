@@ -14,6 +14,7 @@ import PublicButton from "../../components/shared/PublicButton";
 const announcementsByCampus = {
   main: [
     {
+      id: "ann-1",
       title: "Mid-term exam instructions",
       description:
         "Bring university ID, only blue/black pens allowed. Calculators permitted for Section B.",
@@ -22,6 +23,7 @@ const announcementsByCampus = {
       attachment: "#",
     },
     {
+      id: "ann-2",
       title: "Project milestone feedback posted",
       description:
         "Feedback shared on the portal; review comments and update your design docs.",
@@ -29,6 +31,7 @@ const announcementsByCampus = {
       classSection: "BSCS - B",
     },
     {
+      id: "ann-3",
       title: "Guest lecture next week",
       description:
         "Industry talk on distributed systems, Tuesday 11 AM, Auditorium 2.",
@@ -38,6 +41,7 @@ const announcementsByCampus = {
   ],
   law: [
     {
+      id: "ann-4",
       title: "Moot court finals schedule",
       description:
         "Finals will be held in the Moot Court Hall, Sept 25-27. Register by Sept 20.",
@@ -45,6 +49,7 @@ const announcementsByCampus = {
       classSection: "LLB - A",
     },
     {
+      id: "ann-5",
       title: "Law library extended hours",
       description:
         "The law library will remain open until 10 PM during exam season.",
@@ -54,6 +59,7 @@ const announcementsByCampus = {
   ],
   hala: [
     {
+      id: "ann-6",
       title: "Business plan competition",
       description:
         "Register your team for the annual business plan competition by Sept 20.",
@@ -84,6 +90,7 @@ const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
 
   const onSubmitForm = (data) => {
     const newAnnouncement = {
+      id: `ann-${Date.now()}`,
       title: data.title,
       description: data.description,
       attachment: data.attachment || fileLink,
@@ -126,7 +133,7 @@ const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
       onClick={onClose}
     >
       <div
-        className="bg-white dark:bg-college-navy rounded-xl md:rounded-2xl shadow-xl w-full max-w-lg p-5 md:p-6 space-y-4 border border-gray-200 dark:border-college-gold/20"
+        className="bg-white dark:bg-college-navy rounded-sm md:rounded-sm shadow-xl w-full max-w-lg p-5 md:p-6 space-y-4 border border-gray-200 dark:border-college-gold/20"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">
@@ -151,7 +158,7 @@ const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
             </label>
             <input
               type="text"
-              className="w-full px-4 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold outline-none dark:text-white"
+              className="w-full px-4 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold outline-none dark:text-white"
               placeholder="e.g. Quiz on Monday"
               {...register("title")}
             />
@@ -168,7 +175,7 @@ const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
             </label>
             <textarea
               rows={4}
-              className="w-full px-4 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold outline-none resize-none dark:text-white"
+              className="w-full px-4 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold outline-none resize-none dark:text-white"
               placeholder="Details about the announcement..."
               {...register("description")}
             />
@@ -190,7 +197,7 @@ const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
                   onChange={handleFileChange}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                 />
-                <div className="w-full px-4 py-2.5 rounded-xl border border-dashed border-gray-300 dark:border-college-gold/40 bg-gray-50 dark:bg-college-navy/50 text-gray-500 dark:text-gray-400 group-hover/file:bg-college-navy/5 dark:group-hover/file:bg-college-gold/10 group-hover/file:border-college-navy dark:group-hover/file:border-college-gold transition-all flex items-center justify-center gap-2 truncate text-xs text-center">
+                <div className="w-full px-4 py-2.5 rounded-sm border border-dashed border-gray-300 dark:border-college-gold/40 bg-gray-50 dark:bg-college-navy/50 text-gray-500 dark:text-gray-400 group-hover/file:bg-college-navy/5 dark:group-hover/file:bg-college-gold/10 group-hover/file:border-college-navy dark:group-hover/file:border-college-gold transition-all flex items-center justify-center gap-2 truncate text-xs text-center">
                   <Upload
                     size={14}
                     className="text-college-navy dark:text-college-gold shrink-0"
@@ -208,7 +215,7 @@ const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
               </label>
               <input
                 type="url"
-                className="w-full px-4 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold outline-none dark:text-white text-sm"
+                className="w-full px-4 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold outline-none dark:text-white text-sm"
                 placeholder="Google Drive / URL"
                 {...register("attachment")}
               />
@@ -225,12 +232,12 @@ const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
               Target Classes
             </label>
             <div
-              className={`grid grid-cols-2 gap-2 max-h-40 overflow-y-auto pr-2 p-1 rounded-xl transition-all ${errors.classes ? "ring-2 ring-red-500/20 border-red-500/50" : ""}`}
+              className={`grid grid-cols-2 gap-2 max-h-40 overflow-y-auto pr-2 p-1 rounded-sm transition-all ${errors.classes ? "ring-2 ring-red-500/20 border-red-500/50" : ""}`}
             >
               {classes.map((cls) => (
                 <label
                   key={cls.id}
-                  className={`flex items-center p-2 rounded-lg border cursor-pointer transition-all ${selectedClasses.includes(cls.id) ? "bg-college-navy/5 dark:bg-college-gold/10 border-college-navy dark:border-college-gold text-college-navy dark:text-college-gold" : "hover:bg-gray-50 dark:hover:bg-white/5 border-gray-200 dark:border-college-gold/20 text-gray-700 dark:text-gray-300"}`}
+                  className={`flex items-center p-2 rounded-sm border cursor-pointer transition-all ${selectedClasses.includes(cls.id) ? "bg-college-navy/5 dark:bg-college-gold/10 border-college-navy dark:border-college-gold text-college-navy dark:text-college-gold" : "hover:bg-gray-50 dark:hover:bg-white/5 border-gray-200 dark:border-college-gold/20 text-gray-700 dark:text-gray-300"}`}
                 >
                   <input
                     type="checkbox"
@@ -303,6 +310,15 @@ const Announcements = () => {
 
   const handlePost = (newAnnouncement) => {
     const updatedAnnouncements = [newAnnouncement, ...announcements];
+    saveAnnouncements(updatedAnnouncements);
+  };
+
+  const handleDelete = (id) => {
+    const updatedAnnouncements = announcements.filter((a) => a.id !== id);
+    saveAnnouncements(updatedAnnouncements);
+  };
+
+  const saveAnnouncements = (updatedAnnouncements) => {
     setAnnouncements(updatedAnnouncements);
 
     // Update localStorage
@@ -351,13 +367,14 @@ const Announcements = () => {
         <div className="space-y-4">
           {announcements.map((announcement) => (
             <AnnouncementCard
-              key={announcement.title}
+              key={announcement.id || announcement.title}
               announcement={announcement}
+              onDelete={handleDelete}
             />
           ))}
         </div>
       ) : (
-        <div className="bg-white/60 dark:bg-college-navy/40 backdrop-blur-sm border border-dashed border-gray-300 dark:border-college-gold/30 rounded-3xl p-12 text-center">
+        <div className="bg-white/60 dark:bg-college-navy/40 backdrop-blur-sm border border-dashed border-gray-300 dark:border-college-gold/30 rounded-sm p-12 text-center">
           <div className="w-16 h-16 bg-college-navy/5 dark:bg-college-gold/10 rounded-full flex items-center justify-center mx-auto mb-4 text-college-navy dark:text-college-gold">
             <Megaphone size={30} />
           </div>
@@ -370,7 +387,7 @@ const Announcements = () => {
           </p>
           <button
             onClick={() => setIsPosting(true)}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-college-navy/80 border border-gray-200 dark:border-college-gold/30 text-college-navy dark:text-white rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-college-navy transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-college-navy/80 border border-gray-200 dark:border-college-gold/30 text-college-navy dark:text-white rounded-sm font-semibold hover:bg-gray-50 dark:hover:bg-college-navy transition-colors"
           >
             <Plus size={18} />
             Post Announcement

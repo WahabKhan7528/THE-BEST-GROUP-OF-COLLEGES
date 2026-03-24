@@ -1,13 +1,13 @@
-import { useParams, Link } from 'react-router-dom';
-import SubmissionCard from '../../components/portal-shared/SubmissionCard';
-import PortalPageHeader from '../../components/portal-shared/PortalPageHeader';
-import Badge from '../../components/shared/Badge';
-import { useFacultyContext } from '../../context/FacultyContext';
-import { useToast } from '../../context/ToastContext';
-import { ArrowLeft, CheckCircle } from 'lucide-react';
+import { useParams, Link } from "react-router-dom";
+import SubmissionCard from "../../components/portal-shared/SubmissionCard";
+import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
+import Badge from "../../components/shared/Badge";
+import { useFacultyContext } from "../../context/FacultyContext";
+import { useToast } from "../../context/ToastContext";
+import { ArrowLeft, CheckCircle } from "lucide-react";
 
 import { mockSubmissions } from "../../data/facultyPortalData";
-import PublicButton from '../../components/shared/PublicButton';
+import PublicButton from "../../components/shared/PublicButton";
 
 const Submissions = () => {
   const { assignmentId } = useParams();
@@ -18,7 +18,7 @@ const Submissions = () => {
     <div className="space-y-6 pb-10">
       <PortalPageHeader
         badge={
-          <div className="whitespace-nowrap flex items-center gap-2">
+          <div className="flex items-center gap-2 max-w-full">
             <Badge variant={isDarkMode ? "gold" : "navy"}>
               BSCS - A • Operating Systems
             </Badge>
@@ -37,7 +37,7 @@ const Submissions = () => {
               Assignments
             </PublicButton>
             <PublicButton
-              onClick={() => toast.success('Grading process finalized')}
+              onClick={() => toast.success("Grading process finalized")}
               variant="secondary"
               shape="slanted"
               className="w-full"

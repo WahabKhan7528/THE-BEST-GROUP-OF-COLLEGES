@@ -23,7 +23,7 @@ const EditGalleryImage = () => {
 
     const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({
         resolver: zodResolver(gallerySchema),
-        defaultValues: { title: "", album: "", tags: "", description: "", date: "" }
+        defaultValues: { title: "", category: "", tags: "", description: "", date: "" }
     });
 
     useEffect(() => {
@@ -31,7 +31,7 @@ const EditGalleryImage = () => {
         if (foundImage) {
             reset({
                 title: foundImage.title,
-                album: foundImage.album,
+                category: foundImage.category,
                 tags: "",
                 description: foundImage.description || "",
                 date: foundImage.date
@@ -113,7 +113,7 @@ const EditGalleryImage = () => {
                         onDragLeave={handleDragLeave}
                         onClick={() => fileInputRef.current?.click()}
                         className={`
-              relative aspect-square md:aspect-[4/3] rounded-2xl border-2 border-dashed transition-all duration-200 flex flex-col items-center justify-center cursor-pointer overflow-hidden
+              relative aspect-square md:aspect-[4/3] rounded-sm border-2 border-dashed transition-all duration-200 flex flex-col items-center justify-center cursor-pointer overflow-hidden
               ${isDragging
                                 ? "bg-college-navy/5 border-college-navy dark:bg-college-gold/10 dark:border-college-gold shadow-sm"
                                 : preview
@@ -141,7 +141,7 @@ const EditGalleryImage = () => {
                                                 e.stopPropagation();
                                                 fileInputRef.current?.click();
                                             }}
-                                            className="px-4 py-2 bg-white/20 backdrop-blur-md rounded-lg text-white hover:bg-white/40 transition-colors text-sm font-medium"
+                                            className="px-4 py-2 bg-white/20 backdrop-blur-md rounded-sm text-white hover:bg-white/40 transition-colors text-sm font-medium"
                                         >
                                             Change
                                         </button>
@@ -162,8 +162,8 @@ const EditGalleryImage = () => {
                     </div>
 
                     {file && (
-                        <div className="flex items-center gap-3 p-3 bg-white/50 dark:bg-college-navy/50 border border-white/20 dark:border-college-gold/20 rounded-xl shadow-sm">
-                            <div className="w-10 h-10 rounded-lg bg-college-gold/10 flex items-center justify-center text-college-gold">
+                        <div className="flex items-center gap-3 p-3 bg-white/50 dark:bg-college-navy/50 border border-white/20 dark:border-college-gold/20 rounded-sm shadow-sm">
+                            <div className="w-10 h-10 rounded-sm bg-college-gold/10 flex items-center justify-center text-college-gold">
                                 <ImageIcon className="w-5 h-5" />
                             </div>
                             <div className="flex-1 min-w-0">
@@ -190,14 +190,14 @@ const EditGalleryImage = () => {
 
                         <div className="col-span-1 md:col-span-2">
                             <label className="text-xs md:text-sm font-medium text-college-navy dark:text-gray-200">
-                                Album Collection <span className="text-red-500">*</span>
+                                Image Category <span className="text-red-500">*</span>
                             </label>
                             <select
-                                {...register("album")}
-                                className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-college-gold/20 bg-white dark:bg-college-navy/50 dark:text-white focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm md:text-base mt-2"
+                                {...register("category")}
+                                className="w-full px-4 py-2.5 rounded-sm border border-gray-200 dark:border-college-gold/20 bg-white dark:bg-college-navy/50 dark:text-white focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm md:text-base mt-2"
                                 required
                             >
-                                <option value="" disabled>Select album</option>
+                                <option value="" disabled>Select category</option>
                                 <option value="Campus Life">Campus Life</option>
                                 <option value="Events">Events</option>
                                 <option value="Facilities">Facilities</option>
@@ -222,7 +222,7 @@ const EditGalleryImage = () => {
                                 {...register("description")}
                                 placeholder="Write a short description..."
                                 rows="3"
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-college-gold/20 bg-white dark:bg-college-navy/50 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all resize-none text-sm md:text-base shadow-sm"
+                                className="w-full px-4 py-3 rounded-sm border border-gray-200 dark:border-college-gold/20 bg-white dark:bg-college-navy/50 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all resize-none text-sm md:text-base shadow-sm"
                             />
                         </div>
 

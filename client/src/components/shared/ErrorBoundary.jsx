@@ -40,14 +40,14 @@ class ErrorBoundary extends React.Component {
             <div className="flex items-center justify-center gap-3">
               <button
                 onClick={this.handleReset}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-college-navy dark:bg-college-gold text-white dark:text-college-navy font-semibold hover:opacity-90 transition-all"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-sm bg-college-navy dark:bg-college-gold text-white dark:text-college-navy font-semibold hover:opacity-90 transition-all"
               >
                 <RefreshCw size={16} />
                 Try Again
               </button>
               <a
                 href="/"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-gray-200 dark:border-college-gold/20 text-gray-700 dark:text-gray-300 font-semibold hover:bg-gray-50 dark:hover:bg-white/5 transition-all"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-sm border border-gray-200 dark:border-college-gold/20 text-gray-700 dark:text-gray-300 font-semibold hover:bg-gray-50 dark:hover:bg-white/5 transition-all"
               >
                 <Home size={16} />
                 Home

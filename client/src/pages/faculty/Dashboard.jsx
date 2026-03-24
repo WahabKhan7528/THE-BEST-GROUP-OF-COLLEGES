@@ -92,7 +92,7 @@ const Dashboard = () => {
             <Link
               key={action.title}
               to={action.path}
-              className="group relative overflow-hidden bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/20 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 hover:bg-college-navy dark:hover:bg-white/5 transition-all duration-300 flex"
+              className="group relative overflow-hidden bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/20 rounded-sm shadow-sm hover:shadow-xl hover:-translate-y-1 hover:bg-college-navy dark:hover:bg-white/5 transition-all duration-300 flex"
             >
               {/* Vertical Accent Bar */}
               <div className="w-1.5 bg-college-navy dark:bg-college-gold opacity-10 dark:opacity-20 group-hover:opacity-100 transition-opacity flex-shrink-0" />
@@ -131,7 +131,7 @@ const Dashboard = () => {
       </div>
 
       {/* Announcements Section */}
-      <section className="bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/30 rounded-3xl shadow-sm p-6 md:p-8">
+      <section className="bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/30 rounded-sm shadow-sm p-6 md:p-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
           <div>
             <h2 className="text-xl font-bold text-college-navy dark:text-white">
@@ -143,7 +143,7 @@ const Dashboard = () => {
           </div>
           <Link
             to="/faculty/announcements"
-            className="flex items-center justify-center gap-2 text-sm font-semibold text-college-navy dark:text-college-gold hover:text-white dark:hover:text-white hover:bg-college-navy dark:hover:bg-white/5 px-4 py-2 rounded-xl transition-all border border-transparent hover:border-college-navy/10 dark:hover:border-college-gold/30"
+            className="flex items-center justify-center gap-2 text-sm font-semibold text-college-navy dark:text-college-gold hover:text-white dark:hover:text-white hover:bg-college-navy dark:hover:bg-white/5 px-4 py-2 rounded-sm transition-all border border-transparent hover:border-college-navy/10 dark:hover:border-college-gold/30"
           >
             View All
             <ArrowRight size={16} />
@@ -154,7 +154,7 @@ const Dashboard = () => {
           {recentAnnouncements.map((item, idx) => (
             <div
               key={idx}
-              className="group relative bg-white dark:bg-college-navy border border-gray-100 dark:border-college-gold/20 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 hover:bg-college-navy dark:hover:bg-white/5 transition-all duration-300 flex overflow-hidden"
+              className="group relative bg-white dark:bg-college-navy border border-gray-100 dark:border-college-gold/20 rounded-sm shadow-sm hover:shadow-xl hover:-translate-y-1 hover:bg-college-navy dark:hover:bg-white/5 transition-all duration-300 flex overflow-hidden"
             >
               {/* Vertical Accent Bar */}
               <div className="w-1 bg-college-navy dark:bg-college-gold opacity-20 dark:opacity-30 group-hover:opacity-100 transition-opacity flex-shrink-0" />
@@ -181,7 +181,7 @@ const Dashboard = () => {
             </div>
           ))}
 
-          <button className="group relative flex flex-col items-center justify-center gap-2 p-5 rounded-2xl border-2 border-dashed border-gray-200 dark:border-college-gold/20 bg-gray-50/50 dark:bg-white/5 text-sm font-bold text-gray-400 dark:text-gray-500 hover:border-college-navy dark:hover:border-college-gold hover:text-white dark:hover:text-college-gold hover:bg-college-navy dark:hover:bg-college-gold/5 transition-all duration-300 min-h-[120px]">
+          <button className="group relative flex flex-col items-center justify-center gap-2 p-5 rounded-sm border-2 border-dashed border-gray-200 dark:border-college-gold/20 bg-gray-50/50 dark:bg-white/5 text-sm font-bold text-gray-400 dark:text-gray-500 hover:border-college-navy dark:hover:border-college-gold hover:text-white dark:hover:text-college-gold hover:bg-college-navy dark:hover:bg-college-gold/5 transition-all duration-300 min-h-[120px]">
             <span className="text-2xl font-light group-hover:scale-125 transition-transform">+</span>
             <span className="tracking-widest uppercase text-[11px]">New Broadcast</span>
           </button>

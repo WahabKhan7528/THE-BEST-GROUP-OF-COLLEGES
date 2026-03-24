@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Table from "../../../../components/admin/Table";
+import Table from "../../../../components/portal-shared/Table";
 import PublicButton from "../../../../components/shared/PublicButton";
 import { useAdminContext } from "../../../../context/AdminContext";
 import { useToast } from "../../../../context/ToastContext";
@@ -86,7 +86,7 @@ const NewsList = () => {
       label: "Title & Category",
       render: (row) => (
         <div className="flex items-start gap-3 max-w-sm">
-          <div className={`p-2 rounded-lg ${row.type === 'Event'
+          <div className={`p-2 rounded-sm ${row.type === 'Event'
             ? 'bg-college-navy/10 text-college-navy dark:bg-college-gold/10 dark:text-college-gold'
             : 'bg-white border border-gray-200 text-college-navy dark:bg-college-navy dark:border-college-gold/20 dark:text-college-gold'}`}>
             {row.type === 'Event' ? <Calendar className="w-5 h-5" /> : <Newspaper className="w-5 h-5" />}
@@ -153,15 +153,15 @@ const NewsList = () => {
       </div>
 
       {/* Filters & Search */}
-      <div className="bg-white/80 dark:bg-college-navy backdrop-blur-xl border border-white/20 dark:border-college-gold/20 p-4 rounded-2xl shadow-sm">
+      <div className="bg-white/80 dark:bg-college-navy backdrop-blur-xl border border-white/20 dark:border-college-gold/20 p-4 rounded-sm shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           {/* Filter Tabs */}
-          <div className="flex p-1 bg-gray-100/80 dark:bg-college-navy/50 border border-transparent dark:border-college-gold/20 rounded-xl w-fit">
+          <div className="flex p-1 bg-gray-100/80 dark:bg-college-navy/50 border border-transparent dark:border-college-gold/20 rounded-sm w-fit">
             {["all", "news", "event"].map((filter) => (
               <button
                 key={filter}
                 onClick={() => setActiveFilter(filter)}
-                className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 capitalize ${activeFilter === filter
+                className={`px-4 py-2 text-sm font-medium rounded-sm transition-all duration-200 capitalize ${activeFilter === filter
                   ? "bg-white text-college-navy shadow-sm dark:bg-college-navy dark:text-white dark:border dark:border-college-gold/30"
                   : "text-gray-500 hover:text-gray-700 hover:bg-gray-200/50 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:bg-college-navy/80"
                   }`}
@@ -179,7 +179,7 @@ const NewsList = () => {
               placeholder="Search posts..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm dark:text-white dark:placeholder-gray-400"
+              className="w-full pl-10 pr-4 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm dark:text-white dark:placeholder-gray-400"
             />
           </div>
         </div>
@@ -209,10 +209,7 @@ const NewsList = () => {
           ]}
         />
       ) : (
-        <div className="flex flex-col items-center justify-center py-12 bg-white/50 dark:bg-college-navy/50 backdrop-blur-sm rounded-2xl border border-dashed border-gray-300 dark:border-college-gold/20">
-          <div className="w-16 h-16 bg-gray-50 dark:bg-college-gold/10 rounded-full flex items-center justify-center mb-4">
-            <Newspaper className="w-8 h-8 text-gray-400 dark:text-college-gold/40" />
-          </div>
+        <div className="flex flex-col items-center justify-center py-12 rounded-sm border border-dashed border-gray-300 dark:border-college-gold/20">
           <h3 className="text-lg font-medium text-college-navy dark:text-white">No posts found</h3>
           <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 mb-4 max-w-sm text-center">
             {searchQuery || activeFilter !== "all"

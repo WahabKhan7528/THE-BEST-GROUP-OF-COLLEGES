@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useAdminContext } from "../../../context/AdminContext";
 import { useToast } from "../../../context/ToastContext";
 import { useConfirm } from "../../../context/ConfirmContext";
-import Table from "../../../components/admin/Table";
+import Table from "../../../components/portal-shared/Table";
 import PublicButton from "../../../components/shared/PublicButton";
 import {
   Plus,
@@ -144,7 +144,7 @@ const ClassesList = () => {
       </div>
 
       {/* Filters Section */}
-      <div className="bg-white/80 dark:bg-college-navy backdrop-blur-xl border border-white/20 dark:border-college-gold/20 p-4 rounded-2xl shadow-sm space-y-4">
+      <div className="bg-white/80 dark:bg-college-navy backdrop-blur-xl border border-white/20 dark:border-college-gold/20 p-4 rounded-sm shadow-sm space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Search Input */}
           <div className="relative col-span-1 lg:col-span-2">
@@ -154,7 +154,7 @@ const ClassesList = () => {
               placeholder="Search classes, subjects, or faculty..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm dark:text-white dark:placeholder-gray-400"
+              className="w-full pl-10 pr-4 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm dark:text-white dark:placeholder-gray-400"
             />
           </div>
 
@@ -165,7 +165,7 @@ const ClassesList = () => {
               <select
                 value={selectedCampus}
                 onChange={(e) => setSelectedCampus(e.target.value)}
-                className="w-full pl-10 pr-8 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm appearance-none cursor-pointer dark:text-gray-300"
+                className="w-full pl-10 pr-8 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm appearance-none cursor-pointer dark:text-gray-300"
               >
                 <option value="">All Campuses</option>
                 {campuses.map((campus) => (
@@ -203,22 +203,19 @@ const ClassesList = () => {
           ]}
         />
       ) : (
-        <div className="flex flex-col items-center justify-center py-12 bg-white/50 backdrop-blur-sm rounded-2xl border border-dashed border-gray-300">
-          <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
-            <BookOpen className="w-8 h-8 text-gray-400" />
-          </div>
-          <h3 className="text-lg font-medium text-college-navy">No classes found</h3>
-          <p className="text-gray-500 text-sm mt-1 mb-4 max-w-sm text-center">
+        <div className="flex flex-col items-center justify-center py-12 rounded-sm border border-dashed border-gray-300 dark:border-college-gold/20">
+          <h3 className="text-lg font-medium text-college-navy dark:text-white">No classes found</h3>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 mb-4 max-w-sm text-center">
             {searchQuery || selectedCampus
               ? "Try adjusting your search or filters to find what you're looking for."
               : "Get started by creating a new class for your academic schedule."}
           </p>
           {(searchQuery || selectedCampus) && (
             <button
-              onClick={() => { setSearchQuery(""); setSelectedCampus(""); }}
-              className="text-college-navy dark:text-college-gold text-sm font-medium hover:underline"
+               onClick={() => { setSearchQuery(""); setSelectedCampus(""); }}
+               className="text-college-navy dark:text-college-gold text-sm font-medium hover:underline"
             >
-              Clear all filters
+               Clear all filters
             </button>
           )}
         </div>

@@ -19,7 +19,7 @@ const CampusFilter = () => {
       <select
         value={selectedCampusFilter}
         onChange={(e) => setSelectedCampusFilter(e.target.value)}
-        className="pl-2 sm:pl-3 pr-6 sm:pr-8 py-1.5 sm:py-2 border border-transparent dark:border-college-gold/40 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-college-navy/30 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold bg-white dark:bg-college-navy text-college-navy dark:text-white w-32 sm:w-auto overflow-hidden text-ellipsis whitespace-nowrap shadow-sm"
+        className="pl-2 sm:pl-3 pr-6 sm:pr-8 py-1.5 sm:py-2 border border-transparent dark:border-college-gold/40 rounded-sm text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-college-navy/30 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold bg-white dark:bg-college-navy text-college-navy dark:text-white w-32 sm:w-auto overflow-hidden text-ellipsis whitespace-nowrap shadow-sm"
       >
         <option value="all">All Campuses (Unified)</option>
         {campuses.map((c) => (

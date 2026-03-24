@@ -87,6 +87,7 @@ const EditAssignment = lazy(() => import("./pages/faculty/EditAssignment"));
 const FacultySubmissions = lazy(() => import("./pages/faculty/Submissions"));
 const FacultyMaterials = lazy(() => import("./pages/faculty/Materials"));
 const UploadMaterial = lazy(() => import("./pages/faculty/UploadMaterial"));
+const EditMaterial = lazy(() => import("./pages/faculty/EditMaterial"));
 const FacultyResults = lazy(() => import("./pages/faculty/Results"));
 const FacultyAnnouncements = lazy(
   () => import("./pages/faculty/Announcements"),
@@ -212,6 +213,7 @@ function App() {
                 />
                 <Route path="materials" element={<FacultyMaterials />} />
                 <Route path="materials/upload" element={<UploadMaterial />} />
+                <Route path="materials/edit/:id" element={<EditMaterial />} />
                 <Route path="results" element={<FacultyResults />} />
                 <Route
                   path="announcements"

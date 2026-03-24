@@ -1,11 +1,11 @@
+import { useState, useMemo } from "react";
 import { useFacultyContext } from "../../context/FacultyContext";
 import AssignmentCard from "../../components/portal-shared/AssignmentCard";
 import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
-import { PlusCircle, Search, Filter, BookOpen } from "lucide-react";
+import { PlusCircle, Search, BookOpen } from "lucide-react";
 import PublicButton from "../../components/shared/PublicButton";
 import FormInput from "../../components/shared/FormInput";
-import Button from "../../components/shared/Button";
 import Card from "../../components/shared/Card";
 
 
@@ -89,7 +89,18 @@ const campusNames = {
 const Assignments = () => {
   const { getCurrentCampus, isDarkMode } = useFacultyContext();
   const campus = getCurrentCampus();
-  const assignments = assignmentsByCampus[campus] || [];
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const assignments = useMemo(() => {
+    const rawData = assignmentsByCampus[campus] || [];
+    if (!searchTerm.trim()) return rawData;
+    
+    return rawData.filter((a) => 
+      a.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      a.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      a.classSection.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [campus, searchTerm]);
 
   return (
     <div className="space-y-6 pb-10">
@@ -114,22 +125,18 @@ const Assignments = () => {
         }
       />
 
-      {/* Filters and Search */}
+      {/* Search */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 z-10" size={20} />
           <FormInput
-            placeholder="Search assignments..."
-            className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-200 dark:border-college-gold/20 bg-white/50 dark:bg-college-navy/50 focus:bg-white dark:focus:bg-college-navy focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all outline-none dark:text-white"
+            value={searchTerm}
+            onChange={setSearchTerm}
+            label={""}
+            placeholder="Search assignments by title, subject or class..."
+            className="w-full pl-12 pr-4 py-3.5 rounded-sm border border-gray-200 dark:border-college-gold/20 bg-white/50 dark:bg-college-navy/50 focus:bg-white dark:focus:bg-college-navy focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all outline-none dark:text-white"
           />
         </div>
-        <Button
-          variant="outline"
-          className="gap-2 bg-white/50 dark:bg-college-navy/50 border-gray-200 dark:border-college-gold/20 text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-college-navy"
-        >
-          <Filter size={18} />
-          Filter
-        </Button>
       </div>
 
       {assignments.length > 0 ? (
@@ -147,10 +154,14 @@ const Assignments = () => {
           <p className="text-gray-500 dark:text-gray-400 mt-2 mb-6 max-w-sm mx-auto">
             You haven't created any assignments for {campusNames[campus]} yet. Get started by creating your first assignment.
           </p>
-          <Button to="/faculty/assignments/create" variant="outline">
+          <PublicButton
+            to="/faculty/assignments/create"
+            variant="secondary"
+            className="px-6"
+          >
             <PlusCircle size={18} />
             Create Assignment
-          </Button>
+          </PublicButton>
         </Card>
       )}
     </div>

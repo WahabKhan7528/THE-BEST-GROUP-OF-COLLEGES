@@ -13,6 +13,8 @@ const statusStyles = {
 const AssignmentCard = ({ assignment, role = 'faculty' }) => {
     const [note, setNote] = useState('');
     const [fileName, setFileName] = useState('');
+    const [localStatus, setLocalStatus] = useState(assignment.status);
+    const [isEditing, setIsEditing] = useState(false);
 
     const handleFileChange = (e) => {
         const file = e.target.files?.[0];
@@ -20,9 +22,17 @@ const AssignmentCard = ({ assignment, role = 'faculty' }) => {
     };
 
     if (role === 'student') {
-        const badge = statusStyles[assignment.status] || 'bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-100 dark:border-gray-700';
+        const displayStatus = isEditing ? 'Editing' : localStatus;
+        const badge = statusStyles[displayStatus] || statusStyles[assignment.status] || 'bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-100 dark:border-gray-700';
+        
+        const isSubmitted = localStatus === 'Submitted' && !isEditing;
+
+        const handleSubmit = () => {
+            setLocalStatus('Submitted');
+            setIsEditing(false);
+        };
         return (
-            <Card hover={false} className="p-4 md:p-5 border border-transparent dark:border-college-gold/60 shadow-sm hover:shadow-md transition-all duration-300 space-y-4">
+            <Card hover={false} className="p-4 md:p-5 border border-gray-200 dark:border-college-gold/50 shadow-sm hover:shadow-md transition-all duration-300 space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                     <div className="flex-1">
                         <p className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
@@ -42,41 +52,64 @@ const AssignmentCard = ({ assignment, role = 'faculty' }) => {
                             </a>
                         </div>
                     </div>
-                    <span className={`px-2 md:px-3 py-1 rounded-full text-[10px] md:text-xs font-semibold border self-start ${badge}`}>
-                        {assignment.status}
+                    <span className={`px-2 md:px-3 py-1 rounded-full text-[10px] md:text-xs font-semibold border self-start whitespace-nowrap ${badge}`}>
+                        {displayStatus}
                     </span>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <label className="flex flex-col gap-2 text-xs md:text-sm text-gray-700 dark:text-gray-300">
-                        Upload file
-                        <input
-                            type="file"
-                            onChange={handleFileChange}
-                            className="block w-full px-2 md:px-3 py-1.5 md:py-2 text-xs md:text-sm rounded-lg border border-gray-300 dark:border-college-gold/50 bg-white dark:bg-college-navy/60 text-gray-900 dark:text-white shadow-sm focus:border-college-navy dark:focus:border-college-gold focus:ring-college-navy dark:focus:ring-college-gold transition-all"
-                        />
-                        {fileName && <span className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400">Selected: {fileName}</span>}
-                    </label>
+                {!isSubmitted ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 transition-opacity animate-in fade-in duration-300">
+                        <label className="flex flex-col gap-2 text-xs md:text-sm text-gray-700 dark:text-gray-300">
+                            Upload file
+                            <input
+                                type="file"
+                                onChange={handleFileChange}
+                                className="block w-full px-2 md:px-3 py-1.5 md:py-2 text-xs md:text-sm rounded-sm border border-gray-300 dark:border-college-gold/50 bg-white dark:bg-college-navy/60 text-gray-900 dark:text-white shadow-sm focus:border-college-navy dark:focus:border-college-gold focus:ring-college-navy dark:focus:ring-college-gold transition-all"
+                            />
+                            {fileName && <span className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400">Selected: {fileName}</span>}
+                        </label>
 
-                    <label className="flex flex-col gap-2 text-xs md:text-sm text-gray-700 dark:text-gray-300">
-                        Notes
-                        <textarea
-                            value={note}
-                            onChange={(e) => setNote(e.target.value)}
-                            rows={3}
-                            placeholder="Add clarification or links..."
-                            className="px-2 md:px-3 py-1.5 md:py-2 text-xs md:text-sm rounded-lg border border-gray-300 dark:border-college-gold/50 bg-white dark:bg-college-navy/60 text-gray-900 dark:text-white shadow-sm focus:border-college-navy dark:focus:border-college-gold focus:ring-college-navy dark:focus:ring-college-gold transition-all"
-                        />
-                    </label>
-                </div>
+                        <label className="flex flex-col gap-2 text-xs md:text-sm text-gray-700 dark:text-gray-300">
+                            Notes
+                            <textarea
+                                value={note}
+                                onChange={(e) => setNote(e.target.value)}
+                                rows={3}
+                                placeholder="Add clarification or links..."
+                                className="px-2 md:px-3 py-1.5 md:py-2 text-xs md:text-sm rounded-sm border border-gray-300 dark:border-college-gold/50 bg-white dark:bg-college-navy/60 text-gray-900 dark:text-white shadow-sm focus:border-college-navy dark:focus:border-college-gold focus:ring-college-navy dark:focus:ring-college-gold transition-all resize-none"
+                            />
+                        </label>
+                    </div>
+                ) : (
+                    <div className="bg-college-navy/5 dark:bg-college-gold/5 p-4 rounded-sm border border-college-navy/10 dark:border-college-gold/20 flex flex-col gap-2 transition-all animate-in fade-in duration-300">
+                        <p className="text-xs font-bold uppercase tracking-wider text-college-navy/60 dark:text-college-gold/80 mb-1">Your Submission</p>
+                        <p className="text-sm font-medium text-college-navy dark:text-white flex items-center gap-2">
+                            <FileText size={16} className="text-emerald-600 dark:text-emerald-400" />
+                            {fileName || "assignment_submission.pdf"}
+                        </p>
+                        {note && (
+                            <div className="mt-2 text-xs text-gray-600 dark:text-gray-400 bg-white/50 dark:bg-college-navy/50 p-2 rounded-sm border border-black/5 dark:border-white/5">
+                                <span className="font-semibold text-college-navy dark:text-college-gold block mb-1">Notes:</span> 
+                                <p className="leading-relaxed">{note}</p>
+                            </div>
+                        )}
+                    </div>
+                )}
 
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 md:gap-3">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 md:gap-3 pt-2">
                     <p className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400">
-                        Last submission status: {assignment.status}
+                        Original status: {assignment.status}
                     </p>
-                    <PublicButton variant="secondary" shape="slanted" size="sm" className="shadow-md">
-                        Submit Assignment
-                    </PublicButton>
+                    {isSubmitted ? (
+                        <PublicButton onClick={() => setIsEditing(true)} variant="outline" size="sm" className="shadow-sm border-gray-300 dark:border-college-gold/30">
+                            <Pencil size={14} className="mr-1.5" />
+                            Edit Assignment
+                        </PublicButton>
+                    ) : (
+                        <PublicButton onClick={handleSubmit} variant="secondary" shape="slanted" size="sm" className="shadow-md">
+                            {localStatus === 'Submitted' ? 'Save Changes' : 'Submit Assignment'}
+                        </PublicButton>
+                    )}
                 </div>
             </Card>
         );
@@ -84,7 +117,7 @@ const AssignmentCard = ({ assignment, role = 'faculty' }) => {
 
     // faculty variant (default)
     return (
-        <Card hover={false} className="p-4 md:p-5 border border-transparent dark:border-college-gold/60 shadow-sm hover:shadow-md transition-all duration-300">
+        <Card hover={false} className="p-4 md:p-5 border border-gray-200 dark:border-college-gold/50 shadow-sm hover:shadow-md transition-all duration-300">
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                 <div className="flex-1">
                     <p className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">

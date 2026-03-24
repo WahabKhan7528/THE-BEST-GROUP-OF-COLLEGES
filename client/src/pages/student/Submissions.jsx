@@ -29,7 +29,7 @@ const Submissions = () => {
         ))}
 
         {mockStudentSubmissions.length === 0 && (
-          <div className="text-center py-20 bg-white dark:bg-college-navy/40 rounded-3xl border border-dashed border-gray-200 dark:border-white/10">
+          <div className="text-center py-20 bg-white dark:bg-college-navy/40 rounded-sm border border-dashed border-gray-200 dark:border-white/10">
             <p className="text-gray-500 dark:text-gray-400">No submissions found.</p>
           </div>
         )}

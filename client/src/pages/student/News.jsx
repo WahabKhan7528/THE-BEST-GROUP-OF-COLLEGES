@@ -68,7 +68,7 @@ const News = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white/70 backdrop-blur-xl border border-white/40 rounded-3xl shadow-xl p-8 relative overflow-hidden">
+      <div className="bg-white/70 backdrop-blur-xl border border-white/40 rounded-sm shadow-xl p-8 relative overflow-hidden">
         <div className="absolute top-0 right-0 p-8 opacity-5">
           <Megaphone size={150} />
         </div>
@@ -103,7 +103,7 @@ const News = () => {
           ))}
         </div>
       ) : (
-        <div className="bg-white/60 dark:bg-college-navy/40 backdrop-blur-sm border border-dashed border-gray-300 dark:border-college-gold/30 rounded-3xl p-12 text-center">
+        <div className="bg-white/60 dark:bg-college-navy/40 backdrop-blur-sm border border-dashed border-gray-300 dark:border-college-gold/30 rounded-sm p-12 text-center">
           <div className="w-16 h-16 bg-gray-50 dark:bg-college-gold/10 rounded-full flex items-center justify-center mx-auto mb-4">
             <Megaphone size={30} className="text-gray-400 dark:text-college-gold/40" />
           </div>

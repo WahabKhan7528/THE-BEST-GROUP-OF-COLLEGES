@@ -106,7 +106,7 @@ const CreateSubject = () => {
               <label
                 key={campus.id}
                 className={`
-                  relative flex flex-col items-center justify-center p-6 rounded-xl border-2 transition-all duration-200
+                  relative flex flex-col items-center justify-center p-6 rounded-sm border-2 transition-all duration-200
                   ${!isSuperAdmin ? 'cursor-not-allowed opacity-80' : 'cursor-pointer'}
                   ${isSelected
                     ? 'border-college-navy bg-college-navy/10 dark:bg-college-gold/10 dark:border-college-gold shadow-sm'

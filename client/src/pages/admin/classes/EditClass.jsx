@@ -102,7 +102,7 @@ const EditClass = () => {
                 <label
                   key={campus.id}
                   className={`
-                    relative flex flex-col items-center justify-center p-4 rounded-xl border-2 cursor-pointer transition-all duration-200
+                    relative flex flex-col items-center justify-center p-4 rounded-sm border-2 cursor-pointer transition-all duration-200
                     ${campusValue === campus.id
                       ? "bg-college-navy/5 border-college-navy dark:bg-college-gold/10 dark:border-college-gold shadow-sm"
                       : "bg-white border-gray-100 hover:bg-gray-50 dark:bg-college-navy/50 dark:border-college-gold/20 dark:hover:bg-college-navy/80"
@@ -126,7 +126,7 @@ const EditClass = () => {
               ))}
             </div>
           ) : (
-            <div className="flex items-center gap-3 p-4 bg-gray-50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl text-gray-700 dark:text-gray-200">
+            <div className="flex items-center gap-3 p-4 bg-gray-50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm text-gray-700 dark:text-gray-200">
               <Building2 className="w-5 h-5 text-gray-400" />
               <span className="font-medium">{getCampusLabel()}</span>
               <span className="ml-auto text-xs bg-college-gold/10 text-college-navy dark:text-college-gold px-2 py-1 rounded-full">Automated Selection</span>
@@ -172,7 +172,7 @@ const EditClass = () => {
               {...register("subjects")}
               placeholder="e.g. Operating Systems, Data Structures, Linear Algebra..."
               rows="3"
-              className="w-full pr-4 py-3 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all resize-none dark:text-white dark:placeholder-gray-500"
+              className="w-full pr-4 py-3 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all resize-none dark:text-white dark:placeholder-gray-500"
             />
           </div>
         </div>

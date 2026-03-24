@@ -28,11 +28,14 @@ const Gallery = () => {
   const toast = useToast();
   const confirmDialog = useConfirm();
   const [activeFilter, setActiveFilter] = useState("All");
-  const albums = ["All", ...new Set(images.map(img => img.album))];
+  const [searchQuery, setSearchQuery] = useState("");
+  const categories = ["All", ...new Set(images.map(img => img.category))];
 
-  const filteredImages = activeFilter === "All"
-    ? images
-    : images.filter(img => img.album === activeFilter);
+  const filteredImages = images.filter(img => {
+    const matchesFilter = activeFilter === "All" || img.category === activeFilter;
+    const matchesSearch = img.title.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesFilter && matchesSearch;
+  });
 
   return (
     <div className="space-y-8">
@@ -58,21 +61,21 @@ const Gallery = () => {
       </div>
 
       {/* Filters & Search */}
-      <div className="bg-white/80 dark:bg-college-navy backdrop-blur-xl border border-white/20 dark:border-college-gold/20 p-4 rounded-2xl shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+      <div className="bg-white/80 dark:bg-college-navy backdrop-blur-xl border border-white/20 dark:border-college-gold/20 p-4 rounded-sm shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
         <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 no-scrollbar">
-          {albums.map((album) => (
+          {categories.map((category) => (
             <button
-              key={album}
-              onClick={() => setActiveFilter(album)}
+              key={category}
+              onClick={() => setActiveFilter(category)}
               className={`
-                px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-200 border
-                ${activeFilter === album
+                px-4 py-2 rounded-sm text-sm font-medium whitespace-nowrap transition-all duration-200 border
+                ${activeFilter === category
                   ? "bg-college-navy/10 text-college-navy border-college-navy/20 dark:bg-college-gold/10 dark:text-college-gold dark:border-college-gold/30 shadow-sm"
                   : "text-gray-600 border-transparent hover:bg-gray-50 hover:text-college-navy dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/5"
                 }
               `}
             >
-              {album}
+              {category}
             </button>
           ))}
         </div>
@@ -82,29 +85,28 @@ const Gallery = () => {
           <input
             type="text"
             placeholder="Search images..."
-            className="w-full pl-10 pr-4 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm dark:text-white dark:placeholder-gray-400"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm dark:text-white dark:placeholder-gray-400"
           />
         </div>
       </div>
 
       {/* Gallery Grid */}
       {filteredImages.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-12 bg-white/50 dark:bg-college-navy/50 backdrop-blur-sm rounded-2xl border border-dashed border-gray-300 dark:border-college-gold/20 mb-6">
-          <div className="w-16 h-16 bg-gray-50 dark:bg-college-gold/10 rounded-full flex items-center justify-center mb-4">
-            <Image className="w-8 h-8 text-gray-400 dark:text-college-gold/40" />
-          </div>
+        <div className="flex flex-col items-center justify-center py-12 rounded-sm border border-dashed border-gray-300 dark:border-college-gold/20 mb-6">
           <h3 className="text-lg font-medium text-college-navy dark:text-white">No images found</h3>
           <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 mb-4 max-w-sm text-center">
-            {activeFilter !== "All"
-              ? "Try selecting a different album filter."
+            {activeFilter !== "All" || searchQuery
+              ? "Try adjusting your search or filters to find what you're looking for."
               : "Get started by uploading a new image."}
           </p>
-          {activeFilter !== "All" && (
+          {(activeFilter !== "All" || searchQuery) && (
             <button
-              onClick={() => setActiveFilter("All")}
+              onClick={() => { setActiveFilter("All"); setSearchQuery(""); }}
               className="text-college-navy dark:text-college-gold text-sm font-medium hover:underline"
             >
-              Clear filter
+              Clear all filters
             </button>
           )}
         </div>
@@ -114,7 +116,7 @@ const Gallery = () => {
         {filteredImages.map((img) => (
           <div
             key={img.id}
-            className="group relative bg-white dark:bg-college-navy border border-gray-100 dark:border-college-gold/20 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden"
+            className="group relative bg-white dark:bg-college-navy border border-gray-100 dark:border-college-gold/20 rounded-sm shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden"
           >
             {/* Image Container */}
             <div className="aspect-[4/3] bg-gray-100 relative overflow-hidden">
@@ -146,10 +148,10 @@ const Gallery = () => {
                 </button>
               </div>
 
-              {/* Album Badge */}
+              {/* Category Badge */}
               <div className="absolute top-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <span className="px-2.5 py-1 bg-black/50 backdrop-blur-md text-white text-xs font-medium rounded-lg border border-white/20">
-                  {img.album}
+                <span className="px-2.5 py-1 bg-black/50 backdrop-blur-md text-white text-xs font-medium rounded-sm border border-white/20">
+                  {img.category}
                 </span>
               </div>
             </div>
@@ -170,7 +172,7 @@ const Gallery = () => {
 
         <Link
           to="/admin/cms/gallery/upload"
-          className="flex flex-col items-center justify-center aspect-[4/3] border-2 border-dashed border-gray-200 dark:border-college-gold/20 rounded-2xl hover:bg-college-navy/5 dark:hover:bg-college-gold/10 hover:border-college-navy/30 dark:hover:border-college-gold/30 transition-all duration-300 group cursor-pointer dark:bg-college-navy/30 shadow-sm"
+          className="flex flex-col items-center justify-center aspect-[4/3] border-2 border-dashed border-gray-200 dark:border-college-gold/20 rounded-sm hover:bg-college-navy/5 dark:hover:bg-college-gold/10 hover:border-college-navy/30 dark:hover:border-college-gold/30 transition-all duration-300 group cursor-pointer dark:bg-college-navy/30 shadow-sm"
         >
           <div className="w-14 h-14 bg-college-navy/5 dark:bg-college-gold/10 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-inner">
             <Plus className="w-7 h-7 text-college-navy/40 dark:text-college-gold group-hover:text-college-navy dark:group-hover:text-college-gold transition-colors" />

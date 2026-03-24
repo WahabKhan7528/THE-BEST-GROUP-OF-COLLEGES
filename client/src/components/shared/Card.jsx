@@ -1,4 +1,5 @@
 import { clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 const variants = {
     default:
@@ -12,11 +13,13 @@ const variants = {
 export default function Card({ variant = "default", hover = true, className, children }) {
     return (
         <div
-            className={clsx(
-                "overflow-hidden transition-all duration-300 ease-out",
-                variants[variant],
-                hover && "hover:shadow-xl hover:-translate-y-1.5 cursor-pointer",
-                className
+            className={twMerge(
+                clsx(
+                    "overflow-hidden transition-all duration-300 ease-out",
+                    variants[variant],
+                    hover && "hover:shadow-xl hover:-translate-y-1.5 cursor-pointer",
+                    className
+                )
             )}
         >
             {children}

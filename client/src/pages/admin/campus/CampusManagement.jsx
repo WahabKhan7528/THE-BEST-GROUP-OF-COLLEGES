@@ -4,7 +4,7 @@ import { useAdminContext } from "../../../context/AdminContext";
 import { useToast } from "../../../context/ToastContext";
 import { useConfirm } from "../../../context/ConfirmContext";
 import PublicButton from "../../../components/shared/PublicButton";
-import Table from "../../../components/admin/Table";
+import Table from "../../../components/portal-shared/Table";
 import {
   Plus,
   Search,
@@ -23,8 +23,8 @@ const CampusManagement = () => {
 
   if (!isSuperAdmin) {
     return (
-      <div className="p-8 bg-college-navy/5 dark:bg-college-gold/10 backdrop-blur-sm border border-college-navy/10 dark:border-college-gold/20 rounded-2xl flex items-center gap-4">
-        <div className="p-3 bg-college-navy/20 dark:bg-college-gold/20 rounded-xl text-college-navy dark:text-white">
+      <div className="p-8 bg-college-navy/5 dark:bg-college-gold/10 backdrop-blur-sm border border-college-navy/10 dark:border-college-gold/20 rounded-sm flex items-center gap-4">
+        <div className="p-3 bg-college-navy/20 dark:bg-college-gold/20 rounded-sm text-college-navy dark:text-white">
           <ShieldCheck size={24} />
         </div>
         <div>
@@ -100,7 +100,7 @@ const CampusManagement = () => {
           onClick={handleAddCampus}
           variant={isDarkMode ? "secondary" : "primary"}
           shape="slanted"
-          size="lg"
+          size="md"
           icon={Plus}
         >
           Add New Campus
@@ -109,8 +109,8 @@ const CampusManagement = () => {
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/20 rounded-2xl p-6 shadow-sm flex items-center gap-5 transition-all duration-300">
-          <div className="w-14 h-14 rounded-xl bg-college-navy/10 dark:bg-college-gold/10 flex items-center justify-center text-college-navy dark:text-college-gold shadow-sm">
+        <div className="bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/20 rounded-sm p-6 shadow-sm flex items-center gap-5 transition-all duration-300">
+          <div className="w-14 h-14 rounded-sm bg-college-navy/10 dark:bg-college-gold/10 flex items-center justify-center text-college-navy dark:text-college-gold shadow-sm">
             <School size={28} />
           </div>
           <div>
@@ -119,8 +119,8 @@ const CampusManagement = () => {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/20 rounded-2xl p-6 shadow-sm flex items-center gap-5 transition-all duration-300">
-          <div className="w-14 h-14 rounded-xl bg-college-navy/10 dark:bg-college-gold/10 flex items-center justify-center text-college-navy dark:text-college-gold shadow-sm">
+        <div className="bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/20 rounded-sm p-6 shadow-sm flex items-center gap-5 transition-all duration-300">
+          <div className="w-14 h-14 rounded-sm bg-college-navy/10 dark:bg-college-gold/10 flex items-center justify-center text-college-navy dark:text-college-gold shadow-sm">
             <MapPin size={28} />
           </div>
           <div>
@@ -140,7 +140,7 @@ const CampusManagement = () => {
           placeholder="Search campuses by name, code, or location..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-11 pr-4 py-3.5 bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all shadow-sm text-college-navy dark:text-white"
+          className="w-full pl-11 pr-4 py-3.5 bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/30 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all shadow-sm text-college-navy dark:text-white"
         />
       </div>
 
@@ -152,10 +152,9 @@ const CampusManagement = () => {
           actionButtons={actionButtons}
         />
       ) : (
-        <div className="text-center py-12 bg-white dark:bg-college-navy rounded-2xl border-2 border-dashed border-gray-200 dark:border-college-gold/20 transition-all duration-300">
-          <School className="w-12 h-12 text-college-navy/30 dark:text-college-gold/30 mx-auto mb-3" />
+        <div className="flex flex-col items-center justify-center py-12 rounded-sm border border-dashed border-gray-300 dark:border-college-gold/20">
           <h3 className="text-lg font-medium text-college-navy dark:text-white">No campuses found</h3>
-          <p className="text-gray-500 dark:text-gray-400">Try adjusting your search or add a new campus.</p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 max-w-sm text-center">Try adjusting your search or add a new campus.</p>
         </div>
       )}
     </div>

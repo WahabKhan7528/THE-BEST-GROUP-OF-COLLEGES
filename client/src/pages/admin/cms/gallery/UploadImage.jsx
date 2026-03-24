@@ -18,7 +18,7 @@ const UploadImage = () => {
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(gallerySchema),
-    defaultValues: { title: "", album: "", tags: "" }
+    defaultValues: { title: "", category: "", tags: "" }
   });
 
   const handleFileSelect = (selectedFile) => {
@@ -87,7 +87,7 @@ const UploadImage = () => {
             onDragLeave={handleDragLeave}
             onClick={() => fileInputRef.current?.click()}
             className={`
-              relative aspect-square md:aspect-[4/3] rounded-2xl border-2 border-dashed transition-all duration-200 flex flex-col items-center justify-center cursor-pointer overflow-hidden
+              relative aspect-square md:aspect-[4/3] rounded-sm border-2 border-dashed transition-all duration-200 flex flex-col items-center justify-center cursor-pointer overflow-hidden
               ${isDragging
                 ? "bg-college-navy/5 border-college-navy dark:bg-college-gold/10 dark:border-college-gold shadow-sm"
                 : preview
@@ -134,8 +134,8 @@ const UploadImage = () => {
           </div>
 
           {file && (
-            <div className="flex items-center gap-3 p-3 bg-white/50 dark:bg-college-navy/50 border border-white/20 dark:border-college-gold/20 rounded-xl shadow-sm">
-              <div className="w-10 h-10 rounded-lg bg-college-gold/10 flex items-center justify-center text-college-gold">
+            <div className="flex items-center gap-3 p-3 bg-white/50 dark:bg-college-navy/50 border border-white/20 dark:border-college-gold/20 rounded-sm shadow-sm">
+              <div className="w-10 h-10 rounded-sm bg-college-gold/10 flex items-center justify-center text-college-gold">
                 <ImageIcon className="w-5 h-5" />
               </div>
               <div className="flex-1 min-w-0">
@@ -161,13 +161,13 @@ const UploadImage = () => {
             </div>
 
             <div className="col-span-1 md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Album / Category <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Category <span className="text-red-500">*</span></label>
               <select
-                {...register("album")}
-                className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none dark:text-white"
+                {...register("category")}
+                className="w-full px-4 py-2 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 dark:bg-college-navy dark:text-gray-300"
                 required
               >
-                <option value="" disabled>Select album</option>
+                <option value="" disabled>Select category</option>
                 <option value="Campus Life">Campus Life</option>
                 <option value="Events">Events</option>
                 <option value="Facilities">Facilities</option>

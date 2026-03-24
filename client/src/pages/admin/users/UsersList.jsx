@@ -4,7 +4,7 @@ import { useAdminContext } from "../../../context/AdminContext";
 import { useToast } from "../../../context/ToastContext";
 import { useConfirm } from "../../../context/ConfirmContext";
 import PublicButton from "../../../components/shared/PublicButton";
-import Table from "../../../components/admin/Table";
+import Table from "../../../components/portal-shared/Table";
 import {
   Plus,
   Search,
@@ -144,7 +144,7 @@ const UsersList = () => {
           to="/admin/users/create"
           variant={isDarkMode ? "secondary" : "primary"}
           shape="slanted"
-          size="lg"
+          size="md"
           className="shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
           icon={UserPlus}
         >
@@ -153,7 +153,7 @@ const UsersList = () => {
       </div>
 
       {/* Filters Section */}
-      <div className="bg-white/60 dark:bg-college-navy backdrop-blur-md border border-white/60 dark:border-college-gold/20 p-6 rounded-2xl shadow-sm space-y-6 transition-all duration-300">
+      <div className="bg-white/60 dark:bg-college-navy backdrop-blur-md border border-white/60 dark:border-college-gold/20 p-6 rounded-sm shadow-sm space-y-6 transition-all duration-300">
         <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
           <Filter size={16} />
           <span>Filters & Search</span>
@@ -170,7 +170,7 @@ const UsersList = () => {
               placeholder="Search by name, email, or ID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-3 py-2.5 bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm dark:text-white"
+              className="w-full pl-10 pr-3 py-2.5 bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm dark:text-white"
             />
           </div>
 
@@ -182,7 +182,7 @@ const UsersList = () => {
             <select
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
-              className="w-full pl-10 pr-3 py-2.5 bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm appearance-none dark:text-white"
+              className="w-full pl-10 pr-3 py-2.5 bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm appearance-none dark:text-white"
             >
               <option value="">All Roles</option>
               {isSuperAdmin && <option value="Super Admin">Super Admin</option>}
@@ -201,7 +201,7 @@ const UsersList = () => {
               <select
                 value={selectedCampus}
                 onChange={(e) => setSelectedCampus(e.target.value)}
-                className="w-full pl-10 pr-3 py-2.5 bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm appearance-none dark:text-white"
+                className="w-full pl-10 pr-3 py-2.5 bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm appearance-none dark:text-white"
               >
                 <option value="">All Campuses</option>
                 {campuses.map((campus) => (
@@ -245,16 +245,18 @@ const UsersList = () => {
           actionButtons={actionButtons}
         />
       ) : (
-        <div className="bg-white/50 dark:bg-college-navy backdrop-blur rounded-2xl border border-dashed border-gray-300 dark:border-college-gold/20 p-12 text-center transition-all duration-300">
-          <Users className="w-12 h-12 text-gray-300 dark:text-college-gold/30 mx-auto mb-3" />
-          <p className="text-gray-500 dark:text-gray-400 font-medium">No users match your criteria.</p>
+        <div className="flex flex-col items-center justify-center py-12 rounded-sm border border-dashed border-gray-300 dark:border-college-gold/20">
+          <h3 className="text-lg font-medium text-college-navy dark:text-white">No users found</h3>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 mb-4 max-w-sm text-center">
+            No users match your criteria.
+          </p>
           <button
             onClick={() => {
               setSearchTerm("");
               setSelectedRole("");
               setSelectedCampus("");
             }}
-            className="mt-4 text-college-navy dark:text-college-gold hover:underline font-semibold text-sm"
+            className="text-college-navy dark:text-college-gold text-sm font-medium hover:underline"
           >
             Clear all filters
           </button>

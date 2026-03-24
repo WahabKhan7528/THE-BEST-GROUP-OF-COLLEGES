@@ -80,7 +80,7 @@ const EditCourse = () => {
       {/* Basic Info Section */}
       <PortalForm.Section title="Course Information">
         <div className="md:col-span-2 flex justify-end">
-          <span className="px-2.5 py-1 bg-college-navy/10 text-college-navy dark:text-college-gold text-xs font-medium rounded-lg border border-college-gold/20 inline-block w-fit">
+          <span className="px-2.5 py-1 bg-college-navy/10 text-college-navy dark:text-college-gold text-xs font-medium rounded-sm border border-college-gold/20 inline-block w-fit">
             ID: {id}
           </span>
         </div>
@@ -116,7 +116,7 @@ const EditCourse = () => {
           </label>
           <select
             {...register("examSystem")}
-            className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none dark:text-white"
+            className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none dark:text-white"
           >
             <option value="annual">Annual</option>
             <option value="semester">Semester</option>
@@ -129,7 +129,7 @@ const EditCourse = () => {
           </label>
           <textarea
             {...register("description")}
-            className="w-full px-4 py-3 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all resize-y min-h-[100px] dark:text-white dark:placeholder-gray-500"
+            className="w-full px-4 py-3 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all resize-y min-h-[100px] dark:text-white dark:placeholder-gray-500"
             placeholder="Write a brief overview of the course..."
           />
         </div>
@@ -144,7 +144,7 @@ const EditCourse = () => {
               <label
                 key={campus.id}
                 className={`
-                    relative flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all duration-200
+                    relative flex flex-col items-center justify-center p-4 rounded-sm border-2 transition-all duration-200
                     ${!isSuperAdmin ? 'cursor-not-allowed opacity-80' : 'cursor-pointer'}
                     ${isSelected
                     ? "border-college-navy bg-college-navy/10 pt-6 dark:bg-college-gold/10 dark:border-college-gold"
