@@ -5,6 +5,7 @@ import { newsSchema } from "../../../../schemas/newsSchema";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../../../context/ToastContext";
 import PortalForm from "../../../../components/portal-shared/PortalForm";
+import { adminApi } from "../../../../services/api";
 import {
   Calendar,
   Newspaper,
@@ -24,13 +25,29 @@ const CreateNews = () => {
     resolver: zodResolver(newsSchema),
     defaultValues: {
       title: "", date: "", time: "", location: "",
-      description: "", category: "", status: "Published"
+      description: "", category: "", status: "published"
     }
   });
 
-  const onSubmit = () => {
-    toast.success("Post published successfully");
-    navigate("/admin/cms/news");
+  const onSubmit = async (values) => {
+    try {
+      const formData = new FormData();
+      formData.append("type", type);
+      formData.append("title", values.title);
+      formData.append("date", values.date || "");
+      formData.append("time", values.time || "");
+      formData.append("location", values.location || "");
+      formData.append("description", values.description);
+      formData.append("category", values.category);
+      formData.append("status", (values.status || "published").toLowerCase());
+      if (image) formData.append("image", image);
+
+      await adminApi.createNewsEvent(formData);
+      toast.success(`${type === "news" ? "News" : "Event"} published successfully`);
+      navigate("/admin/cms/news", { replace: true });
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to publish post");
+    }
   };
 
   return (
@@ -73,7 +90,7 @@ const CreateNews = () => {
               <label className="block text-sm font-bold text-college-navy dark:text-gray-200 mb-2">Subject Category</label>
               <select
                 {...register("category")}
-                className="w-full px-5 py-3.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/10 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold transition-all text-base appearance-none dark:text-white"
+                className="w-full px-5 py-3.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/10 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold transition-all text-base appearance-none text-gray-900 dark:text-white"
               >
                 <option value="" disabled>Select category</option>
                 <option value="Academic">Academic</option>

@@ -1,10 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useAdminContext } from "../../../context/AdminContext";
+import { useEffect, useMemo, useState } from "react";
+import { useAdminContext } from "../../../store/hooks/useAdminReduxContext";
 import { useToast } from "../../../context/ToastContext";
 import { useConfirm } from "../../../context/ConfirmContext";
 import PublicButton from "../../../components/shared/PublicButton";
 import Table from "../../../components/portal-shared/Table";
+import SkeletonLoading from "../../../components/shared/SkeletonLoading";
 import {
   Plus,
   Search,
@@ -14,7 +15,7 @@ import {
   Shield,
   Building2,
 } from "lucide-react";
-import { mockUsersData as adminUsers } from "../../../data/adminData";
+import { adminApi } from "../../../services/api";
 
 const UsersList = () => {
   const navigate = useNavigate();
@@ -24,55 +25,60 @@ const UsersList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
   const [selectedCampus, setSelectedCampus] = useState("");
+  const [users, setUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const mockData = adminUsers;
+  useEffect(() => {
+    const loadUsers = async () => {
+      setIsLoading(true);
+      try {
+        const { data } = await adminApi.users();
+        setUsers(data.data || []);
+      } catch {
+        setUsers([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  // Filter data based on user role and selected filters
-  let filteredData = mockData;
+    loadUsers();
+  }, []);
 
-  // If Sub-Admin, only show users from their allocated campuses
-  if (!isSuperAdmin) {
-    filteredData = filteredData.filter((user) =>
-      user.allocatedCampuses.some((campus) =>
-        currentAdmin?.allocatedCampuses?.includes(campus),
-      ),
-    );
-  }
+  const filteredData = useMemo(() => {
+    let result = [...users];
 
-  // Sub-Admin can only manage Faculty and Student, not other admins
-  if (!isSuperAdmin) {
-    filteredData = filteredData.filter(
-      (user) => user.role === "Faculty" || user.role === "Student",
-    );
-  }
+    if (!isSuperAdmin) {
+      result = result.filter(
+        (user) => String(user.campus?._id || user.campus) === String(currentAdmin?.campus?._id || currentAdmin?.campus),
+      );
+      result = result.filter((user) => user.role === "faculty" || user.role === "student");
+    }
 
-  // Apply role filter
-  if (selectedRole) {
-    filteredData = filteredData.filter((user) => user.role === selectedRole);
-  }
+    if (selectedRole) {
+      result = result.filter((user) => user.role === selectedRole);
+    }
 
-  // Apply campus filter (Super Admin only)
-  if (isSuperAdmin && selectedCampus) {
-    filteredData = filteredData.filter((user) =>
-      user.allocatedCampuses.includes(selectedCampus),
-    );
-  }
+    if (isSuperAdmin && selectedCampus) {
+      result = result.filter((user) => String(user.campus?._id || user.campus) === selectedCampus);
+    }
 
-  // Apply search term
-  if (searchTerm) {
-    filteredData = filteredData.filter(
-      (user) =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.id.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
-  }
+    if (searchTerm) {
+      const query = searchTerm.toLowerCase();
+      result = result.filter(
+        (user) =>
+          user.name?.toLowerCase().includes(query) ||
+          user.email?.toLowerCase().includes(query) ||
+          user.portalId?.toLowerCase().includes(query),
+      );
+    }
+
+    return result;
+  }, [users, isSuperAdmin, currentAdmin, selectedRole, selectedCampus, searchTerm]);
 
   // Format allocated campuses display
-  const getCampusesDisplay = (campusIds) => {
-    return campusIds
-      .map((cId) => campuses.find((c) => c.id === cId)?.code || cId)
-      .join(", ");
+  const getCampusesDisplay = (campusObjOrId) => {
+    const id = campusObjOrId?._id || campusObjOrId;
+    return campuses.find((c) => c.id === id)?.code || campusObjOrId?.code || "N/A";
   };
 
   const columns = [
@@ -81,7 +87,9 @@ const UsersList = () => {
       label: "User Details",
       render: (row) => (
         <div className="flex flex-col">
-          <span className="font-semibold text-college-navy">{row.name}</span>
+          <span className="font-semibold text-college-navy">
+            {row.name || row.fullName || row.studentName || row.displayName || row.portalId || "Unnamed User"}
+          </span>
           <span className="text-xs text-gray-500">{row.email}</span>
         </div>
       )
@@ -90,23 +98,23 @@ const UsersList = () => {
       key: "role",
       label: "Role",
       render: (row) => (
-        <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${row.role === 'Super Admin' ? 'bg-college-navy/10 text-college-navy dark:text-college-gold' :
-          row.role === 'Sub-Admin' ? 'bg-college-gold/10 text-college-navy dark:text-college-gold' :
-            row.role === 'Faculty' ? 'bg-white dark:bg-college-navy/50 border border-college-gold/20 text-college-navy dark:text-college-gold' :
+        <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${row.role === 'super_admin' ? 'bg-college-navy/10 text-college-navy dark:text-college-gold' :
+          row.role === 'admin' ? 'bg-college-gold/10 text-college-navy dark:text-college-gold' :
+            row.role === 'faculty' ? 'bg-white dark:bg-college-navy/50 border border-college-gold/20 text-college-navy dark:text-college-gold' :
               'bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-400'
           }`}>
-          {row.role}
+          {row.role?.replace("_", " ")}
         </span>
       )
     },
-    { key: "id", label: "ID" },
+    { key: "portalId", label: "ID" },
     { key: "department", label: "Department / Subject / Course" },
     {
-      key: "allocatedCampuses",
+      key: "campus",
       label: "Campuses",
       render: (row) => (
         <span className="text-sm bg-gray-50 px-2 py-1 rounded border border-gray-100 font-medium text-gray-600">
-          {getCampusesDisplay(row.allocatedCampuses)}
+          {getCampusesDisplay(row.campus)}
         </span>
       ),
     },
@@ -115,15 +123,17 @@ const UsersList = () => {
   const actionButtons = (row) => [
     {
       label: "Edit",
-      onClick: () => navigate(`/admin/users/edit/${row.id}`),
+      onClick: () => navigate(`/admin/users/edit/${row._id}`),
       className: "text-emerald-600 hover:text-emerald-700 font-medium bg-emerald-50 border border-emerald-100 dark:bg-emerald-900 dark:border-transparent dark:text-gray-300 dark:hover:bg-emerald-800",
     },
     {
-      label: "Disable",
+      label: "Delete",
       onClick: async () => {
-        const confirmed = await confirm({ title: "Disable User", message: "Are you sure you want to disable this user?", confirmText: "Disable", variant: "danger" });
+        const confirmed = await confirm({ title: "Delete User", message: "Are you sure you want to delete this user?", confirmText: "Delete", variant: "danger" });
         if (confirmed) {
-          toast.success("User disabled");
+          await adminApi.disableUser(row._id);
+          setUsers((prev) => prev.filter((user) => user._id !== row._id));
+          toast.success("User deleted");
         }
       },
       className: "text-red-600 hover:text-red-700 font-medium bg-red-50 border border-red-100 dark:bg-red-900 dark:border-transparent dark:text-gray-300 dark:hover:bg-red-800",
@@ -185,10 +195,10 @@ const UsersList = () => {
               className="w-full pl-10 pr-3 py-2.5 bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm appearance-none dark:text-white"
             >
               <option value="">All Roles</option>
-              {isSuperAdmin && <option value="Super Admin">Super Admin</option>}
-              {isSuperAdmin && <option value="Sub-Admin">Sub-Admin</option>}
-              <option value="Faculty">Faculty</option>
-              <option value="Student">Student</option>
+              {isSuperAdmin && <option value="super_admin">Super Admin</option>}
+              {isSuperAdmin && <option value="admin">Admin</option>}
+              <option value="faculty">Faculty</option>
+              <option value="student">Student</option>
             </select>
           </div>
 
@@ -238,7 +248,13 @@ const UsersList = () => {
       </div>
 
       {/* Table */}
-      {filteredData.length > 0 ? (
+      {isLoading ? (
+        <div className="bg-white dark:bg-college-navy border border-gray-200 dark:border-dark-border rounded-sm shadow-sm overflow-hidden">
+          <div className="p-5 space-y-4">
+            <SkeletonLoading count={6} variant="tableRow" containerClassName="space-y-4" />
+          </div>
+        </div>
+      ) : filteredData.length > 0 ? (
         <Table
           columns={columns}
           data={filteredData}
@@ -267,3 +283,4 @@ const UsersList = () => {
 };
 
 export default UsersList;
+

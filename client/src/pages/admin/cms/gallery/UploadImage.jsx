@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useToast } from '../../../../context/ToastContext';
 import PortalForm from "../../../../components/portal-shared/PortalForm";
 import { Upload, Image as ImageIcon, X, CheckCircle2 } from 'lucide-react';
+import { adminApi } from '../../../../services/api';
 
 const UploadImage = () => {
   const navigate = useNavigate();
@@ -58,13 +59,26 @@ const UploadImage = () => {
     }
   };
 
-  const onSubmit = () => {
+  const onSubmit = async (values) => {
     if (!file) {
       toast.warning("Please select an image to upload");
       return;
     }
-    toast.success("Image uploaded successfully");
-    navigate("/admin/cms/gallery");
+
+    try {
+      const formData = new FormData();
+      formData.append("title", values.title);
+      formData.append("category", values.category);
+      formData.append("tags", values.tags || "");
+      if (values.description) formData.append("description", values.description);
+      formData.append("image", file);
+
+      await adminApi.uploadGalleryItem(formData);
+      toast.success("Image uploaded successfully");
+      navigate("/admin/cms/gallery", { replace: true });
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to upload image");
+    }
   };
 
   return (
@@ -164,7 +178,7 @@ const UploadImage = () => {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Category <span className="text-red-500">*</span></label>
               <select
                 {...register("category")}
-                className="w-full px-4 py-2 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 dark:bg-college-navy dark:text-gray-300"
+                className="w-full px-4 py-2 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 dark:bg-college-navy text-gray-900 dark:text-white"
                 required
               >
                 <option value="" disabled>Select category</option>

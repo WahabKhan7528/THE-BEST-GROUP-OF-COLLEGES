@@ -1,0 +1,102 @@
+# The Best College Server
+
+Complete backend for the `client` frontend using:
+- Node.js + Express.js
+- MongoDB Atlas (Mongoose)
+- JWT access/refresh tokens
+- bcrypt password hashing
+- Cloudinary for image/file storage
+
+## 1) Setup
+
+```bash
+cd server
+npm install
+```
+
+Create `.env` from `.env.example` and fill all values.
+
+## 2) Run
+
+```bash
+npm run dev
+```
+
+Health check:
+- `GET /api/v1/health`
+
+## 3) Seed First Super Admin
+
+```bash
+node utils/seedSuperAdmin.js
+```
+
+Optional env overrides:
+- `SEED_SUPER_ADMIN_ID`
+- `SEED_SUPER_ADMIN_EMAIL`
+- `SEED_SUPER_ADMIN_PASSWORD`
+
+## 4) Authentication Flow (Postman)
+
+1. `POST /api/v1/auth/login`
+2. Use returned `accessToken` in header:
+   - `Authorization: Bearer <accessToken>`
+3. Refresh when expired:
+   - `POST /api/v1/auth/refresh` with `refreshToken`
+4. Logout:
+   - `POST /api/v1/auth/logout`
+
+## 5) Core API Modules
+
+### Public
+- `GET /api/v1/public/campuses`
+- `GET /api/v1/public/courses`
+- `GET /api/v1/public/faculty?q=&page=&limit=`
+- `GET /api/v1/public/news-events?type=news|event`
+- `GET /api/v1/public/gallery?category=`
+
+### Auth
+- `POST /api/v1/auth/register` (student self-register)
+- `POST /api/v1/auth/login`
+- `POST /api/v1/auth/refresh`
+- `POST /api/v1/auth/logout`
+- `GET /api/v1/auth/me`
+- `PUT /api/v1/auth/change-password`
+
+### Admin (super_admin/admin)
+- Users: `POST/GET /api/v1/admin/users`, `PUT/DELETE /api/v1/admin/users/:id`
+- Campuses: `POST/GET /api/v1/admin/campuses`, `PUT/DELETE /api/v1/admin/campuses/:id`
+- Courses: `POST/GET /api/v1/admin/courses`, `PUT/DELETE /api/v1/admin/courses/:id`
+- Classes: `POST/GET /api/v1/admin/classes`, `PUT/DELETE /api/v1/admin/classes/:id`
+- Subjects: `POST/GET /api/v1/admin/subjects`, `PUT/DELETE /api/v1/admin/subjects/:id`
+- News/Events: `POST/GET /api/v1/admin/news-events`, `PUT/DELETE /api/v1/admin/news-events/:id`
+- Gallery: `POST /api/v1/admin/gallery`, `PUT/DELETE /api/v1/admin/gallery/:id`
+
+### Portal (faculty/student/admin)
+- Announcements: `POST/GET /api/v1/portal/announcements`
+- Assignments: `POST/GET /api/v1/portal/assignments`, `PUT /api/v1/portal/assignments/:id`
+- Materials: `POST/GET /api/v1/portal/materials`, `PUT /api/v1/portal/materials/:id`
+- Submissions:
+  - Student submit: `POST /api/v1/portal/submissions`
+  - Student own list: `GET /api/v1/portal/submissions`
+  - Faculty by assignment: `GET /api/v1/portal/submissions/assignment/:assignmentId`
+  - Grade: `PUT /api/v1/portal/submissions/:id/grade`
+- Results: `POST/GET /api/v1/portal/results`
+
+## 6) File Upload Fields (form-data)
+
+- Campus image: field `image`
+- News/Event image: field `image`
+- Gallery image: field `image`
+- Announcement attachment: field `attachment`
+- Assignment attachment: field `attachment`
+- Material file: field `file`
+- Student submission file: field `file`
+
+## 7) Architecture Notes
+
+- Layered modular design: models, controllers, routes, middleware, services, utils
+- Refresh tokens are persisted and rotated on refresh
+- Role-based route authorization for admin/faculty/student workflows
+- Cloudinary stores all large media/documents to keep app servers stateless
+- Mongoose relational refs ensure clean linkages across portals and CMS modules

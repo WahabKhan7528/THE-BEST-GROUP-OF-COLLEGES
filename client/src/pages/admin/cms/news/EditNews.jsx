@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { newsSchema } from "../../../../schemas/newsSchema";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAdminContext } from "../../../../context/AdminContext";
 import { useToast } from "../../../../context/ToastContext";
 import { useConfirm } from "../../../../context/ConfirmContext";
 import PublicButton from "../../../../components/shared/PublicButton";
 import PortalForm from "../../../../components/portal-shared/PortalForm";
+import { adminApi } from "../../../../services/api";
 import {
   Calendar,
   Newspaper,
@@ -26,46 +26,79 @@ const EditNews = () => {
   const confirmDialog = useConfirm();
   const [type, setType] = useState("news");
   const [image, setImage] = useState(null);
+  const fileInputRef = useRef(null);
 
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(newsSchema),
     defaultValues: {
       title: "", date: "", time: "", location: "",
-      description: "", category: "", status: "Published"
+      description: "", category: "", status: "published"
     }
   });
 
   useEffect(() => {
-    if (id === 'n1' || id === 'n4') setType('event');
-    else setType('news');
+    const loadPost = async () => {
+      try {
+        const { data } = await adminApi.newsEvents();
+        const foundPost = (data.data || []).find((item) => item._id === id);
 
-    reset({
-      title: id === 'n1' ? "Convocation 2025" : "Best Group Achieves Higher Accreditation",
-      date: "2026-01-30",
-      time: "10:00",
-      location: "Main Auditorium",
-      description: "Detailed description of the event...",
-      category: "Academic",
-      status: "Published",
-    });
-    setImage({ name: "banner.jpg" });
-  }, [id, reset]);
+        if (!foundPost) {
+          navigate("/admin/cms/news", { replace: true });
+          return;
+        }
+
+        setType(foundPost.type || "news");
+        reset({
+          title: foundPost.title || "",
+          date: foundPost.date ? new Date(foundPost.date).toISOString().slice(0, 10) : "",
+          time: foundPost.time || "",
+          location: foundPost.location || "",
+          description: foundPost.description || "",
+          category: foundPost.category || "Academic",
+          status: foundPost.status || "published",
+        });
+        setImage(foundPost.image?.url ? { name: foundPost.image.url.split("/").pop() || "image" } : null);
+      } catch {
+        navigate("/admin/cms/news", { replace: true });
+      }
+    };
+
+    loadPost();
+  }, [id, navigate, reset]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) setImage(file);
   };
 
-  const onSubmit = () => {
-    toast.success(`${type === "news" ? "News" : "Event"} updated successfully`);
-    navigate("/admin/cms/news");
+  const onSubmit = async (values) => {
+    try {
+      const formData = new FormData();
+      formData.append("type", type);
+      formData.append("title", values.title);
+      formData.append("date", values.date || "");
+      formData.append("time", values.time || "");
+      formData.append("location", values.location || "");
+      formData.append("description", values.description);
+      formData.append("category", values.category);
+      formData.append("status", (values.status || "published").toLowerCase());
+      const file = fileInputRef.current?.files?.[0];
+      if (file) formData.append("image", file);
+
+      await adminApi.updateNewsEvent(id, formData);
+      toast.success(`${type === "news" ? "News" : "Event"} updated successfully`);
+      navigate("/admin/cms/news", { replace: true });
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to update post");
+    }
   };
 
   const handleDelete = async () => {
     const confirmed = await confirmDialog({ title: "Delete Post", message: "Are you sure you want to delete this post?", confirmText: "Delete", variant: "danger" });
     if (confirmed) {
+      await adminApi.deleteNewsEvent(id);
       toast.success(`Post ${id} deleted`);
-      navigate("/admin/cms/news");
+      navigate("/admin/cms/news", { replace: true });
     }
   };
 
@@ -120,7 +153,7 @@ const EditNews = () => {
               <label className="block text-sm font-bold text-college-navy dark:text-gray-200 mb-2">Subject Category</label>
               <select
                 {...register("category")}
-                className="w-full px-5 py-3.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/10 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold transition-all text-base appearance-none dark:text-white"
+                className="w-full px-5 py-3.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/10 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold transition-all text-base appearance-none text-gray-900 dark:text-white"
               >
                 <option value="" disabled>Select category</option>
                 <option value="Academic">Academic</option>
@@ -204,6 +237,7 @@ const EditNews = () => {
               <div className="border-2 border-dashed border-gray-200 dark:border-college-gold/20 rounded-sm p-8 flex flex-col items-center justify-center text-center hover:bg-gray-50 dark:hover:bg-college-navy/40 transition-all duration-300 cursor-pointer group dark:bg-college-navy/30 relative">
                 <input
                   type="file"
+                  ref={fileInputRef}
                   className="hidden"
                   id="image-upload"
                   onChange={handleImageChange}

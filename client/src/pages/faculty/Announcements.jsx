@@ -1,78 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { announcementSchema } from "../../schemas/announcementSchema";
-import { useFacultyContext } from "../../context/FacultyContext";
+import { useFacultyContext } from "../../store/hooks/useFacultyReduxContext";
 import { useToast } from "../../context/ToastContext";
 import AnnouncementCard from "../../components/portal-shared/AnnouncementCard";
 import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
 import { X, Plus, Megaphone, Upload } from "lucide-react";
 import PublicButton from "../../components/shared/PublicButton";
-
-// Mock announcements data by campus
-const announcementsByCampus = {
-  main: [
-    {
-      id: "ann-1",
-      title: "Mid-term exam instructions",
-      description:
-        "Bring university ID, only blue/black pens allowed. Calculators permitted for Section B.",
-      date: "Sept 12, 2025",
-      classSection: "BSCS - A",
-      attachment: "#",
-    },
-    {
-      id: "ann-2",
-      title: "Project milestone feedback posted",
-      description:
-        "Feedback shared on the portal; review comments and update your design docs.",
-      date: "Sept 10, 2025",
-      classSection: "BSCS - B",
-    },
-    {
-      id: "ann-3",
-      title: "Guest lecture next week",
-      description:
-        "Industry talk on distributed systems, Tuesday 11 AM, Auditorium 2.",
-      date: "Sept 9, 2025",
-      classSection: "BSCS - A",
-    },
-  ],
-  law: [
-    {
-      id: "ann-4",
-      title: "Moot court finals schedule",
-      description:
-        "Finals will be held in the Moot Court Hall, Sept 25-27. Register by Sept 20.",
-      date: "Sept 11, 2025",
-      classSection: "LLB - A",
-    },
-    {
-      id: "ann-5",
-      title: "Law library extended hours",
-      description:
-        "The law library will remain open until 10 PM during exam season.",
-      date: "Sept 8, 2025",
-      classSection: "LLB - A",
-    },
-  ],
-  hala: [
-    {
-      id: "ann-6",
-      title: "Business plan competition",
-      description:
-        "Register your team for the annual business plan competition by Sept 20.",
-      date: "Sept 10, 2025",
-      classSection: "BBA - A",
-    },
-  ],
-};
+import { portalApi } from "../../services/api";
 
 const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
-  const toast = useToast();
   const [fileName, setFileName] = useState("");
-  const [fileLink, setFileLink] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const {
     register,
@@ -90,22 +31,13 @@ const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
 
   const onSubmitForm = (data) => {
     const newAnnouncement = {
-      id: `ann-${Date.now()}`,
       title: data.title,
       description: data.description,
-      attachment: data.attachment || fileLink,
-      date: new Date().toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      }),
-      classSection: selectedClasses
-        .map((id) => classes.find((c) => c.id === id)?.code)
-        .join(", "),
       classes: selectedClasses,
+      link: data.attachment,
     };
 
-    onPost(newAnnouncement);
+    onPost(newAnnouncement, selectedFile);
     onClose();
   };
 
@@ -113,8 +45,7 @@ const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
     const file = e.target.files?.[0];
     if (file) {
       setFileName(file.name);
-      // Mocking a link for the file
-      setFileLink(URL.createObjectURL(file));
+      setSelectedFile(file);
     }
   };
 
@@ -243,10 +174,10 @@ const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
                     type="checkbox"
                     className="w-4 h-4 text-college-gold bg-white dark:bg-college-navy/50 border-gray-200 dark:border-college-gold/30 rounded focus:ring-college-gold focus:ring-offset-0 dark:focus:ring-offset-college-navy"
                     checked={selectedClasses.includes(cls.id)}
-                    onChange={() => toggleClass(cls.id)}
+                    onChange={() => toggleClass(cls.id || cls._id)}
                   />
                   <span className="ml-2 text-sm font-medium">
-                    {cls.code}{" "}
+                      {(cls.code || cls.name)}{" "}
                     <span className="text-xs opacity-70">({cls.section})</span>
                   </span>
                 </label>
@@ -293,44 +224,51 @@ const campusNames = {
 const Announcements = () => {
   const { getCurrentCampus, getClassesByCurrentCampus, isDarkMode } =
     useFacultyContext(); // Get classes getter
+  const toast = useToast();
   const campus = getCurrentCampus();
   const classes = getClassesByCurrentCampus(); // Get array of classes
-
-  // Initialize from localStorage or mock data
-  const [announcements, setAnnouncements] = useState(() => {
-    const saved = localStorage.getItem("college_announcements");
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      return parsed[campus] || [];
-    }
-    return announcementsByCampus[campus] || [];
-  });
+  const [announcements, setAnnouncements] = useState([]);
 
   const [isPosting, setIsPosting] = useState(false);
 
-  const handlePost = (newAnnouncement) => {
-    const updatedAnnouncements = [newAnnouncement, ...announcements];
-    saveAnnouncements(updatedAnnouncements);
+  const loadAnnouncements = async () => {
+    try {
+      const { data } = await portalApi.announcements();
+      const mapped = (data.data || []).map((item) => ({
+        id: item._id,
+        title: item.title,
+        description: item.description,
+        date: new Date(item.createdAt).toLocaleDateString(),
+        classSection: (item.targetClasses || []).map((cls) => `${cls.name} (${cls.section})`).join(", "),
+        attachment: item.attachment?.url,
+      }));
+      setAnnouncements(mapped);
+    } catch {
+      setAnnouncements([]);
+    }
   };
 
-  const handleDelete = (id) => {
-    const updatedAnnouncements = announcements.filter((a) => a.id !== id);
-    saveAnnouncements(updatedAnnouncements);
+  useEffect(() => {
+    loadAnnouncements();
+  }, []);
+
+  const handlePost = async (newAnnouncement, file) => {
+    const formData = new FormData();
+    formData.append("title", newAnnouncement.title);
+    formData.append("description", newAnnouncement.description);
+    (newAnnouncement.classes || []).forEach((classId) => formData.append("classes", classId));
+    if (newAnnouncement.link) formData.append("attachment", newAnnouncement.link);
+    if (file) formData.append("attachment", file);
+
+    await portalApi.createAnnouncement(formData);
+    toast.success("Announcement posted");
+    await loadAnnouncements();
   };
 
-  const saveAnnouncements = (updatedAnnouncements) => {
-    setAnnouncements(updatedAnnouncements);
-
-    // Update localStorage
-    const saved = localStorage.getItem("college_announcements");
-    const allAnnouncements = saved
-      ? JSON.parse(saved)
-      : { ...announcementsByCampus };
-    allAnnouncements[campus] = updatedAnnouncements;
-    localStorage.setItem(
-      "college_announcements",
-      JSON.stringify(allAnnouncements),
-    );
+  const handleDelete = async (id) => {
+    await portalApi.deleteAnnouncement(id);
+    toast.success("Announcement deleted");
+    await loadAnnouncements();
   };
 
   return (
@@ -399,3 +337,4 @@ const Announcements = () => {
 };
 
 export default Announcements;
+

@@ -1,144 +1,10 @@
-import { useStudentContext } from "../../context/StudentContext";
+import { useEffect, useMemo, useState } from "react";
+import { useStudentContext } from "../../store/hooks/useStudentReduxContext";
 import MaterialCard from "../../components/portal-shared/MaterialCard";
 import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
 import { FolderOpen } from "lucide-react";
-
-// Mock subjects and materials data by campus
-const subjectsByCampus = {
-  main: [
-    {
-      name: "Computer Science",
-      code: "CS-312",
-      materials: [
-        {
-          name: "Week 7 Lecture Slides",
-          type: "PDF",
-          date: "Sept 12, 2025",
-          description: "Process scheduling & CPU bursts",
-        },
-        {
-          name: "Disk Management Demo",
-          type: "Video",
-          date: "Sept 10, 2025",
-          description: "Lab walk-through and code review",
-        },
-        {
-          name: "Revision Cheatsheet",
-          type: "Notes",
-          date: "Sept 9, 2025",
-          description: "Key formulas and definitions",
-        },
-      ],
-    },
-    {
-      name: "Linear Algebra",
-      code: "MTH-205",
-      materials: [
-        {
-          name: "Assignment Solutions",
-          type: "PDF",
-          date: "Sept 11, 2025",
-          description: "Solutions to tutorial sheet 4",
-        },
-        {
-          name: "Eigenvalues Explained",
-          type: "Video",
-          date: "Sept 8, 2025",
-          description: "30-min concept recap",
-        },
-        {
-          name: "Practice Set",
-          type: "Notes",
-          date: "Sept 7, 2025",
-          description: "Extra credit problems",
-        },
-      ],
-    },
-    {
-      name: "Database Systems",
-      code: "CS-215",
-      materials: [
-        {
-          name: "ER Diagrams Gallery",
-          type: "Image",
-          date: "Sept 10, 2025",
-          description: "Sample schemas from class",
-        },
-        {
-          name: "Normalization Guide",
-          type: "PDF",
-          date: "Sept 9, 2025",
-          description: "1NF to BCNF examples",
-        },
-        {
-          name: "SQL Lab Recording",
-          type: "Video",
-          date: "Sept 6, 2025",
-          description: "Joins and aggregations lab",
-        },
-      ],
-    },
-  ],
-  law: [
-    {
-      name: "Constitutional Law",
-      code: "LAW-201",
-      materials: [
-        {
-          name: "Constitution Overview",
-          type: "PDF",
-          date: "Sept 12, 2025",
-          description: "Key articles and amendments",
-        },
-        {
-          name: "Case Law Database",
-          type: "PDF",
-          date: "Sept 10, 2025",
-          description: "Landmark constitutional cases",
-        },
-      ],
-    },
-    {
-      name: "Criminal Law",
-      code: "LAW-302",
-      materials: [
-        {
-          name: "Criminal Code Summary",
-          type: "PDF",
-          date: "Sept 11, 2025",
-          description: "Section-wise analysis",
-        },
-        {
-          name: "Criminal Procedure Flowchart",
-          type: "Image",
-          date: "Sept 9, 2025",
-          description: "Investigation to conviction",
-        },
-      ],
-    },
-  ],
-  hala: [
-    {
-      name: "Business Management",
-      code: "BBA-101",
-      materials: [
-        {
-          name: "Strategic Planning guide",
-          type: "PDF",
-          date: "Sept 10, 2025",
-          description: "Framework and templates",
-        },
-        {
-          name: "Case Studies",
-          type: "PDF",
-          date: "Sept 8, 2025",
-          description: "Real-world examples",
-        },
-      ],
-    },
-  ],
-};
+import { portalApi } from "../../services/api";
 
 const campusNames = {
   main: "Main Campus",
@@ -149,7 +15,64 @@ const campusNames = {
 const Materials = () => {
   const { getCurrentCampus, isDarkMode } = useStudentContext();
   const campus = getCurrentCampus();
-  const subjects = subjectsByCampus[campus] || [];
+  const [materials, setMaterials] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadMaterials = async () => {
+      try {
+        const { data } = await portalApi.materials();
+        const mappedMaterials = (data.data || []).map((material) => ({
+          id: material._id,
+          classSection: material.classRoom?.name || material.classRoom?.section || material.classRoom || "-",
+          subject: material.subject?.name || material.subject?.code || material.subject || "-",
+          title: material.title,
+          type: material.type,
+          uploadDate: material.createdAt ? new Date(material.createdAt).toLocaleDateString() : "-",
+          link: material.file?.url || material.link || "#",
+          description: material.title,
+        }));
+
+        if (isMounted) {
+          setMaterials(mappedMaterials);
+        }
+      } catch {
+        if (isMounted) {
+          setMaterials([]);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadMaterials();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const groupedMaterials = useMemo(() => {
+    const grouped = new Map();
+
+    materials.forEach((material) => {
+      const key = `${material.classSection}-${material.subject}`;
+      if (!grouped.has(key)) {
+        grouped.set(key, {
+          classSection: material.classSection,
+          subject: material.subject,
+          items: [],
+        });
+      }
+      grouped.get(key).items.push(material);
+    });
+
+    return Array.from(grouped.values());
+  }, [materials]);
 
   return (
     <div className="space-y-8 pb-10">
@@ -163,35 +86,30 @@ const Materials = () => {
         subtitle="Access lecture slides, videos, notes, and other learning resources for your enrolled subjects."
       />
 
-      {subjects.length > 0 ? (
+      {loading ? (
+        <div className="py-10 text-center text-gray-500 dark:text-gray-400">Loading materials...</div>
+      ) : groupedMaterials.length > 0 ? (
         <div className="space-y-8">
-          {subjects.map((subject) => (
-            <section
-              key={subject.code}
-              className="space-y-4"
-            >
+          {groupedMaterials.map((group) => (
+            <section key={`${group.classSection}-${group.subject}`} className="space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-2">
                 <div>
                   <h2 className="text-xl font-bold text-college-navy dark:text-white break-words">
-                    {subject.name}
+                    {group.subject}
                   </h2>
                   <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mt-1 sm:mt-0">
-                    <span className="font-medium px-2 py-0.5 bg-gray-100 dark:bg-dark-elevated rounded text-gray-600 dark:text-gray-300 shrink-0">{subject.code}</span>
-                    <span className="hidden sm:inline">â€¢</span>
-                    <span className="break-words">PDFs, videos, images, notes</span>
+                    <span className="font-medium px-2 py-0.5 bg-gray-100 dark:bg-dark-elevated rounded text-gray-600 dark:text-gray-300 shrink-0">{group.classSection}</span>
+                    <span className="hidden sm:inline">•</span>
+                    <span className="break-words">Files shared by your instructors</span>
                   </div>
                 </div>
                 <span className="self-start sm:self-center text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-100 dark:bg-dark-surface text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-dark-border shrink-0">
-                  {subject.materials.length} items
+                  {group.items.length} items
                 </span>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                {subject.materials.map((item) => (
-                  <MaterialCard
-                    key={item.name}
-                    material={item}
-                    role="student"
-                  />
+                {group.items.map((item) => (
+                  <MaterialCard key={item.id} material={item} role="student" />
                 ))}
               </div>
             </section>

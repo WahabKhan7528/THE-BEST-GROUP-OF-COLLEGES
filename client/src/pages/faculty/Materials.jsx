@@ -1,74 +1,11 @@
-import { Link } from "react-router-dom";
-import { useFacultyContext } from "../../context/FacultyContext";
+import { useEffect, useState } from "react";
+import { useFacultyContext } from "../../store/hooks/useFacultyReduxContext";
 import MaterialCard from "../../components/portal-shared/MaterialCard";
 import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
-import { UploadCloud } from "lucide-react";
+import { Plus, UploadCloud } from "lucide-react";
 import PublicButton from "../../components/shared/PublicButton";
-
-// Mock materials data by campus
-const materialsByCampus = {
-  main: [
-    {
-      id: "m1",
-      classSection: "BSCS - A",
-      subject: "Operating Systems",
-      title: "Lecture 07 Slides",
-      type: "Slides",
-      uploadDate: "Sept 11, 2025",
-      link: "#",
-    },
-    {
-      id: "m2",
-      classSection: "BSCS - B",
-      subject: "Database Systems",
-      title: "Normalization Cheatsheet",
-      type: "PDF",
-      uploadDate: "Sept 10, 2025",
-      link: "#",
-    },
-    {
-      id: "m3",
-      classSection: "BSCS - A",
-      subject: "Operating Systems",
-      title: "Lab Demo Recording",
-      type: "Video",
-      uploadDate: "Sept 9, 2025",
-      link: "#",
-    },
-  ],
-  law: [
-    {
-      id: "m4",
-      classSection: "LLB - A",
-      subject: "Constitutional Law",
-      title: "Indian Constitution Overview",
-      type: "Slides",
-      uploadDate: "Sept 12, 2025",
-      link: "#",
-    },
-    {
-      id: "m5",
-      classSection: "LLB - A",
-      subject: "Criminal Law",
-      title: "Criminal Procedure Code Summary",
-      type: "PDF",
-      uploadDate: "Sept 11, 2025",
-      link: "#",
-    },
-  ],
-  hala: [
-    {
-      id: "m6",
-      classSection: "BBA - A",
-      subject: "Business Management",
-      title: "Strategic Planning Framework",
-      type: "Slides",
-      uploadDate: "Sept 10, 2025",
-      link: "#",
-    },
-  ],
-};
+import { portalApi } from "../../services/api";
 
 const campusNames = {
   main: "Main Campus",
@@ -79,7 +16,28 @@ const campusNames = {
 const Materials = () => {
   const { getCurrentCampus, isDarkMode } = useFacultyContext();
   const campus = getCurrentCampus();
-  const materials = materialsByCampus[campus] || [];
+  const [materials, setMaterials] = useState([]);
+
+  useEffect(() => {
+    const loadMaterials = async () => {
+      try {
+        const { data } = await portalApi.materials();
+        setMaterials((data.data || []).map((material) => ({
+          id: material._id,
+          classSection: material.classRoom?.name || material.classRoom?.section || material.classRoom || "-",
+          subject: material.subject?.name || material.subject?.code || material.subject || "-",
+          title: material.title,
+          type: material.type,
+          uploadDate: material.createdAt ? new Date(material.createdAt).toLocaleDateString() : "-",
+          link: material.file?.url || material.link,
+        })));
+      } catch {
+        setMaterials([]);
+      }
+    };
+
+    loadMaterials();
+  }, []);
 
   return (
     <div className="space-y-6 pb-10">
@@ -93,13 +51,14 @@ const Materials = () => {
         subtitle="Upload and manage resources, lecture notes, and media for your students."
         action={
           <PublicButton
-            onClick={() => navigate("/faculty/materials/upload")}
-            variant="secondary"
-            className="w-full"
+            to="/faculty/materials/upload"
+            variant={isDarkMode ? "secondary" : "primary"}
             shape="slanted"
+            size="md"
+            icon={Plus}
+            className="shadow-md transition-all duration-200"
           >
-            <UploadCloud size={18} />
-            <span>Upload Material</span>
+            Upload Material
           </PublicButton>
         }
       />
@@ -118,12 +77,6 @@ const Materials = () => {
           <p className="text-gray-600 dark:text-gray-400 text-lg mb-4">
             No materials uploaded for {campusNames[campus]} yet.
           </p>
-          <Link
-            to="/faculty/materials/upload"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-college-navy/80 border border-gray-200 dark:border-college-gold/30 text-college-navy dark:text-white rounded-sm font-semibold hover:bg-gray-50 dark:hover:bg-college-navy transition-colors"
-          >
-            Upload your first material
-          </Link>
         </div>
       )}
     </div>
@@ -131,3 +84,4 @@ const Materials = () => {
 };
 
 export default Materials;
+

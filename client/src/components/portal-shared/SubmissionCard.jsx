@@ -1,7 +1,8 @@
 import { FileText } from "lucide-react";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 import Card from "../shared/Card";
 import PublicButton from "../shared/PublicButton";
-import { useThemeContext } from "../../context/ThemeContext";
 
 const statusBadge = {
   "On-time":
@@ -12,7 +13,44 @@ const statusBadge = {
 };
 
 const SubmissionCard = ({ submission, role = "faculty", onGrade }) => {
-  const { isDarkMode } = useThemeContext();
+  const isDarkMode = useSelector((state) => state.ui.isDarkMode);
+  const maxMarks = submission.maxMarks || 100;
+  const hasGrade = submission.marks !== undefined && submission.marks !== null;
+  const [marks, setMarks] = useState(submission.marks ?? "");
+  const [remarks, setRemarks] = useState(submission.remarks ?? "");
+  const [isEditing, setIsEditing] = useState(!hasGrade);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    setMarks(submission.marks ?? "");
+    setRemarks(submission.remarks ?? "");
+    setIsEditing(!hasGrade);
+    setError("");
+  }, [submission.id, submission.marks, submission.remarks, hasGrade]);
+
+  const handleSave = async () => {
+    const parsedMarks = Number(marks);
+
+    if (Number.isNaN(parsedMarks)) {
+      setError("Enter a valid mark.");
+      return;
+    }
+
+    if (parsedMarks < 0 || parsedMarks > maxMarks) {
+      setError(`Marks must be between 0 and ${maxMarks}.`);
+      return;
+    }
+
+    setError("");
+
+    try {
+      await onGrade?.({ id: submission.id, marks: parsedMarks, remarks, maxMarks });
+      setIsEditing(false);
+    } catch {
+      setError("Unable to save grade right now.");
+    }
+  };
+
   const badge =
     statusBadge[submission.status] ||
     "bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-100 dark:border-gray-700";
@@ -52,9 +90,9 @@ const SubmissionCard = ({ submission, role = "faculty", onGrade }) => {
               {submission.submittedAt}
             </div>
 
-            {isStudent && submission.marks !== undefined && (
+            {isStudent && hasGrade && (
               <div className="text-xs text-emerald-600 dark:text-emerald-400 font-bold">
-                Score: {submission.marks}/{submission.maxMarks || 100}
+                Score: {submission.marks}/{maxMarks}
               </div>
             )}
           </div>
@@ -90,28 +128,84 @@ const SubmissionCard = ({ submission, role = "faculty", onGrade }) => {
             </div>
           )
         ) : (
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-            <input
-              type="number"
-              placeholder="Marks"
-              defaultValue={submission.marks}
-              className="w-full sm:w-24 px-3 py-2 rounded-sm border border-gray-200 dark:border-college-navy/20 bg-white dark:bg-college-navy/40 dark:text-white text-sm shadow-sm focus:border-college-navy dark:focus:border-college-gold focus:ring-1 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500"
-            />
-            <input
-              type="text"
-              placeholder="Grading remarks..."
-              defaultValue={submission.remarks}
-              className="w-full sm:w-48 px-3 py-2 rounded-sm border border-gray-200 dark:border-college-navy/20 bg-white dark:bg-college-navy/40 dark:text-white text-sm shadow-sm focus:border-college-navy dark:focus:border-college-gold focus:ring-1 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500"
-            />
-            <PublicButton
-              variant={isDarkMode ? "secondary" : "primary"}
-              size="sm"
-              shape="slanted"
-              className="w-full sm:w-auto font-bold whitespace-nowrap"
-              onClick={() => onGrade?.(submission.studentId)}
-            >
-              Mark Graded
-            </PublicButton>
+          <div className="flex-1 space-y-3">
+            {hasGrade && !isEditing ? (
+              <div className="grid gap-3 sm:grid-cols-[1fr_auto] sm:items-start">
+                <div className="space-y-2">
+                  <div className="inline-flex items-center gap-2 text-sm font-bold text-college-navy dark:text-college-gold">
+                    Grade: {submission.marks}/{maxMarks}
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    {submission.remarks || "No remarks added."}
+                  </p>
+                  <p className="text-[11px] text-gray-400 dark:text-gray-500">
+                    Maximum marks: {maxMarks}
+                  </p>
+                </div>
+
+                <PublicButton
+                  variant={isDarkMode ? "secondary" : "primary"}
+                  size="sm"
+                  shape="slanted"
+                  className="w-full sm:w-auto font-bold whitespace-nowrap"
+                  onClick={() => setIsEditing(true)}
+                >
+                  Edit Grade
+                </PublicButton>
+              </div>
+            ) : (
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <div className="space-y-1">
+                  <input
+                    type="number"
+                    placeholder="Marks"
+                    value={marks}
+                    onChange={(e) => setMarks(e.target.value)}
+                    className="w-full sm:w-24 px-3 py-2 rounded-sm border border-gray-200 dark:border-college-navy/20 bg-white dark:bg-college-navy/40 dark:text-white text-sm shadow-sm focus:border-college-navy dark:focus:border-college-gold focus:ring-1 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                  />
+                  <p className="text-[11px] text-gray-400 dark:text-gray-500 sm:w-24">
+                    Max {maxMarks} marks
+                  </p>
+                </div>
+                <div className="flex-1 space-y-1">
+                  <input
+                    type="text"
+                    placeholder="Grading remarks..."
+                    value={remarks}
+                    onChange={(e) => setRemarks(e.target.value)}
+                    className="w-full px-3 py-2 rounded-sm border border-gray-200 dark:border-college-navy/20 bg-white dark:bg-college-navy/40 dark:text-white text-sm shadow-sm focus:border-college-navy dark:focus:border-college-gold focus:ring-1 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                  />
+                  {error && <p className="text-xs font-medium text-red-600 dark:text-red-400">{error}</p>}
+                </div>
+                <div className="flex gap-2 flex-col sm:flex-row">
+                  <PublicButton
+                    variant={isDarkMode ? "secondary" : "primary"}
+                    size="sm"
+                    shape="slanted"
+                    className="w-full sm:w-auto font-bold whitespace-nowrap"
+                    onClick={handleSave}
+                  >
+                    {hasGrade ? "Save Grade" : "Mark Graded"}
+                  </PublicButton>
+                  {hasGrade && isEditing && (
+                    <PublicButton
+                      variant="secondary"
+                      size="sm"
+                      shape="slanted"
+                      className="w-full sm:w-auto font-bold whitespace-nowrap"
+                      onClick={() => {
+                        setMarks(submission.marks ?? "");
+                        setRemarks(submission.remarks ?? "");
+                        setIsEditing(false);
+                        setError("");
+                      }}
+                    >
+                      Cancel
+                    </PublicButton>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

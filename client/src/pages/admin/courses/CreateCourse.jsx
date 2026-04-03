@@ -1,30 +1,33 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAdminContext } from "../../../context/AdminContext";
+import { useAdminContext } from "../../../store/hooks/useAdminReduxContext";
 import { useToast } from "../../../context/ToastContext";
 import { useNavigate } from "react-router-dom";
 import PortalForm from "../../../components/portal-shared/PortalForm";
 import { Building2, CheckCircle2, Plus } from "lucide-react";
 import { courseSchema } from "../../../schemas/courseSchema";
+import { adminApi } from "../../../services/api";
 
 const CreateCourse = () => {
   const navigate = useNavigate();
-  const { campuses, isDarkMode, isSuperAdmin, getSubAdminCampus, currentAdmin } = useAdminContext();
+  const { campuses, isSuperAdmin, currentAdmin } = useAdminContext();
   const toast = useToast();
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+  const { register, handleSubmit, reset, watch, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(courseSchema),
-    defaultValues: { examSystem: "annual" },
+    defaultValues: { examSystem: "semester" },
   });
   const [selectedCampuses, setSelectedCampuses] = useState([]);
+  const examSystem = watch("examSystem");
 
-  // Pre-lock campus for sub-admins
+  const currentCampusId = currentAdmin?.campus?._id || currentAdmin?.campus || null;
+
   useEffect(() => {
-    if (!isSuperAdmin) {
-      const campus = getSubAdminCampus();
-      if (campus) setSelectedCampuses([campus]);
+    if (isSuperAdmin) return;
+    if (currentCampusId && selectedCampuses.length === 0) {
+      setSelectedCampuses([currentCampusId]);
     }
-  }, [isSuperAdmin, getSubAdminCampus]);
+  }, [currentCampusId, isSuperAdmin, selectedCampuses.length]);
 
   const handleCampusToggle = (campusId) => {
     setSelectedCampuses((prev) =>
@@ -34,12 +37,41 @@ const CreateCourse = () => {
     );
   };
 
-  const onSubmit = () => {
+  const onSubmit = async (values) => {
     if (selectedCampuses.length === 0) {
       toast.warning("Please select at least one campus where this course will be offered");
       return;
     }
-    navigate("/admin/courses");
+
+    try {
+      await adminApi.createCourse({
+        title: values.title,
+        duration: values.duration,
+        eligibility: values.eligibility,
+        examSystem: values.examSystem,
+        totalSemesters: values.totalSemesters || undefined,
+        totalYears: values.totalYears || undefined,
+        totalCreditHours: values.totalCreditHours || undefined,
+        description: values.description,
+        campuses: selectedCampuses,
+      });
+
+      reset({
+        title: "",
+        duration: "",
+        eligibility: "",
+        examSystem: "semester",
+        totalSemesters: "",
+        totalYears: "",
+        totalCreditHours: "",
+        description: "",
+      });
+      setSelectedCampuses([]);
+      toast.success("Course created successfully");
+      window.location.replace("/admin/courses");
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to create course");
+    }
   };
 
   return (
@@ -65,6 +97,10 @@ const CreateCourse = () => {
           />
         </div>
 
+        <div className="md:col-span-2 rounded-sm border border-dashed border-gray-300 dark:border-college-gold/20 bg-gray-50/70 dark:bg-college-navy/40 p-4 text-sm text-gray-600 dark:text-gray-300">
+          Course code is generated automatically from the course title after save.
+        </div>
+
         <div>
           <PortalForm.Input
             label="Duration"
@@ -87,11 +123,43 @@ const CreateCourse = () => {
           </label>
           <select
             {...register("examSystem")}
-            className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none dark:text-white"
+            className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none text-gray-900 dark:text-white"
           >
-            <option value="annual">Annual</option>
             <option value="semester">Semester</option>
+            <option value="annual">Annual</option>
+            <option value="other">Other</option>
           </select>
+        </div>
+
+        {examSystem === "semester" && (
+          <div>
+            <PortalForm.Input
+              label="Total Semesters"
+              type="number"
+              registration={register("totalSemesters")}
+              placeholder="8"
+            />
+          </div>
+        )}
+
+        {examSystem === "annual" && (
+          <div>
+            <PortalForm.Input
+              label="Total Years"
+              type="number"
+              registration={register("totalYears")}
+              placeholder="5"
+            />
+          </div>
+        )}
+
+        <div>
+          <PortalForm.Input
+            label="Total Credit Hours"
+            type="number"
+            registration={register("totalCreditHours")}
+            placeholder="120"
+          />
         </div>
 
         <div className="md:col-span-2">
@@ -108,7 +176,7 @@ const CreateCourse = () => {
       {/* Campus Availability */}
       <PortalForm.Section title={<>Campus Availability <span className="text-red-500 text-sm ml-1">*</span></>} className="!space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 col-span-1 md:col-span-2">
-          {(isSuperAdmin ? campuses : campuses.filter(c => currentAdmin?.allocatedCampuses?.includes(c.id))).map((campus) => {
+          {(isSuperAdmin ? campuses : campuses.filter(c => String(c.id) === String(currentAdmin?.campus?._id || currentAdmin?.campus))).map((campus) => {
             const isSelected = selectedCampuses.includes(campus.id);
             return (
               <div
@@ -149,3 +217,4 @@ const CreateCourse = () => {
 };
 
 export default CreateCourse;
+

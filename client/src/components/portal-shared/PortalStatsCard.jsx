@@ -24,6 +24,9 @@ const PortalStatsCard = ({ title, value, hint }) => {
             {value}
           </span>
         </div>
+        {hint ? (
+          <p className="text-xs text-gray-500 dark:text-gray-300 font-medium">{hint}</p>
+        ) : null}
       </div>
 
       

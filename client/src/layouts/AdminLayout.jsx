@@ -1,19 +1,26 @@
 import { useState, useEffect, Suspense } from "react";
 import { Outlet, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import PortalSidebar from "../components/portal-shared/PortalSidebar";
 import PortalNavbar from "../components/portal-shared/PortalNavbar";
-import { useAdminContext } from "../context/AdminContext";
 import { adminNavItems } from "../data/navigationData";
 import PageLoader from "../components/shared/PageLoader";
+import { fetchAdminCampuses } from "../store/slices/adminSlice";
+
+let hasBootstrappedAdminData = false;
 
 const AdminLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { currentAdmin, isSuperAdmin } = useAdminContext();
+  const dispatch = useDispatch();
+  const { user: currentAdmin } = useSelector((state) => state.auth);
+  const isDarkMode = useSelector((state) => state.ui.isDarkMode);
+  const campuses = useSelector((state) => state.admin.campuses);
+  const isSuperAdmin = currentAdmin?.role === "super_admin";
 
   const visibleNavItems = adminNavItems.filter(
     (item) =>
       !(item.superAdminOnly && !isSuperAdmin) &&
-      !(item.subAdminHidden && !isSuperAdmin)
+      !(item.subAdminOnly && isSuperAdmin)
   );
 
   const user = {
@@ -29,8 +36,19 @@ const AdminLayout = () => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
+  useEffect(() => {
+    if (hasBootstrappedAdminData) return;
+    if (!currentAdmin) return;
+
+    hasBootstrappedAdminData = true;
+    if (isSuperAdmin || campuses.length === 0) {
+      dispatch(fetchAdminCampuses());
+    }
+  }, [currentAdmin, dispatch, isSuperAdmin, campuses.length]);
+
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-dark-base flex flex-col lg:flex-row transition-colors duration-300">
+    <div className={isDarkMode ? "dark" : ""}>
+      <div className="min-h-screen bg-neutral-50 dark:bg-dark-base flex flex-col lg:flex-row transition-colors duration-300">
       {/* Mobile Overlay */}
       {isSidebarOpen && (
         <div
@@ -69,6 +87,7 @@ const AdminLayout = () => {
             </Suspense>
           </div>
         </main>
+      </div>
       </div>
     </div>
   );

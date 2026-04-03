@@ -1,5 +1,6 @@
 import React from "react";
 import { AlertTriangle, RefreshCw, Home } from "lucide-react";
+import PublicButton from "./PublicButton";
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -38,20 +39,21 @@ class ErrorBoundary extends React.Component {
               An unexpected error occurred. Please try again or return to the home page.
             </p>
             <div className="flex items-center justify-center gap-3">
-              <button
+              <PublicButton
                 onClick={this.handleReset}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-sm bg-college-navy dark:bg-college-gold text-white dark:text-college-navy font-semibold hover:opacity-90 transition-all"
+                variant="primary"
+
               >
                 <RefreshCw size={16} />
                 Try Again
-              </button>
-              <a
+              </PublicButton>
+              <PublicButton
                 href="/"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-sm border border-gray-200 dark:border-college-gold/20 text-gray-700 dark:text-gray-300 font-semibold hover:bg-gray-50 dark:hover:bg-white/5 transition-all"
+                variant="secondary"
               >
                 <Home size={16} />
                 Home
-              </a>
+              </PublicButton>
             </div>
           </div>
         </div>

@@ -44,6 +44,19 @@ const iconForType = {
   Video: Play,
 };
 
+const normalizeType = (type) => {
+  const value = String(type || "").trim().toLowerCase();
+
+  if (value === "pdf") return "PDF";
+  if (value === "ppt" || value === "pptx") return "Slides";
+  if (value === "doc" || value === "docx") return "Notes";
+  if (value === "image") return "Image";
+  if (value === "video") return "Video";
+  if (value === "other") return "Other";
+
+  return type ? String(type) : "Other";
+};
+
 const MaterialCard = ({ material, role = "faculty" }) => {
   const toast = useToast();
   const confirmDialog = useConfirm();
@@ -61,8 +74,9 @@ const MaterialCard = ({ material, role = "faculty" }) => {
   };
 
   if (role === "student") {
+    const displayType = normalizeType(material.type);
     const badgeClass =
-      badgeColors[material.type] ||
+      badgeColors[displayType] ||
       "text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 border-gray-100 dark:border-gray-700";
     return (
       <div className="bg-white dark:bg-college-navy border dark:border-college-gold/50 border-gray-100 rounded-sm p-4 shadow-sm hover:shadow-md transition-all duration-300">
@@ -83,7 +97,7 @@ const MaterialCard = ({ material, role = "faculty" }) => {
           <span
             className={`text-xs font-semibold px-3 py-1 rounded-full border shrink-0 ${badgeClass}`}
           >
-            {material.type}
+            {displayType}
           </span>
         </div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-4 text-sm">
@@ -104,10 +118,11 @@ const MaterialCard = ({ material, role = "faculty" }) => {
   }
 
   // faculty variant (default)
+  const displayType = normalizeType(material.type);
   const badge =
-    typeBadge[material.type] ||
+    typeBadge[displayType] ||
     "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300";
-  const Icon = iconForType[material.type] || File;
+  const Icon = iconForType[displayType] || File;
 
   return (
     <div className="bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/50 rounded-sm p-4 shadow-sm hover:shadow-md transition-all duration-300 space-y-3">
@@ -126,7 +141,7 @@ const MaterialCard = ({ material, role = "faculty" }) => {
               {material.title}
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              {material.type}
+              {displayType}
             </p>
           </div>
         </div>

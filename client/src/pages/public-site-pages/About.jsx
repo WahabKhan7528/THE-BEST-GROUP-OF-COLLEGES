@@ -6,7 +6,7 @@ import Badge from "../../components/shared/Badge";
 import Card from "../../components/shared/Card";
 import CTASection from "../../components/public-site/CTASection";
 
-import { milestones, values, leadership } from "../../data/aboutData";
+import { milestones, leadership } from "../../data/aboutData";
 
 const About = () => {
   return (

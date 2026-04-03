@@ -7,9 +7,7 @@ import {
     Users,
     LayoutDashboard,
     ClipboardList,
-    PlusCircle,
     FolderOpen,
-    Upload,
     BarChart3,
     Megaphone,
     Image,
@@ -56,22 +54,15 @@ export const adminNavItems = [
     { to: "/admin/courses", label: "Courses", icon: Layers },
     { to: "/admin/subjects", label: "Subjects", icon: BookOpen },
     { to: "/admin/classes", label: "Classes", icon: GraduationCap },
-    { to: "/admin/cms/news", label: "News & Events", icon: Megaphone, subAdminHidden: true },
-    { to: "/admin/cms/gallery", label: "Gallery", icon: Image, subAdminHidden: true },
+    { to: "/admin/cms/news", label: "News & Events", icon: Megaphone, superAdminOnly: true },
+    { to: "/admin/cms/gallery", label: "Gallery", icon: Image, superAdminOnly: true },
 ];
 
 // Faculty sidebar navigation items
 export const facultyNavItems = [
     { to: "/faculty/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { to: "/faculty/assignments", label: "Assignments", icon: ClipboardList },
-    {
-        to: "/faculty/assignments/create",
-        label: "Create Assignment",
-        icon: PlusCircle,
-    },
-    { to: "/faculty/submissions/123", label: "Submissions", icon: ClipboardList },
     { to: "/faculty/materials", label: "Materials", icon: FolderOpen },
-    { to: "/faculty/materials/upload", label: "Upload Material", icon: Upload },
     { to: "/faculty/results", label: "Results", icon: BarChart3 },
     { to: "/faculty/announcements", label: "Announcements", icon: Megaphone },
 ];

@@ -1,5 +1,8 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { ArrowRight, Bell } from "lucide-react";
+import PageLoader from "../../components/shared/PageLoader";
 import PublicButton from "../../components/shared/PublicButton";
 import StatsGrid from "../../components/public-site/StatsGrid";
 import Section from "../../components/public-site/Section";
@@ -9,15 +12,69 @@ import CampusCard from "../../components/public-site/CampusCard";
 import TestimonialSlider from "../../components/public-site/TestimonialSlider";
 import ContactForm from "../../components/public-site/ContactForm";
 import FAQ from "../../components/public-site/FAQ";
+import SkeletonLoading from "../../components/shared/SkeletonLoading";
+import { publicApi } from "../../services/api";
 
 import {
   collegesData,
   testimonials,
   homeStats as stats,
-  announcements,
 } from "../../data/homeData";
 
 const Home = () => {
+  const { user, loading } = useSelector((state) => state.auth);
+  const [newsItems, setNewsItems] = useState([]);
+  const [isLoadingNews, setIsLoadingNews] = useState(true);
+
+  useEffect(() => {
+    const loadNews = async () => {
+      setIsLoadingNews(true);
+      try {
+        const { data } = await publicApi.newsEvents({ type: "news" });
+        const items = (data.data || []).map((item) => ({
+          id: item._id,
+          title: item.title,
+          date: item.date
+            ? new Date(item.date).toLocaleDateString(undefined, {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              })
+            : new Date(item.createdAt).toLocaleDateString(undefined, {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              }),
+          description: item.description,
+        }));
+
+        setNewsItems(items.slice(0, 3));
+      } catch {
+        setNewsItems([]);
+      } finally {
+        setIsLoadingNews(false);
+      }
+    };
+
+    loadNews();
+  }, []);
+
+  if (loading) {
+    return <PageLoader />;
+  }
+
+  if (user?.role === "super_admin" || user?.role === "admin") {
+    return <Navigate to="/admin/dashboard" replace />;
+  }
+
+  if (user?.role === "faculty") {
+    return <Navigate to="/faculty/dashboard" replace />;
+  }
+
+  if (user?.role === "student") {
+    return <Navigate to="/student/dashboard" replace />;
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-white font-sans">
       {/* Hero Section */}
@@ -28,7 +85,7 @@ const Home = () => {
             alt="THE BEST GROUP OF COLLEGES"
             className="w-full h-full object-cover object-center"
             loading="eager"
-            fetchpriority="high"
+            fetchPriority="high"
           />
         </div>
         <div className="absolute inset-0 z-0 bg-college-navy/70" />
@@ -64,7 +121,7 @@ const Home = () => {
               </div>
             </div>
 
-            {announcements?.length > 0 && (
+            {(isLoadingNews || newsItems.length > 0) && (
               <div className="lg:col-span-5 h-full flex flex-col justify-center lg:items-end w-full">
                 <div className="w-full lg:max-w-lg xl:max-w-xl bg-college-navy shadow-2xl border border-college-gold/30 p-6 rounded-sm">
                   <div className="flex items-center gap-3 mb-6">
@@ -74,13 +131,15 @@ const Home = () => {
                     <h2 className="text-2xl font-serif font-bold text-white">News & Updates</h2>
                   </div>
                   <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 no-scrollbar">
-                    {announcements.map((announcement, index) => (
-                      <div key={announcement.id || index} className="group border-b border-white/20 pb-4 last:border-0 last:pb-0">
-                        <h3 className="text-lg font-bold text-college-gold mb-1 transition-colors">{announcement.title}</h3>
-                        <p className="text-xs text-white/70 mb-2 uppercase tracking-wider">{announcement.date}</p>
-                        <p className="text-white/90 text-sm leading-relaxed line-clamp-2 group-hover:line-clamp-none transition-all">{announcement.description}</p>
-                      </div>
-                    ))}
+                    {isLoadingNews
+                      ? <SkeletonLoading count={3} variant="textLine" className="h-16 bg-white/10 border-b border-white/20 rounded-none" containerClassName="space-y-4" />
+                      : newsItems.map((newsItem) => (
+                        <div key={newsItem.id} className="group border-b border-white/20 pb-4 last:border-0 last:pb-0">
+                          <h3 className="text-lg font-bold text-college-gold mb-1 transition-colors">{newsItem.title}</h3>
+                          <p className="text-xs text-white/70 mb-2 uppercase tracking-wider">{newsItem.date}</p>
+                          <p className="text-white/90 text-sm leading-relaxed line-clamp-2 group-hover:line-clamp-none transition-all">{newsItem.description}</p>
+                        </div>
+                      ))}
                   </div>
                 </div>
               </div>

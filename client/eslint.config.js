@@ -48,6 +48,8 @@ export default [
       "react/jsx-uses-react": "off",
       "react/prop-types": "off",
       "react/jsx-pascal-case": ["error", { allowAllCaps: true }],
+      "react-refresh/only-export-components": "off",
+      "react/no-unescaped-entities": "off",
     },
   },
 ];

@@ -8,7 +8,7 @@ import { useConfirm } from '../../../../context/ConfirmContext';
 import PublicButton from '../../../../components/shared/PublicButton';
 import PortalForm from '../../../../components/portal-shared/PortalForm';
 import { Upload, Image as ImageIcon, CheckCircle2, Save, Trash2 } from 'lucide-react';
-import { adminGalleryImages as mockImages } from "../../../../data/adminData";
+import { adminApi } from '../../../../services/api';
 
 const EditGalleryImage = () => {
     const { id } = useParams();
@@ -27,18 +27,27 @@ const EditGalleryImage = () => {
     });
 
     useEffect(() => {
-        const foundImage = mockImages.find(img => img.id === id);
-        if (foundImage) {
-            reset({
-                title: foundImage.title,
-                category: foundImage.category,
-                tags: "",
-                description: foundImage.description || "",
-                date: foundImage.date
-            });
-            setPreview(foundImage.url);
-        }
-    }, [id, reset]);
+        const loadImage = async () => {
+            try {
+                const { data } = await adminApi.galleryItems();
+                const foundImage = (data.data || []).find((img) => img._id === id);
+                if (!foundImage) return;
+
+                reset({
+                    title: foundImage.title,
+                    category: foundImage.category,
+                    tags: (foundImage.tags || []).join(", "),
+                    description: foundImage.description || "",
+                    date: foundImage.createdAt ? new Date(foundImage.createdAt).toLocaleDateString() : "",
+                });
+                setPreview(foundImage.image?.url || null);
+            } catch {
+                navigate("/admin/cms/gallery");
+            }
+        };
+
+        loadImage();
+    }, [id, navigate, reset]);
 
     const handleFileSelect = (selectedFile) => {
         if (selectedFile && selectedFile.type.startsWith('image/')) {
@@ -69,7 +78,15 @@ const EditGalleryImage = () => {
         setIsDragging(false);
     };
 
-    const onSubmit = () => {
+    const onSubmit = async (values) => {
+        const formData = new FormData();
+        formData.append("title", values.title);
+        formData.append("category", values.category);
+        formData.append("description", values.description || "");
+        formData.append("tags", values.tags || "");
+        if (file) formData.append("image", file);
+
+        await adminApi.updateGalleryItem(id, formData);
         toast.success("Image details updated successfully");
         navigate("/admin/cms/gallery");
     };
@@ -77,6 +94,7 @@ const EditGalleryImage = () => {
     const handleDelete = async () => {
         const confirmed = await confirmDialog({ title: "Delete Image", message: "Are you sure you want to delete this image?", confirmText: "Delete", variant: "danger" });
         if (confirmed) {
+            await adminApi.deleteGalleryItem(id);
             toast.success("Image deleted successfully");
             navigate("/admin/cms/gallery");
         }

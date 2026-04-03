@@ -41,6 +41,7 @@ export default function FilterBar({
                             <div className="flex gap-2 w-max pb-1">
                                 {filters.map((filter) => {
                                     const isActive = activeFilter === filter.id;
+                                    const filterLabel = filter.name || filter.label || filter.title || filter.id;
                                     return (
                                         <button
                                             key={filter.id}
@@ -52,7 +53,7 @@ export default function FilterBar({
                                                     : "bg-white text-gray-600 border-gray-200 hover:border-college-navy/40"
                                             )}
                                         >
-                                            {filter.name}
+                                                {filterLabel}
                                         </button>
                                     );
                                 })}
@@ -89,7 +90,7 @@ export default function FilterBar({
                                 className="w-full appearance-none bg-gray-50 border border-gray-200 rounded-xl pl-9 pr-9 py-3 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-college-navy cursor-pointer"
                             >
                                 {filters?.map((f) => (
-                                    <option key={f.id} value={f.id}>{f.name}</option>
+                                    <option key={f.id} value={f.id}>{f.name || f.label || f.title || f.id}</option>
                                 ))}
                             </select>
                             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
@@ -119,18 +120,19 @@ export default function FilterBar({
                         <div className="flex flex-wrap gap-3">
                             {filters.map((filter) => {
                                 const isActive = activeFilter === filter.id;
+                                const filterLabel = filter.name || filter.label || filter.title || filter.id;
                                 return (
                                     <button
                                         key={filter.id}
                                         onClick={() => onFilterChange(filter.id)}
                                         className={clsx(
-                                            "px-6 py-2.5 rounded font-medium text-sm transition-all",
+                                            "px-6 py-2.5 rounded font-semibold text-sm transition-all border",
                                             isActive
-                                                ? "bg-college-gold text-college-navy"
-                                                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                                ? "bg-college-gold text-college-navy border-college-gold shadow-sm"
+                                                : "bg-white text-gray-800 border-gray-300 hover:bg-gray-50 hover:border-college-navy/30"
                                         )}
                                     >
-                                        {filter.name}
+                                        {filterLabel}
                                     </button>
                                 );
                             })}
@@ -167,7 +169,7 @@ export default function FilterBar({
                                 className="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-college-navy text-sm bg-white min-w-[180px]"
                             >
                                 {filters?.map((f) => (
-                                    <option key={f.id} value={f.id}>{f.name}</option>
+                                    <option key={f.id} value={f.id}>{f.name || f.label || f.title || f.id}</option>
                                 ))}
                             </select>
                         </div>

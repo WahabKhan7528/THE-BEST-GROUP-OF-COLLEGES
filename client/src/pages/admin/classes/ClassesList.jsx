@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useAdminContext } from "../../../context/AdminContext";
+import { useEffect, useMemo, useState } from "react";
+import { useAdminContext } from "../../../store/hooks/useAdminReduxContext";
 import { useToast } from "../../../context/ToastContext";
 import { useConfirm } from "../../../context/ConfirmContext";
 import Table from "../../../components/portal-shared/Table";
@@ -9,10 +9,10 @@ import {
   Plus,
   Search,
   Filter,
-  BookOpen,
   Users,
+  Building2,
 } from "lucide-react";
-import { mockClassesData as adminClasses } from "../../../data/adminData";
+import { adminApi } from "../../../services/api";
 
 
 const ClassesList = () => {
@@ -23,19 +23,43 @@ const ClassesList = () => {
   const confirm = useConfirm();
   const [selectedCampus, setSelectedCampus] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [classes, setClasses] = useState([]);
 
-  const mockData = adminClasses;
+  useEffect(() => {
+    const loadClasses = async () => {
+      try {
+        const { data } = await adminApi.classes();
+        setClasses(data.data || []);
+      } catch {
+        setClasses([]);
+      }
+    };
 
-  // Filter data based on user role, selected campus, and search query
-  let filteredData = mockData;
+    loadClasses();
+  }, []);
+
+  const normalizedClasses = useMemo(
+    () =>
+      classes.map((cls) => ({
+        ...cls,
+        id: cls._id,
+        currentTerm: cls.semester || cls.annualYear || "Not assigned",
+        lockedSemesters: (cls.semesterSubjects || []).filter((semester) => semester.status === "locked" || semester.status === "completed" || semester.resultPublished).length,
+        totalSemesters: (cls.semesterSubjects || []).length,
+        studentsCount: cls.students?.length || 0,
+      })),
+    [classes],
+  );
+
+  let filteredData = [...normalizedClasses];
 
   // 1. Filter by Role & Campus
   if (!isSuperAdmin) {
     filteredData = filteredData.filter((cls) =>
-      currentAdmin?.allocatedCampuses?.includes(cls.campus),
+      String(cls.campus?._id || cls.campus) === String(currentAdmin?.campus?._id || currentAdmin?.campus),
     );
   } else if (selectedCampus) {
-    filteredData = filteredData.filter((cls) => cls.campus === selectedCampus);
+    filteredData = filteredData.filter((cls) => String(cls.campus?._id || cls.campus) === selectedCampus);
   }
 
   // 2. Filter by Search Query
@@ -44,8 +68,8 @@ const ClassesList = () => {
     filteredData = filteredData.filter(
       (cls) =>
         cls.name.toLowerCase().includes(query) ||
-        cls.faculty.toLowerCase().includes(query) ||
-        cls.subjects.some(sub => sub.toLowerCase().includes(query))
+        String(cls.currentTerm).toLowerCase().includes(query) ||
+        String(cls.totalSemesters).toLowerCase().includes(query)
     );
   }
 
@@ -61,62 +85,52 @@ const ClassesList = () => {
         <div className="flex flex-col">
           <span className="font-semibold text-college-navy">{row.name}</span>
           <span className="text-xs text-gray-500 flex items-center gap-1">
-            <Users className="w-3 h-3" /> {row.students} Students
+            <Users className="w-3 h-3" /> {row.studentsCount} Students
           </span>
         </div>
       )
     },
     {
-      key: "sections",
-      label: "Sections",
+      key: "currentTerm",
+      label: "Current Term",
       render: (row) => (
-        <div className="flex gap-1 flex-wrap">
-          {row.sections.map((sec, idx) => (
-            <span key={idx} className="bg-college-navy/5 text-college-navy px-2 py-0.5 rounded text-xs font-medium border border-college-navy/10">
-              {sec}
-            </span>
-          ))}
+        <div className="flex flex-col gap-1">
+          <span className="bg-college-navy/5 text-college-navy px-2 py-0.5 rounded text-xs font-medium border border-college-navy/10 w-fit">
+            {row.currentTerm}
+          </span>
+          <span className="text-xs text-gray-500 dark:text-gray-400">Section {row.section || "A"}</span>
         </div>
       )
     },
     {
-      key: "subjects",
-      label: "Subjects",
-      render: (row) => (
-        <div className="flex flex-wrap gap-1 max-w-[200px]">
-          {row.subjects.slice(0, 2).map((sub, idx) => (
-            <span key={idx} className="bg-white dark:bg-college-navy/30 text-college-navy dark:text-college-gold px-2 py-0.5 rounded text-xs font-medium border border-college-gold/20">
-              {sub}
-            </span>
-          ))}
-          {row.subjects.length > 2 && (
-            <span className="text-xs text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded">+{row.subjects.length - 2} more</span>
-          )}
-        </div>
-      )
-    },
-    {
-      key: "faculty",
-      label: "Faculty Lead",
+      key: "studentsCount",
+      label: "Students",
       render: (row) => (
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-full bg-college-navy/10 dark:bg-college-gold/10 flex items-center justify-center text-college-navy dark:text-college-gold text-xs font-bold border border-college-navy/10 dark:border-college-gold/20">
-            {row.faculty.charAt(0)}
-          </div>
-          <span className="text-sm text-gray-700">{row.faculty}</span>
+          <Users className="w-4 h-4 text-college-navy/60 dark:text-college-gold/60" />
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{row.studentsCount}</span>
         </div>
       )
     },
     {
+      key: "lockedSemesters",
+      label: "Locked Semesters",
+      render: (row) => (
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">
+          {row.lockedSemesters}/{row.totalSemesters}
+        </span>
+      )
+    },
+    ...(isSuperAdmin ? [{
       key: "campus",
       label: "Campus",
       render: (row) => (
         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">
           <Building2 className="w-3 h-3" />
-          {getCampusName(row.campus)}
+          {getCampusName(row.campus?._id || row.campus)}
         </span>
       ),
-    },
+    }] : []),
   ];
 
   return (
@@ -131,16 +145,18 @@ const ClassesList = () => {
             Manage academic classes, sections, and subject allocations
           </p>
         </div>
-        <PublicButton
-          to="/admin/classes/create"
-          variant={isDarkMode ? "secondary" : "primary"}
-          shape="slanted"
-          size="md"
-          className="shadow-md transition-all duration-200"
-          icon={Plus}
-        >
-          Create New Class
-        </PublicButton>
+        {!isSuperAdmin && (
+          <PublicButton
+            to="/admin/classes/create"
+            variant={isDarkMode ? "secondary" : "primary"}
+            shape="slanted"
+            size="md"
+            className="shadow-md transition-all duration-200"
+            icon={Plus}
+          >
+            Create New Class
+          </PublicButton>
+        )}
       </div>
 
       {/* Filters Section */}
@@ -184,7 +200,7 @@ const ClassesList = () => {
         <Table
           columns={columns}
           data={filteredData}
-          actionButtons={(row) => [
+          actionButtons={isSuperAdmin ? undefined : (row) => [
             {
               label: "Edit",
               onClick: () => navigate(`/admin/classes/edit/${row.id}`),
@@ -195,7 +211,9 @@ const ClassesList = () => {
               onClick: async () => {
                 const confirmed = await confirm({ title: "Delete Class", message: "Are you sure you want to delete this class?", confirmText: "Delete", variant: "danger" });
                 if (confirmed) {
-                  toast.success(`Class ${row.id} deleted`);
+                  await adminApi.deleteClass(row.id);
+                  setClasses((prev) => prev.filter((cls) => cls._id !== row.id));
+                  toast.success("Class deleted");
                 }
               },
               className: "text-red-600 hover:text-red-700 font-medium bg-red-50 border border-red-100 dark:bg-red-900 dark:border-transparent dark:text-gray-300 dark:hover:bg-red-800",
@@ -225,4 +243,5 @@ const ClassesList = () => {
 };
 
 export default ClassesList;
+
 

@@ -1,18 +1,26 @@
+import { useEffect } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "../../schemas/loginSchema";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { ArrowRight, Lock, User, Home, Key } from "lucide-react";
+import { ArrowRight, Lock, User, Home, Key, Eye, EyeOff } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
 import PublicButton from "../../components/shared/PublicButton";
 import Card from "../../components/shared/Card";
+import { useToast } from "../../context/ToastContext";
+import { loginUser, logoutUser } from "../../store/slices/authSlice";
 
 const Login = () => {
   const { type } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const toast = useToast();
+  const currentUser = useSelector((state) => state.auth.user);
+  const [showPassword, setShowPassword] = useState(false);
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(loginSchema),
@@ -20,6 +28,29 @@ const Login = () => {
   });
 
   const portalType = type ? type.toLowerCase() : "";
+
+  useEffect(() => {
+    if (!currentUser) return;
+
+    if (portalType === "admin" && (currentUser.role === "super_admin" || currentUser.role === "admin")) {
+      navigate("/admin/dashboard", { replace: true });
+      return;
+    }
+
+    if (portalType === "faculty" && currentUser.role === "faculty") {
+      navigate("/faculty/dashboard", { replace: true });
+      return;
+    }
+
+    if (portalType === "student" && currentUser.role === "student") {
+      navigate("/student/dashboard", { replace: true });
+      return;
+    }
+
+    if (portalType === "admin" || portalType === "faculty" || portalType === "student") {
+      dispatch(logoutUser()).unwrap().catch(() => null);
+    }
+  }, [currentUser, dispatch, navigate, portalType]);
 
   const portalinfo =
     portalType === "admin"
@@ -46,7 +77,48 @@ const Login = () => {
               path: "/",
             };
 
-  const handleLogin = () => navigate(portalinfo.path);
+      const allowedRolesByPortal = {
+        admin: ["super_admin", "admin"],
+        faculty: ["faculty"],
+        student: ["student"],
+      };
+
+      const getPortalRoleError = (role) => {
+        if (portalType === "admin") return "Please use an admin account to sign in here.";
+        if (portalType === "faculty") return "Please use a faculty account to sign in here.";
+        if (portalType === "student") return "Please use a student account to sign in here.";
+        return `This portal does not accept ${role} accounts.`;
+      };
+
+  const handleLogin = async (formData) => {
+    try {
+      const result = await dispatch(
+        loginUser({
+          loginId: formData.id?.trim(),
+          password: formData.password,
+          allowedRoles: allowedRolesByPortal[portalType] || [],
+        })
+      ).unwrap();
+
+      const role = result.role;
+
+      if (role === "super_admin" || role === "admin") {
+        navigate("/admin/dashboard");
+      } else if (role === "faculty") {
+        navigate("/faculty/dashboard");
+      } else if (role === "student") {
+        navigate("/student/dashboard");
+      } else {
+        navigate(portalinfo.path);
+      }
+
+      toast.success("Login successful");
+    } catch (error) {
+      await dispatch(logoutUser()).unwrap().catch(() => null);
+      const message = error?.response?.data?.message || error?.message || "Login failed";
+      toast.error(message);
+    }
+  };
   const titleWords = portalinfo.title.split(" ");
 
   return (
@@ -140,11 +212,19 @@ const Login = () => {
                   size={20}
                 />
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   {...register("password")}
-                  className="w-full pl-12 pr-4 py-4 rounded-sm border border-white/10 bg-white/5 focus:bg-white/10 focus:ring-2 focus:ring-college-navy/50 focus:border-college-navy outline-none text-white placeholder:text-white/20"
-                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                  className="w-full pl-12 pr-12 py-4 rounded-sm border border-white/10 bg-white/5 focus:bg-white/10 focus:ring-2 focus:ring-college-navy/50 focus:border-college-navy outline-none text-white placeholder:text-white/20"
+                  placeholder="********"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-college-gold transition-colors"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
               {errors.password && (
                 <p className="text-xs text-red-400 ml-1 mt-1">

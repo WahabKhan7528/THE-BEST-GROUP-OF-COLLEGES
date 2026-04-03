@@ -1,20 +1,21 @@
 import { Link } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
 import {
-  Megaphone,
-  PlusCircle,
   ArrowRight,
 } from "lucide-react";
 
-import { useFacultyContext } from "../../context/FacultyContext";
+import { useFacultyContext } from "../../store/hooks/useFacultyReduxContext";
 import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
 import PortalStatsCard from "../../components/portal-shared/PortalStatsCard";
+import { portalApi } from "../../services/api";
 
-import {
-  campusNames,
-  facultyQuickActions as quickActions,
-  recentAnnouncements,
-} from "../../data/facultyPortalData";
+const quickActions = [
+  { title: "Create Assignment", path: "/faculty/assignments/create" },
+  { title: "Upload Material", path: "/faculty/materials/upload" },
+  { title: "View Submissions", path: "/faculty/assignments" },
+  { title: "Announcements", path: "/faculty/announcements" },
+];
 
 const Dashboard = () => {
   const {
@@ -22,18 +23,36 @@ const Dashboard = () => {
     getClassesByCurrentCampus,
     getAssignmentStatsByCurrentCampus,
     getTotalStudents,
-    getAverageClassSize,
+    getAssignedSubjectsCount,
     getCurrentCampus,
     isDarkMode,
   } = useFacultyContext();
+  const [recentAnnouncements, setRecentAnnouncements] = useState([]);
+
+  useEffect(() => {
+    const loadAnnouncements = async () => {
+      try {
+        const { data } = await portalApi.announcements();
+        const items = (data.data || []).slice(0, 3).map((item) => ({
+          title: item.title,
+          date: new Date(item.createdAt).toLocaleDateString(),
+        }));
+        setRecentAnnouncements(items);
+      } catch {
+        setRecentAnnouncements([]);
+      }
+    };
+
+    loadAnnouncements();
+  }, []);
 
   const campus = getCurrentCampus();
   const classes = getClassesByCurrentCampus();
   const assignmentStats = getAssignmentStatsByCurrentCampus();
   const totalStudents = getTotalStudents();
-  const avgClassSize = getAverageClassSize();
+  const assignedSubjectsCount = getAssignedSubjectsCount();
 
-  const stats = [
+  const stats = useMemo(() => [
     {
       title: "Total Students",
       value: totalStudents,
@@ -45,16 +64,16 @@ const Dashboard = () => {
       hint: "Assigned",
     },
     {
-      title: "Avg. Class Size",
-      value: avgClassSize,
-      hint: "Students per class",
+      title: "Assigned Subjects",
+      value: assignedSubjectsCount,
+      hint: "Across active classes",
     },
     {
       title: "Assignments",
       value: assignmentStats?.totalAssignments || 0,
       hint: "Across all classes",
     }
-  ];
+  ], [totalStudents, classes.length, assignedSubjectsCount, assignmentStats]);
 
 
 
@@ -64,11 +83,11 @@ const Dashboard = () => {
       <PortalPageHeader
         badge={
           <Badge variant={isDarkMode ? "gold" : "navy"}>
-            {campusNames[campus]}
+            {campus?.toUpperCase() || "CAMPUS"}
           </Badge>
         }
-        title={`Welcome, ${currentFaculty.name}`}
-        subtitle={`${currentFaculty.designation} â€¢ ${currentFaculty.department}`}
+        title={`Welcome, ${currentFaculty?.name || "Faculty"}`}
+        subtitle={`${currentFaculty?.designation || "Instructor"} • ${currentFaculty?.department || "Department"}`}
       />
 
       {/* Main Stats Grid */}
@@ -192,3 +211,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+

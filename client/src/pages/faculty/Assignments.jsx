@@ -1,84 +1,13 @@
-import { useState, useMemo } from "react";
-import { useFacultyContext } from "../../context/FacultyContext";
+import { useEffect, useMemo, useState } from "react";
+import { useFacultyContext } from "../../store/hooks/useFacultyReduxContext";
 import AssignmentCard from "../../components/portal-shared/AssignmentCard";
 import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
-import { PlusCircle, Search, BookOpen } from "lucide-react";
-import PublicButton from "../../components/shared/PublicButton";
+import { Plus, Search, BookOpen } from "lucide-react";
 import FormInput from "../../components/shared/FormInput";
 import Card from "../../components/shared/Card";
-
-
-// Mock assignments data by campus
-const assignmentsByCampus = {
-  main: [
-    {
-      id: "a1",
-      title: "CPU Scheduling Report",
-      description:
-        "Analyze FCFS vs SJF using your lab data and provide charts.",
-      dueDate: "Sept 18, 2025",
-      attachment: "#",
-      classSection: "BSCS - A",
-      subject: "Operating Systems",
-      maxMarks: 20,
-    },
-    {
-      id: "a2",
-      title: "ER Diagram for Library",
-      description: "Submit ERD + relational schema with keys and constraints.",
-      dueDate: "Sept 20, 2025",
-      attachment: "#",
-      classSection: "BSCS - B",
-      subject: "Database Systems",
-      maxMarks: 25,
-    },
-    {
-      id: "a3",
-      title: "Matrix Factorization Set",
-      description: "Problem set on eigen decomposition and SVD.",
-      dueDate: "Sept 14, 2025",
-      attachment: "#",
-      classSection: "BSCS - A",
-      subject: "Linear Algebra",
-      maxMarks: 15,
-    },
-  ],
-  law: [
-    {
-      id: "a4",
-      title: "Constitutional Case Analysis",
-      description: "Analyze Supreme Court ruling with precedents.",
-      dueDate: "Sept 22, 2025",
-      attachment: "#",
-      classSection: "LLB - A",
-      subject: "Constitutional Law",
-      maxMarks: 30,
-    },
-    {
-      id: "a5",
-      title: "Criminal Law Essay",
-      description: "Essay on mens rea and actus reus principles.",
-      dueDate: "Sept 25, 2025",
-      attachment: "#",
-      classSection: "LLB - A",
-      subject: "Criminal Law",
-      maxMarks: 20,
-    },
-  ],
-  hala: [
-    {
-      id: "a6",
-      title: "Business Proposal",
-      description: "Submit comprehensive business plan and projections.",
-      dueDate: "Sept 28, 2025",
-      attachment: "#",
-      classSection: "BBA - A",
-      subject: "Business Management",
-      maxMarks: 25,
-    },
-  ],
-};
+import PublicButton from "../../components/shared/PublicButton";
+import { portalApi } from "../../services/api";
 
 const campusNames = {
   main: "Main Campus",
@@ -90,17 +19,39 @@ const Assignments = () => {
   const { getCurrentCampus, isDarkMode } = useFacultyContext();
   const campus = getCurrentCampus();
   const [searchTerm, setSearchTerm] = useState("");
+  const [assignments, setAssignments] = useState([]);
 
-  const assignments = useMemo(() => {
-    const rawData = assignmentsByCampus[campus] || [];
-    if (!searchTerm.trim()) return rawData;
+  useEffect(() => {
+    const loadAssignments = async () => {
+      try {
+        const { data } = await portalApi.assignments();
+        setAssignments((data.data || []).map((assignment) => ({
+          id: assignment._id,
+          title: assignment.title,
+          description: assignment.description,
+          dueDate: assignment.dueDate ? new Date(assignment.dueDate).toLocaleDateString() : "-",
+          attachment: assignment.attachment?.url,
+          classSection: assignment.classRoom?.name || assignment.classRoom?.section || assignment.classRoom || "-",
+          subject: assignment.subject?.name || assignment.subject?.code || assignment.subject || "-",
+          maxMarks: assignment.maxMarks,
+        })));
+      } catch {
+        setAssignments([]);
+      }
+    };
+
+    loadAssignments();
+  }, []);
+
+  const filteredAssignments = useMemo(() => {
+    if (!searchTerm.trim()) return assignments;
     
-    return rawData.filter((a) => 
+    return assignments.filter((a) => 
       a.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       a.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
       a.classSection.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  }, [campus, searchTerm]);
+  }, [assignments, searchTerm]);
 
   return (
     <div className="space-y-6 pb-10">
@@ -115,11 +66,12 @@ const Assignments = () => {
         action={
           <PublicButton
             to="/faculty/assignments/create"
-            className=""
-            variant="secondary"
+            variant={isDarkMode ? "secondary" : "primary"}
             shape="slanted"
+            size="md"
+            icon={Plus}
+            className="shadow-md transition-all duration-200"
           >
-            <PlusCircle size={20} />
             Create Assignment
           </PublicButton>
         }
@@ -139,9 +91,9 @@ const Assignments = () => {
         </div>
       </div>
 
-      {assignments.length > 0 ? (
+      {filteredAssignments.length > 0 ? (
         <div className="grid grid-cols-1 gap-4">
-          {assignments.map((assignment) => (
+          {filteredAssignments.map((assignment) => (
             <AssignmentCard key={assignment.id} assignment={assignment} />
           ))}
         </div>
@@ -154,14 +106,6 @@ const Assignments = () => {
           <p className="text-gray-500 dark:text-gray-400 mt-2 mb-6 max-w-sm mx-auto">
             You haven't created any assignments for {campusNames[campus]} yet. Get started by creating your first assignment.
           </p>
-          <PublicButton
-            to="/faculty/assignments/create"
-            variant="secondary"
-            className="px-6"
-          >
-            <PlusCircle size={18} />
-            Create Assignment
-          </PublicButton>
         </Card>
       )}
     </div>
@@ -169,3 +113,4 @@ const Assignments = () => {
 };
 
 export default Assignments;
+

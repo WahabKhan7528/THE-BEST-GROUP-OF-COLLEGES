@@ -1,10 +1,11 @@
 import { Menu, Home, User, GraduationCap, ChevronRight } from "lucide-react";
-import { useContext, useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import DarkModeToggle from "./DarkModeToggle";
 import CampusFilter from "../admin/CampusFilter";
-import { AdminContext } from "../../context/AdminContext";
-import { mockUsersData } from "../../data/adminData";
+import { useConfirm } from "../../context/ConfirmContext";
+import { logoutUser } from "../../store/slices/authSlice";
 
 const ROLE_ICONS = {
   admin: User,
@@ -20,9 +21,8 @@ const PortalNavbar = ({
   showCampusFilter = false,
 }) => {
   const navigate = useNavigate();
-  const adminCtx = useContext(AdminContext);
-  const switchAdminUser = adminCtx?.switchAdminUser;
-  const currentAdmin = adminCtx?.currentAdmin;
+  const dispatch = useDispatch();
+  const confirm = useConfirm();
 
   const [showMobileProfile, setShowMobileProfile] = useState(false);
   const profileRef = useRef(null);
@@ -39,15 +39,32 @@ const PortalNavbar = ({
 
   const RoleIcon = ROLE_ICONS[role] || User;
 
-  // Filter only admin users for the switcher
-  const adminUsers = mockUsersData.filter((u) => u.adminRole);
-
   const initials =
     user?.name
       ?.split(" ")
       .map((n) => n[0])
       .join("")
       .toUpperCase() || role[0].toUpperCase();
+
+  const handleHomeClick = async () => {
+    const shouldLogout = await confirm({
+      title: `Leave ${badgeLabel || "Portal"}?`,
+      message: "To open the public site, you will be logged out first.",
+      confirmText: "Logout and Continue",
+      cancelText: "Stay in Portal",
+      variant: "info",
+    });
+
+    if (!shouldLogout) return;
+
+    try {
+      await dispatch(logoutUser()).unwrap();
+    } catch {
+      // Ignore logout network failures and still continue to the public site.
+    }
+
+    navigate("/");
+  };
 
   return (
     <header className="min-h-20 bg-white/70 dark:bg-college-navy backdrop-blur-xl border-b border-gray-200/50 dark:border-college-gold/15 sticky top-0 z-20 px-3 sm:px-4 lg:px-8 shadow-sm transition-colors duration-300">
@@ -79,35 +96,10 @@ const PortalNavbar = ({
         <div className="flex items-center justify-end flex-wrap gap-1.5 sm:gap-3 min-w-0">
           {showCampusFilter && <CampusFilter />}
 
-          {/* Admin Switcher (Developer Tool) only for testing */}
-          {role === "admin" && (
-            <div className="hidden sm:inline-flex items-center gap-1 px-2 py-1 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-900/50 rounded-sm max-w-[170px]">
-              <span className="text-[10px] font-bold text-amber-700 dark:text-amber-500 uppercase tracking-tight whitespace-nowrap">
-                Switch:
-              </span>
-              <select
-                value={currentAdmin?.id}
-                onChange={(e) => {
-                  const user = adminUsers.find((u) => u.id === e.target.value);
-                  if (user) switchAdminUser(user);
-                }}
-                className="bg-transparent text-xs font-bold text-college-navy dark:text-amber-500 focus:outline-none border-none p-0 cursor-pointer truncate max-w-[100px]"
-                style={{ minWidth: 0 }}
-              >
-                {adminUsers.map((u) => (
-                  <option key={u.id} value={u.id} className="truncate">
-                    {u.name.length > 16 ? u.name.slice(0, 15) + "â€¦" : u.name} (
-                    {u.adminRole})
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-
           <DarkModeToggle />
 
           <button
-            onClick={() => navigate("/")}
+            onClick={handleHomeClick}
             className="p-2 sm:p-2.5 rounded-sm text-gray-500 hover:bg-college-navy/10 hover:text-college-navy dark:hover:bg-college-gold/10 dark:hover:text-college-gold transition-all duration-200"
             title="Back to Home"
             aria-label="Back to Home"

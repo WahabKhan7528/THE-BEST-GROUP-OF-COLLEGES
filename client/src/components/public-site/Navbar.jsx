@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import PublicButton from "../shared/PublicButton";
 import PortalSelector from "./PortalSelector";
+import { campuses } from "../../data/navigationData";
 
 export default function Navbar() {
     const location = useLocation();
@@ -56,12 +57,6 @@ export default function Navbar() {
             location.pathname === path || (path !== "/" && location.pathname.startsWith(path + "/"))
         );
     };
-
-    const campuses = [
-        { name: "Main Campus", path: "/campuses/main", icon: School },
-        { name: "Law Campus", path: "/campuses/law", icon: Building },
-        { name: "Hala Campus", path: "/campuses/hala", icon: BookOpen },
-    ];
 
     const pagesLinks = [
         { name: "Faculty", path: "/faculty-info", icon: UsersIcon },
@@ -160,47 +155,49 @@ export default function Navbar() {
                     </div>
 
                     {/* Campus Dropdown */}
-                    <div
-                        className="relative ml-2"
-                        ref={dropdownRef}
-                        onMouseEnter={() => setIsCampusOpen(true)}
-                        onMouseLeave={() => setIsCampusOpen(false)}
-                    >
-                        <PublicButton
-                            variant="unstyled"
-                            size="none"
-                            className="flex items-center gap-1.5 px-3 py-2 text-[13px] uppercase tracking-widest font-bold text-gray-600 hover:text-college-gold transition-colors"
-                            onClick={() => setIsCampusOpen(!isCampusOpen)}
-                            aria-expanded={isCampusOpen}
-                            aria-haspopup="true"
+                    {campuses.length > 0 && (
+                        <div
+                            className="relative ml-2"
+                            ref={dropdownRef}
+                            onMouseEnter={() => setIsCampusOpen(true)}
+                            onMouseLeave={() => setIsCampusOpen(false)}
                         >
-                            Campuses
-                            <ChevronDown
-                                className={`w-4 h-4 transition-transform duration-200 ${isCampusOpen ? "rotate-180 text-college-gold" : ""
-                                    }`}
-                            />
-                        </PublicButton>
+                            <PublicButton
+                                variant="unstyled"
+                                size="none"
+                                className="flex items-center gap-1.5 px-3 py-2 text-[13px] uppercase tracking-widest font-bold text-gray-600 hover:text-college-gold transition-colors"
+                                onClick={() => setIsCampusOpen(!isCampusOpen)}
+                                aria-expanded={isCampusOpen}
+                                aria-haspopup="true"
+                            >
+                                Campuses
+                                <ChevronDown
+                                    className={`w-4 h-4 transition-transform duration-200 ${isCampusOpen ? "rotate-180 text-college-gold" : ""
+                                        }`}
+                                />
+                            </PublicButton>
 
-                        {isCampusOpen && (
-                            <div className="absolute right-0 top-full pt-4 w-64 z-50 transition-all duration-200">
-                                <div className="bg-white rounded-xl shadow-xl border border-gray-100 p-2 overflow-hidden">
-                                    {campuses.map((campus) => (
-                                        <Link
-                                            key={campus.name}
-                                            to={campus.path}
-                                            onClick={() => setIsCampusOpen(false)}
-                                            className="group flex items-center gap-3 px-4 py-3 rounded hover:bg-college-gold/5 text-sm font-bold tracking-wide text-college-navy hover:text-college-gold transition-colors"
-                                        >
-                                            <div className="w-8 h-8 rounded bg-college-navy/5 flex items-center justify-center text-college-navy group-hover:bg-college-gold group-hover:text-white transition-colors">
-                                                <campus.icon className="w-4 h-4" />
-                                            </div>
-                                            <span>{campus.name}</span>
-                                        </Link>
-                                    ))}
+                            {isCampusOpen && (
+                                <div className="absolute right-0 top-full pt-4 w-64 z-50 transition-all duration-200">
+                                    <div className="bg-white rounded-xl shadow-xl border border-gray-100 p-2 overflow-hidden">
+                                        {campuses.map((campus) => (
+                                            <Link
+                                                key={campus.name}
+                                                to={campus.path}
+                                                onClick={() => setIsCampusOpen(false)}
+                                                className="group flex items-center gap-3 px-4 py-3 rounded hover:bg-college-gold/5 text-sm font-bold tracking-wide text-college-navy hover:text-college-gold transition-colors"
+                                            >
+                                                <div className="w-8 h-8 rounded bg-college-navy/5 flex items-center justify-center text-college-navy group-hover:bg-college-gold group-hover:text-white transition-colors">
+                                                    <campus.icon className="w-4 h-4" />
+                                                </div>
+                                                <span>{campus.name}</span>
+                                            </Link>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
-                        )}
-                    </div>
+                            )}
+                        </div>
+                    )}
 
                     {/* Portals Button */}
                     <div className="ml-4">
@@ -296,44 +293,46 @@ export default function Navbar() {
                         </div>
 
                         {/* Mobile Campuses Dropdown */}
-                        <div className="mobile-nav-item pt-2 border-t border-gray-100 mt-2">
-                            <PublicButton
-                                variant="unstyled"
-                                size="none"
-                                onClick={() => setIsMobileCampusOpen(!isMobileCampusOpen)}
-                                className="w-full flex items-center justify-between px-4 py-3.5 rounded text-xs tracking-widest uppercase font-bold text-gray-600 hover:text-college-gold transition-all"
-                            >
-                                <span className="flex items-center gap-2">
-                                    <School className="w-4 h-4 text-college-gold" />
-                                    Campuses
-                                </span>
-                                <ChevronDown
-                                    className={`w-4 h-4 transition-transform duration-200 ${isMobileCampusOpen ? "rotate-180 text-college-gold" : ""
-                                        }`}
-                                />
-                            </PublicButton>
+                        {campuses.length > 0 && (
+                            <div className="mobile-nav-item pt-2 border-t border-gray-100 mt-2">
+                                <PublicButton
+                                    variant="unstyled"
+                                    size="none"
+                                    onClick={() => setIsMobileCampusOpen(!isMobileCampusOpen)}
+                                    className="w-full flex items-center justify-between px-4 py-3.5 rounded text-xs tracking-widest uppercase font-bold text-gray-600 hover:text-college-gold transition-all"
+                                >
+                                    <span className="flex items-center gap-2">
+                                        <School className="w-4 h-4 text-college-gold" />
+                                        Campuses
+                                    </span>
+                                    <ChevronDown
+                                        className={`w-4 h-4 transition-transform duration-200 ${isMobileCampusOpen ? "rotate-180 text-college-gold" : ""
+                                            }`}
+                                    />
+                                </PublicButton>
 
-                            {isMobileCampusOpen && (
-                                <div className="px-2 pb-2 space-y-1">
-                                    {campuses.map((campus) => (
-                                        <Link
-                                            key={campus.name}
-                                            to={campus.path}
-                                            onClick={() => {
-                                                setIsOpen(false);
-                                                setIsMobileCampusOpen(false);
-                                            }}
-                                            className="flex items-center gap-3 px-4 py-3 rounded text-xs tracking-widest uppercase font-bold transition-colors text-college-navy hover:text-college-gold hover:bg-college-gold/5"
-                                        >
-                                            <div className="w-6 h-6 rounded bg-college-navy/5 flex items-center justify-center group-hover:bg-college-gold">
-                                                <campus.icon className="w-3 h-3 text-college-navy group-hover:text-white" />
-                                            </div>
-                                            {campus.name}
-                                        </Link>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+                                {isMobileCampusOpen && (
+                                    <div className="px-2 pb-2 space-y-1">
+                                        {campuses.map((campus) => (
+                                            <Link
+                                                key={campus.name}
+                                                to={campus.path}
+                                                onClick={() => {
+                                                    setIsOpen(false);
+                                                    setIsMobileCampusOpen(false);
+                                                }}
+                                                className="flex items-center gap-3 px-4 py-3 rounded text-xs tracking-widest uppercase font-bold transition-colors text-college-navy hover:text-college-gold hover:bg-college-gold/5"
+                                            >
+                                                <div className="w-6 h-6 rounded bg-college-navy/5 flex items-center justify-center group-hover:bg-college-gold">
+                                                    <campus.icon className="w-3 h-3 text-college-navy group-hover:text-white" />
+                                                </div>
+                                                {campus.name}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
 
                         {/* Mobile Portals Button */}
                         <div className="mobile-nav-item pt-4 pb-2">

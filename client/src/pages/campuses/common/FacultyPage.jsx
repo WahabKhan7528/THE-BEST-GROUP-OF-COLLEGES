@@ -1,17 +1,17 @@
-import { useLocation } from "react-router-dom";
-import Section from "../../../components/public-site/Section";
+import { useMemo } from "react";
+import { useParams } from "react-router-dom";
 import SectionHeader from "../../../components/public-site/SectionHeader";
-import FacultyGrid from "../../../components/public-site/FacultyGrid";
 import CampusCta from "../../../components/public-site/CampusCta";
+import FacultyGrid from "../../../components/public-site/FacultyGrid";
 
 const FacultyPage = () => {
-  const location = useLocation();
-  const path = location.pathname;
-
-  let campusName = "";
-  if (path.includes("/main")) campusName = "Main Campus";
-  else if (path.includes("/law")) campusName = "Law College";
-  else if (path.includes("/hala")) campusName = "Hala Campus";
+  const { campus } = useParams();
+  const campusName = useMemo(() => {
+    if (campus === "main") return "Main Campus";
+    if (campus === "law") return "Law Campus";
+    if (campus === "hala") return "Hala Campus";
+    return "Campus";
+  }, [campus]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -27,7 +27,8 @@ const FacultyPage = () => {
           />
         </div>
       </section>
-      <FacultyGrid filterCampus={campusName} />
+
+      <FacultyGrid filterCampus={campus} />
 
       <CampusCta
         badge="JOIN OUR FACULTY"

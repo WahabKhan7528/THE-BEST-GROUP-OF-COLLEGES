@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAdminContext } from "../../../context/AdminContext";
+import { useAdminContext } from "../../../store/hooks/useAdminReduxContext";
 import { useToast } from "../../../context/ToastContext";
 import { useConfirm } from "../../../context/ConfirmContext";
 import PublicButton from "../../../components/shared/PublicButton";
@@ -13,10 +13,11 @@ import {
   ShieldCheck,
   School
 } from "lucide-react";
+import { adminApi } from "../../../services/api";
 
 const CampusManagement = () => {
   const navigate = useNavigate();
-  const { campuses, isSuperAdmin, isDarkMode } = useAdminContext();
+  const { campuses, isSuperAdmin, isDarkMode, deleteCampus: deleteCampusState } = useAdminContext();
   const toast = useToast();
   const confirmDialog = useConfirm();
   const [searchTerm, setSearchTerm] = useState("");
@@ -79,7 +80,15 @@ const CampusManagement = () => {
       label: "Delete",
       onClick: async () => {
         const confirmed = await confirmDialog({ title: "Delete Campus", message: `Delete campus "${row.name}"?`, confirmText: "Delete", variant: "danger" });
-        if (confirmed) toast.success("Campus deleted");
+        if (confirmed) {
+          try {
+            await adminApi.deleteCampus(row._id);
+            deleteCampusState(row._id);
+            toast.success("Campus deleted");
+          } catch (error) {
+            toast.error(error?.response?.data?.message || "Failed to delete campus");
+          }
+        }
       },
       className: "text-red-600 hover:text-red-700 font-medium bg-red-50 border border-red-100 dark:bg-red-900 dark:border-transparent dark:text-gray-300 dark:hover:bg-red-800",
     },
@@ -162,3 +171,4 @@ const CampusManagement = () => {
 };
 
 export default CampusManagement;
+

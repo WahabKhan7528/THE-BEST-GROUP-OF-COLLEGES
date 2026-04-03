@@ -1,4 +1,5 @@
 import { Phone, Mail, CheckSquare, Send, ArrowRight } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import PublicButton from "../../components/shared/PublicButton";
 import Section from "../../components/public-site/Section";
 import SectionHeader from "../../components/public-site/SectionHeader";
@@ -10,17 +11,47 @@ import {
   admissionSteps,
   requirements,
 } from "../../data/admissionsData";
-import { programsData } from "../../data/programsData";
 import ProgramCard from "../../components/public-site/ProgramCard";
-import { useRef, useState } from "react";
+import SkeletonLoading from "../../components/shared/SkeletonLoading";
+import { publicApi } from "../../services/api";
 
 const Admissions = () => {
-  // Flatten all programs across campuses
-  const allPrograms = [
-    ...programsData.main.flatMap((cat) => cat.items),
-    ...programsData.law.flatMap((cat) => cat.items),
-    ...programsData.hala.flatMap((cat) => cat.items),
-  ];
+  const [courses, setCourses] = useState([]);
+  const [isLoadingCourses, setIsLoadingCourses] = useState(true);
+
+  useEffect(() => {
+    const loadCourses = async () => {
+      setIsLoadingCourses(true);
+      try {
+        const { data } = await publicApi.courses();
+        const mappedCourses = (data.data || []).map((course) => ({
+          id: course._id,
+          title: course.title,
+          duration:
+            course.duration ||
+            (course.examSystem === "semester" && course.totalSemesters
+              ? `${course.totalSemesters} Semesters`
+              : course.examSystem === "annual" && course.totalYears
+                ? `${course.totalYears} Years`
+                : "Program"),
+          description:
+            course.description ||
+            `Explore the ${course.title} curriculum designed for ${course.examSystem} study with strong academic foundations.`,
+          campuses: (course.campuses || []).map((campus) => campus.name).filter(Boolean),
+        }));
+
+        setCourses(mappedCourses);
+      } catch {
+        setCourses([]);
+      } finally {
+        setIsLoadingCourses(false);
+      }
+    };
+
+    loadCourses();
+  }, []);
+
+  const allPrograms = useMemo(() => courses, [courses]);
 
   const [visibleCount, setVisibleCount] = useState(6);
   const displayedPrograms = allPrograms.slice(0, visibleCount);
@@ -30,11 +61,15 @@ const Admissions = () => {
     setVisibleCount((prev) => prev + 6);
   };
 
-  const formPrograms = [
-    ...programsData.main.flatMap((cat) => cat.items).map(p => ({ value: p.title, label: p.title, campus: "Main Campus" })),
-    ...programsData.law.flatMap((cat) => cat.items).map(p => ({ value: p.title, label: p.title, campus: "Law Campus" })),
-    ...programsData.hala.flatMap((cat) => cat.items).map(p => ({ value: p.title, label: p.title, campus: "Hala Campus" })),
-  ];
+  const formPrograms = useMemo(
+    () =>
+      courses.map((course) => ({
+        value: course.title,
+        label: course.title,
+        campus: course.campuses.length > 0 ? course.campuses.join(", ") : "All Campuses",
+      })),
+    [courses],
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
@@ -78,12 +113,14 @@ const Admissions = () => {
         />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 max-w-7xl mx-auto relative z-10 mt-10">
-          {displayedPrograms.map((program, idx) => (
-            <ProgramCard key={`${program.title}-${idx}`} program={program} variant="overview" />
-          ))}
+          {isLoadingCourses
+            ? <SkeletonLoading count={6} variant="card" containerClassName="contents" />
+            : displayedPrograms.map((program) => (
+              <ProgramCard key={program.id || program.title} program={program} variant="overview" />
+            ))}
         </div>
 
-        {hasMore && (
+        {!isLoadingCourses && hasMore && (
           <div className="text-center mt-12 relative z-10">
             <PublicButton onClick={loadMore} className='px-8 flex items-center gap-2 hover:gap-4' variant="primary" size="md" shape="slanted">
               Load More Programs <ArrowRight />

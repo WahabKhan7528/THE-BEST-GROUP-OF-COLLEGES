@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import PublicButton from "../../components/shared/PublicButton";
 import CampusHero from "../../components/public-site/CampusHero";
@@ -9,17 +10,60 @@ import Badge from "../../components/shared/Badge";
 import ProgramCard from "../../components/public-site/ProgramCard";
 import FacilityCard from "../../components/public-site/FacilityCard";
 import CampusCta from "../../components/public-site/CampusCta";
+import SkeletonLoading from "../../components/shared/SkeletonLoading";
 
-import { programsData } from "../../data/programsData";
 import { campusPageConfig } from "../../data/campusData";
+import { publicApi } from "../../services/api";
 
 const CampusPage = () => {
   const { campus } = useParams();
   const config = campusPageConfig[campus];
+  const [courses, setCourses] = useState([]);
+  const [isLoadingCourses, setIsLoadingCourses] = useState(true);
 
   if (!config) return <Navigate to="/" replace />;
 
-  const programs = programsData[campus]?.[0]?.items || [];
+  useEffect(() => {
+    const loadCourses = async () => {
+      setIsLoadingCourses(true);
+      try {
+        const { data } = await publicApi.courses();
+        const mappedCourses = (data.data || []).map((course) => ({
+          id: course._id,
+          title: course.title,
+          duration:
+            course.duration ||
+            (course.examSystem === "semester" && course.totalSemesters
+              ? `${course.totalSemesters} Semesters`
+              : course.examSystem === "annual" && course.totalYears
+                ? `${course.totalYears} Years`
+                : "Program"),
+          description: course.description || `Explore the ${course.title} program.`,
+          campuses: (course.campuses || []).map((campusRef) => ({
+            id: campusRef?._id,
+            code: String(campusRef?.code || "").toLowerCase(),
+            slug: String(campusRef?.slug || "").toLowerCase(),
+          })),
+        }));
+        setCourses(mappedCourses);
+      } catch {
+        setCourses([]);
+      } finally {
+        setIsLoadingCourses(false);
+      }
+    };
+
+    loadCourses();
+  }, []);
+
+  const programs = useMemo(() => {
+    return courses.filter((course) =>
+      (course.campuses || []).some(
+        (campusRef) => campusRef.slug === campus || campusRef.code === campus,
+      ),
+    );
+  }, [courses, campus]);
+
   const { hero, stats, facilities, vision, programs: progSection, facilitiesSection, cta } = config;
 
   return (
@@ -92,11 +136,21 @@ const CampusPage = () => {
           variant="light"
           centered
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {programs.map((program) => (
-            <ProgramCard key={program.title} program={program} />
-          ))}
-        </div>
+        {isLoadingCourses ? (
+          <SkeletonLoading count={4} variant="card" containerClassName="grid grid-cols-1 md:grid-cols-2 gap-8" className="bg-white" />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {programs.map((program) => (
+              <ProgramCard key={program.id || program.title} program={program} />
+            ))}
+          </div>
+        )}
+
+        {!isLoadingCourses && programs.length === 0 ? (
+          <div className="mt-6 rounded-sm border border-dashed border-gray-300 p-8 text-center text-gray-500">
+            No programs are currently available for this campus.
+          </div>
+        ) : null}
       </Section>
 
       {/* Facilities */}

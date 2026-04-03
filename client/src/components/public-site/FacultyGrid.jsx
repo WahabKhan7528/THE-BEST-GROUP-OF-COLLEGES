@@ -1,27 +1,76 @@
-import { useState, useMemo } from "react";
-import { Mail } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
 import { clsx } from "clsx";
-import { facultyData } from "../../data/facultyMembersData";
+import { publicApi } from "../../services/api";
 import FilterBar from "./FilterBar";
 import Pagination from "./Pagination";
 import Card from "../shared/Card";
+import SkeletonLoading from "../shared/SkeletonLoading";
 
 export default function FacultyGrid({ filterCampus }) {
     const [searchQuery, setSearchQuery] = useState("");
-    const [selectedCampus, setSelectedCampus] = useState(filterCampus || "All Campuses");
+    const [selectedCampus, setSelectedCampus] = useState(filterCampus || "all");
     const [currentPage, setCurrentPage] = useState(1);
+    const [facultyData, setFacultyData] = useState([]);
+    const [campusOptions, setCampusOptions] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const itemsPerPage = 6;
 
-    // Get unique campuses
-    const campuses = useMemo(() => {
-        const camps = new Set(facultyData.map((f) => f.campus));
-        return ["All Campuses", ...Array.from(camps)];
+    useEffect(() => {
+        const loadCampuses = async () => {
+            try {
+                const { data } = await publicApi.campuses();
+                const options = (data.data || []).map((campus) => ({
+                    id: campus.slug || campus._id,
+                    name: campus.name,
+                }));
+                setCampusOptions(options);
+            } catch {
+                setCampusOptions([]);
+            }
+        };
+
+        loadCampuses();
     }, []);
 
-    // Campus options for FilterBar select
+    useEffect(() => {
+        const loadFaculty = async () => {
+            setIsLoading(true);
+            try {
+                const campusParam = selectedCampus !== "all" ? selectedCampus : undefined;
+                const { data } = await publicApi.faculty({ page: 1, limit: 100, campus: campusParam });
+                const mappedFaculty = (data.data || []).map((faculty) => ({
+                    id: faculty._id,
+                    name: faculty.name,
+                    designation: faculty.designation || faculty.role || "Faculty",
+                    education: faculty.education || faculty.department || faculty.campus?.name || "Faculty Member",
+                    subject: faculty.subjectSpecialization || faculty.department || "General",
+                    experience: faculty.experienceYears ? `${faculty.experienceYears} years` : "Experience not listed",
+                    campus: faculty.campus?.name || "All Campuses",
+                    campusSlug: faculty.campus?.slug || "",
+                    image: faculty.image?.url || `https://placehold.co/300x300?text=${encodeURIComponent((faculty.name || "Faculty").split(" ").map((part) => part[0]).join("").slice(0, 2))}`,
+                    awards: faculty.subjects?.length ? faculty.subjects.map((subject) => subject.name || subject.title || "") : [],
+                }));
+
+                setFacultyData(mappedFaculty);
+            } catch {
+                setFacultyData([]);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadFaculty();
+    }, [selectedCampus]);
+
+    useEffect(() => {
+        setSelectedCampus(filterCampus || "all");
+    }, [filterCampus]);
+
+    const normalizeCampus = (value) => (value || "").toLowerCase().replace(/\b(campus|college)\b/g, "").replace(/[^a-z0-9]/g, "");
+
     const campusFilters = useMemo(
-        () => campuses.map((c) => ({ id: c, name: c })),
-        [campuses]
+        () => [{ id: "all", name: "All Campuses" }, ...campusOptions],
+        [campusOptions]
     );
 
     // Filter faculty
@@ -30,22 +79,26 @@ export default function FacultyGrid({ filterCampus }) {
             const matchesSearch =
                 searchQuery === "" ||
                 faculty.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                faculty.designation.toLowerCase().includes(searchQuery.toLowerCase());
+                faculty.designation.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                faculty.education.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                faculty.subject.toLowerCase().includes(searchQuery.toLowerCase());
             const matchesCampus =
-                selectedCampus === "All Campuses" || faculty.campus === selectedCampus;
+                selectedCampus === "all" ||
+                normalizeCampus(faculty.campus) === normalizeCampus(selectedCampus) ||
+                normalizeCampus(faculty.campusSlug) === normalizeCampus(selectedCampus);
             return matchesSearch && matchesCampus;
         });
-    }, [searchQuery, selectedCampus]);
+    }, [facultyData, searchQuery, selectedCampus]);
 
     // Pagination
-    const totalPages = Math.ceil(filteredFaculty.length / itemsPerPage);
+    const totalPages = Math.max(Math.ceil(filteredFaculty.length / itemsPerPage), 1);
     const paginatedFaculty = filteredFaculty.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
 
     // Reset page on filter change
-    useMemo(() => {
+    useEffect(() => {
         setCurrentPage(1);
     }, [searchQuery, selectedCampus]);
 
@@ -79,7 +132,13 @@ export default function FacultyGrid({ filterCampus }) {
 
             {/* Faculty Grid */}
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                {paginatedFaculty.length === 0 ? (
+                {isLoading ? (
+                    <SkeletonLoading
+                        count={6}
+                        variant="avatarCard"
+                        containerClassName="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-12"
+                    />
+                ) : paginatedFaculty.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-20 text-center">
                         <div className="w-16 h-16 bg-gray-50 dark:bg-college-gold/10 rounded-full flex items-center justify-center mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-gray-400 dark:text-college-gold/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -113,6 +172,9 @@ export default function FacultyGrid({ filterCampus }) {
                                         </span>
                                         <h3 className="text-base font-serif font-bold text-college-navy leading-tight">{faculty.name}</h3>
                                         <p className="text-college-gold text-[10px] font-bold uppercase tracking-widest mt-0.5">{faculty.education}</p>
+                                        <p className="text-gray-500 text-xs mt-1 line-clamp-1">Subject: {faculty.subject}</p>
+                                        <p className="text-gray-500 text-xs mt-1 line-clamp-1">{faculty.experience}</p>
+                                        <p className="text-gray-500 text-xs mt-1 line-clamp-1">{faculty.campus}</p>
                                         {faculty.awards && faculty.awards.length > 0 && (
                                             <p className="text-gray-500 text-xs mt-1 line-clamp-1">Research: {faculty.awards.join(", ")}</p>
                                         )}
@@ -134,6 +196,12 @@ export default function FacultyGrid({ filterCampus }) {
                                     </div>
                                     <h3 className="text-xl font-serif font-bold text-college-navy mb-1">{faculty.name}</h3>
                                     <p className="text-college-gold text-xs font-bold uppercase tracking-widest mb-3">{faculty.education}</p>
+                                    <p className="text-gray-500 text-sm mb-1">Subject: {faculty.subject}</p>
+                                    <p className="text-gray-500 text-sm mb-2">{faculty.experience}</p>
+                                    <p className="text-gray-500 text-sm mb-3">{faculty.campus}</p>
+                                    {faculty.email && (
+                                        <p className="text-gray-500 text-sm mb-3 break-all">{faculty.email}</p>
+                                    )}
                                     {faculty.awards && faculty.awards.length > 0 && (
                                         <p className="text-gray-600 text-sm mb-4 line-clamp-2">Research: {faculty.awards.join(", ")}</p>
                                     )}

@@ -1,20 +1,18 @@
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import {
-  Megaphone,
-  BookOpen,
-  ArrowRight,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
-import { useStudentContext } from "../../context/StudentContext";
+import { useStudentContext } from "../../store/hooks/useStudentReduxContext";
 import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
 import PortalStatsCard from "../../components/portal-shared/PortalStatsCard";
 
-import {
-  studentCampusNames as campusNames,
-  studentQuickLinks as quickLinks,
-} from "../../data/studentPortalData";
+const quickLinks = [
+  { title: "Assignments", description: "View and submit coursework", path: "/student/assignments" },
+  { title: "Submissions", description: "Track grades and feedback", path: "/student/submissions" },
+  { title: "Materials", description: "Slides, notes, and videos", path: "/student/materials" },
+  { title: "Announcements", description: "Class updates and alerts", path: "/student/announcements" },
+  { title: "Results", description: "Marks and transcripts", path: "/student/results" },
+];
 
 const Dashboard = () => {
   const {
@@ -22,50 +20,37 @@ const Dashboard = () => {
     getSubjectsByCurrentCampus,
     getAnnouncementsByCurrentCampus,
     getTotalCredits,
+    getCurrentCgpa,
     getCurrentCampus,
+    getCurrentAcademicProfile,
     isDarkMode,
   } = useStudentContext();
 
   const campus = getCurrentCampus();
   const subjects = getSubjectsByCurrentCampus();
+  const academicProfile = getCurrentAcademicProfile();
   const announcements = getAnnouncementsByCurrentCampus();
   const totalCredits = getTotalCredits();
-
-  // Fetch real announcements from localStorage
-  const [realAnnouncements, setRealAnnouncements] = useState([]);
-
-  useEffect(() => {
-    const saved = localStorage.getItem("college_announcements");
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      const campusAnnouncements = parsed[campus] || [];
-      const subjectCodes = subjects.map((s) => s.code);
-
-      const relevant = campusAnnouncements.filter((a) => {
-        if (!a.classSection) return false;
-        return subjectCodes.some((code) => a.classSection.includes(code));
-      });
-      setRealAnnouncements(relevant);
-    }
-  }, [campus, subjects]);
-
-  const displayAnnouncements =
-    realAnnouncements.length > 0 ? realAnnouncements : announcements.recent;
+  const displayAnnouncements = announcements.recent || [];
+  const cgpaValue = getCurrentCgpa();
+  const displayCgpa = cgpaValue === null || cgpaValue === undefined
+    ? "-"
+    : Number(cgpaValue).toFixed(2);
 
   const stats = [
     {
       title: "Current Course",
-      value: currentStudent.department,
-      hint: `Semester ${currentStudent.semester}`,
+      value: academicProfile?.courseLabel || currentStudent?.department || "-",
+      hint: academicProfile?.semesterLabel || `Semester ${currentStudent?.semester || "-"}`,
     },
     {
       title: "Enrolled Subjects",
       value: subjects.length,
-      hint: "Current Term",
+      hint: academicProfile?.termLabel || "Current Term",
     },
     {
       title: "Overall CGPA",
-      value: currentStudent.cgpa,
+      value: displayCgpa,
       hint: "Cumulative",
     },
     {
@@ -81,11 +66,11 @@ const Dashboard = () => {
       <PortalPageHeader
         badge={
           <Badge variant={isDarkMode ? "gold" : "navy"}>
-            {campusNames[campus]}
+            {campus?.toUpperCase() || "CAMPUS"}
           </Badge>
         }
-        title={`Welcome back, ${currentStudent.name.split(" ")[0]}!`}
-        subtitle={`ID: ${currentStudent.id} â€¢ Student Dashboard`}
+        title={`Welcome back, ${(currentStudent?.name || "Student").split(" ")[0]}!`}
+        subtitle={`ID: ${currentStudent?.portalId || "-"} • Student Dashboard`}
       />
 
       {/* Main Stats Grid */}
@@ -151,7 +136,7 @@ const Dashboard = () => {
                 Enrolled Subjects
               </h2>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                {campusNames[campus]}
+                {academicProfile?.courseLabel || campus?.toUpperCase() || "CAMPUS"}
               </p>
             </div>
             <Link
@@ -167,27 +152,27 @@ const Dashboard = () => {
               {subjects.map((subject) => (
                 <div
                   key={subject.code}
-                  className="group relative overflow-hidden bg-white dark:bg-white/5 border border-gray-200 dark:border-college-gold/10 rounded-sm flex hover:shadow-xl hover:-translate-y-0.5 hover:bg-college-navy dark:hover:bg-white/10 transition-all duration-300 cursor-default"
+                  className="group relative overflow-hidden bg-white dark:bg-white/5 border border-gray-200 dark:border-college-gold/10 rounded-sm flex text-college-navy hover:shadow-xl hover:-translate-y-0.5 hover:bg-college-navy/10 dark:hover:bg-white/10 hover:text-college-navy transition-all duration-300 cursor-default"
                 >
                   {/* Vertical Accent Bar */}
                   <div className="w-1.5 bg-college-navy dark:bg-college-gold opacity-10 dark:opacity-20 group-hover:opacity-100 transition-opacity flex-shrink-0" />
 
                   <div className="p-4 md:p-5 flex items-center justify-between w-full relative z-10">
                     <div>
-                      <h4 className="font-bold text-college-navy dark:text-white transition-colors group-hover:text-white text-base">
+                      <h4 className="font-bold text-college-navy dark:text-white transition-colors group-hover:text-navy text-base">
                         {subject.name}
                       </h4>
                       <div className="flex items-center gap-3 mt-1">
-                        <span className="text-[10px] font-bold text-college-navy/40 dark:text-college-gold/50 group-hover:text-white/50 uppercase tracking-widest">
+                        <span className="text-[10px] font-bold text-college-navy/40 dark:text-college-gold/50 group-hover:text-navy/50 uppercase tracking-widest">
                           {subject.code}
                         </span>
-                        <span className="text-[10px] font-medium text-gray-400 dark:text-gray-500 group-hover:text-white/40">
+                        <span className="text-[10px] font-medium text-gray-400 dark:text-gray-500 group-hover:text-navy/40">
                           {subject.instructor}
                         </span>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-[10px] font-bold text-college-navy dark:text-college-gold bg-college-navy/5 dark:bg-college-gold/10 px-2.5 py-1.5 rounded-sm border border-college-navy/10 dark:border-college-gold/20 group-hover:bg-college-gold group-hover:text-college-navy group-hover:border-college-gold transition-all">
+                      <span className="text-[10px] font-bold text-college-navy dark:text-college-gold bg-college-navy/5 dark:bg-college-gold/10 px-2.5 py-1.5 rounded-sm border border-college-navy/10 dark:border-college-gold/20 group-hover:bg-college-navy dark:group-hover:bg-college-gold group-hover:text-white dark:group-hover:text-college-navy group-hover:border-college-navy dark:group-hover:border-college-gold transition-all">
                         {subject.credits} Cr
                       </span>
                     </div>
@@ -199,7 +184,7 @@ const Dashboard = () => {
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center text-center p-12 border-2 border-dashed border-gray-100 dark:border-college-gold/10 rounded-sm">
               <p className="text-gray-400 dark:text-gray-500 font-medium text-sm">
-                No active subjects enrolled
+                No active subjects enrolled for the current class
               </p>
             </div>
           )}
@@ -223,7 +208,7 @@ const Dashboard = () => {
             </Link>
           </div>
 
-          {displayAnnouncements && displayAnnouncements.length > 0 ? (
+          {displayAnnouncements.length > 0 ? (
             <div className="space-y-3">
               {displayAnnouncements.slice(0, 3).map((item, index) => (
                 <Link
@@ -267,3 +252,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+

@@ -1,18 +1,19 @@
 import { useState, useEffect, Suspense } from "react";
 import { Outlet, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 import PortalNavbar from "../components/portal-shared/PortalNavbar";
 import PortalSidebar from "../components/portal-shared/PortalSidebar";
-import { useFacultyContext } from "../context/FacultyContext";
 import { facultyNavItems } from "../data/navigationData";
 import PageLoader from "../components/shared/PageLoader";
 
 const FacultyLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { currentFaculty } = useFacultyContext();
+  const { user: currentFaculty } = useSelector((state) => state.auth);
+  const isDarkMode = useSelector((state) => state.ui.isDarkMode);
 
   const user = {
     name: currentFaculty?.name || "Faculty User",
-    line2: `${currentFaculty?.department || "Faculty"} â€¢ ${currentFaculty?.designation || "Faculty"}`,
+    line2: `${currentFaculty?.department || "Faculty"} • ${currentFaculty?.designation || "Faculty"}`,
   };
   const { pathname } = useLocation();
 
@@ -22,7 +23,8 @@ const FacultyLayout = () => {
   }, [pathname]);
 
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-dark-base flex flex-col lg:flex-row transition-colors duration-300">
+    <div className={isDarkMode ? "dark" : ""}>
+      <div className="min-h-screen bg-neutral-50 dark:bg-dark-base flex flex-col lg:flex-row transition-colors duration-300">
       {/* Mobile Overlay */}
       {isSidebarOpen && (
         <div
@@ -63,6 +65,7 @@ const FacultyLayout = () => {
             </Suspense>
           </div>
         </main>
+      </div>
       </div>
     </div>
   );

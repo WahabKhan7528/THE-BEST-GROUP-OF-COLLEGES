@@ -1,22 +1,56 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PublicButton from "../../components/shared/PublicButton";
 import PageHero from "../../components/public-site/PageHero";
 import FilterBar from "../../components/public-site/FilterBar";
 import Badge from "../../components/shared/Badge";
 import CTASection from "../../components/public-site/CTASection";
+import SkeletonLoading from "../../components/shared/SkeletonLoading";
 
 import { Calendar, Tag } from "lucide-react";
 
-import {
-  galleryFilters as filters,
-  galleryImages as images,
-} from "../../data/galleryData";
+import { publicApi } from "../../services/api";
 
 const Gallery = () => {
   const [activeFilter, setActiveFilter] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
   const [visibleCount, setVisibleCount] = useState(9);
   const [popoverImage, setPopoverImage] = useState(null);
+  const [images, setImages] = useState([]);
+  const [isLoadingGallery, setIsLoadingGallery] = useState(true);
+
+  useEffect(() => {
+    const loadGallery = async () => {
+      setIsLoadingGallery(true);
+      try {
+        const { data } = await publicApi.gallery();
+        const mapped = (data.data || []).map((item) => ({
+          id: item._id,
+          src: item.image?.url,
+          title: item.title,
+          category: item.category,
+          tags: (item.tags || []).join(", "),
+          description: item.description,
+          createdAt: new Date(item.createdAt).getTime(),
+          date: new Date(item.createdAt).toLocaleDateString(),
+        }));
+        setImages(mapped);
+      } catch {
+        setImages([]);
+      } finally {
+        setIsLoadingGallery(false);
+      }
+    };
+
+    loadGallery();
+  }, []);
+
+  const filters = useMemo(() => {
+    const categories = Array.from(new Set(images.map((image) => image.category).filter(Boolean)));
+    return [
+      { id: "all", label: "All" },
+      ...categories.map((category) => ({ id: category, label: category })),
+    ];
+  }, [images]);
 
   const filteredImages =
     activeFilter === "all"
@@ -25,10 +59,10 @@ const Gallery = () => {
 
   const sortedImages = [...filteredImages].sort((a, b) => {
     if (sortBy === "newest") {
-      return b.id - a.id;
-    } else {
-      return a.id - b.id;
+      return b.createdAt - a.createdAt;
     }
+
+    return a.createdAt - b.createdAt;
   });
 
   const displayedImages = sortedImages.slice(0, visibleCount);
@@ -66,7 +100,9 @@ const Gallery = () => {
       {/* Gallery Grid */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-7 mb-12">
-          {displayedImages.map((image) => (
+          {isLoadingGallery
+            ? <SkeletonLoading count={9} variant="card" className="h-80" containerClassName="contents" />
+            : displayedImages.map((image) => (
             <div
               key={image.id}
               className="group flex flex-col bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 cursor-pointer"
@@ -129,7 +165,7 @@ const Gallery = () => {
         </div>
 
 
-        {hasMore && (
+        {!isLoadingGallery && hasMore && (
           <div className="text-center">
             <PublicButton onClick={loadMore} variant="outline" size="md" className="px-8">
               Load More Photos
@@ -137,7 +173,7 @@ const Gallery = () => {
           </div>
         )}
 
-        {filteredImages.length === 0 && (
+        {!isLoadingGallery && filteredImages.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <div className="w-16 h-16 bg-gray-50 dark:bg-college-gold/10 rounded-full flex items-center justify-center mb-4">
               <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-gray-400 dark:text-college-gold/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>

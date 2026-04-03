@@ -106,5 +106,6 @@ PortalForm.Section = ({ title, children, className = "" }) => (
 
 // Alias to FormInput to allow neat imports like <PortalForm.Input />
 PortalForm.Input = FormInput;
+PortalForm.Section.displayName = "PortalFormSection";
 
 export default PortalForm;

@@ -1,5 +1,5 @@
 import React from "react";
-import { useAdminContext } from "../../context/AdminContext";
+import { useAdminContext } from "../../store/hooks/useAdminReduxContext";
 
 const CampusFilter = () => {
   const {
@@ -33,3 +33,4 @@ const CampusFilter = () => {
 };
 
 export default CampusFilter;
+

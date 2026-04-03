@@ -1,34 +1,38 @@
 import { useEffect } from "react";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { editCampusSchema } from "../../../schemas/campusSchema";
-import { useAdminContext } from "../../../context/AdminContext";
+import { useAdminContext } from "../../../store/hooks/useAdminReduxContext";
 import { useToast } from "../../../context/ToastContext";
 import { useConfirm } from "../../../context/ConfirmContext";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import PublicButton from "../../../components/shared/PublicButton";
 import PortalForm from "../../../components/portal-shared/PortalForm";
 import { Save, Trash2 } from "lucide-react";
+import { adminApi } from "../../../services/api";
 
 const EditCampus = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { campuses } = useAdminContext();
+  const { campuses, updateCampus: updateCampusState, deleteCampus: deleteCampusState } = useAdminContext();
   const toast = useToast();
   const confirmDialog = useConfirm();
+  const submitLockRef = useRef(false);
 
   const {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(editCampusSchema),
     defaultValues: {
       name: "",
-      code: "",
       location: "",
+      description: "",
       dean: "",
       established: "",
       contact: { phone: "", email: "", website: "" },
@@ -40,8 +44,8 @@ const EditCampus = () => {
     if (campus) {
       reset({
         name: campus.name || "",
-        code: campus.code || "",
         location: campus.location || "",
+        description: campus.description || "",
         dean: campus.dean || "",
         established: campus.established || "",
         contact: {
@@ -53,21 +57,58 @@ const EditCampus = () => {
     }
   }, [id, location.state, campuses, reset]);
 
-  const onSubmit = () => {
-    toast.success("Campus updated successfully");
-    navigate("/admin/campus");
+  const campusName = watch("name");
+
+  const onSubmit = async (values) => {
+    if (submitLockRef.current) return;
+    submitLockRef.current = true;
+
+    try {
+      const normalizedCampusName = String(values.name).trim();
+      const normalizedLocation = String(values.location).trim();
+      const duplicateCampus = campuses.find((campus) => campus.id !== id && String(campus.name || "").trim().toLowerCase() === normalizedCampusName.toLowerCase());
+
+      if (duplicateCampus) {
+        toast.error("Another campus already uses that name");
+        return;
+      }
+
+      const payload = {
+        name: normalizedCampusName,
+        location: normalizedLocation,
+        description: values.description?.trim(),
+        dean: values.dean,
+        established: values.established,
+        contact: values.contact,
+      };
+
+      const { data: response } = await adminApi.updateCampus(id, payload);
+      updateCampusState(id, response.data);
+      toast.success("Campus updated successfully");
+      navigate("/admin/campus");
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to update campus");
+    } finally {
+      submitLockRef.current = false;
+    }
   };
 
   const handleDelete = async () => {
     const confirmed = await confirmDialog({
       title: "Delete Campus",
-      message: `Are you sure you want to delete ${form.name}? This cannot be undone.`,
+      message: `Are you sure you want to delete ${campusName || "this campus"}? This cannot be undone.`,
       confirmText: "Delete",
       variant: "danger",
     });
     if (confirmed) {
-      toast.success("Campus deleted successfully");
-      navigate("/admin/campus");
+      try {
+        await adminApi.deleteCampus(id);
+        deleteCampusState(id);
+        toast.success("Campus deleted successfully");
+        navigate("/admin/campus");
+      } catch (error) {
+        toast.error(error?.response?.data?.message || "Failed to delete campus");
+      }
     }
   };
 
@@ -108,10 +149,9 @@ const EditCampus = () => {
 
         <div>
           <PortalForm.Input
-            label="Campus Code"
-            registration={register("code")}
-            error={errors.code?.message}
-            required
+            label="Dean"
+            registration={register("dean")}
+            placeholder="e.g. Dr. Ahmed Khan"
           />
         </div>
 
@@ -150,9 +190,29 @@ const EditCampus = () => {
             error={errors.contact?.email?.message}
           />
         </div>
+
+        <div className="col-span-1 md:col-span-2">
+          <PortalForm.Input
+            label="Website"
+            registration={register("contact.website")}
+            placeholder="e.g. https://campus.edu"
+          />
+        </div>
+
+        <div className="col-span-1 md:col-span-2">
+          <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+            Description
+          </label>
+          <textarea
+            {...register("description")}
+            rows="4"
+            className="w-full px-3 md:px-4 py-2 md:py-3 text-sm md:text-base border border-gray-300 dark:border-college-gold/20 dark:bg-college-navy/50 dark:text-white rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy dark:focus:ring-college-gold"
+          />
+        </div>
       </PortalForm.Section>
     </PortalForm>
   );
 };
 
 export default EditCampus;
+

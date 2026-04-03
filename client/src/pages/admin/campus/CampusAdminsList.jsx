@@ -2,16 +2,15 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import PublicButton from "../../../components/shared/PublicButton";
 import Table from "../../../components/portal-shared/Table";
-import { useAdminContext } from "../../../context/AdminContext";
+import { useAdminContext } from "../../../store/hooks/useAdminReduxContext";
 import { useToast } from "../../../context/ToastContext";
 import { useConfirm } from "../../../context/ConfirmContext";
 import {
     Search,
-    Users,
     UserPlus,
     ArrowLeft,
 } from "lucide-react";
-import { mockCampusAdminsData as adminUsers } from "../../../data/adminData";
+import { adminApi } from "../../../services/api";
 
 const CampusAdminsList = () => {
     const { id } = useParams();
@@ -26,14 +25,26 @@ const CampusAdminsList = () => {
     const toast = useToast();
     const confirmDialog = useConfirm();
     const [searchTerm, setSearchTerm] = useState("");
+    const [adminUsers, setAdminUsers] = useState([]);
     const campus = campuses.find(c => c.id === id);
 
-    const mockData = adminUsers;
+    useEffect(() => {
+        const loadAdmins = async () => {
+            try {
+                const { data } = await adminApi.users({ role: "admin" });
+                setAdminUsers(data.data || []);
+            } catch {
+                setAdminUsers([]);
+            }
+        };
+
+        loadAdmins();
+    }, []);
 
     // Filter for admins of this specific campus
-    const filteredData = mockData.filter(user =>
-        (user.role === 'Sub-Admin' || user.role === 'Super Admin') &&
-        user.allocatedCampuses.includes(id) &&
+    const filteredData = adminUsers.filter(user =>
+        (user.role === 'admin' || user.role === 'super_admin') &&
+        String(user.campus?._id || user.campus) === id &&
         (user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.email.toLowerCase().includes(searchTerm.toLowerCase()))
     );
@@ -53,28 +64,32 @@ const CampusAdminsList = () => {
             key: "role",
             label: "Role",
             render: (row) => (
-                <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${row.role === 'Super Admin'
+                <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${row.role === 'super_admin'
                     ? 'bg-college-navy/10 text-college-navy dark:bg-college-gold/10 dark:text-college-gold'
                     : 'bg-college-gold/10 text-college-navy dark:text-college-gold border border-college-gold/20 shadow-sm'
                     }`}>
-                    {row.role}
+                    {row.role.replace("_", " ")}
                 </span>
             )
         },
-        { key: "id", label: "ID" },
+        { key: "portalId", label: "ID" },
     ];
 
     const actionButtons = (row) => [
         {
             label: "Edit",
-            onClick: () => navigate(`/admin/users/edit/${row.id}`),
+            onClick: () => navigate(`/admin/users/edit/${row._id}`),
             className: "text-emerald-600 hover:text-emerald-700 font-medium bg-emerald-50 border border-emerald-100 dark:bg-emerald-900 dark:border-transparent dark:text-gray-300 dark:hover:bg-emerald-800",
         },
         {
             label: "Remove",
             onClick: async () => {
                 const confirmed = await confirmDialog({ title: "Remove Admin", message: `Remove ${row.name} from ${campus?.name}?`, confirmText: "Remove", variant: "danger" });
-                if (confirmed) toast.success("User removed from campus");
+                if (confirmed) {
+                    await adminApi.updateUser(row._id, { campus: null });
+                    setAdminUsers((prev) => prev.map((user) => user._id === row._id ? { ...user, campus: null } : user));
+                    toast.success("User removed from campus");
+                }
             },
             className: "text-red-600 hover:text-red-700 font-medium bg-red-50 border border-red-100 dark:bg-red-900 dark:border-transparent dark:text-gray-300 dark:hover:bg-red-800",
         }
@@ -143,3 +158,4 @@ const CampusAdminsList = () => {
 };
 
 export default CampusAdminsList;
+

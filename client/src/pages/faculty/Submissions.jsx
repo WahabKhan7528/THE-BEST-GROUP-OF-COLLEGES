@@ -1,18 +1,70 @@
 import { useParams, Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import SubmissionCard from "../../components/portal-shared/SubmissionCard";
 import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
-import { useFacultyContext } from "../../context/FacultyContext";
+import { useFacultyContext } from "../../store/hooks/useFacultyReduxContext";
 import { useToast } from "../../context/ToastContext";
 import { ArrowLeft, CheckCircle } from "lucide-react";
-
-import { mockSubmissions } from "../../data/facultyPortalData";
 import PublicButton from "../../components/shared/PublicButton";
+import { portalApi } from "../../services/api";
 
 const Submissions = () => {
   const { assignmentId } = useParams();
   const { isDarkMode } = useFacultyContext();
   const toast = useToast();
+  const [submissions, setSubmissions] = useState([]);
+
+  useEffect(() => {
+    const loadSubmissions = async () => {
+      try {
+        const { data } = await portalApi.submissionsByAssignment(assignmentId);
+        const mapped = (data.data || []).map((submission) => ({
+          id: submission._id || submission.id,
+          studentId: submission.student?.portalId,
+          studentName: submission.student?.name,
+          submittedAt: submission.submittedAt ? new Date(submission.submittedAt).toLocaleString() : "-",
+          file: submission.file?.url,
+          status: submission.status === "on_time" ? "On-time" : submission.status,
+          remarks: submission.remarks,
+          marks: submission.marks,
+          maxMarks: submission.assignment?.maxMarks || 100,
+        }));
+        setSubmissions(mapped);
+      } catch {
+        setSubmissions([]);
+      }
+    };
+
+    loadSubmissions();
+  }, [assignmentId]);
+
+  const handleGrade = async ({ id, marks, remarks }) => {
+    try {
+      if (!id) {
+        throw new Error("Missing submission id");
+      }
+
+      await portalApi.gradeSubmission(id, { marks, remarks });
+      toast.success("Grading saved");
+
+      const { data } = await portalApi.submissionsByAssignment(assignmentId);
+      setSubmissions((data.data || []).map((submission) => ({
+        id: submission._id || submission.id,
+        studentId: submission.student?.portalId,
+        studentName: submission.student?.name,
+        submittedAt: submission.submittedAt ? new Date(submission.submittedAt).toLocaleString() : "-",
+        file: submission.file?.url,
+        status: submission.status === "on_time" ? "On-time" : submission.status,
+        remarks: submission.remarks,
+        marks: submission.marks,
+        maxMarks: submission.assignment?.maxMarks || 100,
+      })));
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to save grading");
+      throw error;
+    }
+  };
 
   return (
     <div className="space-y-6 pb-10">
@@ -49,8 +101,8 @@ const Submissions = () => {
       />
 
       <div className="space-y-4">
-        {mockSubmissions.map((submission) => (
-          <SubmissionCard key={submission.studentId} submission={submission} />
+        {submissions.map((submission) => (
+          <SubmissionCard key={submission.id} submission={submission} onGrade={handleGrade} />
         ))}
       </div>
     </div>
@@ -58,3 +110,4 @@ const Submissions = () => {
 };
 
 export default Submissions;
+

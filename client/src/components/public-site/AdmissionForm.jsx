@@ -21,17 +21,22 @@ export default function AdmissionForm({ programs }) {
 
     const onSubmit = async () => {
         try {
-            await emailjs.sendForm(
-                import.meta.env.VITE_EMAILJS_SERVICE_ID,
-                import.meta.env.VITE_EMAILJS_APPLICATION_TEMPLATE,
-                formRef.current,
-                import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-            );
+            const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+            const templateId = import.meta.env.VITE_EMAILJS_APPLICATION_TEMPLATE;
+            const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
+            if (!serviceId || !templateId || !publicKey) {
+                console.error("Missing EmailJS configuration:", { serviceId, templateId, publicKey });
+                toast.error("Email service not configured. Please contact admin.");
+                return;
+            }
+
+            await emailjs.sendForm(serviceId, templateId, formRef.current, publicKey);
             toast.success("Application submitted successfully");
             reset();
-        } catch {
-            toast.error("Application submission failed");
+        } catch (error) {
+            console.error("Admission form submission error:", error);
+            toast.error(`Application submission failed: ${error.message || "Unknown error"}`);
         }
     };
 

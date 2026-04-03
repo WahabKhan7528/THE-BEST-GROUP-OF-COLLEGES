@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import PublicButton from "../../../components/shared/PublicButton";
-import { useAdminContext } from "../../../context/AdminContext";
+import { useAdminContext } from "../../../store/hooks/useAdminReduxContext";
 import { useToast } from "../../../context/ToastContext";
-import { mockAllAdmins } from "../../../data/adminData";
+import { adminApi } from "../../../services/api";
 
 
 
@@ -11,7 +11,7 @@ const AllocateAdmin = () => {
   const navigate = useNavigate();
   const { campusId } = useParams();
   const location = useLocation();
-  const { campuses, adminCampusAllocations, updateAdminAllocations, isDarkMode, isSuperAdmin } =
+  const { campuses, isSuperAdmin } =
     useAdminContext();
 
   useEffect(() => {
@@ -23,6 +23,7 @@ const AllocateAdmin = () => {
 
   const [campus, setCampus] = useState(null);
   const [selectedAdmins, setSelectedAdmins] = useState([]);
+  const [admins, setAdmins] = useState([]);
   const [currentAllocations, setCurrentAllocations] = useState({});
 
   useEffect(() => {
@@ -33,15 +34,25 @@ const AllocateAdmin = () => {
     }
     setCampus(campusData);
 
-    // Load current allocations
-    const allocations = {};
-    Object.entries(adminCampusAllocations).forEach(([adminId, campusIds]) => {
-      if (campusIds.includes(campusId)) {
-        allocations[adminId] = true;
-      }
-    });
-    setCurrentAllocations(allocations);
-  }, [campusId, campuses, adminCampusAllocations, location.state]);
+    const loadAdmins = async () => {
+      const { data } = await adminApi.users({ role: "admin" });
+      const adminList = data.data || [];
+      setAdmins(adminList);
+      const allocations = {};
+      adminList.forEach((admin) => {
+        const isAllocated = String(admin.campus?._id || admin.campus) === String(campusId);
+        allocations[admin._id] = isAllocated;
+      });
+      setCurrentAllocations(allocations);
+      setSelectedAdmins(
+        adminList
+          .filter((admin) => String(admin.campus?._id || admin.campus) === String(campusId))
+          .map((admin) => admin._id),
+      );
+    };
+
+    loadAdmins();
+  }, [campusId, campuses, location.state]);
 
   if (!campus) {
     return (
@@ -59,37 +70,26 @@ const AllocateAdmin = () => {
     );
   };
 
-  const handleSave = () => {
-    // Update allocations for all admins
-    const newAllocations = { ...adminCampusAllocations };
+  const handleSave = async () => {
+    const updates = admins.map(async (admin) => {
+      const shouldBeAllocated = selectedAdmins.includes(admin._id);
+      const isAllocated = String(admin.campus?._id || admin.campus) === String(campusId);
 
-    mockAllAdmins.forEach(({ id }) => {
-      const currentCampuses = newAllocations[id] || [];
-      const isNowSelected = selectedAdmins.includes(id);
-      const wasAllocated = currentAllocations[id];
-
-      if (isNowSelected && !wasAllocated) {
-        // Add campus allocation
-        newAllocations[id] = [...currentCampuses, campusId];
-      } else if (!isNowSelected && wasAllocated) {
-        // Remove campus allocation
-        newAllocations[id] = currentCampuses.filter((cId) => cId !== campusId);
+      if (shouldBeAllocated !== isAllocated) {
+        await adminApi.updateUser(admin._id, { campus: shouldBeAllocated ? campusId : null });
       }
     });
 
-    // Update context
-    Object.entries(newAllocations).forEach(([adminId, campuses]) => {
-      updateAdminAllocations(adminId, campuses);
-    });
+    await Promise.all(updates);
 
     toast.success("Admin allocations updated!");
     navigate("/admin/campus");
   };
 
   const getCurrentAllocatedAdmins = () => {
-    return Object.entries(adminCampusAllocations)
-      .filter(([, campusIds]) => campusIds.includes(campusId))
-      .map(([adminId]) => adminId);
+    return admins
+      .filter((admin) => String(admin.campus?._id || admin.campus) === String(campusId))
+      .map((admin) => admin._id);
   };
 
   const currentAllocatedAdmins = getCurrentAllocatedAdmins();
@@ -112,7 +112,7 @@ const AllocateAdmin = () => {
         {currentAllocatedAdmins.length > 0 ? (
           <ul className="list-disc list-inside text-college-navy/80 dark:text-gray-300">
             {currentAllocatedAdmins.map((adminId) => {
-              const admin = mockAllAdmins.find((a) => a.id === adminId);
+              const admin = admins.find((a) => a._id === adminId);
               return admin ? <li key={adminId}>{admin.name}</li> : null;
             })}
           </ul>
@@ -129,25 +129,25 @@ const AllocateAdmin = () => {
           Available Sub-Admins
         </h3>
         <div className="space-y-3">
-          {mockAllAdmins.map((admin) => (
+          {admins.map((admin) => (
             <label
-              key={admin.id}
-              className={`flex items-center p-4 border rounded-sm transition-all cursor-pointer ${currentAllocations[admin.id]
+              key={admin._id}
+              className={`flex items-center p-4 border rounded-sm transition-all cursor-pointer ${currentAllocations[admin._id]
                 ? 'bg-college-navy/10 border-college-navy shadow-sm dark:bg-college-gold/10 dark:border-college-gold'
                 : 'bg-white dark:bg-college-navy/50 border-gray-200 dark:border-college-gold/20'
                 }`}
             >
               <input
                 type="checkbox"
-                checked={currentAllocations[admin.id] || false}
-                onChange={() => handleAdminToggle(admin.id)}
+                checked={selectedAdmins.includes(admin._id)}
+                onChange={() => handleAdminToggle(admin._id)}
                 className="w-4 h-4 text-college-navy rounded focus:ring-college-navy/20 dark:focus:ring-college-gold/20 border-gray-300 dark:border-college-gold/30 bg-white dark:bg-college-navy"
               />
               <div className="ml-4 flex-1">
                 <div className="font-medium text-college-navy dark:text-white">{admin.name}</div>
                 <div className="text-sm text-gray-500 dark:text-gray-400">{admin.email}</div>
               </div>
-              {currentAllocations[admin.id] && (
+              {selectedAdmins.includes(admin._id) && (
                 <span className="text-xs bg-college-navy/10 text-college-navy dark:bg-college-gold/10 dark:text-college-gold px-3 py-1 rounded-full font-medium border border-college-navy/10 dark:border-college-gold/20">
                   Currently Allocated
                 </span>
@@ -189,3 +189,4 @@ const AllocateAdmin = () => {
 };
 
 export default AllocateAdmin;
+

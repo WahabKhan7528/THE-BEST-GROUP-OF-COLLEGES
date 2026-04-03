@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useAdminContext } from "../../../context/AdminContext";
+import { useEffect, useMemo, useState } from "react";
+import { useAdminContext } from "../../../store/hooks/useAdminReduxContext";
 import { useToast } from "../../../context/ToastContext";
 import { useConfirm } from "../../../context/ConfirmContext";
 import Table from "../../../components/portal-shared/Table";
@@ -15,7 +15,7 @@ import {
   Building2,
   ChevronDown
 } from "lucide-react";
-import { mockCoursesData as adminCourses } from "../../../data/adminData";
+import { adminApi } from "../../../services/api";
 
 const CourseList = () => {
   const navigate = useNavigate();
@@ -25,42 +25,52 @@ const CourseList = () => {
 
   const [selectedCampus, setSelectedCampus] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [courses, setCourses] = useState([]);
 
-  const mockData = adminCourses;
+  useEffect(() => {
+    const loadCourses = async () => {
+      try {
+        const { data } = await adminApi.courses();
+        setCourses(data.data || []);
+      } catch {
+        setCourses([]);
+      }
+    };
 
-  // Filter data based on user and selected campus
-  let filteredData = mockData;
+    loadCourses();
+  }, []);
+
+  const filteredData = useMemo(() => {
+    let result = [...courses];
 
   // Search Filter
-  if (searchQuery) {
-    filteredData = filteredData.filter(course =>
+    if (searchQuery) {
+      result = result.filter((course) =>
       course.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }
+    }
 
   // If Sub-Admin, only show courses offered at their allocated campuses
-  if (!isSuperAdmin) {
-    filteredData = filteredData.filter((course) =>
-      course.offeredAt.some((campus) =>
-        currentAdmin?.allocatedCampuses?.includes(campus),
-      ),
-    );
-  } else if (selectedCampus) {
-    // If Super Admin selected a campus, filter to courses offered there
-    filteredData = filteredData.filter((course) =>
-      course.offeredAt.includes(selectedCampus),
-    );
-  }
+    if (!isSuperAdmin) {
+      const campusId = currentAdmin?.campus?._id || currentAdmin?.campus;
+      result = result.filter((course) => (course.campuses || []).some((campus) => String(campus?._id || campus) === String(campusId)));
+    } else if (selectedCampus) {
+      result = result.filter((course) => (course.campuses || []).some((campus) => String(campus?._id || campus) === selectedCampus));
+    }
 
-  const getCampusesDisplay = (campusIds) => {
-    return campusIds.map((cId) => {
-      const campus = campuses.find((c) => c.id === cId);
+    return result;
+  }, [courses, searchQuery, isSuperAdmin, currentAdmin, selectedCampus]);
+
+  const getCampusesDisplay = (campusObjs) => {
+    return (campusObjs || []).map((campusObj) => {
+      const campusId = campusObj?._id || campusObj;
+      const campus = campuses.find((c) => c.id === campusId);
       return (
         <span
-          key={cId}
+          key={campusId}
           className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-college-navy/5 text-college-navy dark:text-college-gold dark:bg-college-gold/10 border border-college-navy/10 dark:border-college-gold/20"
         >
-          {campus?.code || cId}
+          {campus?.code || campusObj?.code || campusId}
         </span>
       );
     });
@@ -95,11 +105,20 @@ const CourseList = () => {
             <Clock className="w-3.5 h-3.5 text-college-navy/40 dark:text-college-gold/60" />
             {row.duration}
           </div>
-          <div className="flex items-center gap-1.5 text-xs text-gray-500">
+            <div className="flex items-center gap-1.5 text-xs text-gray-500">
             <DollarSign className="w-3.5 h-3.5 text-gray-400" />
-            {row.fee}/{row.type}
+            {row.fee || "-"}/{row.examSystem || row.type || "semester"}
           </div>
         </div>
+      )
+    },
+    {
+      key: "examSystem",
+      label: "Exam System",
+      render: (row) => (
+        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200 capitalize">
+          {row.examSystem || row.type || "semester"}
+        </span>
       )
     },
     {
@@ -112,15 +131,15 @@ const CourseList = () => {
         </div>
       )
     },
-    {
-      key: "offeredAt",
+    ...(isSuperAdmin ? [{
+      key: "campuses",
       label: "Campuses",
       render: (row) => (
         <div className="flex flex-wrap gap-1.5 max-w-[200px]">
-          {getCampusesDisplay(row.offeredAt)}
+          {getCampusesDisplay(row.campuses)}
         </div>
       ),
-    },
+    }] : []),
   ];
 
   return (
@@ -135,15 +154,17 @@ const CourseList = () => {
             Manage degree programs, short courses, and academic offerings
           </p>
         </div>
-        <PublicButton
-          to="/admin/courses/create"
-          variant={isDarkMode ? "secondary" : "primary"}
-          shape="slanted"
-          size="md"
-          icon={Plus}
-        >
-          Add New Course
-        </PublicButton>
+        {!isSuperAdmin && (
+          <PublicButton
+            to="/admin/courses/create"
+            variant={isDarkMode ? "secondary" : "primary"}
+            shape="slanted"
+            size="md"
+            icon={Plus}
+          >
+            Add New Course
+          </PublicButton>
+        )}
       </div>
 
       {/* Filters & Actions */}
@@ -184,11 +205,11 @@ const CourseList = () => {
         <Table
           columns={columns}
           data={filteredData}
-          actionButtons={(row) => [
+          actionButtons={isSuperAdmin ? undefined : (row) => [
             {
               label: "Edit",
               onClick: () => {
-                navigate(`/admin/courses/edit/${row.id}`);
+                navigate(`/admin/courses/edit/${row._id}`);
               },
               className: "text-emerald-600 hover:text-emerald-700 font-medium bg-emerald-50 border border-emerald-100 dark:bg-emerald-900 dark:border-transparent dark:text-gray-300 dark:hover:bg-emerald-800",
             },
@@ -197,7 +218,9 @@ const CourseList = () => {
               onClick: async () => {
                 const confirmed = await confirm({ title: "Delete Course", message: "Are you sure you want to delete this course?", confirmText: "Delete", variant: "danger" });
                 if (confirmed) {
-                  toast.success(`Course ${row.id} deleted`);
+                  await adminApi.deleteCourse(row._id);
+                  setCourses((prev) => prev.filter((course) => course._id !== row._id));
+                  toast.success("Course deleted");
                 }
               },
               className: "text-red-600 hover:text-red-700 font-medium bg-red-50 border border-red-100 dark:bg-red-900 dark:border-transparent dark:text-gray-300 dark:hover:bg-red-800",
@@ -217,3 +240,4 @@ const CourseList = () => {
 };
 
 export default CourseList;
+

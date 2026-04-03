@@ -1,4 +1,4 @@
-import { useStudentContext } from "../../context/StudentContext";
+import { useStudentContext } from "../../store/hooks/useStudentReduxContext";
 import AnnouncementCard from "../../components/portal-shared/AnnouncementCard";
 import { Megaphone } from "lucide-react";
 
@@ -94,7 +94,7 @@ const News = () => {
         <div
           className="space-y-4"
         >
-          {announcements.map((announcement, index) => (
+          {announcements.map((announcement) => (
             <div
               key={announcement.title}
             >
@@ -118,3 +118,4 @@ const News = () => {
 };
 
 export default News;
+

@@ -62,6 +62,23 @@
   html.dark textarea::placeholder {
     @apply text-slate-500;
   }
+
+  select,
+  option,
+  textarea,
+  input {
+    color: #111827;
+  }
+
+  select option {
+    background: #ffffff;
+    color: #111827;
+  }
+
+  html.dark select option {
+    background: #0f172a;
+    color: #e2e8f0;
+  }
 }
 
 @layer utilities {

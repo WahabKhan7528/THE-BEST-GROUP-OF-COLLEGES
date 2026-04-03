@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useStudentContext } from "../../context/StudentContext";
+import { useStudentContext } from "../../store/hooks/useStudentReduxContext";
 import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
 import {
@@ -102,6 +102,16 @@ const calculateCredits = (subjects) => {
   return subjects.reduce((sum, sub) => sum + sub.credits, 0);
 };
 
+const getUniquePlanSubjects = (subjects = []) => {
+  const seen = new Set();
+  return subjects.filter((subject) => {
+    const key = `${subject.code || subject.title || "subject"}-${subject.instructorEmail || subject.instructor || "faculty"}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+};
+
 const campusNames = {
   main: "Main Campus",
   law: "Law Campus",
@@ -114,6 +124,8 @@ const StudentResults = () => {
   const campus = getCurrentCampus();
   const resultData = getDetailedResultsByCurrentCampus(); // { semesters: [] }
   const semesters = resultData?.semesters || [];
+  const currentProfile = resultData?.currentAcademicProfile;
+  const currentPlanSubjects = getUniquePlanSubjects(currentProfile?.subjects || []);
 
   const [selectedSemesterId, setSelectedSemesterId] = useState("all"); // "all" or semester ID
 
@@ -182,6 +194,56 @@ const StudentResults = () => {
           </div>
         }
       />
+
+      {currentProfile && (
+        <div className="bg-white dark:bg-college-navy border border-college-navy/10 dark:border-college-gold/20 rounded-sm shadow-sm p-5 md:p-6 space-y-5">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-college-navy/60 dark:text-college-gold font-bold">Plan of Study</p>
+              <h2 className="text-xl font-serif font-bold text-college-navy dark:text-white">
+                {currentProfile.courseLabel}
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                {currentProfile.termLabel} • {currentProfile.termStatus === "active" ? "Current semester" : "Current class track"}
+              </p>
+            </div>
+            <div className="rounded-sm bg-college-navy/5 dark:bg-college-gold/10 px-4 py-3 text-sm font-bold text-college-navy dark:text-college-gold">
+              {currentPlanSubjects.length} Subject{currentPlanSubjects.length === 1 ? "" : "s"}
+            </div>
+          </div>
+
+          {currentPlanSubjects.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              {currentPlanSubjects.map((subject) => (
+                <div key={`${subject.subjectId}-${subject.code}`} className="rounded-sm border border-college-navy/10 dark:border-college-gold/20 bg-slate-50/80 dark:bg-white/5 p-4 space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400 font-bold">Subject</p>
+                      <h3 className="mt-1 text-base font-black text-college-navy dark:text-white">{subject.name}</h3>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{subject.code || "No code"} • {subject.credits} Cr. Hrs</p>
+                    </div>
+                    <span className="rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
+                      {subject.semesterLabel || currentProfile.termLabel}
+                    </span>
+                  </div>
+
+                  <div className="space-y-1.5 text-sm">
+                    <p className="font-semibold text-college-navy dark:text-white">{subject.instructor}</p>
+                    {subject.instructorEmail ? (
+                      <p className="text-gray-600 dark:text-gray-400 break-all">{subject.instructorEmail}</p>
+                    ) : null}
+                    <p className="text-gray-600 dark:text-gray-400">{subject.instructorDesignation || "Faculty"}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-sm border border-dashed border-gray-300 dark:border-college-gold/30 p-8 text-center text-gray-500 dark:text-gray-400">
+              No subject plan available for the current semester.
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Content */}
       {selectedSemesterId === "all" ? (
@@ -335,3 +397,4 @@ const StudentResults = () => {
 };
 
 export default StudentResults;
+

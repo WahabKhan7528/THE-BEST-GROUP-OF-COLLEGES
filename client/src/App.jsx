@@ -4,9 +4,13 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import PageLoader from "./components/shared/PageLoader";
 import ErrorBoundary from "./components/shared/ErrorBoundary";
+import { fetchUser } from "./store/slices/authSlice";
+
+let hasBootstrappedAuth = false;
 
 // All time neccessary imports
 import RootLayout from "./layouts/RootLayout";
@@ -14,10 +18,7 @@ import CampusLayout from "./layouts/CampusLayout";
 import AdminLayout from "./layouts/AdminLayout";
 import FacultyLayout from "./layouts/FacultyLayout";
 import StudentLayout from "./layouts/StudentLayout";
-import { AdminProvider } from "./context/AdminContext";
-import { FacultyProvider } from "./context/FacultyContext";
-import { StudentProvider } from "./context/StudentContext";
-import { ThemeProvider } from "./context/ThemeContext";
+import ProtectedRoute from "./components/shared/ProtectedRoute";
 
 // Public pages
 const Home = lazy(() => import("./pages/public-site-pages/Home"));
@@ -89,6 +90,7 @@ const FacultyMaterials = lazy(() => import("./pages/faculty/Materials"));
 const UploadMaterial = lazy(() => import("./pages/faculty/UploadMaterial"));
 const EditMaterial = lazy(() => import("./pages/faculty/EditMaterial"));
 const FacultyResults = lazy(() => import("./pages/faculty/Results"));
+const FacultySemesterDetail = lazy(() => import("./pages/faculty/SemesterDetail"));
 const FacultyAnnouncements = lazy(
   () => import("./pages/faculty/Announcements"),
 );
@@ -104,8 +106,21 @@ const StudentAnnouncements = lazy(
 const StudentSubmissions = lazy(() => import("./pages/student/Submissions"));
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (hasBootstrappedAuth) return;
+    hasBootstrappedAuth = true;
+    dispatch(fetchUser());
+  }, [dispatch]);
+
   return (
-    <Router>
+    <Router
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
+    >
       <ErrorBoundary>
         <Suspense fallback={<PageLoader />}>
           <Routes>
@@ -142,49 +157,202 @@ function App() {
               <Route
                 path="/admin/*"
                 element={
-                  <ThemeProvider>
-                    <AdminProvider>
-                      <AdminLayout />
-                    </AdminProvider>
-                  </ThemeProvider>
+                  <ProtectedRoute allowedRoles={["super_admin", "admin"]}>
+                    <AdminLayout />
+                  </ProtectedRoute>
                 }
               >
                 <Route index element={<AdminDashboard />} />
                 <Route path="dashboard" element={<AdminDashboard />} />
-                <Route path="users" element={<UsersList />} />
-                <Route path="users/create" element={<CreateUser />} />
-                <Route path="users/edit/:id" element={<EditUser />} />
-                <Route path="courses" element={<CourseList />} />
-                <Route path="courses/create" element={<CreateCourse />} />
-                <Route path="courses/edit/:id" element={<EditCourse />} />
+                <Route
+                  path="users"
+                  element={
+                    <ProtectedRoute allowedRoles={["super_admin", "admin"]} redirectTo="/admin/dashboard">
+                      <UsersList />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="users/create"
+                  element={
+                    <ProtectedRoute allowedRoles={["super_admin", "admin"]} redirectTo="/admin/dashboard">
+                      <CreateUser />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="users/edit/:id"
+                  element={
+                    <ProtectedRoute allowedRoles={["super_admin", "admin"]} redirectTo="/admin/dashboard">
+                      <EditUser />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="courses"
+                  element={
+                    <ProtectedRoute allowedRoles={["super_admin", "admin"]} redirectTo="/admin/dashboard">
+                      <CourseList />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="courses/create"
+                  element={
+                    <ProtectedRoute allowedRoles={["admin"]} redirectTo="/admin/dashboard">
+                      <CreateCourse />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="courses/edit/:id"
+                  element={
+                    <ProtectedRoute allowedRoles={["admin"]} redirectTo="/admin/dashboard">
+                      <EditCourse />
+                    </ProtectedRoute>
+                  }
+                />
 
                 {/* Campus Management */}
-                <Route path="campus" element={<CampusManagement />} />
-                <Route path="campus/create" element={<CreateCampus />} />
-                <Route path="campus/:id/edit" element={<EditCampus />} />
+                <Route
+                  path="campus"
+                  element={
+                    <ProtectedRoute allowedRoles={["super_admin"]} redirectTo="/admin/dashboard">
+                      <CampusManagement />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="campus/create"
+                  element={
+                    <ProtectedRoute allowedRoles={["super_admin"]} redirectTo="/admin/dashboard">
+                      <CreateCampus />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="campus/:id/edit"
+                  element={
+                    <ProtectedRoute allowedRoles={["super_admin"]} redirectTo="/admin/dashboard">
+                      <EditCampus />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route
                   path="campus/:id/admins"
-                  element={<CampusAdminsList />}
+                  element={
+                    <ProtectedRoute allowedRoles={["super_admin"]} redirectTo="/admin/dashboard">
+                      <CampusAdminsList />
+                    </ProtectedRoute>
+                  }
                 />
-                <Route path="campus/allocate" element={<AllocateAdmin />} />
+                <Route
+                  path="campus/allocate"
+                  element={
+                    <ProtectedRoute allowedRoles={["super_admin"]} redirectTo="/admin/dashboard">
+                      <AllocateAdmin />
+                    </ProtectedRoute>
+                  }
+                />
 
                 {/* Academic Management */}
-                <Route path="classes" element={<ClassesList />} />
-                <Route path="classes/create" element={<CreateClass />} />
-                <Route path="classes/edit/:id" element={<EditClass />} />
-                <Route path="subjects" element={<SubjectsList />} />
-                <Route path="subjects/create" element={<CreateSubject />} />
-                <Route path="subjects/edit/:id" element={<EditSubject />} />
+                <Route
+                  path="classes"
+                  element={
+                    <ProtectedRoute allowedRoles={["super_admin", "admin"]} redirectTo="/admin/dashboard">
+                      <ClassesList />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="classes/create"
+                  element={
+                    <ProtectedRoute allowedRoles={["admin"]} redirectTo="/admin/dashboard">
+                      <CreateClass />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="classes/edit/:id"
+                  element={
+                    <ProtectedRoute allowedRoles={["admin"]} redirectTo="/admin/dashboard">
+                      <EditClass />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="subjects"
+                  element={
+                    <ProtectedRoute allowedRoles={["super_admin", "admin"]} redirectTo="/admin/dashboard">
+                      <SubjectsList />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="subjects/create"
+                  element={
+                    <ProtectedRoute allowedRoles={["admin"]} redirectTo="/admin/dashboard">
+                      <CreateSubject />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="subjects/edit/:id"
+                  element={
+                    <ProtectedRoute allowedRoles={["admin"]} redirectTo="/admin/dashboard">
+                      <EditSubject />
+                    </ProtectedRoute>
+                  }
+                />
 
                 {/* CMS Management */}
-                <Route path="cms/news" element={<NewsList />} />
-                <Route path="cms/news/create" element={<CreateNews />} />
-                <Route path="cms/news/edit/:id" element={<EditNews />} />
-                <Route path="cms/gallery" element={<GalleryManager />} />
-                <Route path="cms/gallery/upload" element={<UploadImage />} />
+                <Route
+                  path="cms/news"
+                  element={
+                    <ProtectedRoute allowedRoles={["super_admin"]} redirectTo="/admin/dashboard">
+                      <NewsList />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="cms/news/create"
+                  element={
+                    <ProtectedRoute allowedRoles={["super_admin"]} redirectTo="/admin/dashboard">
+                      <CreateNews />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="cms/news/edit/:id"
+                  element={
+                    <ProtectedRoute allowedRoles={["super_admin"]} redirectTo="/admin/dashboard">
+                      <EditNews />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="cms/gallery"
+                  element={
+                    <ProtectedRoute allowedRoles={["super_admin"]} redirectTo="/admin/dashboard">
+                      <GalleryManager />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="cms/gallery/upload"
+                  element={
+                    <ProtectedRoute allowedRoles={["super_admin"]} redirectTo="/admin/dashboard">
+                      <UploadImage />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route
                   path="cms/gallery/edit/:id"
-                  element={<EditGalleryImage />}
+                  element={
+                    <ProtectedRoute allowedRoles={["super_admin"]} redirectTo="/admin/dashboard">
+                      <EditGalleryImage />
+                    </ProtectedRoute>
+                  }
                 />
               </Route>
 
@@ -192,11 +360,9 @@ function App() {
               <Route
                 path="/faculty/*"
                 element={
-                  <ThemeProvider>
-                    <FacultyProvider>
-                      <FacultyLayout />
-                    </FacultyProvider>
-                  </ThemeProvider>
+                  <ProtectedRoute allowedRoles={["faculty"]}>
+                    <FacultyLayout />
+                  </ProtectedRoute>
                 }
               >
                 <Route index element={<Navigate to="dashboard" replace />} />
@@ -218,6 +384,7 @@ function App() {
                 <Route path="materials/upload" element={<UploadMaterial />} />
                 <Route path="materials/edit/:id" element={<EditMaterial />} />
                 <Route path="results" element={<FacultyResults />} />
+                <Route path="results/:classId/:termNumber" element={<FacultySemesterDetail />} />
                 <Route
                   path="announcements"
                   element={<FacultyAnnouncements />}
@@ -228,11 +395,9 @@ function App() {
               <Route
                 path="/student/*"
                 element={
-                  <ThemeProvider>
-                    <StudentProvider>
-                      <StudentLayout />
-                    </StudentProvider>
-                  </ThemeProvider>
+                  <ProtectedRoute allowedRoles={["student"]}>
+                    <StudentLayout />
+                  </ProtectedRoute>
                 }
               >
                 <Route index element={<Navigate to="dashboard" replace />} />

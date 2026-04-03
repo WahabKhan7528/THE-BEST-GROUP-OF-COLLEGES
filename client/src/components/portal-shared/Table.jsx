@@ -41,7 +41,7 @@ const Table = ({ columns, data, actionButtons }) => {
                     key={col.key}
                     className={`${cellPadding} text-xs md:text-sm text-gray-700 dark:text-gray-300 group-hover:text-college-navy dark:group-hover:text-college-gold transition-colors break-words min-w-[120px]`}
                   >
-                    {row[col.key]}
+                    {typeof col.render === "function" ? col.render(row) : row[col.key]}
                   </td>
                 ))}
 

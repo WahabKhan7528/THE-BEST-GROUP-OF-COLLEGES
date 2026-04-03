@@ -1,89 +1,189 @@
 import { Link } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
 import {
   Users,
   Layers,
-  BookOpen,
   GraduationCap,
-  Image,
-  Newspaper,
   Book,
   ArrowRight,
+  Building2,
+  Megaphone,
+  Image,
 } from "lucide-react";
 
-import { useAdminContext } from "../../context/AdminContext";
+import { useAdminContext } from "../../store/hooks/useAdminReduxContext";
 import PortalStatsCard from "../../components/portal-shared/PortalStatsCard";
 import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
-import Card from "../../components/shared/Card";
+import SkeletonLoading from "../../components/shared/SkeletonLoading";
+import { adminApi } from "../../services/api";
 
-import {
-  mockAllStats,
-  adminQuickActions as quickActions,
-  systemMetadata,
-} from "../../data/adminData";
+const getRefId = (value) => value?._id || value?.id || value || null;
+
+const matchesCampus = (entityCampus, selectedCampusId) => {
+  if (!selectedCampusId || selectedCampusId === "all") return true;
+  return String(getRefId(entityCampus)) === String(selectedCampusId);
+};
+
+const subAdminActions = [
+  { title: "Add Classes", desc: "Create new class sections", path: "/admin/classes/create" },
+  { title: "Add Subjects", desc: "Register new subjects", path: "/admin/subjects/create" },
+  { title: "Add Courses", desc: "Launch new academic programs", path: "/admin/courses/create" },
+  { title: "Manage Users", desc: "Create staff and student accounts", path: "/admin/users" },
+];
+
+const superAdminActions = [
+  { title: "Campus Management", desc: "Create and manage campuses", path: "/admin/campus" },
+  { title: "News & Events", desc: "Publish latest updates", path: "/admin/cms/news/create" },
+  { title: "Add Gallery", desc: "Upload campus photos", path: "/admin/cms/gallery/upload" },
+];
 
 const Dashboard = () => {
-  const { selectedCampusFilter, getCurrentCampusContext, isSuperAdmin, isDarkMode } =
+  const { selectedCampusFilter, getCurrentCampusContext, isDarkMode, isSuperAdmin, currentAdmin } =
     useAdminContext();
+  const [isLoading, setIsLoading] = useState(true);
+  const [resolvedSubAdminCampusName, setResolvedSubAdminCampusName] = useState("");
+  const [counts, setCounts] = useState({ students: 0, faculty: 0, classes: 0, subjects: 0, courses: 0, campuses: 0, news: 0, gallery: 0 });
+
+  useEffect(() => {
+    const loadStats = async () => {
+      setIsLoading(true);
+      try {
+        const requests = [
+          adminApi.campuses(),
+          adminApi.users(),
+          adminApi.classes(),
+          adminApi.subjects(),
+          adminApi.courses(),
+        ];
+
+        if (isSuperAdmin) {
+          requests.push(adminApi.newsEvents(), adminApi.galleryItems());
+        }
+
+        const responses = await Promise.allSettled(requests);
+
+        const getDataAt = (index) => {
+          const result = responses[index];
+          return result?.status === "fulfilled" ? result.value?.data?.data || [] : [];
+        };
+
+        const campuses = getDataAt(0);
+        const users = getDataAt(1);
+        const classes = getDataAt(2);
+        const subjects = getDataAt(3);
+        const courses = getDataAt(4);
+        const newsItems = isSuperAdmin ? getDataAt(5) : [];
+        const galleryItems = isSuperAdmin ? getDataAt(6) : [];
+
+        const campusId = isSuperAdmin
+          ? (selectedCampusFilter === "all" ? null : selectedCampusFilter)
+          : (currentAdmin?.campus?._id || currentAdmin?.campus || null);
+
+        const filteredUsers = campusId ? users.filter((user) => matchesCampus(user.campus, campusId)) : users;
+        const filteredClasses = campusId ? classes.filter((classRoom) => matchesCampus(classRoom.campus, campusId)) : classes;
+        const filteredSubjects = campusId
+          ? subjects.filter((subject) => (subject.campuses || []).some((campus) => matchesCampus(campus, campusId)))
+          : subjects;
+        const filteredCourses = campusId
+          ? courses.filter((course) => (course.campuses || []).some((campus) => matchesCampus(campus, campusId)))
+          : courses;
+        const filteredNews = campusId
+          ? newsItems.filter((item) => matchesCampus(item.createdBy?.campus, campusId))
+          : newsItems;
+        const filteredGallery = campusId
+          ? galleryItems.filter((item) => matchesCampus(item.uploadedBy?.campus, campusId))
+          : galleryItems;
+
+        const filteredStudents = filteredUsers.filter((user) => user.role === "student");
+        const filteredFaculty = filteredUsers.filter((user) => user.role === "faculty");
+
+        if (!isSuperAdmin) {
+          const campusId = String(currentAdmin?.campus?._id || currentAdmin?.campus || "");
+          const matchedCampus = campuses.find((campus) => String(campus._id || campus.id) === campusId);
+          setResolvedSubAdminCampusName(matchedCampus?.name || matchedCampus?.code || "");
+        }
+
+        setCounts({
+          students: filteredStudents.length,
+          faculty: filteredFaculty.length,
+          classes: filteredClasses.length,
+          subjects: filteredSubjects.length,
+          courses: filteredCourses.length,
+          campuses: campusId ? 1 : campuses.length,
+          news: filteredNews.length,
+          gallery: filteredGallery.length,
+        });
+      } catch {
+        setCounts({ students: 0, faculty: 0, classes: 0, subjects: 0, courses: 0, campuses: 0, news: 0, gallery: 0 });
+        if (!isSuperAdmin) {
+          setResolvedSubAdminCampusName("");
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadStats();
+  }, [selectedCampusFilter, isSuperAdmin, currentAdmin]);
 
   const currentCampus = getCurrentCampusContext();
-  const campusKey = currentCampus ? currentCampus.id : "all";
+  const subAdminCampusLabel =
+    resolvedSubAdminCampusName ||
+    currentAdmin?.campus?.name ||
+    currentAdmin?.campus?.code ||
+    "Assigned Campus";
   const campusLabel = currentCampus ? currentCampus.name : "All Campuses";
 
-  const currentStats = mockAllStats[campusKey] || mockAllStats.all;
+  const stats = useMemo(() => {
+    if (isSuperAdmin && selectedCampusFilter === "all") {
+      return [
+        { title: "Courses", value: counts.courses, hint: "Active programs", icon: Layers, tone: "primary" },
+        { title: "Campuses", value: counts.campuses, hint: "Managed campuses", icon: Building2, tone: "primary" },
+        { title: "News Posts", value: counts.news, hint: "Published updates", icon: Megaphone, tone: "primary" },
+        { title: "Gallery Items", value: counts.gallery, hint: "Media assets", icon: Image, tone: "primary" },
+      ];
+    }
 
-  const stats = [
-    {
-      title: "Total Users",
-      value: currentStats.users.value,
-      hint: currentStats.users.hint,
-      icon: Users,
-      tone: "primary",
-    },
-    {
-      title: "Active Classes",
-      value: currentStats.classes.value,
-      hint: currentStats.classes.hint,
-      icon: GraduationCap,
-      tone: "primary",
-    },
-    {
-      title: "Active Subjects",
-      value: currentStats.subjects.value,
-      hint: currentStats.subjects.hint,
-      icon: Book,
-      tone: "primary",
-    },
-    {
-      title: "Active Courses",
-      value: currentStats.courses.value,
-      hint: currentStats.courses.hint,
-      icon: Layers,
-      tone: "primary",
-    },
-  ];
+    return [
+      { title: "Total Students", value: counts.students, hint: "Campus enrollments", icon: Users, tone: "primary" },
+      { title: "Faculty", value: counts.faculty, hint: "Campus teaching staff", icon: GraduationCap, tone: "primary" },
+      { title: "Courses", value: counts.courses, hint: "Campus courses", icon: Layers, tone: "primary" },
+      { title: "Classes", value: counts.classes, hint: "Campus classes", icon: Book, tone: "primary" },
+    ];
+  }, [counts, selectedCampusFilter, isSuperAdmin]);
+
+  const quickActions = isSuperAdmin ? superAdminActions : subAdminActions;
 
   return (
     <div className="space-y-8 pb-10">
       {/* Header */}
       <PortalPageHeader
         badge={
-          selectedCampusFilter !== "all" ? (
+          !isSuperAdmin ? (
+            <Badge variant={isDarkMode ? "gold" : "navy"}>
+              {subAdminCampusLabel}
+            </Badge>
+          ) : selectedCampusFilter !== "all" ? (
             <Badge variant={isDarkMode ? "gold" : "navy"}>
               {campusLabel}
             </Badge>
           ) : null
         }
         title="Admin Control Center"
-        subtitle="Unified institutional management and system monitoring"
+        subtitle={isSuperAdmin ? "Campus, news, and gallery control for the system owner" : "Academic operations for admin users"}
       />
 
       {/* Main Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5 lg:gap-6">
-        {stats.map((item) => (
-          <PortalStatsCard key={item.title} {...item} />
-        ))}
-      </div>
+      {isLoading ? (
+        <SkeletonLoading count={4} variant="panel" containerClassName="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5 lg:gap-6" />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5 lg:gap-6">
+          {stats.map((item) => (
+            <PortalStatsCard key={item.title} {...item} />
+          ))}
+        </div>
+      )}
 
       {/* Quick Actions Grid */}
       <div className="space-y-6">
@@ -139,3 +239,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+

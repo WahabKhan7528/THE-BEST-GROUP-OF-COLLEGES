@@ -1,19 +1,72 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, User } from "lucide-react";
-import { clsx } from "clsx";
 import PublicButton from "../../components/shared/PublicButton";
 import PageHero from "../../components/public-site/PageHero";
 import NewsCard from "../../components/public-site/NewsCard";
 import EventCard from "../../components/public-site/EventCard";
 import CTASection from "../../components/public-site/CTASection";
 import Card from "../../components/shared/Card";
+import SkeletonLoading from "../../components/shared/SkeletonLoading";
 
-import { newsItems, events } from "../../data/newsEventsData";
 import Pagination from "../../components/public-site/Pagination";
+import { publicApi } from "../../services/api";
 
 const NewsAndEvents = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [items, setItems] = useState([]);
+  const [isLoadingItems, setIsLoadingItems] = useState(true);
   const newsPerPage = 3;
+
+  useEffect(() => {
+    const loadNewsEvents = async () => {
+      setIsLoadingItems(true);
+      try {
+        const { data } = await publicApi.newsEvents();
+        setItems(data.data || []);
+      } catch {
+        setItems([]);
+      } finally {
+        setIsLoadingItems(false);
+      }
+    };
+
+    loadNewsEvents();
+  }, []);
+
+  const newsItems = useMemo(
+    () =>
+      items
+        .filter((item) => item.type === "news")
+        .map((item) => ({
+          id: item._id,
+          title: item.title,
+          category: item.category,
+          categoryColor: "from-sky-100 to-sky-200 text-sky-800",
+          date: item.date ? new Date(item.date).toLocaleDateString() : new Date(item.createdAt).toLocaleDateString(),
+          image: item.image?.url,
+          description: item.description,
+        })),
+    [items],
+  );
+
+  const events = useMemo(
+    () =>
+      items
+        .filter((item) => item.type === "event")
+        .map((item) => ({
+          id: item._id,
+          title: item.title,
+          category: item.category,
+          categoryColor: "from-blue-400 to-blue-500",
+          date: item.date ? new Date(item.date).toLocaleDateString() : new Date(item.createdAt).toLocaleDateString(),
+          time: item.time || "",
+          location: item.location || "",
+          image: item.image?.url,
+          description: item.description,
+          status: item.status || "Upcoming",
+        })),
+    [items],
+  );
 
   // Pagination Logic
   const indexOfLastNews = currentPage * newsPerPage;
@@ -45,9 +98,11 @@ const NewsAndEvents = () => {
             </div>
 
             <div className="space-y-8 flex-1">
-              {currentNewsItems.map((news) => (
-                <NewsCard key={news.id} news={news} />
-              ))}
+              {isLoadingItems
+                ? <SkeletonLoading count={3} variant="card" className="h-48" containerClassName="space-y-8" />
+                : currentNewsItems.map((news) => (
+                  <NewsCard key={news.id} news={news} />
+                ))}
             </div>
 
             {/* Pagination Controls */}
@@ -67,9 +122,11 @@ const NewsAndEvents = () => {
             <div className="relative group">
               {/* Slider Container */}
               <div className="max-h-[700px] overflow-y-auto space-y-6 no-scrollbar pr-1 py-1 scroll-smooth">
-                {events.map((event) => (
-                  <EventCard key={event.id} event={event} />
-                ))}
+                {isLoadingItems
+                  ? <SkeletonLoading count={3} variant="card" className="h-56" containerClassName="space-y-6" />
+                  : events.map((event) => (
+                    <EventCard key={event.id} event={event} />
+                  ))}
               </div>
             </div>
 

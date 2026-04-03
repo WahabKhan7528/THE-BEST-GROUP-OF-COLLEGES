@@ -1,7 +1,8 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { LogOut, X } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
 import PublicButton from "../shared/PublicButton";
-import { useThemeContext } from "../../context/ThemeContext";
+import { logoutUser } from "../../store/slices/authSlice";
 
 /**
  * Unified portal sidebar used by Admin, Faculty, and Student layouts.
@@ -21,7 +22,17 @@ const PortalSidebar = ({
   menuSectionLabel = "Navigation",
 }) => {
   const navigate = useNavigate();
-  const { isDarkMode } = useThemeContext();
+  const dispatch = useDispatch();
+  const isDarkMode = useSelector((state) => state.ui.isDarkMode);
+
+  const handleLogout = async () => {
+    try {
+      await dispatch(logoutUser()).unwrap();
+    } catch {
+      // Ignore logout network errors.
+    }
+    navigate(loginPath);
+  };
 
   return (
     <aside className="h-full w-72 bg-white dark:bg-college-navy border-r border-gray-200 dark:border-college-gold/15 flex flex-col transition-colors duration-300">
@@ -87,7 +98,7 @@ const PortalSidebar = ({
       {/* Sidebar Footer */}
       <div className="p-4 border-t border-gray-100 dark:border-white/10">
         <PublicButton
-          onClick={() => navigate(loginPath)}
+          onClick={handleLogout}
           variant={isDarkMode ? "secondary" : "primary"}
           className="w-full"
           shape="slanted"

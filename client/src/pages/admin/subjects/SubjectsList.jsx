@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useAdminContext } from "../../../context/AdminContext";
+import { useEffect, useMemo, useState } from "react";
+import { useAdminContext } from "../../../store/hooks/useAdminReduxContext";
 import { useToast } from "../../../context/ToastContext";
 import { useConfirm } from "../../../context/ConfirmContext";
 import PublicButton from "../../../components/shared/PublicButton";
@@ -13,7 +13,7 @@ import {
   Building2,
   Hash,
 } from "lucide-react";
-import { mockSubjectsData as adminSubjects } from "../../../data/adminData";
+import { adminApi } from "../../../services/api";
 
 const SubjectsList = () => {
   const navigate = useNavigate();
@@ -23,23 +23,43 @@ const SubjectsList = () => {
 
   const [selectedCampus, setSelectedCampus] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [subjects, setSubjects] = useState([]);
 
-  const mockData = adminSubjects;
+  useEffect(() => {
+    const loadSubjects = async () => {
+      try {
+        const { data } = await adminApi.subjects();
+        setSubjects(data.data || []);
+      } catch {
+        setSubjects([]);
+      }
+    };
 
-  // Filter data based on user and selected campus
-  let filteredData = mockData;
+    loadSubjects();
+  }, []);
+
+  const normalizedSubjects = useMemo(
+    () =>
+      subjects.map((subject) => ({
+        ...subject,
+        class: subject.course?.title || "General",
+        facultyName: (subject.faculty || []).map((f) => f.name).join(", ") || "Not assigned",
+      })),
+    [subjects],
+  );
+
+  let filteredData = [...normalizedSubjects];
 
   // 1. Filter by Role & Campus
   if (!isSuperAdmin) {
     filteredData = filteredData.filter((subject) =>
-      subject.offeredAt.some((campus) =>
-        currentAdmin?.allocatedCampuses?.includes(campus),
+      (subject.campuses || []).some((campus) =>
+        String(campus?._id || campus) === String(currentAdmin?.campus?._id || currentAdmin?.campus),
       ),
     );
   } else if (selectedCampus) {
-    // If Super Admin selected a campus, filter to subjects offered there
     filteredData = filteredData.filter((subject) =>
-      subject.offeredAt.includes(selectedCampus),
+      (subject.campuses || []).some((campus) => String(campus?._id || campus) === selectedCampus),
     );
   }
 
@@ -50,7 +70,8 @@ const SubjectsList = () => {
       (sub) =>
         sub.name.toLowerCase().includes(query) ||
         sub.code.toLowerCase().includes(query) ||
-        sub.faculty.toLowerCase().includes(query)
+        sub.class.toLowerCase().includes(query) ||
+        sub.facultyName.toLowerCase().includes(query),
     );
   }
 
@@ -84,35 +105,37 @@ const SubjectsList = () => {
         </span>
       )
     },
-    {
+    ...(isSuperAdmin ? [{
       key: "faculty",
       label: "Faculty",
       render: (row) => (
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-college-navy dark:bg-college-gold flex items-center justify-center text-white dark:text-college-navy text-xs font-bold ring-2 ring-white/50 shadow-sm">
-            {row.faculty.charAt(0)}
+            {row.facultyName.charAt(0)}
           </div>
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{row.faculty}</span>
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{row.facultyName}</span>
         </div>
       )
-    },
-    {
-      key: "offeredAt",
+    }, {
+      key: "campuses",
       label: "Campuses",
       render: (row) => (
         <div className="flex flex-wrap gap-1">
-          {row.offeredAt.map((campusId) => (
-            <span
-              key={campusId}
-              className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-college-navy/5 text-college-navy border border-college-navy/10"
-            >
-              <Building2 className="w-3 h-3" />
-              {getCampusName(campusId)}
-            </span>
-          ))}
+          {(row.campuses || []).map((campus) => {
+            const campusId = campus?._id || campus;
+            return (
+              <span
+                key={campusId}
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-college-navy/5 text-college-navy border border-college-navy/10"
+              >
+                <Building2 className="w-3 h-3" />
+                {getCampusName(campusId)}
+              </span>
+            );
+          })}
         </div>
       ),
-    },
+    }] : []),
   ];
 
   return (
@@ -127,15 +150,17 @@ const SubjectsList = () => {
             Manage course curriculum and campus-specific subject offerings
           </p>
         </div>
-        <PublicButton
-          to="/admin/subjects/create"
-          variant={isDarkMode ? "secondary" : "primary"}
-          shape="slanted"
-          size="md"
-          icon={Plus}
-        >
-          Add New Subject
-        </PublicButton>
+        {!isSuperAdmin && (
+          <PublicButton
+            to="/admin/subjects/create"
+            variant={isDarkMode ? "secondary" : "primary"}
+            shape="slanted"
+            size="md"
+            icon={Plus}
+          >
+            Add New Subject
+          </PublicButton>
+        )}
       </div>
 
       {/* Filters Section */}
@@ -179,10 +204,10 @@ const SubjectsList = () => {
         <Table
           columns={columns}
           data={filteredData}
-          actionButtons={(row) => [
+          actionButtons={isSuperAdmin ? undefined : (row) => [
             {
               label: "Edit",
-              onClick: () => navigate(`/admin/subjects/edit/${row.id}`),
+              onClick: () => navigate(`/admin/subjects/edit/${row._id}`),
               className: "text-emerald-600 hover:text-emerald-700 font-medium bg-emerald-50 border border-emerald-100 dark:bg-emerald-900 dark:border-transparent dark:text-gray-300 dark:hover:bg-emerald-800",
             },
             {
@@ -190,7 +215,9 @@ const SubjectsList = () => {
               onClick: async () => {
                 const confirmed = await confirm({ title: "Delete Subject", message: "Are you sure you want to delete this subject?", confirmText: "Delete", variant: "danger" });
                 if (confirmed) {
-                  toast.success(`Subject ${row.id} deleted`);
+                  await adminApi.deleteSubject(row._id);
+                  setSubjects((prev) => prev.filter((subject) => subject._id !== row._id));
+                  toast.success("Subject deleted");
                 }
               },
               className: "text-red-600 hover:text-red-700 font-medium bg-red-50 border border-red-100 dark:bg-red-900 dark:border-transparent dark:text-gray-300 dark:hover:bg-red-800",
@@ -220,3 +247,4 @@ const SubjectsList = () => {
 };
 
 export default SubjectsList;
+

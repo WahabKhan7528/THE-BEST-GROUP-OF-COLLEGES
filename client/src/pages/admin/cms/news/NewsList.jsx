@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Table from "../../../../components/portal-shared/Table";
 import PublicButton from "../../../../components/shared/PublicButton";
-import { useAdminContext } from "../../../../context/AdminContext";
+import { useAdminContext } from "../../../../store/hooks/useAdminReduxContext";
 import { useToast } from "../../../../context/ToastContext";
 import { useConfirm } from "../../../../context/ConfirmContext";
 import {
@@ -12,6 +12,7 @@ import {
   Newspaper,
   Eye,
 } from "lucide-react";
+import { adminApi } from "../../../../services/api";
 
 const NewsList = () => {
   const navigate = useNavigate();
@@ -27,44 +28,28 @@ const NewsList = () => {
   const [activeFilter, setActiveFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const data = [
-    {
-      id: "n1",
-      title: "Convocation 2025",
-      type: "Event",
-      date: "Jan 30, 2026",
-      status: "Published",
-      category: "Academic",
-      views: 1240
-    },
-    {
-      id: "n2",
-      title: "Best Group Achieves Higher Accreditation",
-      type: "News",
-      date: "Dec 20, 2025",
-      status: "Published",
-      category: "Achievement",
-      views: 856
-    },
-    {
-      id: "n3",
-      title: "New Research Center Inaugurated",
-      type: "News",
-      date: "Dec 15, 2025",
-      status: "Published",
-      category: "Research",
-      views: 0
-    },
-    {
-      id: "n4",
-      title: "Annual Sports Gala 2025",
-      type: "Event",
-      date: "Jan 15, 2026",
-      status: "Published",
-      category: "Sports",
-      views: 2100
-    },
-  ];
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const loadNews = async () => {
+      try {
+        const { data: response } = await adminApi.newsEvents();
+        setData((response.data || []).map((item) => ({
+          id: item._id,
+          title: item.title,
+          type: item.type === "event" ? "Event" : "News",
+          date: item.date ? new Date(item.date).toLocaleDateString() : new Date(item.createdAt).toLocaleDateString(),
+          status: item.status || "published",
+          category: item.category,
+          views: item.views || 0,
+        })));
+      } catch {
+        setData([]);
+      }
+    };
+
+    loadNews();
+  }, []);
 
   let filteredData = data;
 
@@ -201,6 +186,8 @@ const NewsList = () => {
               onClick: async () => {
                 const confirmed = await confirm({ title: "Delete Post", message: "Are you sure you want to delete this post?", confirmText: "Delete", variant: "danger" });
                 if (confirmed) {
+                  await adminApi.deleteNewsEvent(row.id);
+                  setData((prev) => prev.filter((item) => item.id !== row.id));
                   toast.success(`Post ${row.id} deleted`);
                 }
               },
@@ -231,4 +218,5 @@ const NewsList = () => {
 };
 
 export default NewsList;
+
 

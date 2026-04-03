@@ -1,73 +1,10 @@
-import { useStudentContext } from "../../context/StudentContext";
+import { useEffect, useMemo, useState } from "react";
+import { useStudentContext } from "../../store/hooks/useStudentReduxContext";
 import AssignmentCard from "../../components/portal-shared/AssignmentCard";
 import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
-import { CheckCircle, Clock } from "lucide-react";
-
-
-// Mock assignments data by campus
-const assignmentsByCampus = {
-  main: [
-    {
-      title: "Operating Systems Lab Report",
-      subject: "CS-312",
-      description:
-        "Analyze CPU scheduling strategies with your lab data and submit a 3-page reflection.",
-      dueDate: "Sept 15, 2025",
-      attachment: "#",
-      status: "Pending",
-    },
-    {
-      title: "Database Design Project",
-      subject: "CS-215",
-      description:
-        "Submit ER diagram, relational schema, and sample queries for the bookstore system.",
-      dueDate: "Sept 18, 2025",
-      attachment: "#",
-      status: "Submitted",
-    },
-    {
-      title: "Linear Algebra Problem Set 5",
-      subject: "MTH-205",
-      description:
-        "Complete questions 1-10 focusing on eigenvalues and diagonalization.",
-      dueDate: "Sept 10, 2025",
-      attachment: "#",
-      status: "Late",
-    },
-  ],
-  law: [
-    {
-      title: "Constitutional Case Brief",
-      subject: "LAW-201",
-      description:
-        "Brief two landmark constitutional cases with detailed analysis.",
-      dueDate: "Sept 20, 2025",
-      attachment: "#",
-      status: "Pending",
-    },
-    {
-      title: "Criminal Law Essay",
-      subject: "LAW-302",
-      description:
-        "Essay on mens rea and actus reus requirements in criminal law.",
-      dueDate: "Sept 25, 2025",
-      attachment: "#",
-      status: "Pending",
-    },
-  ],
-  hala: [
-    {
-      title: "Business Plan Submission",
-      subject: "BBA-101",
-      description:
-        "Submit your comprehensive business plan with financial projections.",
-      dueDate: "Sept 22, 2025",
-      attachment: "#",
-      status: "Pending",
-    },
-  ],
-};
+import { CheckCircle } from "lucide-react";
+import { portalApi } from "../../services/api";
 
 const campusNames = {
   main: "Main Campus",
@@ -78,7 +15,67 @@ const campusNames = {
 const Assignments = () => {
   const { getCurrentCampus, isDarkMode } = useStudentContext();
   const campus = getCurrentCampus();
-  const assignments = assignmentsByCampus[campus] || [];
+  const [assignments, setAssignments] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadAssignments = async () => {
+      try {
+        const [assignmentRes, submissionRes] = await Promise.all([
+          portalApi.assignments(),
+          portalApi.mySubmissions(),
+        ]);
+
+        const submissions = submissionRes.data.data || [];
+        const submissionMap = new Map(
+          submissions.map((submission) => [submission.assignment?._id || submission.assignment, submission]),
+        );
+
+        const mappedAssignments = (assignmentRes.data.data || []).map((assignment) => {
+          const submission = submissionMap.get(assignment._id);
+          const status = submission
+            ? submission.status === "late"
+              ? "Late"
+              : "Submitted"
+            : "Pending";
+
+          return {
+            id: assignment._id,
+            title: assignment.title,
+            description: assignment.description,
+            dueDate: assignment.dueDate ? new Date(assignment.dueDate).toLocaleDateString() : "-",
+            attachment: assignment.attachment?.url || "#",
+            status,
+            classSection: assignment.classRoom?.name || assignment.classRoom?.section || assignment.classRoom || "-",
+            subject: assignment.subject?.name || assignment.subject?.code || assignment.subject || "-",
+            maxMarks: assignment.maxMarks,
+          };
+        });
+
+        if (isMounted) {
+          setAssignments(mappedAssignments);
+        }
+      } catch {
+        if (isMounted) {
+          setAssignments([]);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadAssignments();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const pendingCount = useMemo(() => assignments.filter((assignment) => assignment.status === "Pending").length, [assignments]);
 
   return (
     <div className="space-y-6 pb-10">
@@ -93,19 +90,19 @@ const Assignments = () => {
         action={
           <div className="flex items-center gap-3">
             <div className="flex items-baseline gap-2">
-              <p className="text-2xl md:text-3xl font-bold text-college-navy text-under dark:text-college-gold">" {assignments.filter(a => a.status === 'Pending').length} "</p>
-              <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 font-medium"> Pending Tasks</p>
+              <p className="text-2xl md:text-3xl font-bold text-college-navy dark:text-college-gold">{pendingCount}</p>
+              <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 font-medium">Pending Tasks</p>
             </div>
           </div>
         }
       />
 
-      {assignments.length > 0 ? (
+      {loading ? (
+        <div className="py-10 text-center text-gray-500 dark:text-gray-400">Loading assignments...</div>
+      ) : assignments.length > 0 ? (
         <div className="space-y-4">
           {assignments.map((assignment) => (
-            <div key={assignment.title}>
-              <AssignmentCard assignment={assignment} role="student" />
-            </div>
+            <AssignmentCard key={assignment.id} assignment={assignment} role="student" />
           ))}
         </div>
       ) : (

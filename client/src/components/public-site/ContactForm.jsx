@@ -20,17 +20,22 @@ export default function ContactForm({ className }) {
 
     const onSubmit = async () => {
         try {
-            await emailjs.sendForm(
-                import.meta.env.VITE_EMAILJS_SERVICE_ID,
-                import.meta.env.VITE_EMAILJS_CONTACT_TEMPLATE,
-                formRef.current,
-                import.meta.env.VITE_EMAILJS_PUBLIC_KEY
-            );
+            const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+            const templateId = import.meta.env.VITE_EMAILJS_CONTACT_TEMPLATE;
+            const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
+            if (!serviceId || !templateId || !publicKey) {
+                console.error("Missing EmailJS configuration:", { serviceId, templateId, publicKey });
+                toast.error("Email service not configured. Please contact admin.");
+                return;
+            }
+
+            await emailjs.sendForm(serviceId, templateId, formRef.current, publicKey);
             toast.success("Message sent successfully");
             reset();
-        } catch {
-            toast.error("Failed to send message");
+        } catch (error) {
+            console.error("Contact form submission error:", error);
+            toast.error(`Failed to send message: ${error.message || "Unknown error"}`);
         }
     };
 

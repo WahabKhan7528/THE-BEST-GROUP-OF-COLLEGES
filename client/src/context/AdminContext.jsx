@@ -1,36 +1,51 @@
-import { createContext, useContext, useState, useEffect } from "react";
-import { mockAdminUser, mockCampuses } from "../data/adminData";
+import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { useThemeContext } from "./ThemeContext";
+import { adminApi, authApi } from "../services/api";
 
 export const AdminContext = createContext();
 
 export const AdminProvider = ({ children }) => {
-  // Current logged-in admin user
-  const [currentAdmin, setCurrentAdmin] = useState(mockAdminUser);
-
-  // Selected campus filter for data display ('all' for Super Admin unified view, or specific campus id)
+  const [currentAdmin, setCurrentAdmin] = useState(null);
   const [selectedCampusFilter, setSelectedCampusFilter] = useState("all");
-
-  // All campuses in the system
-  const [campuses, setCampuses] = useState(mockCampuses);
-
-  // Sub-Admin to Campus allocation mapping
-  const [adminCampusAllocations, setAdminCampusAllocations] = useState({
-    "U-002": ["law"],  // Ahmed Khan â†’ Law Campus
-    "U-003": ["main"], // Fatima Ali â†’ Main Campus
-    "U-004": ["main"], // Sub-Admin restricted to Main Campus
-  });
+  const [campuses, setCampuses] = useState([]);
 
   const { isDarkMode, toggleDarkMode } = useThemeContext();
 
-  // Check if current admin is Super Admin
-  const isSuperAdmin = currentAdmin?.adminRole === "Super Admin";
+  const isSuperAdmin = currentAdmin?.role === "super_admin";
+
+  const normalizedCampuses = useMemo(
+    () =>
+      campuses.map((campus) => ({
+        ...campus,
+        id: campus._id,
+      })),
+    [campuses],
+  );
+
+  useEffect(() => {
+    const loadAdminContext = async () => {
+      try {
+        const meRes = await authApi.me();
+        setCurrentAdmin(meRes.data.user || null);
+      } catch {
+        setCurrentAdmin(null);
+      }
+
+      try {
+        const campusesRes = await adminApi.campuses();
+        setCampuses(campusesRes.data.data || []);
+      } catch {
+        setCampuses([]);
+      }
+    };
+
+    loadAdminContext();
+  }, []);
 
   // Get the single allocated campus id for a sub-admin (null for super admin)
   const getSubAdminCampus = () => {
     if (isSuperAdmin) return null;
-    const allocations = adminCampusAllocations[currentAdmin?.id];
-    return allocations?.[0] || currentAdmin?.allocatedCampuses?.[0] || null;
+    return currentAdmin?.campus?._id || currentAdmin?.campus || null;
   };
 
   // Auto-lock campus filter to sub-admin's campus on login/switch
@@ -42,53 +57,48 @@ export const AdminProvider = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentAdmin]);
 
-  // Get visible campuses based on current admin role
   const getVisibleCampuses = () => {
-    if (isSuperAdmin) return campuses;
-    return campuses.filter(c => currentAdmin?.allocatedCampuses?.includes(c.id));
+    if (isSuperAdmin) return normalizedCampuses;
+    const currentCampusId = getSubAdminCampus();
+    return normalizedCampuses.filter((c) => c.id === currentCampusId);
   };
 
   // Get currently selected campus object
   const getCurrentCampusContext = () => {
     if (selectedCampusFilter === "all") return null;
-    return campuses.find(c => c.id === selectedCampusFilter);
+    return normalizedCampuses.find((c) => c.id === selectedCampusFilter);
   };
 
-  const getAdminAllocations = (adminId) => adminCampusAllocations[adminId] || [];
-
-  // Update sub-admin campus allocation
-  const updateAdminAllocations = (adminId, newCampuses) => {
-    setAdminCampusAllocations(prev => ({
-      ...prev,
-      [adminId]: newCampuses,
-    }));
+  const getAdminAllocations = () => {
+    const campusId = getSubAdminCampus();
+    return campusId ? [campusId] : [];
   };
+
+  const updateAdminAllocations = () => {};
 
   // Add new campus
   const addCampus = (newCampus) => {
-    setCampuses(prev => [
+    setCampuses((prev) => [
       ...prev,
-      { ...newCampus, id: newCampus.id || Date.now() },
+      { ...newCampus, _id: newCampus._id || newCampus.id || Date.now().toString() },
     ]);
   };
 
   // Update campus
   const updateCampus = (campusId, updatedCampus) => {
-    setCampuses(prev =>
-      prev.map(c => (c.id === campusId ? { ...c, ...updatedCampus } : c))
+    setCampuses((prev) =>
+      prev.map((c) => (c._id === campusId ? { ...c, ...updatedCampus } : c)),
     );
   };
 
   // Delete campus
   const deleteCampus = (campusId) => {
-    setCampuses(prev => prev.filter(c => c.id !== campusId));
+    setCampuses((prev) => prev.filter((c) => c._id !== campusId));
   };
 
-  // Mock: Switch admin user (for testing purposes)
   const switchAdminUser = (adminData) => {
     setCurrentAdmin(adminData);
-    // useEffect will auto-set campus filter for sub-admins
-    if (adminData?.adminRole === "Super Admin") {
+    if (adminData?.role === "super_admin") {
       setSelectedCampusFilter("all");
     }
   };
@@ -97,8 +107,8 @@ export const AdminProvider = ({ children }) => {
     // State
     currentAdmin,
     selectedCampusFilter,
-    campuses,
-    adminCampusAllocations,
+    campuses: normalizedCampuses,
+    adminCampusAllocations: {},
     isDarkMode,
 
     // Computed properties

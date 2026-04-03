@@ -1,76 +1,171 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { userSchema } from "../../../schemas/userSchema";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "../../../context/ToastContext";
+import { UserPlus, Eye, EyeOff } from "lucide-react";
 import PortalForm from "../../../components/portal-shared/PortalForm";
-import { useAdminContext } from "../../../context/AdminContext";
-import { UserPlus, X } from "lucide-react";
+import { useToast } from "../../../context/ToastContext";
+import { useAdminContext } from "../../../store/hooks/useAdminReduxContext";
+import { userSchema } from "../../../schemas/userSchema";
+import { adminApi } from "../../../services/api";
+
+const roleOptions = [
+  { label: "Super Admin", value: "super_admin" },
+  { label: "Admin", value: "admin" },
+  { label: "Faculty", value: "faculty" },
+  { label: "Student", value: "student" },
+];
 
 const CreateUser = () => {
   const navigate = useNavigate();
-  const { campuses, isSuperAdmin, getSubAdminCampus } = useAdminContext();
   const toast = useToast();
-  const [role, setRole] = useState("Faculty");
-  const [allocations, setAllocations] = useState([{ class: "", subject: "" }]);
-  const [selectedCampuses, setSelectedCampuses] = useState([]);
+  const { campuses, isSuperAdmin, getSubAdminCampus } = useAdminContext();
+  const [courses, setCourses] = useState([]);
+  const [classRooms, setClassRooms] = useState([]);
+  const [subjects, setSubjects] = useState([]);
+  const [role, setRole] = useState("student");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const currentCampusId = getSubAdminCampus();
+  const visibleRoles = isSuperAdmin ? roleOptions : roleOptions.filter((option) => option.value === "faculty" || option.value === "student");
 
-  // Pre-lock campus to sub-admin's campus on mount
-  useEffect(() => {
-    if (!isSuperAdmin) {
-      const campus = getSubAdminCampus();
-      if (campus) setSelectedCampuses([campus]);
-    }
-  }, [isSuperAdmin, getSubAdminCampus]);
-
-  const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm({
     resolver: zodResolver(userSchema),
     defaultValues: {
-      name: "", email: "", id: "", subjects: "",
-      contact: "", password: "", confirmPassword: "",
-      course: "", semester: "", class: "", academicSystem: "Semester",
-      designation: "", qualification: ""
-    }
+      role: "student",
+      campus: "",
+      currentCourse: "",
+      currentClassRoom: "",
+      classSection: "",
+      subjects: [],
+    },
   });
 
-  const academicSystem = watch("academicSystem");
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [subjectsRes, coursesRes, classesRes] = await Promise.all([
+          adminApi.subjects(),
+          adminApi.courses(),
+          adminApi.classes(),
+        ]);
 
-  const handleAllocationChange = (index, field, value) => {
-    const newAllocations = [...allocations];
-    newAllocations[index][field] = value;
-    setAllocations(newAllocations);
-  };
+        setSubjects(subjectsRes.data.data || []);
+        setCourses(coursesRes.data.data || []);
+        setClassRooms(classesRes.data.data || []);
+      } catch {
+        setSubjects([]);
+        setCourses([]);
+        setClassRooms([]);
+      }
+    };
 
-  const addAllocation = () => {
-    setAllocations([...allocations, { class: "", subject: "" }]);
-  };
+    loadData();
+  }, []);
 
-  const removeAllocation = (index) => {
-    setAllocations(allocations.filter((_, i) => i !== index));
-  };
+  const selectedCampus = watch("campus");
+  const selectedCourse = watch("currentCourse");
+  const selectedClassRoom = watch("currentClassRoom");
 
-  const handleCampusToggle = (campusId) => {
-    setSelectedCampuses((prev) =>
-      prev.includes(campusId)
-        ? prev.filter((id) => id !== campusId)
-        : [...prev, campusId]
-    );
-  };
-
-  const onSubmit = (data) => {
-    if (role !== "Super Admin" && selectedCampuses.length === 0) {
-      toast.warning(`Please allocate at least one campus for ${role}`);
-      return;
+  useEffect(() => {
+    if (!isSuperAdmin && currentCampusId) {
+      setValue("campus", currentCampusId, { shouldValidate: true });
     }
-    toast.success(`User created as ${role} (mock)`);
-    navigate("/admin/users");
+    if (role !== "student") return;
+    setValue("currentCourse", "");
+    setValue("currentClassRoom", "");
+    setValue("classSection", "");
+  }, [currentCampusId, isSuperAdmin, role, setValue]);
+
+  useEffect(() => {
+    if (role !== "student") return;
+    setValue("currentClassRoom", "");
+    setValue("classSection", "");
+  }, [role, selectedCourse, setValue]);
+
+  useEffect(() => {
+    if (role !== "student" || !selectedClassRoom) return;
+    const classroom = classRooms.find((item) => item._id === selectedClassRoom);
+    if (classroom?.section) {
+      setValue("classSection", classroom.section);
+    }
+  }, [classRooms, role, selectedClassRoom, setValue]);
+
+  const activeCampusId = isSuperAdmin ? selectedCampus : currentCampusId;
+  const filteredCourses = courses.filter((course) => {
+    if (!activeCampusId) return true;
+    return (course.campuses || []).some((campus) => String(campus?._id || campus) === String(activeCampusId));
+  });
+
+  const filteredClassRooms = classRooms.filter((classRoom) => {
+    const matchesCampus = !activeCampusId || String(classRoom.campus?._id || classRoom.campus) === String(activeCampusId);
+    const matchesCourse = !selectedCourse || String(classRoom.course?._id || classRoom.course) === String(selectedCourse);
+    return matchesCampus && matchesCourse;
+  });
+
+  const sectionOptions = Array.from(new Set(filteredClassRooms.map((classRoom) => classRoom.section).filter(Boolean)));
+  const filteredSubjects = subjects.filter((subject) => {
+    if (!activeCampusId) return true;
+    return (subject.campuses || []).some((campus) => String(campus?._id || campus) === String(activeCampusId));
+  });
+
+  const onSubmit = async (values) => {
+    try {
+      const basePayload = {
+        name: values.name,
+        email: values.email,
+        password: values.password,
+        role,
+        isActive: true,
+      };
+
+      const rolePayload =
+        role === "faculty"
+          ? {
+              department: values.department,
+              designation: values.designation,
+              campus: values.campus || null,
+              subjects: values.subjects || [],
+            }
+          : role === "student"
+            ? {
+                campus: values.campus || null,
+                currentCourse: values.currentCourse || null,
+                currentClassRoom: values.currentClassRoom || null,
+                classSection: values.classSection || null,
+                currentSemester: null,
+                currentAnnualYear: null,
+                semester: null,
+                enrollmentYear: null,
+                subjects: [],
+              }
+            : role === "admin"
+              ? {
+                  campus: values.campus || null,
+                }
+              : {};
+
+      await adminApi.createUser({
+        ...basePayload,
+        ...rolePayload,
+      });
+
+      toast.success("User created successfully");
+      navigate("/admin/users");
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to create user");
+    }
   };
 
-  // Campus field visibility logic
-  const showCampusField = ["Faculty", "Student", "Sub-Admin"].includes(role);
-  // Faculty now uses single-campus too (one faculty per campus)
-  const isSingleCampus = ["Student", "Sub-Admin", "Faculty"].includes(role);
+  const showFacultyFields = role === "faculty";
+  const showStudentFields = role === "student";
+  const showAdminFields = role === "admin";
 
   return (
     <PortalForm
@@ -83,273 +178,196 @@ const CreateUser = () => {
       submitIcon={UserPlus}
       submitting={isSubmitting}
     >
-      {/* Role Selection Section */}
-      <PortalForm.Section title="Role & Permissions">
+      <PortalForm.Section title="Role & Identity">
         <div className="col-span-1 md:col-span-2 space-y-2">
           <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Account Type</label>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-            {["Student", "Faculty", ...(isSuperAdmin ? ["Sub-Admin", "Super Admin"] : [])].map((r) => (
+              {visibleRoles.map((option) => (
               <button
-                key={r}
+                key={option.value}
                 type="button"
-                onClick={() => {
-                  setRole(r);
-                  setSelectedCampuses([]);
-                }}
-                className={`px-4 py-3 rounded-sm text-sm font-medium transition-all duration-200 border ${role === r
+                onClick={() => setRole(option.value)}
+                className={`px-4 py-3 rounded-sm text-sm font-medium transition-all duration-200 border ${role === option.value
                   ? "bg-college-navy/10 border-college-navy text-college-navy shadow-sm dark:bg-college-gold/10 dark:border-college-gold dark:text-college-gold"
                   : "bg-white border-college-navy/10 text-gray-600 hover:bg-gray-50 dark:bg-white/5 dark:border-white/10 dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-gray-200"
                   }`}
               >
-                {r}
+                {option.label}
               </button>
             ))}
           </div>
-          <p className="text-xs text-gray-500 dark:text-gray-400 pl-1">
-            {role === "Super Admin" && "Full system access across all campuses"}
-            {role === "Sub-Admin" && "Administrative access restricted to allocated campuses"}
-            {role === "Faculty" && "Access to classes, grading, and materials"}
-            {role === "Student" && "Access to learning portal and results"}
-          </p>
+        </div>
+
+        <PortalForm.Input label="Full Name" registration={register("name")} error={errors.name?.message} required />
+        <PortalForm.Input label="Email Address" type="email" registration={register("email")} error={errors.email?.message} required />
+        <div className="md:col-span-2 rounded-sm border border-dashed border-gray-300 dark:border-college-gold/20 bg-gray-50/70 dark:bg-college-navy/40 p-4 text-sm text-gray-600 dark:text-gray-300">
+          Portal ID is generated automatically after save and cannot be edited.
+        </div>
+        <div className="space-y-1">
+          <label className="text-xs md:text-sm text-college-navy dark:text-gray-200 font-medium">Password *</label>
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              {...register("password")}
+              className="w-full px-4 md:px-5 py-2.5 md:py-3.5 text-sm md:text-base rounded-sm border border-gray-200 dark:border-college-gold/20 bg-white dark:bg-college-navy/50 dark:text-white dark:placeholder-gray-400 focus:bg-white dark:focus:bg-college-navy/50 shadow-sm focus:border-college-navy dark:focus:border-college-gold focus:ring-college-navy/20 dark:focus:ring-college-gold/20 transition pr-11"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-college-navy dark:hover:text-college-gold transition-colors"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
+          {errors.password?.message ? <span className="text-red-500 dark:text-red-400 text-[10px] md:text-xs mt-0.5">{errors.password.message}</span> : null}
+        </div>
+
+        <div className="space-y-1">
+          <label className="text-xs md:text-sm text-college-navy dark:text-gray-200 font-medium">Confirm Password *</label>
+          <div className="relative">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              {...register("confirmPassword")}
+              className="w-full px-4 md:px-5 py-2.5 md:py-3.5 text-sm md:text-base rounded-sm border border-gray-200 dark:border-college-gold/20 bg-white dark:bg-college-navy/50 dark:text-white dark:placeholder-gray-400 focus:bg-white dark:focus:bg-college-navy/50 shadow-sm focus:border-college-navy dark:focus:border-college-gold focus:ring-college-navy/20 dark:focus:ring-college-gold/20 transition pr-11"
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword((prev) => !prev)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-college-navy dark:hover:text-college-gold transition-colors"
+              aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+            >
+              {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
+          {errors.confirmPassword?.message ? <span className="text-red-500 dark:text-red-400 text-[10px] md:text-xs mt-0.5">{errors.confirmPassword.message}</span> : null}
         </div>
       </PortalForm.Section>
 
-      {/* Basic Info Section */}
-      <PortalForm.Section title="Personal Identity">
-        <PortalForm.Input
-          label="Full Name"
-          registration={register("name")}
-          error={errors.name?.message}
-          required
-          placeholder="e.g. John Doe"
-        />
-        <PortalForm.Input
-          label="Email Address"
-          type="email"
-          registration={register("email")}
-          error={errors.email?.message}
-          required
-          placeholder="e.g. john@best.edu"
-        />
-        <PortalForm.Input
-          label={role === "Student" ? "Roll Number / Student ID" : "Employee ID"}
-          registration={register("id")}
-          helper="Unique system identifier"
-          placeholder="e.g. S-2024-001"
-        />
-        <PortalForm.Input
-          label="Contact Number"
-          registration={register("contact")}
-          placeholder="+92-xxx-xxxxxxx"
-        />
-      </PortalForm.Section>
-
-      {/* Academic / Professional Details */}
-      {(role === "Student" || role === "Faculty" || role === "Sub-Admin") && (
-        <PortalForm.Section title={role === "Student" ? "Academic Information" : "Professional Details"}>
-          {role === "Student" && (
-            <>
-              <PortalForm.Input
-                label="Course"
-                registration={register("course")}
-                placeholder="e.g. BSCS, BBA, LLB"
-                required
-              />
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Academic System</label>
-                <div className="flex gap-4 p-2 bg-gray-50/50 dark:bg-college-navy/30 rounded-sm border border-college-navy/10 dark:border-college-gold/10">
-                  {["Semester", "Annual"].map((sys) => (
-                    <label key={sys} className="flex items-center gap-2 cursor-pointer px-3 py-1.5 rounded-sm hover:bg-college-navy/5 dark:hover:bg-college-gold/5 transition-colors">
-                      <input
-                        type="radio"
-                        value={sys}
-                        {...register("academicSystem")}
-                        className="w-4 h-4 text-college-navy focus:ring-college-navy dark:focus:ring-college-gold border-gray-300 dark:border-white/20"
-                      />
-                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{sys}</span>
-                    </label>
-                  ))}
-                </div>
+      {showFacultyFields && (
+        <PortalForm.Section title="Faculty Details">
+          <PortalForm.Input label="Department" registration={register("department")} placeholder="e.g. Computer Science" />
+          <PortalForm.Input label="Designation" registration={register("designation")} placeholder="e.g. Lecturer, Assistant Professor" />
+          <div className="col-span-1 md:col-span-2 space-y-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Campus</label>
+            {isSuperAdmin ? (
+              <select {...register("campus")} className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none text-gray-900 dark:text-white">
+                <option value="">Select a campus...</option>
+                {campuses.map((campus) => (
+                  <option key={campus.id} value={campus.id}>
+                    {campus.name} ({campus.code})
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <div className="rounded-sm border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 dark:border-college-gold/20 dark:bg-college-navy/50 dark:text-gray-200">
+                {campuses.find((campus) => campus.id === currentCampusId)?.name || "Your campus"}
               </div>
-              <PortalForm.Input
-                label={academicSystem === "Annual" ? "Year" : "Semester"}
-                registration={register("semester")}
-                placeholder={academicSystem === "Annual" ? "e.g. 1st Year, 2nd Year" : "e.g. 1st, 5th"}
-                required
-              />
-              <PortalForm.Input
-                label="Class"
-                registration={register("class")}
-                placeholder="e.g. A, Morning"
-                required
-              />
-              <PortalForm.Input
-                label="Enrollment Year"
-                registration={register("enrollmentYear")}
-                placeholder="e.g. 2024"
-              />
-            </>
-          )}
-
-          {role === "Faculty" && (
-            <>
-              <PortalForm.Input
-                label="Designation"
-                registration={register("designation")}
-                placeholder="e.g. Lecturer, Assistant Professor"
-                required
-              />
-              <PortalForm.Input
-                label="Qualification"
-                registration={register("qualification")}
-                placeholder="e.g. PhD, MSCS"
-              />
-              <div className="md:col-span-2 space-y-3">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex justify-between items-center">
-                  <span>Course & Class Allocation</span>
-                  <button
-                    type="button"
-                    onClick={addAllocation}
-                    className="text-xs text-college-navy dark:text-college-gold font-semibold hover:underline"
-                  >
-                    + Add Class
-                  </button>
-                </label>
-                <div className="space-y-3">
-                  {allocations.map((alloc, idx) => (
-                    <div key={idx} className="flex gap-3 items-center">
-                      <div className="flex-1">
-                        <input
-                          type="text"
-                          placeholder="Class / Section (e.g. BSCS-5A)"
-                          className="w-full px-4 py-2 rounded-sm border border-gray-200 dark:border-college-gold/20 bg-white dark:bg-college-navy/50 text-sm focus:outline-none focus:border-college-navy dark:focus:border-college-gold dark:text-white dark:placeholder-gray-500"
-                          value={alloc.class}
-                          onChange={(e) => handleAllocationChange(idx, 'class', e.target.value)}
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <input
-                          type="text"
-                          placeholder="Subject (e.g. Operating Systems)"
-                          className="w-full px-4 py-2 rounded-sm border border-gray-200 dark:border-college-gold/20 bg-white dark:bg-college-navy/50 text-sm focus:outline-none focus:border-college-navy dark:focus:border-college-gold dark:text-white dark:placeholder-gray-500"
-                          value={alloc.subject}
-                          onChange={(e) => handleAllocationChange(idx, 'subject', e.target.value)}
-                        />
-                      </div>
-                      {allocations.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => removeAllocation(idx)}
-                          className="text-rose-500 hover:text-rose-700 p-2"
-                        >
-                          <X size={18} />
-                        </button>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
-
-          {(role === "Sub-Admin" || role === "Super Admin") && (
-            <PortalForm.Input
-              label="Designation / Role Title"
-              registration={register("designation")}
-              placeholder="e.g. Campus Manager, Registrar"
-            />
-          )}
-        </PortalForm.Section>
-      )}
-
-      {/* Campus Allocation Section */}
-      {showCampusField && (
-        <PortalForm.Section title="Campus Allocation">
+            )}
+          </div>
           <div className="col-span-1 md:col-span-2">
-            <div className="bg-gray-50/50 dark:bg-college-navy/50 rounded-sm p-4 border border-college-navy/10 dark:border-college-gold/20">
-              <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 block">
-                {isSingleCampus ? "Select Primary Campus" : "Select Allocated Campuses"}
-              </h3>
-
-              {isSingleCampus ? (
-                <div className="relative">
-                  <select
-                    value={selectedCampuses[0] || ""}
-                    onChange={(e) => {
-                      setSelectedCampuses(e.target.value ? [e.target.value] : []);
-                    }}
-                    className="w-full px-4 py-2.5 rounded-sm border border-college-navy/20 dark:border-college-gold/20 bg-white dark:bg-college-navy dark:text-white focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20"
-                    required
-                    disabled={!isSuperAdmin}
-                  >
-                    <option value="">Select a campus...</option>
-                    {campuses.map((campus) => (
-                      <option key={campus.id} value={campus.id}>
-                        {campus.name} ({campus.code})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {campuses.map((campus) => (
-                    <label
-                      key={campus.id}
-                      className={`flex items-center p-3 border rounded-sm cursor-pointer transition-all duration-200 ${selectedCampuses.includes(campus.id)
-                        ? "bg-college-navy/10 border-college-navy text-college-navy shadow-sm dark:bg-college-gold/20 dark:border-college-gold dark:text-college-gold dark:shadow-none"
-                        : "bg-white border-college-navy/10 hover:bg-gray-50 dark:bg-white/5 dark:border-white/10 dark:hover:bg-white/10"
-                        }`}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={selectedCampuses.includes(campus.id)}
-                        onChange={() => handleCampusToggle(campus.id)}
-                        className="w-4 h-4 text-college-navy rounded focus:ring-college-navy dark:focus:ring-college-gold border-college-navy/30 dark:border-white/20 bg-white dark:bg-college-navy"
-                      />
-                      <div className="ml-3">
-                        <span
-                          className={`block text-sm font-medium ${selectedCampuses.includes(campus.id)
-                            ? "text-college-navy dark:text-college-gold"
-                            : "text-gray-700 dark:text-gray-200"
-                            }`}
-                        >
-                          {campus.name}
-                        </span>
-                        <span
-                          className={`text-xs font-medium ${selectedCampuses.includes(campus.id)
-                            ? "text-college-navy/70 dark:text-college-gold/70"
-                            : "text-gray-500 dark:text-gray-400"
-                            }`}
-                        >
-                          {campus.code}
-                        </span>
-                      </div>
-                    </label>
-                  ))}
-                </div>
-              )}
-            </div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Assigned Subjects</label>
+            <select
+              multiple
+              {...register("subjects")}
+              className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all min-h-[140px] text-gray-900 dark:text-white"
+            >
+              {filteredSubjects.map((subject) => (
+                <option key={subject._id} value={subject._id}>
+                  {subject.name} ({subject.code})
+                </option>
+              ))}
+            </select>
+            <p className="text-xs text-gray-500 dark:text-gray-400">Hold Ctrl or Cmd to select multiple subjects.</p>
           </div>
         </PortalForm.Section>
       )}
 
-      {/* Security Section */}
-      <PortalForm.Section title="Security">
-        <PortalForm.Input
-          label="Password"
-          type="password"
-          registration={register("password")}
-          helper="Leave blank to auto-generate secure password"
-          placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
-        />
-        <PortalForm.Input
-          label="Confirm Password"
-          type="password"
-          registration={register("confirmPassword")}
-          error={errors.confirmPassword?.message}
-          placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
-        />
-      </PortalForm.Section>
+      {showStudentFields && (
+        <PortalForm.Section title="Student Details">
+          {isSuperAdmin ? (
+            <div className="col-span-1 md:col-span-2 space-y-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Campus</label>
+              <select {...register("campus")} className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none text-gray-900 dark:text-white">
+                <option value="">Select a campus...</option>
+                {campuses.map((campus) => (
+                  <option key={campus.id} value={campus.id}>
+                    {campus.name} ({campus.code})
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : (
+            <div className="col-span-1 md:col-span-2 rounded-sm border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 dark:border-college-gold/20 dark:bg-college-navy/50 dark:text-gray-200">
+              {campuses.find((campus) => campus.id === currentCampusId)?.name || "Your campus"}
+            </div>
+          )}
+
+          <div className="col-span-1 md:col-span-2 space-y-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Course</label>
+            <select {...register("currentCourse")} className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none text-gray-900 dark:text-white">
+              <option value="">Select a course...</option>
+              {filteredCourses.map((course) => (
+                <option key={course._id} value={course._id}>
+                  {course.title} ({course.code})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="col-span-1 md:col-span-2 space-y-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Class</label>
+            <select {...register("currentClassRoom")} className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none text-gray-900 dark:text-white">
+              <option value="">Select a class...</option>
+              {filteredClassRooms.map((classRoom) => (
+                <option key={classRoom._id} value={classRoom._id}>
+                  {classRoom.name} {classRoom.section ? `(${classRoom.section})` : ""}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="col-span-1 md:col-span-2 space-y-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Section</label>
+            <select {...register("classSection")} className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none text-gray-900 dark:text-white">
+              <option value="">Select a section later...</option>
+              {sectionOptions.map((section) => (
+                <option key={section} value={section}>
+                  Section {section}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="col-span-1 md:col-span-2 rounded-sm border border-gray-200 dark:border-college-gold/20 bg-gray-50/70 dark:bg-college-navy/40 p-4 text-sm text-gray-600 dark:text-gray-300">
+            All student placement fields are optional during creation and can be updated later.
+          </div>
+        </PortalForm.Section>
+      )}
+
+      {showAdminFields && (
+        <PortalForm.Section title="Campus Allocation">
+          <div className="col-span-1 md:col-span-2 space-y-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Campus</label>
+            <select {...register("campus")} className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none dark:text-white">
+              <option value="">Select a campus...</option>
+              {campuses.map((campus) => (
+                <option key={campus.id} value={campus.id}>
+                  {campus.name} ({campus.code})
+                </option>
+              ))}
+            </select>
+          </div>
+        </PortalForm.Section>
+      )}
+
+      {role === "super_admin" && (
+        <PortalForm.Section title="Access Scope">
+          <div className="col-span-1 md:col-span-2 rounded-sm border border-gray-200 dark:border-college-gold/20 bg-gray-50/70 dark:bg-college-navy/40 p-4 text-sm text-gray-600 dark:text-gray-300">
+            Super admin accounts manage the full system and do not need campus, faculty, or student assignment fields.
+          </div>
+        </PortalForm.Section>
+      )}
     </PortalForm>
   );
 };

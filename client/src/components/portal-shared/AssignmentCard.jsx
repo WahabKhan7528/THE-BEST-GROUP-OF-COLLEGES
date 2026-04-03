@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Calendar, FileText, Pencil, Trash2, ClipboardList } from 'lucide-react';
 import Card from '../shared/Card';
 import Button from '../shared/Button';
 import PublicButton from '../shared/PublicButton';
+import { portalApi } from '../../services/api';
+import { useToast } from '../../context/ToastContext';
 
 const statusStyles = {
     Submitted: 'bg-college-navy/5 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border-college-navy/10 dark:border-emerald-700/40',
@@ -11,14 +13,26 @@ const statusStyles = {
 };
 
 const AssignmentCard = ({ assignment, role = 'faculty' }) => {
+    const toast = useToast();
     const [note, setNote] = useState('');
     const [fileName, setFileName] = useState('');
     const [localStatus, setLocalStatus] = useState(assignment.status);
     const [isEditing, setIsEditing] = useState(false);
+    const [submissionFile, setSubmissionFile] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        setLocalStatus(assignment.status);
+        setIsEditing(false);
+        setNote('');
+        setFileName('');
+        setSubmissionFile(null);
+    }, [assignment.id, assignment.status]);
 
     const handleFileChange = (e) => {
         const file = e.target.files?.[0];
         setFileName(file ? file.name : '');
+        setSubmissionFile(file || null);
     };
 
     if (role === 'student') {
@@ -27,9 +41,27 @@ const AssignmentCard = ({ assignment, role = 'faculty' }) => {
         
         const isSubmitted = localStatus === 'Submitted' && !isEditing;
 
-        const handleSubmit = () => {
-            setLocalStatus('Submitted');
-            setIsEditing(false);
+        const handleSubmit = async () => {
+            if (!submissionFile) {
+                toast.error('Choose a file before submitting the assignment.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('assignmentId', assignment.id || assignment._id);
+            formData.append('file', submissionFile);
+
+            try {
+                setIsSubmitting(true);
+                await portalApi.submitAssignment(formData);
+                setLocalStatus('Submitted');
+                setIsEditing(false);
+                toast.success('Assignment submitted successfully.');
+            } catch (error) {
+                toast.error(error?.response?.data?.message || 'Failed to submit assignment.');
+            } finally {
+                setIsSubmitting(false);
+            }
         };
         return (
             <Card hover={false} className="p-4 md:p-5 border border-gray-200 dark:border-college-gold/50 shadow-sm hover:shadow-md transition-all duration-300 space-y-4">
@@ -107,7 +139,7 @@ const AssignmentCard = ({ assignment, role = 'faculty' }) => {
                         </PublicButton>
                     ) : (
                         <PublicButton onClick={handleSubmit} variant="secondary" shape="slanted" size="sm" className="shadow-md">
-                            {localStatus === 'Submitted' ? 'Save Changes' : 'Submit Assignment'}
+                            {isSubmitting ? 'Submitting...' : localStatus === 'Submitted' ? 'Save Changes' : 'Submit Assignment'}
                         </PublicButton>
                     )}
                 </div>

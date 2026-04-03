@@ -1,18 +1,17 @@
 import { useNavigate, Link } from 'react-router-dom';
 import PublicButton from '../../../../components/shared/PublicButton';
-import { useAdminContext } from '../../../../context/AdminContext';
+import { useAdminContext } from '../../../../store/hooks/useAdminReduxContext';
 import { useToast } from '../../../../context/ToastContext';
 import { useConfirm } from '../../../../context/ConfirmContext';
 import {
   Plus,
-  Image,
   Trash2,
   Search,
   Calendar,
   Pencil
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { adminGalleryImages as images } from "../../../../data/adminData";
+import { adminApi } from '../../../../services/api';
 
 
 
@@ -29,6 +28,28 @@ const Gallery = () => {
   const confirmDialog = useConfirm();
   const [activeFilter, setActiveFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    const loadGallery = async () => {
+      try {
+        const { data } = await adminApi.galleryItems();
+        const mapped = (data.data || []).map((item) => ({
+          id: item._id,
+          title: item.title,
+          category: item.category,
+          url: item.image?.url,
+          date: new Date(item.createdAt).toLocaleDateString(),
+        }));
+        setImages(mapped);
+      } catch {
+        setImages([]);
+      }
+    };
+
+    loadGallery();
+  }, []);
+
   const categories = ["All", ...new Set(images.map(img => img.category))];
 
   const filteredImages = images.filter(img => {
@@ -139,7 +160,11 @@ const Gallery = () => {
                 <button
                   onClick={async () => {
                     const confirmed = await confirmDialog({ title: "Delete Image", message: `Delete image "${img.title}"?`, confirmText: "Delete", variant: "danger" });
-                    if (confirmed) toast.success("Image deleted");
+                    if (confirmed) {
+                      await adminApi.deleteGalleryItem(img.id);
+                      setImages((prev) => prev.filter((item) => item.id !== img.id));
+                      toast.success("Image deleted");
+                    }
                   }}
                   className="p-2 bg-white/90 backdrop-blur-sm rounded-full text-gray-700 hover:text-rose-600 hover:bg-white transition-colors shadow-sm"
                   title="Delete"
@@ -185,4 +210,5 @@ const Gallery = () => {
 };
 
 export default Gallery;
+
 
