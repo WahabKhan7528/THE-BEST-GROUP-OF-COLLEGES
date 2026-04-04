@@ -10,97 +10,12 @@ import {
   ChevronRight,
 } from "lucide-react";
 import Table from "../../components/portal-shared/Table";
-
-// Grading Logic
-const getGradeDetails = (marks) => {
-  if (marks >= 85)
-    return {
-      grade: "A",
-      qp: 4.0,
-      color:
-        "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30",
-    };
-  if (marks >= 80)
-    return {
-      grade: "A-",
-      qp: 3.7,
-      color:
-        "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30",
-    };
-  if (marks >= 75)
-    return {
-      grade: "B+",
-      qp: 3.3,
-      color:
-        "text-college-gold dark:text-college-gold bg-college-navy/5 dark:bg-college-gold/10",
-    };
-  if (marks >= 70)
-    return {
-      grade: "B",
-      qp: 3.0,
-      color:
-        "text-college-gold dark:text-college-gold bg-college-navy/5 dark:bg-college-gold/10",
-    };
-  if (marks >= 65)
-    return {
-      grade: "B-",
-      qp: 2.7,
-      color:
-        "text-college-gold dark:text-college-gold bg-college-navy/5 dark:bg-college-gold/10",
-    };
-  if (marks >= 61)
-    return {
-      grade: "C+",
-      qp: 2.3,
-      color:
-        "text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/30",
-    };
-  if (marks >= 58)
-    return {
-      grade: "C",
-      qp: 2.0,
-      color:
-        "text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/30",
-    };
-  if (marks >= 55)
-    return {
-      grade: "C-",
-      qp: 1.7,
-      color:
-        "text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/30",
-    };
-  if (marks >= 50)
-    return {
-      grade: "D",
-      qp: 1.0,
-      color: "text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30",
-    };
-  return {
-    grade: "F",
-    qp: 0.0,
-    color: "text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30",
-  };
-};
-
-const calculateSGPA = (subjects) => {
-  if (!subjects || subjects.length === 0) return "0.00";
-  let totalQP = 0;
-  let totalCredits = 0;
-  subjects.forEach((sub) => {
-    if (sub.marks > 0) {
-      // Only count graded subjects
-      const { qp } = getGradeDetails(sub.marks);
-      totalQP += qp * sub.credits;
-      totalCredits += sub.credits;
-    }
-  });
-  return totalCredits > 0 ? (totalQP / totalCredits).toFixed(2) : "0.00";
-};
-
-const calculateCredits = (subjects) => {
-  if (!subjects) return 0;
-  return subjects.reduce((sum, sub) => sum + sub.credits, 0);
-};
+import {
+  calculateCgpaFromSemesters,
+  calculateCredits,
+  getGradeDetails,
+  calculateWeightedGpa,
+} from "../../utils/academicCalculations";
 
 const getUniquePlanSubjects = (subjects = []) => {
   const seen = new Set();
@@ -118,6 +33,11 @@ const campusNames = {
   hala: "Hala Campus",
 };
 
+const calculateSGPA = (subjects) => {
+  const gpa = calculateWeightedGpa(subjects);
+  return gpa === null ? "0.00" : gpa.toFixed(2);
+};
+
 const StudentResults = () => {
   const { getDetailedResultsByCurrentCampus, getCurrentCampus, isDarkMode } =
     useStudentContext();
@@ -129,25 +49,8 @@ const StudentResults = () => {
 
   const [selectedSemesterId, setSelectedSemesterId] = useState("all"); // "all" or semester ID
 
-  // Calculate CGPA
-  const calculateCGPA = () => {
-    let totalQP = 0;
-    let totalCredits = 0;
-    semesters.forEach((sem) => {
-      if (sem.subjects) {
-        sem.subjects.forEach((sub) => {
-          if (sub.marks > 0) {
-            const { qp } = getGradeDetails(sub.marks);
-            totalQP += qp * sub.credits;
-            totalCredits += sub.credits;
-          }
-        });
-      }
-    });
-    return totalCredits > 0 ? (totalQP / totalCredits).toFixed(2) : "0.00";
-  };
-
-  const currentCGPA = calculateCGPA();
+  const currentCGPAValue = calculateCgpaFromSemesters(semesters);
+  const currentCGPA = currentCGPAValue === null ? "0.00" : currentCGPAValue.toFixed(2);
 
   const selectedSemester =
     selectedSemesterId === "all"

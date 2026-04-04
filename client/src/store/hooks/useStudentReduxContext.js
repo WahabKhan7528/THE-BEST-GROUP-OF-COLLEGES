@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPortalData } from "../slices/portalsSlice";
 import { toggleDarkMode as toggleDarkModeAction } from "../slices/uiSlice";
+import { calculateCgpaFromSemesters, calculateCredits } from "../../utils/academicCalculations";
 
 const getRefId = (value) => {
   const rawValue = value?._id || value?.id || value;
@@ -102,6 +103,40 @@ const buildEnrolledSubjects = (classes = []) => {
   return Array.from(subjectMap.values());
 };
 
+const buildResultSemesters = (results = [], enrolledSubjects = []) => {
+  const subjectLookup = new Map();
+
+  enrolledSubjects.forEach((subject) => {
+    subjectLookup.set(`${subject.classId || ""}::${subject.subjectId || ""}`, subject);
+  });
+
+  const grouped = {};
+
+  results.forEach((result) => {
+    const key = result.semester || "General";
+    if (!grouped[key]) grouped[key] = [];
+
+    const subjectKey = `${result.classRoom?._id || result.classRoom || ""}::${result.subject?._id || result.subject || ""}`;
+    const subjectDetails = subjectLookup.get(subjectKey);
+
+    grouped[key].push({
+      code: result.subject?.code || "SUB",
+      title: result.subject?.name || "Subject",
+      credits: subjectDetails?.credits || result.subject?.creditHours || 3,
+      marks: result.marksObtained,
+      instructor: subjectDetails?.instructor || result.publishedBy?.name || "Faculty",
+      instructorEmail: subjectDetails?.instructorEmail || result.publishedBy?.email || "",
+      instructorDesignation: subjectDetails?.instructorDesignation || result.publishedBy?.designation || result.publishedBy?.department || "Faculty",
+    });
+  });
+
+  return Object.entries(grouped).map(([name, subjects], index) => ({
+    id: index + 1,
+    name,
+    subjects,
+  }));
+};
+
 export const useStudentContext = () => {
   const dispatch = useDispatch();
   const { classes, announcements, results } = useSelector((state) => state.portals);
@@ -191,55 +226,34 @@ export const useStudentContext = () => {
   const switchStudentUser = () => {};
 
   const getTotalCredits = useCallback(() => {
-    return getSubjectsByCurrentCampus().reduce((sum, subject) => sum + subject.credits, 0);
-  }, [getSubjectsByCurrentCampus]);
+    const currentAcademicProfile = getCurrentAcademicProfile();
+    const profileSubjects = currentAcademicProfile?.subjects || [];
+
+    if (profileSubjects.length > 0) {
+      return calculateCredits(profileSubjects);
+    }
+
+    return calculateCredits(getSubjectsByCurrentCampus());
+  }, [getCurrentAcademicProfile, getSubjectsByCurrentCampus]);
 
   const getCurrentCgpa = useCallback(() => {
+    const semesters = buildResultSemesters(results || [], enrolledSubjects);
+    const calculatedCgpa = calculateCgpaFromSemesters(semesters);
+
+    if (calculatedCgpa !== null && calculatedCgpa !== undefined) {
+      return calculatedCgpa;
+    }
+
     const directCgpa = currentStudent?.cgpa;
     if (directCgpa !== null && directCgpa !== undefined && Number.isFinite(Number(directCgpa))) {
       return Number(directCgpa);
     }
 
-    const validGradePoints = (results || [])
-      .map((item) => Number(item?.gradePoint))
-      .filter((value) => Number.isFinite(value) && value >= 0);
-
-    if (validGradePoints.length === 0) {
-      return null;
-    }
-
-    const total = validGradePoints.reduce((sum, value) => sum + value, 0);
-    return Number((total / validGradePoints.length).toFixed(2));
-  }, [currentStudent?.cgpa, results]);
+    return null;
+  }, [currentStudent?.cgpa, enrolledSubjects, results]);
 
   const getDetailedResultsByCurrentCampus = useCallback(() => {
-    const subjectLookup = new Map();
-    enrolledSubjects.forEach((subject) => {
-      subjectLookup.set(`${subject.classId || ""}::${subject.subjectId || ""}`, subject);
-    });
-
-    const grouped = {};
-    (results || []).forEach((result) => {
-      const key = result.semester || "General";
-      if (!grouped[key]) grouped[key] = [];
-      const subjectKey = `${result.classRoom?._id || result.classRoom || ""}::${result.subject?._id || result.subject || ""}`;
-      const subjectDetails = subjectLookup.get(subjectKey);
-      grouped[key].push({
-        code: result.subject?.code || "SUB",
-        title: result.subject?.name || "Subject",
-        credits: 3,
-        marks: result.marksObtained,
-        instructor: subjectDetails?.instructor || result.publishedBy?.name || "Faculty",
-        instructorEmail: subjectDetails?.instructorEmail || result.publishedBy?.email || "",
-        instructorDesignation: subjectDetails?.instructorDesignation || result.publishedBy?.designation || result.publishedBy?.department || "Faculty",
-      });
-    });
-
-    const semesters = Object.entries(grouped).map(([name, subjects], index) => ({
-      id: index + 1,
-      name,
-      subjects,
-    }));
+    const semesters = buildResultSemesters(results || [], enrolledSubjects);
 
     return { semesters, currentAcademicProfile: getCurrentAcademicProfile() };
   }, [enrolledSubjects, getCurrentAcademicProfile, results]);

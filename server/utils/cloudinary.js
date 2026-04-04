@@ -8,7 +8,7 @@ import streamifier from "streamifier";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const uploadsRoot = path.join(__dirname, "..", "uploads");
-const localBaseUrl = (process.env.SERVER_URL || process.env.BACKEND_URL || "http://localhost:5000").replace(/\/$/, "");
+const localBaseUrl = `http://localhost:${process.env.PORT || 5000}`;
 
 const isPlaceholderValue = (value) => {
   if (!value) return true;
