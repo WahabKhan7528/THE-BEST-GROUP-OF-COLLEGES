@@ -23,7 +23,11 @@ http.interceptors.response.use(
     const originalRequest = error.config;
     const status = error?.response?.status;
 
-    if (originalRequest?.url?.includes("/auth/login") || originalRequest?.url?.includes("/auth/refresh")) {
+    if (
+      originalRequest?.url?.includes("/auth/login")
+      || originalRequest?.url?.includes("/auth/refresh")
+      || originalRequest?.url?.includes("/auth/me")
+    ) {
       return Promise.reject(error);
     }
 

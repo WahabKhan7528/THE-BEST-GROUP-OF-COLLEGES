@@ -1,8 +1,5 @@
 import express from "express";
-import dotenv from "dotenv";
-import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
@@ -15,21 +12,6 @@ import adminRoutes from "./routes/adminRoutes.js";
 import portalRoutes from "./routes/portalRoutes.js";
 import { errorHandler, notFound } from "./middlewares/errorMiddleware.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const envCandidates = [
-  path.join(__dirname, ".env"),
-  path.join(__dirname, "config", "config.env"),
-  path.join(__dirname, ".env.example"),
-];
-
-for (const envPath of envCandidates) {
-  if (fs.existsSync(envPath)) {
-    dotenv.config({ path: envPath });
-    break;
-  }
-}
 
 const app = express();
 
@@ -70,9 +52,10 @@ app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 app.use(mongoSanitize());
 app.use(morgan("dev"));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static(path.join(import.meta.dirname, "uploads")));
 
-app.use("/api/v1/auth", authLimiter);
+// Apply rate limit to login only; keep auth session checks like /auth/me unaffected.
+app.use("/api/v1/auth/login", authLimiter);
 
 app.get("/api/v1/health", (req, res) => {
   res.status(200).json({ success: true, message: "Server is healthy" });

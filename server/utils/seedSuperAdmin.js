@@ -1,26 +1,8 @@
-import dotenv from "dotenv";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
 import { connectDB } from "../database/db.js";
+import "./loadEnv.js";
 import User from "../models/User.js";
 import { ROLES } from "../config/constants.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const envCandidates = [
-  path.join(__dirname, "..", ".env"),
-  path.join(__dirname, "..", "config", "config.env"),
-  path.join(__dirname, "..", ".env.example"),
-];
-
-for (const envPath of envCandidates) {
-  if (fs.existsSync(envPath)) {
-    dotenv.config({ path: envPath });
-    break;
-  }
-}
 
 const run = async () => {
   try {

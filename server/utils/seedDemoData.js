@@ -1,8 +1,5 @@
-import dotenv from "dotenv";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
 import { connectDB } from "../database/db.js";
+import "./loadEnv.js";
 import { ROLES } from "../config/constants.js";
 import AnnualYear from "../models/AnnualYear.js";
 import AnnualYearMapping from "../models/AnnualYearMapping.js";
@@ -25,21 +22,6 @@ import Submission from "../models/Submission.js";
 import Subject from "../models/Subject.js";
 import User from "../models/User.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const envCandidates = [
-  path.join(__dirname, "..", ".env"),
-  path.join(__dirname, "..", "config", "config.env"),
-  path.join(__dirname, "..", ".env.example"),
-];
-
-for (const envPath of envCandidates) {
-  if (fs.existsSync(envPath)) {
-    dotenv.config({ path: envPath });
-    break;
-  }
-}
 
 const demoPassword = "admin@123";
 const demoEmailDomain = "tbc.edu.pk";

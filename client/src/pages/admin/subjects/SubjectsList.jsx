@@ -52,11 +52,14 @@ const SubjectsList = () => {
 
   // 1. Filter by Role & Campus
   if (!isSuperAdmin) {
-    filteredData = filteredData.filter((subject) =>
-      (subject.campuses || []).some((campus) =>
-        String(campus?._id || campus) === String(currentAdmin?.campus?._id || currentAdmin?.campus),
-      ),
-    );
+    const adminCampusId = String(currentAdmin?.campus?._id || currentAdmin?.campus || "");
+    if (adminCampusId) {
+      filteredData = filteredData.filter((subject) => {
+        const campuses = subject.campuses || [];
+        if (!campuses.length) return true;
+        return campuses.some((campus) => String(campus?._id || campus) === adminCampusId);
+      });
+    }
   } else if (selectedCampus) {
     filteredData = filteredData.filter((subject) =>
       (subject.campuses || []).some((campus) => String(campus?._id || campus) === selectedCampus),

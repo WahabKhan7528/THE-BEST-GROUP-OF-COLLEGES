@@ -39,6 +39,10 @@ const Materials = () => {
     loadMaterials();
   }, []);
 
+  const handleMaterialDeleted = (deletedId) => {
+    setMaterials((prev) => prev.filter((item) => String(item.id) !== String(deletedId)));
+  };
+
   return (
     <div className="space-y-6 pb-10">
       <PortalPageHeader
@@ -66,7 +70,11 @@ const Materials = () => {
       {materials.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {materials.map((material) => (
-            <MaterialCard key={material.id} material={material} />
+            <MaterialCard
+              key={material.id}
+              material={material}
+              onDeleted={handleMaterialDeleted}
+            />
           ))}
         </div>
       ) : (

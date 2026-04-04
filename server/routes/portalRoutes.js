@@ -59,7 +59,7 @@ router
 router
   .route("/submissions")
   .post(authorize(ROLES.STUDENT), upload.single("file"), submitAssignment)
-  .get(listSubmissions);
+  .get(authorize(ROLES.SUPER_ADMIN, ROLES.ADMIN, ROLES.FACULTY, ROLES.STUDENT), listSubmissions);
 
 router
   .route("/submissions/assignment/:assignmentId")

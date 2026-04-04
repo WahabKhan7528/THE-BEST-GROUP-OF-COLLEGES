@@ -194,7 +194,11 @@ export const listUsers = asyncHandler(async (req, res) => {
   if (req.query.campus) filter.campus = req.query.campus;
   if (req.user.role === ROLES.ADMIN) {
     filter.campus = req.user.campus?._id || req.user.campus;
-    filter.role = { $in: ALLOWED_ADMIN_MANAGED_ROLES };
+    if (req.query.role && ALLOWED_ADMIN_MANAGED_ROLES.includes(req.query.role)) {
+      filter.role = req.query.role;
+    } else {
+      filter.role = { $in: ALLOWED_ADMIN_MANAGED_ROLES };
+    }
   }
   if (req.query.includeInactive === "true") {
     delete filter.isActive;
@@ -480,13 +484,14 @@ export const listSubjects = asyncHandler(async (req, res) => {
       { "semesterSubjects.subjects": { $in: subjectIds } },
     ],
   })
-    .select("subjects faculty semesterSubjects")
+    .select("campus subjects faculty semesterSubjects")
     .populate("faculty", "name portalId")
     .populate("semesterSubjects.faculty", "name portalId")
     .populate("semesterSubjects.subjectAssignments.subject", "name code")
     .populate("semesterSubjects.subjectAssignments.faculty", "name portalId");
 
   const facultyBySubjectId = new Map();
+  const campusesBySubjectId = new Map();
   const addFaculty = (subjectId, faculty) => {
     const normalizedSubjectId = String(subjectId || "");
     const normalizedFacultyId = String(faculty?._id || faculty || "");
@@ -503,11 +508,25 @@ export const listSubjects = asyncHandler(async (req, res) => {
     });
   };
 
+  const addCampus = (subjectId, campus) => {
+    const normalizedSubjectId = String(subjectId || "");
+    const normalizedCampusId = String(campus?._id || campus || "");
+    if (!normalizedSubjectId || !normalizedCampusId) return;
+
+    if (!campusesBySubjectId.has(normalizedSubjectId)) {
+      campusesBySubjectId.set(normalizedSubjectId, new Set());
+    }
+
+    campusesBySubjectId.get(normalizedSubjectId).add(normalizedCampusId);
+  };
+
   classRooms.forEach((classRoom) => {
+    const classCampusId = String(classRoom?.campus?._id || classRoom?.campus || "");
     const classFaculty = classRoom.faculty || [];
 
     (classRoom.subjects || []).forEach((subject) => {
       const subjectId = String(subject?._id || subject || "");
+      addCampus(subjectId, classCampusId);
       classFaculty.forEach((faculty) => addFaculty(subjectId, faculty));
     });
 
@@ -517,11 +536,13 @@ export const listSubjects = asyncHandler(async (req, res) => {
 
       assignments.forEach((assignment) => {
         const subjectId = String(assignment?.subject?._id || assignment?.subject || "");
+        addCampus(subjectId, classCampusId);
         addFaculty(subjectId, assignment.faculty);
       });
 
       (term.subjects || []).forEach((subject) => {
         const subjectId = String(subject?._id || subject || "");
+        addCampus(subjectId, classCampusId);
         termFaculty.forEach((faculty) => addFaculty(subjectId, faculty));
       });
     });
@@ -535,6 +556,10 @@ export const listSubjects = asyncHandler(async (req, res) => {
       }
 
       const subjectId = String(subject._id);
+      if ((!Array.isArray(data.campuses) || data.campuses.length === 0) && campusesBySubjectId.has(subjectId)) {
+        data.campuses = Array.from(campusesBySubjectId.get(subjectId));
+      }
+
       const explicitFaculty = Array.isArray(data.faculty) ? data.faculty : [];
       if (!explicitFaculty.length && facultyBySubjectId.has(subjectId)) {
         data.faculty = Array.from(facultyBySubjectId.get(subjectId).values());
@@ -544,7 +569,7 @@ export const listSubjects = asyncHandler(async (req, res) => {
     })
     .filter((subject) => {
       if (req.user.role !== "admin") return true;
-      const adminCampusId = String(req.user.campus || "");
+      const adminCampusId = String(req.user.campus?._id || req.user.campus || "");
       if (!adminCampusId) return false;
       return (subject.campuses || []).some((campus) => String(campus?._id || campus) === adminCampusId);
     });

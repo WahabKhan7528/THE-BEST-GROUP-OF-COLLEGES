@@ -110,6 +110,13 @@ function App() {
 
   useEffect(() => {
     if (hasBootstrappedAuth) return;
+
+    const isLoginRoute = typeof window !== "undefined" && window.location.pathname.startsWith("/login");
+    if (isLoginRoute) {
+      hasBootstrappedAuth = true;
+      return;
+    }
+
     hasBootstrappedAuth = true;
     dispatch(fetchUser());
   }, [dispatch]);

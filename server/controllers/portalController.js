@@ -435,7 +435,33 @@ export const listSubmissions = asyncHandler(async (req, res) => {
     filter.student = req.user._id;
   }
 
-  if (req.params.assignmentId) {
+   if (req.user.role === "faculty") {
+    const classes = await ClassRoom.find({
+      $or: [
+        { faculty: req.user._id },
+        { "semesterSubjects.subjectAssignments.faculty": req.user._id },
+      ],
+    }).select("_id");
+
+    const classIds = classes.map((classRoom) => classRoom._id);
+    const assignmentFilter = { classRoom: { $in: classIds } };
+
+    if (req.params.assignmentId) {
+      assignmentFilter._id = req.params.assignmentId;
+    }
+
+    const assignments = classIds.length > 0
+      ? await Assignment.find(assignmentFilter).select("_id")
+      : [];
+
+    if (req.params.assignmentId && assignments.length === 0) {
+      throw new ApiError(403, "You are not authorized to view submissions for this assignment");
+    }
+
+    filter.assignment = { $in: assignments.map((item) => item._id) };
+  }
+
+  if (req.params.assignmentId && req.user.role !== "faculty") {
     filter.assignment = req.params.assignmentId;
   }
 
@@ -569,7 +595,10 @@ export const listResults = asyncHandler(async (req, res) => {
     filter.classRoom = { $in: classes.map((c) => c._id) };
   }
 
-  if (req.query.student) filter.student = req.query.student;
+  // Students must never be able to override their own result scope via query string.
+  if (req.query.student && req.user.role !== "student") {
+    filter.student = req.query.student;
+  }
 
   const results = await Result.find(filter)
     .populate("student", "name portalId")

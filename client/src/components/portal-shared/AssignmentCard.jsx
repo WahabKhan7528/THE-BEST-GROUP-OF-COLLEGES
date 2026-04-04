@@ -5,6 +5,7 @@ import Button from '../shared/Button';
 import PublicButton from '../shared/PublicButton';
 import { portalApi } from '../../services/api';
 import { useToast } from '../../context/ToastContext';
+import { useConfirm } from '../../context/ConfirmContext';
 
 const statusStyles = {
     Submitted: 'bg-college-navy/5 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border-college-navy/10 dark:border-emerald-700/40',
@@ -12,14 +13,16 @@ const statusStyles = {
     Late: 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-100 dark:border-red-700/40',
 };
 
-const AssignmentCard = ({ assignment, role = 'faculty' }) => {
+const AssignmentCard = ({ assignment, role = 'faculty', onDeleted }) => {
     const toast = useToast();
+    const confirmDialog = useConfirm();
     const [note, setNote] = useState('');
     const [fileName, setFileName] = useState('');
     const [localStatus, setLocalStatus] = useState(assignment.status);
     const [isEditing, setIsEditing] = useState(false);
     const [submissionFile, setSubmissionFile] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
         setLocalStatus(assignment.status);
@@ -147,6 +150,30 @@ const AssignmentCard = ({ assignment, role = 'faculty' }) => {
         );
     }
 
+    const handleDelete = async () => {
+        const confirmed = await confirmDialog({
+            title: 'Delete Assignment',
+            message: `Are you sure you want to delete "${assignment.title}"?`,
+            confirmText: 'Delete',
+            variant: 'danger',
+        });
+
+        if (!confirmed) return;
+
+        try {
+            setIsDeleting(true);
+            await portalApi.deleteAssignment(assignment.id || assignment._id);
+            toast.success('Assignment deleted successfully');
+            if (typeof onDeleted === 'function') {
+                onDeleted(assignment.id || assignment._id);
+            }
+        } catch (error) {
+            toast.error(error?.response?.data?.message || 'Failed to delete assignment');
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
     // faculty variant (default)
     return (
         <Card hover={false} className="p-4 md:p-5 border border-gray-200 dark:border-college-gold/50 shadow-sm hover:shadow-md transition-all duration-300">
@@ -195,9 +222,9 @@ const AssignmentCard = ({ assignment, role = 'faculty' }) => {
                     <Pencil size={14} />
                     Edit
                 </Button>
-                <Button variant="danger" size="sm">
+                <Button variant="danger" size="sm" onClick={handleDelete} disabled={isDeleting}>
                     <Trash2 size={14} />
-                    Delete
+                    {isDeleting ? 'Deleting...' : 'Delete'}
                 </Button>
             </div>
         </Card>

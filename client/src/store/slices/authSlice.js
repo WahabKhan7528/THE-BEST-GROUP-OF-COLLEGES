@@ -10,12 +10,18 @@ export const loginUser = createAsyncThunk(
       const user = data.user;
 
       if (Array.isArray(allowedRoles) && allowedRoles.length > 0 && !allowedRoles.includes(user?.role)) {
-        return rejectWithValue(`This portal does not accept ${user?.role || 'this'} accounts.`);
+        return rejectWithValue({
+          message: `This portal does not accept ${user?.role || 'this'} accounts.`,
+          status: 403,
+        });
       }
 
       return user;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Login failed');
+      return rejectWithValue({
+        message: error.response?.data?.message || 'Login failed',
+        status: error.response?.status || null,
+      });
     }
   }
 );
@@ -71,7 +77,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload?.message || action.payload;
       })
       // Logout
       .addCase(logoutUser.pending, (state) => {

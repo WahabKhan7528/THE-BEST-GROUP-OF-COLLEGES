@@ -2,6 +2,7 @@ import { FileText, Play, Image as ImageIcon, File, Edit3 } from "lucide-react";
 import { useToast } from "../../context/ToastContext";
 import { Link } from "react-router-dom";
 import { useConfirm } from "../../context/ConfirmContext";
+import { portalApi } from "../../services/api";
 
 /*
  Shared MaterialCard
@@ -57,7 +58,7 @@ const normalizeType = (type) => {
   return type ? String(type) : "Other";
 };
 
-const MaterialCard = ({ material, role = "faculty" }) => {
+const MaterialCard = ({ material, role = "faculty", onDeleted }) => {
   const toast = useToast();
   const confirmDialog = useConfirm();
   
@@ -69,7 +70,15 @@ const MaterialCard = ({ material, role = "faculty" }) => {
       variant: "danger",
     });
     if (confirmed) {
-      toast.success("Material deleted successfully");
+      try {
+        await portalApi.deleteMaterial(material.id || material._id);
+        toast.success("Material deleted successfully");
+        if (typeof onDeleted === "function") {
+          onDeleted(material.id || material._id);
+        }
+      } catch (error) {
+        toast.error(error?.response?.data?.message || "Failed to delete material");
+      }
     }
   };
 

@@ -53,6 +53,10 @@ const Assignments = () => {
     );
   }, [assignments, searchTerm]);
 
+  const handleAssignmentDeleted = (deletedId) => {
+    setAssignments((prev) => prev.filter((item) => String(item.id) !== String(deletedId)));
+  };
+
   return (
     <div className="space-y-6 pb-10">
       <PortalPageHeader
@@ -94,7 +98,11 @@ const Assignments = () => {
       {filteredAssignments.length > 0 ? (
         <div className="grid grid-cols-1 gap-4">
           {filteredAssignments.map((assignment) => (
-            <AssignmentCard key={assignment.id} assignment={assignment} />
+            <AssignmentCard
+              key={assignment.id}
+              assignment={assignment}
+              onDeleted={handleAssignmentDeleted}
+            />
           ))}
         </div>
       ) : (

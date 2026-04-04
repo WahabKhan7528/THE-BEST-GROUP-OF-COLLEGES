@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "../../schemas/loginSchema";
@@ -18,6 +17,9 @@ const Login = () => {
   const toast = useToast();
   const currentUser = useSelector((state) => state.auth.user);
   const [showPassword, setShowPassword] = useState(false);
+  const [lockoutSeconds, setLockoutSeconds] = useState(0);
+  const lockoutTimerRef = useRef(null);
+  const isLoginLocked = lockoutSeconds > 0;
   const {
     register,
     handleSubmit,
@@ -83,14 +85,11 @@ const Login = () => {
         student: ["student"],
       };
 
-      const getPortalRoleError = (role) => {
-        if (portalType === "admin") return "Please use an admin account to sign in here.";
-        if (portalType === "faculty") return "Please use a faculty account to sign in here.";
-        if (portalType === "student") return "Please use a student account to sign in here.";
-        return `This portal does not accept ${role} accounts.`;
-      };
-
   const handleLogin = async (formData) => {
+    if (isLoginLocked) {
+      return;
+    }
+
     try {
       const result = await dispatch(
         loginUser({
@@ -115,10 +114,49 @@ const Login = () => {
       toast.success("Login successful");
     } catch (error) {
       await dispatch(logoutUser()).unwrap().catch(() => null);
-      const message = error?.response?.data?.message || error?.message || "Login failed";
+      const status = error?.status || null;
+      const message = error?.message || "Login failed";
+
+      if (status === 429) {
+        setLockoutSeconds(15 * 60);
+      }
+
       toast.error(message);
     }
   };
+
+  useEffect(() => {
+    if (!isLoginLocked) {
+      if (lockoutTimerRef.current) {
+        clearInterval(lockoutTimerRef.current);
+        lockoutTimerRef.current = null;
+      }
+      return;
+    }
+
+    lockoutTimerRef.current = setInterval(() => {
+      setLockoutSeconds((seconds) => {
+        if (seconds <= 1) {
+          clearInterval(lockoutTimerRef.current);
+          lockoutTimerRef.current = null;
+          return 0;
+        }
+
+        return seconds - 1;
+      });
+    }, 1000);
+
+    return () => {
+      if (lockoutTimerRef.current) {
+        clearInterval(lockoutTimerRef.current);
+        lockoutTimerRef.current = null;
+      }
+    };
+  }, [isLoginLocked]);
+
+  const lockoutMinutes = String(Math.floor(lockoutSeconds / 60)).padStart(2, "0");
+  const lockoutRemainingSeconds = String(lockoutSeconds % 60).padStart(2, "0");
+
   const titleWords = portalinfo.title.split(" ");
 
   return (
@@ -193,6 +231,7 @@ const Login = () => {
                           ? "e.g. STD-1234"
                           : "ID"
                   }
+                  disabled={isLoginLocked}
                 />
               </div>
               {errors.id && (
@@ -216,12 +255,14 @@ const Login = () => {
                   {...register("password")}
                   className="w-full pl-12 pr-12 py-4 rounded-sm border border-white/10 bg-white/5 focus:bg-white/10 focus:ring-2 focus:ring-college-navy/50 focus:border-college-navy outline-none text-white placeholder:text-white/20"
                   placeholder="********"
+                  disabled={isLoginLocked}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-college-gold transition-colors"
                   aria-label={showPassword ? "Hide password" : "Show password"}
+                  disabled={isLoginLocked}
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -238,13 +279,17 @@ const Login = () => {
                 variant="secondary"
                 size="lg"
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || isLoginLocked}
                 shape="slanted"
                 className="w-full font-bold uppercase tracking-widest"
               >
                 <span className="flex items-center justify-center gap-3">
-                  {isSubmitting ? "Verifying..." : "Sign In"}
-                  {isSubmitting ? (
+                  {isSubmitting
+                    ? "Verifying..."
+                    : isLoginLocked
+                      ? `Try again in ${lockoutMinutes}:${lockoutRemainingSeconds}`
+                      : "Sign In"}
+                  {isSubmitting && !isLoginLocked ? (
                     <div className="w-5 h-5 border-2 border-college-navy/30 border-t-college-navy rounded-full animate-spin" />
                   ) : (
                     <ArrowRight
