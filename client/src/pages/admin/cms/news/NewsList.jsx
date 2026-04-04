@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Table from "../../../../components/portal-shared/Table";
+import Badge from "../../../../components/shared/Badge";
 import PublicButton from "../../../../components/shared/PublicButton";
 import { useAdminContext } from "../../../../store/hooks/useAdminReduxContext";
 import { useToast } from "../../../../context/ToastContext";
@@ -29,9 +30,11 @@ const NewsList = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadNews = async () => {
+      setIsLoading(true);
       try {
         const { data: response } = await adminApi.newsEvents();
         setData((response.data || []).map((item) => ({
@@ -45,6 +48,8 @@ const NewsList = () => {
         })));
       } catch {
         setData([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -70,19 +75,18 @@ const NewsList = () => {
       key: "title",
       label: "Title & Category",
       render: (row) => (
-        <div className="flex items-start gap-3 max-w-sm">
-          <div className={`p-2 rounded-sm ${row.type === 'Event'
+        <div className="flex items-start gap-3 max-w-xs">
+          <div className={`p-2 flex-shrink-0 rounded-sm ${row.type === 'Event'
             ? 'bg-college-navy/10 text-college-navy dark:bg-college-gold/10 dark:text-college-gold'
-            : 'bg-white border border-gray-200 text-college-navy dark:bg-college-navy dark:border-college-gold/20 dark:text-college-gold'}`}>
-            {row.type === 'Event' ? <Calendar className="w-5 h-5" /> : <Newspaper className="w-5 h-5" />}
+            : 'bg-white border border-gray-200 text-college-navy dark:bg-college-navy/40 dark:border-college-gold/20 dark:text-college-gold'}`}>
+            {row.type === 'Event' ? <Calendar className="w-4 h-4" /> : <Newspaper className="w-4 h-4" />}
           </div>
           <div>
-            <span className="font-semibold text-college-navy line-clamp-2">{row.title}</span>
-            <div className="flex items-center gap-2 mt-0.5">
-              <span className="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">{row.category}</span>
-              <span className="text-xs text-gray-400 flex items-center gap-1">
-                <Eye className="w-3 h-3" /> {row.views}
-              </span>
+            <span className="font-semibold text-college-navy dark:text-white line-clamp-2 group-hover:text-college-gold transition-colors">{row.title}</span>
+            <div className="flex items-center gap-2 mt-1">
+              <Badge variant="subtle">
+                {row.category}
+              </Badge>
             </div>
           </div>
         </div>
@@ -92,21 +96,17 @@ const NewsList = () => {
       key: "type",
       label: "Type",
       render: (row) => (
-        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium border ${row.type === "Event"
-          ? "bg-college-navy/5 text-college-navy border-college-navy/10"
-          : "bg-white text-college-navy border-college-navy/20"
-          }`}>
+        <Badge variant="subtle" className="font-bold">
           {row.type}
-        </span>
+        </Badge>
       )
     },
     {
       key: "date",
       label: "Date",
       render: (row) => (
-        <div className="flex flex-col text-sm">
-          <span className="text-gray-700 font-medium">{row.date}</span>
-          <span className="text-xs text-gray-500">Last updated</span>
+        <div className="flex flex-col text-xs md:text-sm">
+          <span className="text-college-navy dark:text-white font-bold">{row.date}</span> 
         </div>
       )
     },
@@ -118,10 +118,10 @@ const NewsList = () => {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-college-navy">
+          <h1 className="text-2xl font-bold text-college-navy dark:text-white">
             News & Events
           </h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             Manage your latest updates, announcements, and upcoming events
           </p>
         </div>
@@ -158,7 +158,7 @@ const NewsList = () => {
 
           {/* Search Input */}
           <div className="relative w-full md:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-college-gold/60 w-4 h-4" />
             <input
               type="text"
               placeholder="Search posts..."
@@ -171,10 +171,11 @@ const NewsList = () => {
       </div>
 
       {/* Table Section */}
-      {filteredData.length > 0 ? (
+      {isLoading || filteredData.length > 0 ? (
         <Table
           columns={columns}
           data={filteredData}
+          isLoading={isLoading}
           actionButtons={(row) => [
             {
               label: "Edit",

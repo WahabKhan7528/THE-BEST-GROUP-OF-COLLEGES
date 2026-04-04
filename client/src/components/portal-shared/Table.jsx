@@ -1,26 +1,40 @@
 import React from "react";
+import SkeletonLoading from "../shared/SkeletonLoading";
 
-const Table = ({ columns, data, actionButtons }) => {
-  const cellPadding = "px-3 sm:px-4 md:px-6 py-3 md:py-4";
+const Table = ({ columns, data, actionButtons, isLoading = false, skeletonCount = 5, compact = false }) => {
+  const cellPadding = compact
+    ? "px-2 sm:px-3 md:px-4 py-2 md:py-2.5"
+    : "px-3 sm:px-4 md:px-6 py-3 md:py-4";
+
+  if (isLoading) {
+    return (
+      <div className="bg-white dark:bg-college-navy border border-college-navy/10 dark:border-college-gold/20 rounded-sm shadow-sm overflow-hidden">
+        <div className="p-4 md:p-6 space-y-4">
+          <SkeletonLoading count={skeletonCount} variant="tableRow" containerClassName="space-y-4" />
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-white dark:bg-college-navy border border-gray-200 dark:border-dark-border rounded-sm shadow-sm overflow-hidden transition-all hover:shadow-md">
+    <div className="bg-white dark:bg-college-navy border border-college-navy/10 dark:border-college-gold/20 rounded-sm shadow-sm overflow-hidden transition-all hover:shadow-md">
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-100 dark:divide-dark-border">
+        <table className="min-w-full divide-y divide-college-navy/10 dark:divide-college-gold/20">
           {/* 1. THE HEADER */}
           <thead>
             <tr className="bg-college-navy/5 dark:bg-college-gold/10">
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  className={`${cellPadding} text-left text-[10px] md:text-xs font-bold text-college-navy dark:text-college-gold uppercase tracking-wider whitespace-nowrap`}
+                  style={col.width ? { width: col.width, minWidth: col.width } : (col.minWidth ? { minWidth: col.minWidth } : {})}
+                  className={`${cellPadding} text-left text-[10px] md:text-xs font-extra-bold text-college-navy dark:text-college-gold uppercase tracking-widest whitespace-nowrap ${col.className || ""}`}
                 >
                   {col.label}
                 </th>
               ))}
               {actionButtons && (
                 <th
-                  className={`${cellPadding} text-right text-[10px] md:text-xs font-bold text-college-navy dark:text-college-gold uppercase tracking-wider`}
+                  className={`${cellPadding} text-right text-[10px] md:text-xs font-extra-bold text-college-navy dark:text-college-gold uppercase tracking-widest`}
                 >
                   Actions
                 </th>
@@ -29,7 +43,7 @@ const Table = ({ columns, data, actionButtons }) => {
           </thead>
 
           {/* 2. THE BODY */}
-          <tbody className="divide-y divide-gray-100 dark:divide-dark-border bg-white dark:bg-college-navy">
+          <tbody className="divide-y divide-college-navy/10 dark:divide-college-gold/20 bg-white dark:bg-college-navy">
             {data.map((row, idx) => (
               <tr
                 key={row.id || idx}
@@ -39,7 +53,8 @@ const Table = ({ columns, data, actionButtons }) => {
                 {columns.map((col) => (
                   <td
                     key={col.key}
-                    className={`${cellPadding} text-xs md:text-sm text-gray-700 dark:text-gray-300 group-hover:text-college-navy dark:group-hover:text-college-gold transition-colors break-words min-w-[120px]`}
+                    style={col.width ? { width: col.width, minWidth: col.width } : (col.minWidth ? { minWidth: col.minWidth } : {})}
+                    className={`${cellPadding} text-xs md:text-sm text-college-navy/80 dark:text-white/80 group-hover:text-college-navy dark:group-hover:text-college-gold transition-colors break-words ${!col.width && !col.minWidth ? "min-w-[120px]" : ""} ${col.className || ""}`}
                   >
                     {typeof col.render === "function" ? col.render(row) : row[col.key]}
                   </td>
@@ -53,7 +68,7 @@ const Table = ({ columns, data, actionButtons }) => {
                         <button
                           key={i}
                           onClick={btn.onClick}
-                          className={`${btn.className} px-2 md:px-3 py-1 md:py-1.5 text-xs md:text-sm rounded-sm hover:shadow-sm transition-all duration-200 whitespace-nowrap`}
+                          className={`${btn.className} px-4 py-1.5 text-xs md:text-sm rounded-sm hover:shadow-md transition-all duration-200 whitespace-nowrap font-bold border border-transparent`}
                           title={btn.label}
                         >
                           {btn.label}

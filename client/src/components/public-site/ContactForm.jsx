@@ -6,6 +6,7 @@ import emailjs from "@emailjs/browser";
 import PublicButton from "../shared/PublicButton";
 import { useToast } from "../../context/ToastContext";
 import { contactSchema } from "../../schemas/contactSchema";
+import FormSelect from "../shared/FormSelect";
 
 const inputBase = "w-full px-4 py-3.5 rounded-sm border bg-gray-50 focus:bg-white focus:border-college-navy focus:ring-2 focus:ring-college-navy/30 dark:focus:ring-college-gold/30 outline-none transition-all";
 const inputOk = `${inputBase} border-gray-200`;
@@ -102,22 +103,20 @@ export default function ContactForm({ className }) {
                     </div>
 
                     <div>
-                        <label htmlFor="subject" className="block text-sm font-bold text-college-navy mb-2 tracking-wide">
-                            Subject *
-                        </label>
-                        <select
-                            id="subject"
-                            {...register("subject")}
-                            className={errors.subject ? inputErr + " text-gray-700" : inputOk + " text-gray-700"}
-                        >
-                            <option value="">Select a subject</option>
-                            <option value="admissions">Admissions Inquiry</option>
-                            <option value="programs">Program Information</option>
-                            <option value="fees">Fee Structure</option>
-                            <option value="scholarships">Scholarships</option>
-                            <option value="other">Other</option>
-                        </select>
-                        {errors.subject && <p className="text-red-500 text-xs mt-1">{errors.subject.message}</p>}
+                        <FormSelect
+                            label="Subject"
+                            registration={register("subject")}
+                            error={errors.subject?.message}
+                            required
+                            options={[
+                                { id: "admissions", label: "Admissions Inquiry" },
+                                { id: "programs", label: "Program Information" },
+                                { id: "fees", label: "Fee Structure" },
+                                { id: "scholarships", label: "Scholarships" },
+                                { id: "other", label: "Other" },
+                            ]}
+                            placeholder="Select a subject"
+                        />
                     </div>
 
                     <div>

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Check, AlertCircle } from "lucide-react";
 import Badge from "../shared/Badge";
 import Table from "../portal-shared/Table";
 
@@ -15,7 +14,7 @@ const getGradeDetails = (marks, max) => {
 };
 
 const inputBase =
-  "px-3 py-2 bg-white dark:bg-white/5 border border-gray-300 dark:border-white/20 rounded-sm text-sm focus:outline-none focus:ring-2 focus:ring-college-gold/20 focus:border-college-gold transition-all dark:text-white";
+  "px-3 py-2 bg-white dark:bg-college-navy/50 border border-college-navy/10 dark:border-college-gold/20 rounded-sm text-sm font-bold shadow-sm focus:outline-none focus:ring-2 focus:ring-college-navy/10 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold transition-all dark:text-white dark:placeholder-gray-500 placeholder:font-normal";
 
 const ResultEntryTable = ({ rows, onSave, readOnly = false }) => {
   const buildState = (items) =>
@@ -106,13 +105,13 @@ const ResultEntryTable = ({ rows, onSave, readOnly = false }) => {
   };
 
   const columns = [
-    { key: "rollNo", label: "Roll No." },
-    { key: "studentName", label: "Student Name" },
-    { key: "marks", label: "Marks Obtained" },
-    { key: "percentage", label: "%" },
-    { key: "grade", label: "Grade" },
-    { key: "remarks", label: "Remarks" },
-    { key: "status", label: "Status" },
+    { key: "rollNo", label: "Roll No.", width: "95px" },
+    { key: "studentName", label: "Student Name", width: "180px" },
+    { key: "marks", label: "Marks Obtained", width: "150px" },
+    { key: "percentage", label: "%", width: "75px" },
+    { key: "grade", label: "Grade", width: "75px" },
+    { key: "remarks", label: "Remarks", minWidth: "250px" },
+    { key: "status", label: "Status", width: "85px" },
   ];
 
   const tableData = rows.map((row) => {
@@ -185,8 +184,7 @@ const ResultEntryTable = ({ rows, onSave, readOnly = false }) => {
         )
       ),
       status: (
-        <Badge variant={isGraded ? "success" : "gold"} className="gap-1.5 w-fit">
-          {isGraded ? <Check size={14} /> : <AlertCircle size={14} />}
+        <Badge variant={isGraded ? "success" : "gold"} className="w-fit">
           {isGraded ? "Graded" : "Pending"}
         </Badge>
       ),
@@ -231,7 +229,7 @@ const ResultEntryTable = ({ rows, onSave, readOnly = false }) => {
 
   return (
     <div className="space-y-4">
-      <Table columns={columns} data={tableData} actionButtons={actionButtons} />
+      <Table columns={columns} data={tableData} actionButtons={actionButtons} compact={true} />
     </div>
   );
 };

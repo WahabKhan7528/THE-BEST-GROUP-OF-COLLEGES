@@ -11,6 +11,7 @@ import PortalForm from "../../../components/portal-shared/PortalForm";
 import { Save, Trash2 } from "lucide-react";
 import { subjectSchema } from "../../../schemas/subjectSchema";
 import { adminApi } from "../../../services/api";
+import SkeletonLoading from "../../../components/shared/SkeletonLoading";
 
 const EditSubject = () => {
   const { id } = useParams();
@@ -20,6 +21,7 @@ const EditSubject = () => {
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [subjectCode, setSubjectCode] = useState("");
+  const [loading, setLoading] = useState(true);
   const currentCampusId = currentAdmin?.campus?._id || currentAdmin?.campus || "";
   const visibleCourses = useMemo(() => {
     if (isSuperAdmin) return courses;
@@ -59,6 +61,8 @@ const EditSubject = () => {
         });
       } catch {
         navigate("/admin/subjects", { replace: true });
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -106,7 +110,24 @@ const EditSubject = () => {
       submitting={isSubmitting}
       headerActions={<PublicButton onClick={handleDelete} variant="danger" size="sm" icon={Trash2} type="button">Delete</PublicButton>}
     >
-      <PortalForm.Section title="Subject Details">
+      {loading ? (
+        <div className="space-y-8 animate-pulse">
+          <PortalForm.Section title="Subject Details">
+            <div className="col-span-1 md:col-span-2 space-y-4">
+              <SkeletonLoading variant="textLine" className="h-4 w-32" />
+              <SkeletonLoading variant="panel" className="h-16" />
+              <div className="md:col-span-2 flex justify-end">
+                <SkeletonLoading variant="textLine" className="h-4 w-24" />
+              </div>
+              <SkeletonLoading variant="panel" className="h-16" />
+              <SkeletonLoading variant="panel" className="h-16" />
+              <SkeletonLoading variant="panel" className="h-32" />
+            </div>
+          </PortalForm.Section>
+        </div>
+      ) : (
+        <>
+          <PortalForm.Section title="Subject Details">
         <div className="col-span-1 md:col-span-2">
           <PortalForm.Input label="Subject Name" registration={register("name")} error={errors.name?.message} required placeholder="e.g. Operating Systems" />
         </div>
@@ -121,25 +142,27 @@ const EditSubject = () => {
         </div>
         <PortalForm.Input label="Credit Hours" type="number" registration={register("creditHours")} placeholder="3" />
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Course</label>
-          <select {...register("course")} className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm text-gray-900 dark:text-white">
-            <option value="">Select course...</option>
-            {visibleCourses.map((course) => <option key={course._id} value={course._id}>{course.title} ({course.code})</option>)}
-          </select>
-        </div>
+        <PortalForm.Select
+          label="Course"
+          registration={register("course")}
+          options={visibleCourses.map((course) => ({ id: course._id, label: `${course.title} (${course.code})` }))}
+          placeholder="Select course..."
+        />
 
         <div className="flex items-center gap-3 pt-2">
           <input type="checkbox" {...register("isElective")} className="w-4 h-4 rounded border-gray-300 text-college-navy focus:ring-college-navy" />
-          <span className="text-sm text-gray-700 dark:text-gray-300">Elective subject</span>
+          <span className="text-[10px] uppercase font-bold tracking-widest text-college-navy/70 dark:text-college-gold/70">Elective subject</span>
         </div>
 
-        <div className="col-span-1 md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Description</label>
-          <textarea {...register("description")} rows={4} className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm resize-none dark:text-white" placeholder="Describe the subject..." />
-        </div>
+        <PortalForm.Input
+          label="Description"
+          type="textarea"
+          registration={register("description")}
+          placeholder="Describe the subject..."
+        />
       </PortalForm.Section>
-
+        </>
+      )}
     </PortalForm>
   );
 };

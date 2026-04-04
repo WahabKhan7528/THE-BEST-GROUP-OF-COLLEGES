@@ -6,6 +6,7 @@ import Badge from "../../components/shared/Badge";
 import { Plus, UploadCloud } from "lucide-react";
 import PublicButton from "../../components/shared/PublicButton";
 import { portalApi } from "../../services/api";
+import SkeletonLoading from "../../components/shared/SkeletonLoading";
 
 const campusNames = {
   main: "Main Campus",
@@ -17,6 +18,8 @@ const Materials = () => {
   const { getCurrentCampus, isDarkMode } = useFacultyContext();
   const campus = getCurrentCampus();
   const [materials, setMaterials] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
 
   useEffect(() => {
     const loadMaterials = async () => {
@@ -33,6 +36,8 @@ const Materials = () => {
         })));
       } catch {
         setMaterials([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -67,7 +72,13 @@ const Materials = () => {
         }
       />
 
-      {materials.length > 0 ? (
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from({ length: 6 }).map((_, idx) => (
+            <SkeletonLoading key={idx} variant="card" className="h-48" />
+          ))}
+        </div>
+      ) : materials.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {materials.map((material) => (
             <MaterialCard

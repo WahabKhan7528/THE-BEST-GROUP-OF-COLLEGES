@@ -85,23 +85,20 @@ const CreateSubject = () => {
 
         <PortalForm.Input label="Credit Hours" type="number" registration={register("creditHours")} placeholder="3" error={errors.creditHours?.message} />
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Course</label>
-          <select {...register("course")} className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold text-gray-900 dark:text-white">
-            <option value="">Select course...</option>
-            {visibleCourses.map((course) => (
-              <option key={course._id} value={course._id}>{course.title} ({course.code})</option>
-            ))}
-          </select>
-        </div>
+        <PortalForm.Select
+          label="Course"
+          registration={register("course")}
+          options={visibleCourses.map((course) => ({ id: course._id, label: `${course.title} (${course.code})` }))}
+          placeholder="Select course..."
+        />
 
         <div className="flex items-center gap-3 pt-2">
           <input type="checkbox" {...register("isElective")} className="w-4 h-4 rounded border-gray-300 text-college-navy focus:ring-college-navy" />
-          <span className="text-sm text-gray-700 dark:text-gray-300">Elective subject</span>
+          <span className="text-[10px] uppercase font-bold tracking-widest text-college-navy/70 dark:text-college-gold/70">Elective subject</span>
         </div>
 
         <div className="col-span-1 md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Description</label>
+          <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-1.5">Description</label>
           <textarea {...register("description")} rows={4} className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 resize-none dark:text-white" placeholder="Describe the subject..." />
         </div>
       </PortalForm.Section>

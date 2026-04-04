@@ -93,7 +93,33 @@
   }
 
 
-  /* --- 6. Themed Components & Animations --- */
+  /* --- 6. Themed Components, Animations & Scrollbars --- */
+  
+  /* Custom Scrollbar Styles */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #001f3f; /* college-navy */
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #c5a059; /* college-gold */
+    border-radius: 3px;
+    transition: background 0.3s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #b08d48; /* slightly darker gold */
+  }
+
+  /* Specific to dark mode */
+  .dark ::-webkit-scrollbar-thumb {
+    background: #c5a059;
+    opacity: 0.8;
+  }
   
   /* Custom gold styling for built-in date/time picker indicators in dark mode */
   .dark ::-webkit-calendar-picker-indicator {

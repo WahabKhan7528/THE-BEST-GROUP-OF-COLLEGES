@@ -7,6 +7,7 @@ import { useToast } from '../../context/ToastContext';
 import { portalApi } from '../../services/api';
 import PortalForm from '../../components/portal-shared/PortalForm';
 import { Upload, Database, FileText } from 'lucide-react';
+import SkeletonLoading from '../../components/shared/SkeletonLoading';
 
 const UploadMaterial = () => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const UploadMaterial = () => {
   const [fileName, setFileName] = useState('');
   const [materialFile, setMaterialFile] = useState(null);
   const [facultySubjects, setFacultySubjects] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const { register, handleSubmit, watch, setValue, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(materialSchema),
@@ -38,11 +40,13 @@ const UploadMaterial = () => {
         }
       } catch {
         setFacultySubjects([]);
+      } finally {
+        setLoading(false);
       }
     };
 
     loadSubjects();
-  }, [setValue]);
+  }, [setValue, selectedClassId]);
 
   const classes = useMemo(() => {
     const map = new Map();
@@ -79,8 +83,10 @@ const UploadMaterial = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
-    setFileName(file ? file.name : '');
-    setMaterialFile(file || null);
+    if (file) {
+      setFileName(file.name);
+      setMaterialFile(file);
+    }
   };
 
   const onSubmit = async (values) => {
@@ -98,6 +104,30 @@ const UploadMaterial = () => {
     navigate('/faculty/materials');
   };
 
+  if (loading) {
+    return (
+        <div className="max-w-5xl mx-auto p-4 md:p-6 lg:p-8 space-y-8">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 dark:border-college-gold/10 pb-8">
+                <div className="space-y-3">
+                    <SkeletonLoading variant="textLine" className="h-4 w-24" />
+                    <SkeletonLoading variant="textLine" className="h-10 w-64" />
+                    <SkeletonLoading variant="textLine" className="h-4 w-48" />
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-6">
+                    <SkeletonLoading variant="panel" className="h-48" />
+                    <SkeletonLoading variant="panel" className="h-[200px]" />
+                </div>
+                <div className="space-y-6">
+                    <SkeletonLoading variant="panel" className="h-[300px]" />
+                </div>
+            </div>
+        </div>
+    );
+  }
+
   return (
     <PortalForm
       title="Upload Course Material"
@@ -110,47 +140,23 @@ const UploadMaterial = () => {
       submitting={isSubmitting}
     >
       <PortalForm.Section title="Course Information" icon={<Database size={20} className="text-college-navy dark:text-college-gold" />}>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-            Class / Section
-          </label>
-          <select
-            {...register('classSection')}
-            className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none dark:text-white"
-            required
-          >
-            <option value="">Select a class</option>
-            {classes.map((classRoom) => (
-              <option key={classRoom._id} value={classRoom._id}>
-                {classRoom.name} - {classRoom.section}
-              </option>
-            ))}
-          </select>
-          {errors.classSection?.message && (
-            <p className="mt-1 text-xs text-red-500">{errors.classSection.message}</p>
-          )}
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-            Subject
-          </label>
-          <select
-            {...register('subject')}
-            className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none dark:text-white"
-            required
-            disabled={subjectOptions.length === 0}
-          >
-            <option value="">{subjectOptions.length > 0 ? 'Select a subject' : 'Select a class first'}</option>
-            {subjectOptions.map((subject) => (
-              <option key={subject.id} value={subject.id}>
-                {subject.label}
-              </option>
-            ))}
-          </select>
-          {errors.subject?.message && (
-            <p className="mt-1 text-xs text-red-500">{errors.subject.message}</p>
-          )}
-        </div>
+        <PortalForm.Select
+          label="Class / Section"
+          registration={register('classSection')}
+          error={errors.classSection?.message}
+          required
+          options={classes.map((c) => ({ id: c._id, label: `${c.name} - ${c.section}` }))}
+          placeholder="Select a class"
+        />
+        <PortalForm.Select
+          label="Subject"
+          registration={register('subject')}
+          error={errors.subject?.message}
+          required
+          disabled={subjectOptions.length === 0}
+          options={subjectOptions}
+          placeholder={subjectOptions.length > 0 ? 'Select a subject' : 'Select a class first'}
+        />
       </PortalForm.Section>
 
       <PortalForm.Section title="Material Details" icon={<FileText size={20} className="text-college-navy dark:text-college-gold" />}>
@@ -165,19 +171,18 @@ const UploadMaterial = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-            Type
-          </label>
-          <select
-            {...register('type')}
-            className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none dark:text-white"
-          >
-            <option value="pdf">PDF</option>
-            <option value="ppt">Slides</option>
-            <option value="doc">Notes</option>
-            <option value="image">Image</option>
-            <option value="other">Video</option>
-          </select>
+          <PortalForm.Select
+            label="Type"
+            registration={register('type')}
+            error={errors.type?.message}
+            options={[
+              { id: 'pdf', label: 'PDF' },
+              { id: 'ppt', label: 'Slides' },
+              { id: 'doc', label: 'Notes' },
+              { id: 'image', label: 'Image' },
+              { id: 'other', label: 'Video' },
+            ]}
+          />
         </div>
 
         <div>
@@ -193,7 +198,7 @@ const UploadMaterial = () => {
 
       <PortalForm.Section title="Content Upload" icon={<Upload size={20} className="text-college-navy dark:text-college-gold" />}>
         <div className="md:col-span-2 space-y-2">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">File Upload</label>
+          <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block px-0.5">File Upload</label>
           <div className="relative group">
             <input
               type="file"
@@ -203,7 +208,7 @@ const UploadMaterial = () => {
             />
             <div className="w-full px-4 py-3 rounded-sm border border-dashed border-gray-300 dark:border-college-gold/40 bg-gray-50 dark:bg-college-navy/50 text-gray-500 dark:text-gray-400 group-hover:bg-college-navy/5 dark:group-hover:bg-college-gold/10 group-hover:border-college-navy dark:group-hover:border-college-gold transition-all flex items-center justify-center gap-2 truncate text-center">
               <Upload size={18} className="text-college-navy dark:text-college-gold" />
-              <span className="truncate text-gray-700 dark:text-gray-300 group-hover:text-college-navy dark:group-hover:text-college-gold transition-colors">{fileName || "Choose file..."}</span>
+              <span className="truncate group-hover:text-college-navy dark:group-hover:text-college-gold transition-colors">{fileName || "Choose file..."}</span>
             </div>
           </div>
         </div>

@@ -29,13 +29,13 @@ class ErrorBoundary extends React.Component {
       return (
         <div className="min-h-[60vh] flex items-center justify-center px-4">
           <div className="text-center max-w-md">
-            <div className="mx-auto w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mb-6">
+            <div className="mx-auto w-16 h-16 rounded-full bg-red-500/10 dark:bg-red-900/30 flex items-center justify-center mb-6">
               <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-400" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+            <h2 className="text-2xl font-black text-college-navy dark:text-white mb-2 uppercase tracking-tight">
               Something went wrong
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-sm font-bold text-college-navy/60 dark:text-white/60 mb-8 uppercase tracking-tight">
               An unexpected error occurred. Please try again or return to the home page.
             </p>
             <div className="flex items-center justify-center gap-3">

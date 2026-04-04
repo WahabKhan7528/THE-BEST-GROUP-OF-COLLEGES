@@ -13,13 +13,13 @@ const CampusFilter = () => {
 
   return (
     <div className="flex items-center gap-1 sm:gap-2">
-      <label className="hidden sm:block text-sm font-medium text-college-navy dark:text-gray-300">
+      <label className="hidden sm:block text-[10px] font-black uppercase tracking-[0.2em] text-college-navy/60 dark:text-college-gold/80">
         Campus:
       </label>
       <select
         value={selectedCampusFilter}
         onChange={(e) => setSelectedCampusFilter(e.target.value)}
-        className="pl-2 sm:pl-3 pr-6 sm:pr-8 py-1.5 sm:py-2 border border-transparent dark:border-college-gold/40 rounded-sm text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-college-navy/30 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold bg-white dark:bg-college-navy text-college-navy dark:text-white w-32 sm:w-auto overflow-hidden text-ellipsis whitespace-nowrap shadow-sm"
+        className="pl-2 sm:pl-3 pr-6 sm:pr-8 py-1.5 sm:py-2 border border-college-navy/10 dark:border-college-gold/40 rounded-sm text-[10px] sm:text-xs font-black uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-college-navy/10 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold bg-white dark:bg-college-navy text-college-navy dark:text-white w-32 sm:w-auto overflow-hidden text-ellipsis whitespace-nowrap shadow-md transition-all cursor-pointer"
       >
         <option value="all">All Campuses (Unified)</option>
         {campuses.map((c) => (
@@ -33,4 +33,3 @@ const CampusFilter = () => {
 };
 
 export default CampusFilter;
-

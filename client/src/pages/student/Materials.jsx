@@ -5,6 +5,7 @@ import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
 import { FolderOpen } from "lucide-react";
 import { portalApi } from "../../services/api";
+import SkeletonLoading from "../../components/shared/SkeletonLoading";
 
 const campusNames = {
   main: "Main Campus",
@@ -87,7 +88,24 @@ const Materials = () => {
       />
 
       {loading ? (
-        <div className="py-10 text-center text-gray-500 dark:text-gray-400">Loading materials...</div>
+        <div className="space-y-8 animate-pulse">
+          {[1, 2].map((g) => (
+            <div key={g} className="space-y-4">
+              <div className="flex justify-between items-center px-2">
+                <div className="space-y-2">
+                  <SkeletonLoading variant="textLine" className="w-40 h-6" />
+                  <SkeletonLoading variant="textLine" className="w-28 h-4" />
+                </div>
+                <SkeletonLoading variant="textLine" className="w-16 h-6" />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {[1, 2, 3].map((i) => (
+                  <SkeletonLoading key={i} variant="panel" className="h-36" />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       ) : groupedMaterials.length > 0 ? (
         <div className="space-y-8">
           {groupedMaterials.map((group) => (

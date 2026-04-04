@@ -5,6 +5,7 @@ import { useToast } from "../../../context/ToastContext";
 import { useConfirm } from "../../../context/ConfirmContext";
 import PublicButton from "../../../components/shared/PublicButton";
 import Table from "../../../components/portal-shared/Table";
+import Badge from "../../../components/shared/Badge";
 import {
   Plus,
   Search,
@@ -24,14 +25,18 @@ const SubjectsList = () => {
   const [selectedCampus, setSelectedCampus] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [subjects, setSubjects] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadSubjects = async () => {
+      setIsLoading(true);
       try {
         const { data } = await adminApi.subjects();
         setSubjects(data.data || []);
       } catch {
         setSubjects([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -88,9 +93,6 @@ const SubjectsList = () => {
       label: "Subject",
       render: (row) => (
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-sm bg-college-navy/10 text-college-navy dark:bg-college-gold/10 dark:text-college-gold flex items-center justify-center">
-            <BookOpen className="w-5 h-5" />
-          </div>
           <div>
             <span className="font-semibold text-college-navy dark:text-college-gold block">{row.name}</span>
             <span className="text-xs text-gray-500 dark:text-gray-400">{row.class}</span>
@@ -102,10 +104,9 @@ const SubjectsList = () => {
       key: "code",
       label: "Code",
       render: (row) => (
-        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-sm text-xs font-medium bg-gray-100 text-gray-700 font-mono border border-gray-200">
-          <Hash className="w-3 h-3 text-gray-400" />
+        <Badge variant="subtle" className="font-mono font-bold">
           {row.code}
-        </span>
+        </Badge>
       )
     },
     ...(isSuperAdmin ? [{
@@ -113,7 +114,7 @@ const SubjectsList = () => {
       label: "Faculty",
       render: (row) => (
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-college-navy dark:bg-college-gold flex items-center justify-center text-white dark:text-college-navy text-xs font-bold ring-2 ring-white/50 shadow-sm">
+          <div className="w-8 h-8 rounded-sm bg-college-navy dark:bg-college-gold flex items-center justify-center text-white dark:text-college-navy text-xs font-bold">
             {row.facultyName.charAt(0)}
           </div>
           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{row.facultyName}</span>
@@ -127,13 +128,13 @@ const SubjectsList = () => {
           {(row.campuses || []).map((campus) => {
             const campusId = campus?._id || campus;
             return (
-              <span
+              <Badge
                 key={campusId}
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-college-navy/5 text-college-navy border border-college-navy/10"
+                variant="subtle"
+                className="font-bold"
               >
-                <Building2 className="w-3 h-3" />
                 {getCampusName(campusId)}
-              </span>
+              </Badge>
             );
           })}
         </div>
@@ -146,10 +147,10 @@ const SubjectsList = () => {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-college-navy">
+          <h1 className="text-2xl font-bold text-college-navy dark:text-white">
             Subjects & Assignments
           </h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             Manage course curriculum and campus-specific subject offerings
           </p>
         </div>
@@ -203,10 +204,11 @@ const SubjectsList = () => {
       </div>
 
       {/* Table Section */}
-      {filteredData.length > 0 ? (
+      {isLoading || filteredData.length > 0 ? (
         <Table
           columns={columns}
           data={filteredData}
+          isLoading={isLoading}
           actionButtons={isSuperAdmin ? undefined : (row) => [
             {
               label: "Edit",

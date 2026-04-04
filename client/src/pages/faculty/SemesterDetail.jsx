@@ -7,6 +7,8 @@ import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
 import ResultEntryTable from "../../components/faculty/ResultEntryTable";
 import { portalApi } from "../../services/api";
+import SkeletonLoading from "../../components/shared/SkeletonLoading";
+import PortalForm from "../../components/portal-shared/PortalForm";
 
 const campusNames = {
   main: "Main Campus",
@@ -251,16 +253,33 @@ const SemesterDetail = () => {
 
   if (loading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 pb-10">
         <PortalPageHeader
-          badge={<Badge variant={isDarkMode ? "gold" : "navy"}>{getCampusLabel(campus)}</Badge>}
-          title="Semester Detail"
-          subtitle="Loading class and result data..."
-          action={null}
+          badge={<SkeletonLoading variant="textLine" className="h-6 w-24" />}
+          title={<SkeletonLoading variant="textLine" className="h-10 w-64" />}
+          subtitle={<SkeletonLoading variant="textLine" className="h-4 w-48 mt-2" />}
+          action={<SkeletonLoading variant="textLine" className="h-10 w-32" />}
         />
-        <div className="bg-white dark:bg-college-navy border border-gray-100 dark:border-college-navy/20 rounded-sm shadow-sm p-10 text-center">
-          <Loader2 className="mx-auto mb-3 h-6 w-6 animate-spin text-college-navy dark:text-college-gold" />
-          <p className="text-gray-600 dark:text-gray-300 font-medium">Preparing semester detail...</p>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {Array.from({ length: 4 }).map((_, idx) => (
+            <SkeletonLoading key={idx} variant="panel" className="h-28" />
+          ))}
+        </div>
+
+        <div className="bg-white dark:bg-college-navy border border-gray-100 dark:border-college-navy/20 rounded-sm shadow-sm p-5">
+          <div className="flex items-center justify-between mb-6">
+            <div className="space-y-2">
+              <SkeletonLoading variant="textLine" className="h-6 w-40" />
+              <SkeletonLoading variant="textLine" className="h-4 w-64" />
+            </div>
+            <SkeletonLoading variant="textLine" className="h-6 w-20 rounded-full" />
+          </div>
+          <div className="space-y-3">
+             {Array.from({ length: 5 }).map((_, idx) => (
+               <SkeletonLoading key={idx} variant="tableRow" className="h-16" />
+             ))}
+          </div>
         </div>
       </div>
     );
@@ -315,23 +334,21 @@ const SemesterDetail = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="rounded-sm bg-white dark:bg-college-navy border border-college-navy/10 dark:border-college-gold/20 p-4 shadow-sm">
-          <p className="text-[10px] uppercase tracking-[0.18em] text-college-navy/60 dark:text-college-gold font-bold">Subject</p>
           {subjectOptions.length > 1 ? (
-            <select
+            <PortalForm.Select
+              label="Subject"
               value={selectedSubjectId || currentSubject?.id || ""}
               onChange={(event) => setSelectedSubjectId(event.target.value)}
-              className="mt-2 w-full rounded-sm border border-college-navy/10 dark:border-college-gold/20 bg-white dark:bg-college-navy/70 px-3 py-2 text-sm font-semibold text-college-navy dark:text-white focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20"
-            >
-              {subjectOptions.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+              options={subjectOptions}
+              placeholder="Select a subject"
+            />
           ) : (
-            <p className="mt-2 text-base font-black text-college-navy dark:text-white">{currentSubject?.label || "Selected subject"}</p>
+            <>
+              <p className="text-[10px] uppercase tracking-[0.18em] text-college-navy/60 dark:text-college-gold font-bold px-0.5">Subject</p>
+              <p className="mt-2 text-base font-black text-college-navy dark:text-white">{currentSubject?.label || "Selected subject"}</p>
+            </>
           )}
-          <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+          <p className="mt-2 text-xs text-slate-500 dark:text-slate-400 font-bold px-0.5 uppercase tracking-wider">
             {subjectOptions.length} assigned subject{subjectOptions.length === 1 ? "" : "s"}
           </p>
         </div>

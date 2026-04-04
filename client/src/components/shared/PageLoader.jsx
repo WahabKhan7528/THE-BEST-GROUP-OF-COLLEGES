@@ -22,7 +22,7 @@ const PageLoader = () => {
           THE BEST GROUP OF COLLEGES
         </h3>
 
-        <div className="flex items-center gap-1 mt-1 text-sm font-medium text-gray-500">
+        <div className="flex items-center gap-1 mt-1 text-[10px] font-black uppercase tracking-[0.3em] text-college-navy/40 dark:text-college-gold/40">
           <span>Loading</span>
           <span className="flex gap-0.5">
             <span className="w-1 h-1 bg-college-gold rounded-full animate-bounce" style={{ animationDelay: "0s" }} />

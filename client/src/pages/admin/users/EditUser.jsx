@@ -10,6 +10,7 @@ import { useConfirm } from "../../../context/ConfirmContext";
 import { useAdminContext } from "../../../store/hooks/useAdminReduxContext";
 import { userSchema } from "../../../schemas/userSchema";
 import { adminApi } from "../../../services/api";
+import SkeletonLoading from "../../../components/shared/SkeletonLoading";
 
 const roleOptions = [
   { label: "Super Admin", value: "super_admin" },
@@ -29,6 +30,7 @@ const EditUser = () => {
   const [classRooms, setClassRooms] = useState([]);
   const [portalId, setPortalId] = useState("");
   const [role, setRole] = useState("student");
+  const [loading, setLoading] = useState(true);
   const currentCampusId = getSubAdminCampus();
   const visibleRoles = isSuperAdmin ? roleOptions : roleOptions.filter((option) => option.value === "faculty" || option.value === "student");
 
@@ -98,6 +100,8 @@ const EditUser = () => {
         });
       } catch {
         navigate("/admin/users", { replace: true });
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -231,9 +235,31 @@ const EditUser = () => {
         </PublicButton>
       }
     >
-      <PortalForm.Section title="Role & Identity">
+      {loading ? (
+        <div className="space-y-8 animate-pulse">
+          <PortalForm.Section title="Role & Identity">
+            <div className="col-span-1 md:col-span-2 space-y-4">
+              <SkeletonLoading variant="textLine" className="h-4 w-32" />
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {[1, 2, 3, 4].map((i) => (
+                  <SkeletonLoading key={i} variant="panel" className="h-10" />
+                ))}
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <SkeletonLoading variant="panel" className="h-16" />
+                <SkeletonLoading variant="panel" className="h-16" />
+              </div>
+            </div>
+          </PortalForm.Section>
+          <PortalForm.Section title="Account Status">
+            <SkeletonLoading variant="panel" className="h-20" />
+          </PortalForm.Section>
+        </div>
+      ) : (
+        <>
+          <PortalForm.Section title="Role & Identity">
         <div className="col-span-1 md:col-span-2 space-y-2">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Account Type</label>
+          <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-1.5">Account Type</label>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
             {visibleRoles.map((option) => (
               <button
@@ -267,28 +293,32 @@ const EditUser = () => {
         <PortalForm.Section title="Faculty Details">
           <PortalForm.Input label="Department" registration={register("department")} placeholder="e.g. Computer Science" />
           <PortalForm.Input label="Designation" registration={register("designation")} placeholder="e.g. Lecturer, Assistant Professor" />
-          <div className="col-span-1 md:col-span-2 space-y-1">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Campus</label>
+          <div className="col-span-1 md:col-span-2">
             {isSuperAdmin ? (
-              <select {...register("campus")} className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none dark:text-white">
-                <option value="">Select a campus...</option>
-                {campuses.map((campus) => (
-                  <option key={campus.id} value={campus.id}>
-                    {campus.name} ({campus.code})
-                  </option>
-                ))}
-              </select>
+              <PortalForm.Select
+                label="Campus"
+                registration={register("campus")}
+                options={campuses.map((campus) => ({ id: campus.id, label: `${campus.name} (${campus.code})` }))}
+                placeholder="Select a campus..."
+              />
             ) : (
-              <div className="rounded-sm border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 dark:border-college-gold/20 dark:bg-college-navy/50 dark:text-gray-200">
-                {campuses.find((campus) => campus.id === currentCampusId)?.name || "Your campus"}
+              <div className="space-y-1.5">
+                <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block">Campus</label>
+                <div className="rounded-sm border border-college-navy/10 bg-gray-50/50 px-4 py-3 text-sm font-bold text-college-navy dark:border-college-gold/20 dark:bg-college-navy/50 dark:text-college-gold/90">
+                  {campuses.find((campus) => campus.id === currentCampusId)?.name || "Your campus"}
+                </div>
               </div>
             )}
           </div>
-          <div className="col-span-1 md:col-span-2 space-y-1">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Assigned Subjects</label>
-            <select multiple {...register("subjects")} className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm min-h-[140px] dark:text-white">
+          <div className="col-span-1 md:col-span-2">
+            <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-1.5">Assigned Subjects</label>
+            <select
+              multiple
+              {...register("subjects")}
+              className="w-full px-4 py-3 bg-white dark:bg-college-navy/50 border border-college-navy/10 dark:border-college-gold/20 rounded-sm min-h-[140px] focus:outline-none focus:ring-2 focus:ring-college-navy/10 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold transition-all dark:text-white font-bold"
+            >
               {filteredSubjects.map((subject) => (
-                <option key={subject._id} value={subject._id}>
+                <option key={subject._id} value={subject._id} className="py-1">
                   {subject.name} ({subject.code})
                 </option>
               ))}
@@ -299,59 +329,44 @@ const EditUser = () => {
 
       {showStudentFields && (
         <PortalForm.Section title="Student Details">
-          {isSuperAdmin ? (
-            <div className="col-span-1 md:col-span-2 space-y-1">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Campus</label>
-              <select {...register("campus")} className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none dark:text-white">
-                <option value="">Select a campus...</option>
-                {campuses.map((campus) => (
-                  <option key={campus.id} value={campus.id}>
-                    {campus.name} ({campus.code})
-                  </option>
-                ))}
-              </select>
-            </div>
-          ) : (
-            <div className="col-span-1 md:col-span-2 rounded-sm border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 dark:border-college-gold/20 dark:bg-college-navy/50 dark:text-gray-200">
-              {campuses.find((campus) => campus.id === currentCampusId)?.name || "Your campus"}
-            </div>
-          )}
-
-          <div className="col-span-1 md:col-span-2 space-y-1">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Course</label>
-            <select {...register("currentCourse")} className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none dark:text-white">
-              <option value="">Select a course...</option>
-              {filteredCourses.map((course) => (
-                <option key={course._id} value={course._id}>
-                  {course.title} ({course.code})
-                </option>
-              ))}
-            </select>
+          <div className="col-span-1 md:col-span-2">
+            {isSuperAdmin ? (
+              <PortalForm.Select
+                label="Campus"
+                registration={register("campus")}
+                options={campuses.map((campus) => ({ id: campus.id, label: `${campus.name} (${campus.code})` }))}
+                placeholder="Select a campus..."
+              />
+            ) : (
+              <div className="space-y-1.5">
+                <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block">Campus</label>
+                <div className="rounded-sm border border-college-navy/10 bg-gray-50/50 px-4 py-3 text-sm font-bold text-college-navy dark:border-college-gold/20 dark:bg-college-navy/50 dark:text-college-gold/90">
+                  {campuses.find((campus) => campus.id === currentCampusId)?.name || "Your campus"}
+                </div>
+              </div>
+            )}
           </div>
 
-          <div className="col-span-1 md:col-span-2 space-y-1">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Class</label>
-            <select {...register("currentClassRoom")} className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none dark:text-white">
-              <option value="">Select a class...</option>
-              {filteredClassRooms.map((classRoom) => (
-                <option key={classRoom._id} value={classRoom._id}>
-                  {classRoom.name} {classRoom.section ? `(${classRoom.section})` : ""}
-                </option>
-              ))}
-            </select>
-          </div>
+          <PortalForm.Select
+            label="Course"
+            registration={register("currentCourse")}
+            options={filteredCourses.map((course) => ({ id: course._id, label: `${course.title} (${course.code})` }))}
+            placeholder="Select a course..."
+          />
 
-          <div className="col-span-1 md:col-span-2 space-y-1">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Section</label>
-            <select {...register("classSection")} className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none dark:text-white">
-              <option value="">Select a section later...</option>
-              {sectionOptions.map((section) => (
-                <option key={section} value={section}>
-                  Section {section}
-                </option>
-              ))}
-            </select>
-          </div>
+          <PortalForm.Select
+            label="Class"
+            registration={register("currentClassRoom")}
+            options={filteredClassRooms.map((classRoom) => ({ id: classRoom._id, label: `${classRoom.name} ${classRoom.section ? `(${classRoom.section})` : ""}` }))}
+            placeholder="Select a class..."
+          />
+
+          <PortalForm.Select
+            label="Section"
+            registration={register("classSection")}
+            options={sectionOptions.map((section) => ({ id: section, label: `Section ${section}` }))}
+            placeholder="Select a section later..."
+          />
 
           <div className="col-span-1 md:col-span-2 space-y-1">
             <div className="col-span-1 md:col-span-2 rounded-sm border border-gray-200 dark:border-college-gold/20 bg-gray-50/70 dark:bg-college-navy/40 p-4 text-sm text-gray-600 dark:text-gray-300">
@@ -363,17 +378,12 @@ const EditUser = () => {
 
       {showAdminFields && (
         <PortalForm.Section title="Campus Allocation">
-          <div className="col-span-1 md:col-span-2 space-y-1">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Campus</label>
-            <select {...register("campus")} className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none dark:text-white">
-              <option value="">Select a campus...</option>
-              {campuses.map((campus) => (
-                <option key={campus.id} value={campus.id}>
-                  {campus.name} ({campus.code})
-                </option>
-              ))}
-            </select>
-          </div>
+          <PortalForm.Select
+            label="Campus"
+            registration={register("campus")}
+            options={campuses.map((campus) => ({ id: campus.id, label: `${campus.name} (${campus.code})` }))}
+            placeholder="Select a campus..."
+          />
         </PortalForm.Section>
       )}
 
@@ -383,6 +393,8 @@ const EditUser = () => {
             Super admin accounts manage the full system and do not need campus, faculty, or student assignment fields.
           </div>
         </PortalForm.Section>
+      )}
+        </>
       )}
     </PortalForm>
   );

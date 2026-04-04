@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Building2, CheckCircle2, Plus } from "lucide-react";
 import { useAdminContext } from "../../../store/hooks/useAdminReduxContext";
 import PortalForm from "../../../components/portal-shared/PortalForm";
+import FormSelect from "../../../components/shared/FormSelect";
 import { classSchema } from "../../../schemas/classSchema";
 import { adminApi } from "../../../services/api";
 
@@ -297,7 +298,7 @@ const CreateClass = () => {
     >
       <PortalForm.Section title="Campus Allocation" className="!space-y-4">
         <div className="col-span-1 md:col-span-2">
-          <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Select Campus *</label>
+          <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-2">Select Campus *</label>
           {isSuperAdmin ? (
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
               {campuses.map((campus) => {
@@ -336,38 +337,29 @@ const CreateClass = () => {
 
         <PortalForm.Input label="Section" registration={register("section")} placeholder="e.g. A" />
 
-        <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">Course</label>
-          <select {...register("course")} className="w-full rounded-sm border border-gray-200 bg-gray-50/50 px-4 py-2.5 text-gray-900 dark:border-college-gold/20 dark:bg-college-navy/50 dark:text-white">
-            <option value="">Select course...</option>
-            {visibleCourses.map((course) => (
-              <option key={course._id} value={course._id}>{course.title} ({course.code})</option>
-            ))}
-          </select>
-        </div>
+        <PortalForm.Select
+          label="Course"
+          registration={register("course")}
+          options={visibleCourses.map((course) => ({ id: course._id, label: `${course.title} (${course.code})` }))}
+          placeholder="Select course..."
+        />
 
         {(isSemesterSystem || !selectedCourse) && (
-          <div>
-            <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">Current Semester</label>
-            <select {...register("semester")} className="w-full rounded-sm border border-gray-200 bg-gray-50/50 px-4 py-2.5 text-gray-900 dark:border-college-gold/20 dark:bg-college-navy/50 dark:text-white">
-              <option value="">Select current semester...</option>
-              {Array.from({ length: isSemesterSystem ? termCount : 8 }, (_, index) => (
-                <option key={index + 1} value={`SEM-${index + 1}`}>Semester {index + 1}</option>
-              ))}
-            </select>
-          </div>
+          <PortalForm.Select
+            label="Current Semester"
+            registration={register("semester")}
+            options={Array.from({ length: isSemesterSystem ? termCount : 8 }, (_, index) => ({ id: `SEM-${index + 1}`, label: `Semester ${index + 1}` }))}
+            placeholder="Select current semester..."
+          />
         )}
 
         {(isAnnualSystem || !selectedCourse) && (
-          <div>
-            <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">Annual Year</label>
-            <select {...register("annualYear")} className="w-full rounded-sm border border-gray-200 bg-gray-50/50 px-4 py-2.5 text-gray-900 dark:border-college-gold/20 dark:bg-college-navy/50 dark:text-white">
-              <option value="">Select year...</option>
-              {Array.from({ length: isAnnualSystem ? termCount : 5 }, (_, index) => (
-                <option key={index + 1} value={`Y${index + 1}`}>Year {index + 1}</option>
-              ))}
-            </select>
-          </div>
+          <PortalForm.Select
+            label="Annual Year"
+            registration={register("annualYear")}
+            options={Array.from({ length: isAnnualSystem ? termCount : 5 }, (_, index) => ({ id: `Y${index + 1}`, label: `Year ${index + 1}` }))}
+            placeholder="Select year..."
+          />
         )}
       </PortalForm.Section>
 
@@ -393,7 +385,7 @@ const CreateClass = () => {
 
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div>
-                    <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">Start Date</label>
+                    <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-1.5 focus:text-college-navy dark:focus:text-college-gold transition-colors">Start Date</label>
                     <input
                       type="date"
                       min={formatDateInput(new Date())}
@@ -405,7 +397,7 @@ const CreateClass = () => {
                   </div>
 
                   <div>
-                    <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">End Date</label>
+                    <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-1.5 focus:text-college-navy dark:focus:text-college-gold transition-colors">End Date</label>
                     <input
                       type="date"
                       min={row.startDate || formatDateInput(new Date())}
@@ -416,25 +408,24 @@ const CreateClass = () => {
                     />
                   </div>
 
-                  <div>
-                    <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
-                    <select
+                  <FormSelect
+                      label="Status"
                       disabled={locked}
                       value={row.status}
                       onChange={(event) => updateSemesterRow(row.semesterNumber, "status", event.target.value)}
-                      className="w-full rounded-sm border border-gray-200 bg-gray-50/50 px-4 py-2.5 text-gray-900 disabled:opacity-60 dark:border-college-gold/20 dark:bg-college-navy/50 dark:text-white"
-                    >
-                      <option value="planned">Planned</option>
-                      <option value="active">Active</option>
-                      <option value="completed">Completed</option>
-                      <option value="locked">Locked</option>
-                    </select>
-                  </div>
+                      options={[
+                        { id: "planned", label: "Planned" },
+                        { id: "active", label: "Active" },
+                        { id: "completed", label: "Completed" },
+                        { id: "locked", label: "Locked" },
+                      ]}
+                      placeholder="Select status..."
+                    />
 
                   <div className="md:col-span-2 space-y-3">
                     <div className="flex items-center justify-between gap-3">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Subject Assignments</label>
+                        <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-1.5 focus:text-college-navy dark:focus:text-college-gold transition-colors">Subject Assignments</label>
                         <p className="text-xs text-gray-500 dark:text-gray-400">Add one subject at a time and choose the teacher for it.</p>
                       </div>
                       <button
@@ -503,35 +494,21 @@ const CreateClass = () => {
             </div>
 
             <div className="mt-4 space-y-4">
-              <div>
-                <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">Subject</label>
-                <select
-                  value={assignmentDialog.subject}
-                  onChange={(event) => setAssignmentDialog((prev) => ({ ...prev, subject: event.target.value }))}
-                  className="w-full rounded-sm border border-gray-200 bg-gray-50/50 px-4 py-2.5 text-gray-900 dark:border-college-gold/20 dark:bg-college-navy/50 dark:text-white"
-                >
-                  <option value="">Select subject...</option>
-                  {subjectOptionsForSemester(assignmentDialog.semesterNumber || 0).map((subject) => (
-                      <option key={subject._id} value={subject._id}>
-                        {subject.name} ({subject.code})
-                      </option>
-                    ))}
-                </select>
-              </div>
+              <FormSelect
+                label="Subject"
+                value={assignmentDialog.subject}
+                onChange={(event) => setAssignmentDialog((prev) => ({ ...prev, subject: event.target.value }))}
+                options={subjectOptionsForSemester(assignmentDialog.semesterNumber || 0).map((subject) => ({ id: subject._id, label: `${subject.name} (${subject.code})` }))}
+                placeholder="Select subject..."
+              />
 
-              <div>
-                <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">Faculty</label>
-                <select
-                  value={assignmentDialog.faculty}
-                  onChange={(event) => setAssignmentDialog((prev) => ({ ...prev, faculty: event.target.value }))}
-                  className="w-full rounded-sm border border-gray-200 bg-gray-50/50 px-4 py-2.5 text-gray-900 dark:border-college-gold/20 dark:bg-college-navy/50 dark:text-white"
-                >
-                  <option value="">Select faculty...</option>
-                  {visibleFacultyUsers.map((user) => (
-                    <option key={user._id} value={user._id}>{user.name} ({user.portalId})</option>
-                  ))}
-                </select>
-              </div>
+              <FormSelect
+                label="Faculty"
+                value={assignmentDialog.faculty}
+                onChange={(event) => setAssignmentDialog((prev) => ({ ...prev, faculty: event.target.value }))}
+                options={visibleFacultyUsers.map((user) => ({ id: user._id, label: `${user.name} (${user.portalId})` }))}
+                placeholder="Select faculty..."
+              />
             </div>
 
             <div className="mt-5 flex justify-end gap-3">

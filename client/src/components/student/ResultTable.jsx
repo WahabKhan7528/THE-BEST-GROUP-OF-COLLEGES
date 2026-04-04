@@ -1,12 +1,12 @@
 const ResultTable = ({ results, showTranscript }) => {
   return (
-    <div className="bg-white dark:bg-white/5 border dark:border-college-gold/15 rounded-sm shadow-sm overflow-hidden transition-colors duration-300">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 sm:px-6 py-4 border-b dark:border-college-gold/15">
+    <div className="bg-white dark:bg-college-navy border border-college-navy/10 dark:border-college-gold/20 rounded-sm shadow-2xl overflow-hidden transition-colors duration-300">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 sm:px-6 py-4 border-b border-college-navy/10 dark:border-college-gold/20">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          <h3 className="text-lg font-black text-college-navy dark:text-white uppercase tracking-tight">
             Semester Results
           </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-[10px] font-bold text-college-navy/40 dark:text-college-gold/60 uppercase tracking-widest mt-0.5">
             Marks, grades, and credits
           </p>
         </div>
@@ -17,27 +17,27 @@ const ResultTable = ({ results, showTranscript }) => {
         )}
       </div>
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-college-gold/15 text-xs sm:text-sm">
-          <thead className="bg-gray-50 dark:bg-college-navy/50">
+        <table className="min-w-full divide-y border-t border-college-navy/10 dark:divide-college-gold/20 text-xs sm:text-sm">
+          <thead className="bg-college-navy/5 dark:bg-college-gold/5">
             <tr>
-              <th className="px-4 sm:px-6 py-3 text-left font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">
+              <th className="px-4 sm:px-6 py-4 text-left font-black text-college-navy dark:text-college-gold uppercase tracking-[0.2em] whitespace-nowrap">
                 Course
               </th>
-              <th className="px-4 sm:px-6 py-3 text-left font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">
+              <th className="px-4 sm:px-6 py-4 text-left font-black text-college-navy dark:text-college-gold uppercase tracking-[0.2em] whitespace-nowrap">
                 Semester
               </th>
-              <th className="px-4 sm:px-6 py-3 text-left font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">
+              <th className="px-4 sm:px-6 py-4 text-left font-black text-college-navy dark:text-college-gold uppercase tracking-[0.2em] whitespace-nowrap">
                 Marks
               </th>
-              <th className="px-4 sm:px-6 py-3 text-left font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">
+              <th className="px-4 sm:px-6 py-4 text-left font-black text-college-navy dark:text-college-gold uppercase tracking-[0.2em] whitespace-nowrap">
                 Grade
               </th>
-              <th className="px-4 sm:px-6 py-3 text-left font-semibold text-gray-700 dark:text-gray-300 whitespace-nowrap">
+              <th className="px-4 sm:px-6 py-4 text-left font-black text-college-navy dark:text-college-gold uppercase tracking-[0.2em] whitespace-nowrap">
                 Credits
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200 dark:divide-college-gold/10">
+          <tbody className="divide-y divide-college-navy/10 dark:divide-college-gold/10">
             {results.map((result) => (
               <tr
                 key={`${result.course}-${result.semester}`}

@@ -7,12 +7,13 @@ import Card from "../shared/Card";
 import PublicButton from "../shared/PublicButton";
 import { useToast } from "../../context/ToastContext";
 import { admissionSchema } from "../../schemas/admissionSchema";
+import FormSelect from "../shared/FormSelect";
 
 const inputBase = "w-full px-4 py-3.5 rounded-sm border bg-gray-50 focus:bg-white focus:border-college-navy focus:ring-2 focus:ring-college-navy/30 dark:focus:ring-college-gold/30 outline-none transition-all";
 const inputOk = `${inputBase} border-gray-200`;
 const inputErr = `${inputBase} border-red-400`;
 
-export default function AdmissionForm({ programs }) {
+export default function AdmissionForm({ programs, loading }) {
     const formRef = useRef(null);
     const toast = useToast();
     const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({
@@ -71,14 +72,18 @@ export default function AdmissionForm({ programs }) {
                         <input {...register("cnic")} type="text" className={inputOk} placeholder="12345-1234567-1" />
                     </div>
                     <div className="xl:col-span-2">
-                        <label className="block text-sm font-bold text-college-navy mb-2 tracking-wide">Select Program *</label>
-                        <select {...register("program")} className={errors.program ? inputErr + " text-gray-700" : inputOk + " text-gray-700"}>
-                            <option value="">Choose a program</option>
-                            {programs && programs.map((program) => (
-                                <option key={program.value} value={program.value}>{program.label} - {program.campus}</option>
-                            ))}
-                        </select>
-                        {errors.program && <p className="text-red-500 text-xs mt-1">{errors.program.message}</p>}
+                        <FormSelect
+                            label="Select Program"
+                            registration={register("program")}
+                            error={errors.program?.message}
+                            required
+                            disabled={loading}
+                            options={loading ? [] : (programs || []).map((p) => ({
+                                id: p.value,
+                                label: `${p.label} - ${p.campus}`
+                            }))}
+                            placeholder={loading ? "Loading programs..." : "Choose a program"}
+                        />
                     </div>
                     <div className="xl:col-span-2">
                         <label className="block text-sm font-bold text-college-navy mb-2 tracking-wide">Previous Education</label>

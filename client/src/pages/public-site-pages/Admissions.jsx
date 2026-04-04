@@ -114,7 +114,7 @@ const Admissions = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 max-w-7xl mx-auto relative z-10 mt-10">
           {isLoadingCourses
-            ? <SkeletonLoading count={6} variant="card" containerClassName="contents" />
+            ? <SkeletonLoading count={6} variant="programCard" containerClassName="contents" />
             : displayedPrograms.map((program) => (
               <ProgramCard key={program.id || program.title} program={program} variant="overview" />
             ))}
@@ -197,7 +197,7 @@ const Admissions = () => {
           <div className="absolute -top-10 -left-10 w-40 h-40 bg-college-gold/10 rounded-full blur-2xl pointer-events-none" />
           <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-college-navy/10 rounded-full blur-2xl pointer-events-none" />
 
-          <AdmissionForm programs={formPrograms} />
+          <AdmissionForm programs={formPrograms} loading={isLoadingCourses} />
         </div>
       </Section>
 

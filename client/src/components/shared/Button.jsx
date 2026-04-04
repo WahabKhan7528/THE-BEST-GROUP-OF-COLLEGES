@@ -9,9 +9,9 @@ const variants = {
   outline:
     "border border-college-navy dark:border-college-gold/40 text-college-navy dark:text-college-gold hover:bg-college-navy/5 dark:hover:bg-college-gold/10 hover:text-college-navy active:bg-college-navy/10",
   ghost:
-    "text-gray-600 dark:text-gray-400 hover:text-college-gold hover:bg-college-gold/5",
+    "text-college-navy/40 dark:text-white/40 hover:text-college-gold hover:bg-college-gold/5",
   danger:
-    "bg-red-600 text-white shadow-sm hover:bg-red-700 hover:shadow-md active:bg-red-800",
+    "bg-red-600/10 text-red-600 shadow-sm hover:bg-red-600/20 hover:shadow-md active:bg-red-600/30 border border-red-600/20",
 };
 
 const sizes = {

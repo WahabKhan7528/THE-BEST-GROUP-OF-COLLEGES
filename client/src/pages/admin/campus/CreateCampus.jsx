@@ -118,17 +118,12 @@ const CreateCampus = () => {
           placeholder="e.g., https://campus.edu"
         />
 
-        <div className="col-span-1 md:col-span-2">
-          <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
-            Description
-          </label>
-          <textarea
-            {...register("description")}
-            placeholder="Enter campus description (optional)"
-            rows="4"
-            className="w-full px-3 md:px-4 py-2 md:py-3 text-sm md:text-base border border-gray-300 dark:border-college-gold/20 dark:bg-college-navy/50 dark:text-white rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy dark:focus:ring-college-gold"
-          />
-        </div>
+        <PortalForm.Input
+          label="Description"
+          type="textarea"
+          registration={register("description")}
+          placeholder="Enter campus description (optional)"
+        />
       </PortalForm.Section>
     </PortalForm>
   );

@@ -88,17 +88,17 @@ const MaterialCard = ({ material, role = "faculty", onDeleted }) => {
       badgeColors[displayType] ||
       "text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800 border-gray-100 dark:border-gray-700";
     return (
-      <div className="bg-white dark:bg-college-navy border dark:border-college-gold/50 border-gray-100 rounded-sm p-4 shadow-sm hover:shadow-md transition-all duration-300">
+      <div className="bg-white dark:bg-college-navy border border-college-navy/10 dark:border-college-gold/30 rounded-sm p-4 shadow-2xl hover:shadow-2xl transition-all duration-300">
         <div className="flex items-start justify-between gap-3 flex-wrap">
           <div className="min-w-0">
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-[10px] font-black text-college-navy/40 dark:text-white/40 uppercase tracking-[0.2em]">
               {material.date || material.uploadDate}
             </p>
-            <h3 className="text-lg font-semibold text-college-navy dark:text-white break-words">
+            <h3 className="text-lg font-black text-college-navy dark:text-white uppercase tracking-tight mt-1">
               {material.title || material.name}
             </h3>
             {material.description && (
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 break-words">
+              <p className="text-sm font-bold text-college-navy/60 dark:text-white/60 mt-2 break-words">
                 {material.description}
               </p>
             )}
@@ -134,7 +134,7 @@ const MaterialCard = ({ material, role = "faculty", onDeleted }) => {
   const Icon = iconForType[displayType] || File;
 
   return (
-    <div className="bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/50 rounded-sm p-4 shadow-sm hover:shadow-md transition-all duration-300 space-y-3">
+    <div className="bg-white dark:bg-college-navy border border-college-navy/10 dark:border-college-gold/30 rounded-sm p-4 shadow-2xl hover:shadow-2xl transition-all duration-300 space-y-3">
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div className="flex items-start sm:items-center gap-3 min-w-0">
           <div

@@ -137,7 +137,7 @@ const CampusPage = () => {
           centered
         />
         {isLoadingCourses ? (
-          <SkeletonLoading count={4} variant="card" containerClassName="grid grid-cols-1 md:grid-cols-2 gap-8" className="bg-white" />
+          <SkeletonLoading count={4} variant="programCard" containerClassName="grid grid-cols-1 md:grid-cols-2 gap-8" className="bg-white" />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {programs.map((program) => (

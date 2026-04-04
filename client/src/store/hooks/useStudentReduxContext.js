@@ -139,7 +139,7 @@ const buildResultSemesters = (results = [], enrolledSubjects = []) => {
 
 export const useStudentContext = () => {
   const dispatch = useDispatch();
-  const { classes, announcements, results } = useSelector((state) => state.portals);
+  const { classes, announcements, results, loading, error } = useSelector((state) => state.portals);
   const currentStudent = useSelector((state) => state.auth.user);
   const isDarkMode = useSelector((state) => state.ui.isDarkMode);
 
@@ -263,6 +263,8 @@ export const useStudentContext = () => {
   }, [dispatch]);
 
   return {
+    loading,
+    error,
     currentStudent,
     enrolledSubjects,
     isDarkMode,

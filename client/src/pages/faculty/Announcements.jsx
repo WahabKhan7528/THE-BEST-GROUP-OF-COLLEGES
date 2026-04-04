@@ -10,6 +10,7 @@ import Badge from "../../components/shared/Badge";
 import { X, Plus, Megaphone, Upload } from "lucide-react";
 import PublicButton from "../../components/shared/PublicButton";
 import { portalApi } from "../../services/api";
+import SkeletonLoading from "../../components/shared/SkeletonLoading";
 
 const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
   const [fileName, setFileName] = useState("");
@@ -84,34 +85,34 @@ const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
 
         <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block px-0.5 mb-1.5">
               Title
             </label>
             <input
               type="text"
-              className="w-full px-4 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold outline-none dark:text-white"
+              className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-college-navy/10 dark:border-college-gold/20 rounded-sm font-bold text-sm focus:ring-2 focus:ring-college-navy/10 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold outline-none dark:text-white"
               placeholder="e.g. Quiz on Monday"
               {...register("title")}
             />
             {errors.title && (
-              <p className="text-xs text-red-500 mt-1">
+              <p className="text-[10px] font-bold text-red-500 mt-1 uppercase tracking-wider px-0.5">
                 {errors.title.message}
               </p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block px-0.5 mb-1.5">
               Message
             </label>
             <textarea
               rows={4}
-              className="w-full px-4 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold outline-none resize-none dark:text-white"
+              className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-college-navy/10 dark:border-college-gold/20 rounded-sm font-bold text-sm focus:ring-2 focus:ring-college-navy/10 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold outline-none resize-none dark:text-white"
               placeholder="Details about the announcement..."
               {...register("description")}
             />
             {errors.description && (
-              <p className="text-xs text-red-500 mt-1">
+              <p className="text-[10px] font-bold text-red-500 mt-1 uppercase tracking-wider px-0.5">
                 {errors.description.message}
               </p>
             )}
@@ -119,7 +120,7 @@ const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block px-0.5">
                 File Upload
               </label>
               <div className="relative group/file">
@@ -141,12 +142,12 @@ const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block px-0.5">
                 Link (Optional)
               </label>
               <input
                 type="url"
-                className="w-full px-4 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold outline-none dark:text-white text-sm"
+                className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-college-navy/10 dark:border-college-gold/20 rounded-sm font-bold text-sm focus:ring-2 focus:ring-college-navy/10 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold outline-none dark:text-white"
                 placeholder="Google Drive / URL"
                 {...register("attachment")}
               />
@@ -159,7 +160,7 @@ const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block px-0.5 mb-2.5">
               Target Classes
             </label>
             <div
@@ -228,7 +229,7 @@ const Announcements = () => {
   const campus = getCurrentCampus();
   const classes = getClassesByCurrentCampus(); // Get array of classes
   const [announcements, setAnnouncements] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(true);
   const [isPosting, setIsPosting] = useState(false);
 
   const loadAnnouncements = async () => {
@@ -245,6 +246,8 @@ const Announcements = () => {
       setAnnouncements(mapped);
     } catch {
       setAnnouncements([]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -301,7 +304,13 @@ const Announcements = () => {
         />
       )}
 
-      {announcements.length > 0 ? (
+      {isLoading ? (
+        <div className="space-y-4">
+          {Array.from({ length: 3 }).map((_, idx) => (
+            <SkeletonLoading key={idx} variant="card" className="h-40" />
+          ))}
+        </div>
+      ) : announcements.length > 0 ? (
         <div className="space-y-4">
           {announcements.map((announcement) => (
             <AnnouncementCard

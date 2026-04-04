@@ -24,48 +24,51 @@ const FacultyLayout = () => {
 
   return (
     <div className={isDarkMode ? "dark" : ""}>
-      <div className="min-h-screen bg-neutral-50 dark:bg-dark-base flex flex-col lg:flex-row transition-colors duration-300">
-      {/* Mobile Overlay */}
-      {isSidebarOpen && (
+      <div className="min-h-screen bg-college-navy/5 dark:bg-college-navy flex flex-col lg:flex-row transition-colors duration-300">
+        {/* Mobile Overlay */}
+        {isSidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-30 lg:hidden backdrop-blur-sm"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+
+        {/* Sidebar - Sticky on desktop, fixed on mobile */}
         <div
-          className="fixed inset-0 bg-black/50 z-30 lg:hidden backdrop-blur-sm"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
-
-      {/* Sidebar - Sticky on desktop, fixed on mobile */}
-      <div
-        className={`fixed inset-y-0 left-0 lg:sticky lg:top-0 lg:h-screen lg:z-0 transform transition-transform duration-300 z-40 ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-        }`}
-      >
-        <PortalSidebar
-          portalLabel="Faculty Portal"
-          navItems={facultyNavItems}
-          onClose={() => setIsSidebarOpen(false)}
-          loginPath="/login/faculty"
-        />
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col w-full relative min-w-0">
-        {/* Header */}
-        <PortalNavbar
-          role="faculty"
-          badgeLabel="Faculty Panel"
-          user={user}
-          onMenuToggle={() => setIsSidebarOpen((prev) => !prev)}
-        />
-
-        {/* Main Content Area */}
-        <main className="flex-1 p-3 sm:p-4 md:p-6 lg:p-10 scroll-smooth">
-          <div className="max-w-7xl mx-auto w-full">
-            <Suspense fallback={<PageLoader />}>
-              <Outlet />
-            </Suspense>
+          className={`fixed inset-y-0 left-0 lg:sticky lg:top-0 lg:h-screen z-40 transition-all duration-300 overflow-hidden ${isSidebarOpen
+              ? "translate-x-0 w-72 border-r border-college-navy/10 dark:border-college-gold/20"
+              : "-translate-x-full lg:translate-x-0 lg:w-0 border-none"
+            }`}
+        >
+          <div className="w-72 h-full">
+            <PortalSidebar
+              portalLabel="Faculty Portal"
+              navItems={facultyNavItems}
+              onClose={() => setIsSidebarOpen(false)}
+              loginPath="/login/faculty"
+            />
           </div>
-        </main>
-      </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col w-full relative min-w-0">
+          {/* Header */}
+          <PortalNavbar
+            role="faculty"
+            badgeLabel="Faculty Panel"
+            user={user}
+            onMenuToggle={() => setIsSidebarOpen((prev) => !prev)}
+          />
+
+          {/* Main Content Area */}
+          <main className="flex-1 p-3 sm:p-4 md:p-6 lg:p-10 scroll-smooth">
+            <div className="max-w-7xl mx-auto w-full">
+              <Suspense fallback={<PageLoader />}>
+                <Outlet />
+              </Suspense>
+            </div>
+          </main>
+        </div>
       </div>
     </div>
   );

@@ -60,7 +60,7 @@ const SubmissionCard = ({ submission, role = "faculty", onGrade }) => {
   return (
     <Card
       hover={false}
-      className="p-4 md:p-5 space-y-4 border border-gray-200 dark:border-college-gold/50 shadow-sm transition-all duration-300"
+      className="p-4 md:p-5 space-y-4 border border-college-navy/10 dark:border-college-gold/30 shadow-2xl bg-white dark:bg-college-navy transition-all duration-300"
     >
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
         <div className="flex-1">
@@ -75,10 +75,10 @@ const SubmissionCard = ({ submission, role = "faculty", onGrade }) => {
             </>
           ) : (
             <>
-              <p className="text-[10px] md:text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest font-bold">
+              <p className="text-[10px] md:text-xs text-college-navy/40 dark:text-college-gold/60 uppercase tracking-[0.2em] font-black">
                 {submission.studentId}
               </p>
-              <h3 className="text-sm md:text-base font-bold text-college-navy dark:text-white mt-1">
+              <h3 className="text-sm md:text-base font-black text-college-navy dark:text-white mt-1 uppercase tracking-tight">
                 {submission.studentName}
               </h3>
             </>
@@ -105,7 +105,7 @@ const SubmissionCard = ({ submission, role = "faculty", onGrade }) => {
         </span>
       </div>
 
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pt-4 border-t border-gray-100 dark:border-white/5">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pt-4 border-t border-college-navy/5 dark:border-white/5">
         <a
           href={submission.file}
           className="inline-flex items-center gap-2 text-college-navy dark:text-college-gold font-bold hover:underline transition-all text-xs md:text-sm"

@@ -5,6 +5,7 @@ import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
 import { CheckCircle } from "lucide-react";
 import { portalApi } from "../../services/api";
+import SkeletonLoading from "../../components/shared/SkeletonLoading";
 
 const campusNames = {
   main: "Main Campus",
@@ -98,7 +99,11 @@ const Assignments = () => {
       />
 
       {loading ? (
-        <div className="py-10 text-center text-gray-500 dark:text-gray-400">Loading assignments...</div>
+        <div className="space-y-4 animate-pulse">
+          {[1, 2, 3].map((i) => (
+            <SkeletonLoading key={i} variant="panel" className="h-32" />
+          ))}
+        </div>
       ) : assignments.length > 0 ? (
         <div className="space-y-4">
           {assignments.map((assignment) => (

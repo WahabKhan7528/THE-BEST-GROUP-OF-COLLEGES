@@ -35,19 +35,19 @@ const PortalSidebar = ({
   };
 
   return (
-    <aside className="h-full w-72 bg-white dark:bg-college-navy border-r border-gray-200 dark:border-college-gold/15 flex flex-col transition-colors duration-300">
+    <aside className="h-full w-72 bg-white dark:bg-college-navy border-r border-college-navy/5 dark:border-college-gold/15 flex flex-col transition-colors duration-300">
       {/* Sidebar Header */}
-      <div className="flex items-center justify-between px-6 h-20 border-b border-gray-100 dark:border-white/10">
+      <div className="flex items-center justify-between px-6 h-20 border-b border-college-navy/5 dark:border-college-gold/15">
         <div>
-          <p className="text-xs font-bold text-gray-500 dark:text-college-gold uppercase tracking-wider mb-0.5">
+          <p className="text-[10px] font-extra-bold text-college-navy/60 dark:text-college-gold uppercase tracking-[0.2em] mb-0.5">
             {portalLabel}
           </p>
-          <p className="text-lg font-serif font-bold text-college-navy dark:text-white">
-            Best Colleges
+          <p className="text-xl font-serif font-black text-college-navy dark:text-white uppercase tracking-tight">
+            Best Group
           </p>
         </div>
         <button
-          className="p-2 rounded-sm hover:bg-gray-100 dark:hover:bg-white/10 text-gray-400 dark:text-white/50 hover:text-college-navy dark:hover:text-white lg:hidden transition-colors"
+          className="p-2 rounded-sm hover:bg-college-navy/5 dark:hover:bg-college-gold/10 text-college-navy/40 dark:text-college-gold/50 hover:text-college-navy dark:hover:text-college-gold lg:hidden transition-all"
           onClick={onClose}
           aria-label="Close sidebar"
         >
@@ -56,8 +56,8 @@ const PortalSidebar = ({
       </div>
 
       {/* Navigation Items */}
-      <div className="flex-1 px-4 py-6 overflow-y-auto space-y-1">
-        <p className="px-4 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 dark:text-white/30 mb-4">
+      <div className="flex-1 px-4 py-6 overflow-y-auto space-y-1.5 custom-scrollbar">
+        <p className="px-4 text-[10px] font-black uppercase tracking-[0.3em] text-college-navy/30 dark:text-white/20 mb-5">
           {menuSectionLabel}
         </p>
         {navItems.map((item) => {
@@ -68,10 +68,10 @@ const PortalSidebar = ({
               to={item.to}
               onClick={() => onClose && onClose()}
               className={({ isActive }) =>
-                `group flex items-center gap-3 px-4 py-3 rounded-sm transition-all duration-200 ${
+                `group flex items-center gap-3 px-4 py-3.5 rounded-sm transition-all duration-300 ${
                   isActive
-                    ? "bg-college-navy/5 text-college-navy border-l-2 border-college-navy shadow-sm dark:bg-college-gold/15 dark:text-college-gold dark:border-college-gold"
-                    : "text-gray-600 hover:bg-gray-50 hover:text-college-navy dark:text-white/60 dark:hover:bg-white/5 dark:hover:text-white"
+                    ? "bg-college-navy text-white shadow-lg dark:bg-college-gold dark:text-college-navy scale-[1.02]"
+                    : "text-college-navy/70 hover:bg-college-navy/5 hover:text-college-navy dark:text-white/60 dark:hover:bg-college-gold/5 dark:hover:text-college-gold"
                 }`
               }
             >
@@ -80,14 +80,16 @@ const PortalSidebar = ({
                   {Icon && (
                     <Icon
                       size={18}
-                      className={`transition-colors ${
+                      className={`transition-all duration-300 ${
                         isActive
-                          ? "text-college-navy dark:text-college-gold"
-                          : "text-gray-400 group-hover:text-college-navy/70 dark:text-white/40 dark:group-hover:text-college-gold/70"
+                          ? "text-college-gold dark:text-college-navy"
+                          : "text-college-navy/40 group-hover:text-college-navy dark:text-white/30 dark:group-hover:text-college-gold"
                       }`}
                     />
                   )}
-                  <span className="text-sm font-medium">{item.label}</span>
+                  <span className={`text-sm font-bold tracking-wide transition-all ${isActive ? 'translate-x-1' : ''}`}>
+                    {item.label}
+                  </span>
                 </>
               )}
             </NavLink>
@@ -96,15 +98,15 @@ const PortalSidebar = ({
       </div>
 
       {/* Sidebar Footer */}
-      <div className="p-4 border-t border-gray-100 dark:border-white/10">
+      <div className="p-4 border-t border-college-navy/5 dark:border-college-gold/15 bg-college-navy/2 dark:bg-black/10">
         <PublicButton
           onClick={handleLogout}
           variant={isDarkMode ? "secondary" : "primary"}
-          className="w-full"
+          className="w-full shadow-md"
           shape="slanted"
         >
           <LogOut size={18} />
-          <span>Sign Out</span>
+          <span className="font-bold">Sign Out</span>
         </PublicButton>
       </div>
     </aside>

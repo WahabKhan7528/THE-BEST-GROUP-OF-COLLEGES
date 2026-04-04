@@ -131,7 +131,7 @@ const EditNews = () => {
           {/* Section 1: Categorization */}
           <PortalForm.Section title="Categorization" className="!p-6 !space-y-6">
             <div className="col-span-1 md:col-span-2 space-y-4">
-              <label className="text-sm font-bold text-college-navy dark:text-college-gold uppercase tracking-wider block mb-2">Content Type</label>
+              <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-2">Content Type</label>
               <div className="grid grid-cols-2 gap-4">
                 <label className={`relative flex flex-col items-center justify-center p-5 rounded-sm border-2 cursor-pointer transition-all duration-300 ${type === "news" ? 'border-college-navy bg-college-navy/10 dark:border-college-gold dark:bg-college-gold/10 shadow-sm' : 'border-gray-100 bg-white dark:bg-college-navy/50 dark:border-college-gold/10 hover:bg-gray-50 dark:hover:bg-college-navy/80'}`}>
                   <input type="radio" name="type" value="news" checked={type === "news"} onChange={() => setType("news")} className="sr-only" />
@@ -150,18 +150,18 @@ const EditNews = () => {
             </div>
 
             <div className="col-span-1 md:col-span-2">
-              <label className="block text-sm font-bold text-college-navy dark:text-gray-200 mb-2">Subject Category</label>
-              <select
-                {...register("category")}
-                className="w-full px-5 py-3.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/10 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold transition-all text-base appearance-none text-gray-900 dark:text-white"
-              >
-                <option value="" disabled>Select category</option>
-                <option value="Academic">Academic</option>
-                <option value="Sports">Sports</option>
-                <option value="Research">Research</option>
-                <option value="Cultural">Cultural</option>
-                <option value="Administration">Administration</option>
-              </select>
+              <PortalForm.Select
+                label="Subject Category"
+                registration={register("category")}
+                options={[
+                  { id: "Academic", label: "Academic" },
+                  { id: "Sports", label: "Sports" },
+                  { id: "Research", label: "Research" },
+                  { id: "Cultural", label: "Cultural" },
+                  { id: "Administration", label: "Administration" },
+                ]}
+                placeholder="Select category"
+              />
             </div>
 
 
@@ -179,7 +179,7 @@ const EditNews = () => {
               />
             </div>
             <div className="col-span-1 md:col-span-2">
-              <label className="block text-sm font-bold text-college-navy dark:text-gray-200 mb-2">Main Content <span className="text-red-500 font-bold ml-0.5">*</span></label>
+              <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-2">Main Content <span className="text-red-500 font-bold ml-0.5">*</span></label>
               <textarea
                 {...register("description")}
                 rows={8}
@@ -217,7 +217,7 @@ const EditNews = () => {
 
             {type === "event" && (
               <div className="col-span-full border-none pt-0">
-                <label className="block text-sm font-bold text-college-navy dark:text-gray-300 mb-2">Location</label>
+                <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-2">Location</label>
                 <div className="relative">
                   <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-college-gold w-4 h-4" />
                   <input

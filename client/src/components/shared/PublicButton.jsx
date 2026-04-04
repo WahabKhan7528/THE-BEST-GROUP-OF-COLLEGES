@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 
 const variants = {
     primary:
-        "bg-college-navy text-white border-2 border-college-navy shadow-sm hover:brightness-150 hover:shadow-md active:brightness-95",
+        "bg-college-navy text-white border-2 border-college-navy shadow-lg hover:bg-college-navy/90 hover:shadow-xl active:scale-95 transition-all uppercase tracking-widest",
     secondary:
-        "bg-college-gold text-white border-2 border-college-gold shadow-sm hover:brightness-90 hover:shadow-md active:brightness-75",
+        "bg-college-gold text-college-navy border-2 border-college-gold shadow-lg hover:bg-college-gold/90 hover:shadow-xl active:scale-95 transition-all uppercase tracking-widest font-black",
     ghost:
-        "text-college-navy dark:text-college-gold hover:opacity-80 transition-opacity",
+        "text-college-navy/60 dark:text-college-gold/60 hover:text-college-navy dark:hover:text-college-gold transition-all uppercase tracking-widest font-bold",
     danger:
         "bg-red-600 text-white border-2 border-red-600 shadow-sm hover:bg-red-700 hover:border-red-700 active:bg-red-800 active:border-red-800 font-bold",
     unstyled:

@@ -13,7 +13,7 @@ export default function DarkModeToggle() {
     return (
         <button
             onClick={handleToggle}
-            className="relative p-2.5 rounded-sm text-gray-500 hover:bg-college-navy/10 hover:text-college-navy dark:hover:bg-college-gold/10 dark:hover:text-college-gold transition-all duration-300 group"
+            className="relative p-2.5 rounded-sm text-college-navy/40 hover:bg-college-navy/5 hover:text-college-navy dark:text-college-gold/40 dark:hover:bg-college-gold/10 dark:hover:text-college-gold transition-all duration-300 group"
             title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
             aria-label="Toggle dark mode"
         >

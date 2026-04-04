@@ -10,6 +10,7 @@ export const FacultyProvider = ({ children }) => {
   const [classes, setClasses] = useState([]);
   const [assignments, setAssignments] = useState([]);
   const [submissions, setSubmissions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const { isDarkMode, toggleDarkMode } = useThemeContext();
 
@@ -41,6 +42,8 @@ export const FacultyProvider = ({ children }) => {
         setSubmissions(submissionsRes.data.data || []);
       } catch {
         setSubmissions([]);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -186,6 +189,7 @@ export const FacultyProvider = ({ children }) => {
     currentFaculty,
     classes,
     isDarkMode,
+    loading,
 
     // Methods
     getCurrentCampus,

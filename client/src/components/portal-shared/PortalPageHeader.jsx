@@ -20,7 +20,7 @@ export default function PortalPageHeader({
   return (
     <div
       className={clsx(
-        "relative bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/30 rounded-sm p-4 sm:p-6 md:p-8 lg:p-10 shadow-2xl overflow-hidden transition-colors duration-300",
+        "relative bg-white dark:bg-college-navy border border-college-navy/10 dark:border-college-gold/30 rounded-sm p-4 sm:p-6 md:p-8 lg:p-10 shadow-2xl overflow-hidden transition-colors duration-300",
         className,
       )}
     >
@@ -57,14 +57,14 @@ export default function PortalPageHeader({
 
             {/* Subtitle - Restored rendering */}
             {subtitle && (
-              <p className="text-sm md:text-base font-medium text-gray-500 dark:text-gray-400 max-w-2xl leading-relaxed transition-colors">
+              <p className="text-sm md:text-base font-bold text-college-navy/60 dark:text-white/60 max-w-2xl leading-relaxed transition-colors uppercase tracking-tight">
                 {subtitle}
               </p>
             )}
 
             {/* Meta Line - Cleaned up per feedback */}
             <div className="flex items-center pt-1 md:pt-2">
-              <span className="text-[11px] font-bold text-college-navy/40 dark:text-college-gold/50 lg:text-gray-400 uppercase tracking-[0.3em] transition-colors">
+              <span className="text-[11px] font-black text-college-navy/30 dark:text-college-gold/40 uppercase tracking-[0.4em] transition-colors">
                 Authorized Access Only
               </span>
             </div>

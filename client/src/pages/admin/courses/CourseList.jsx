@@ -4,6 +4,7 @@ import { useAdminContext } from "../../../store/hooks/useAdminReduxContext";
 import { useToast } from "../../../context/ToastContext";
 import { useConfirm } from "../../../context/ConfirmContext";
 import Table from "../../../components/portal-shared/Table";
+import Badge from "../../../components/shared/Badge";
 import PublicButton from "../../../components/shared/PublicButton";
 import {
   Plus,
@@ -26,14 +27,18 @@ const CourseList = () => {
   const [selectedCampus, setSelectedCampus] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [courses, setCourses] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadCourses = async () => {
+      setIsLoading(true);
       try {
         const { data } = await adminApi.courses();
         setCourses(data.data || []);
       } catch {
         setCourses([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -43,14 +48,14 @@ const CourseList = () => {
   const filteredData = useMemo(() => {
     let result = [...courses];
 
-  // Search Filter
+    // Search Filter
     if (searchQuery) {
       result = result.filter((course) =>
-      course.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+        course.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
     }
 
-  // If Sub-Admin, only show courses offered at their allocated campuses
+    // If Sub-Admin, only show courses offered at their allocated campuses
     if (!isSuperAdmin) {
       const campusId = currentAdmin?.campus?._id || currentAdmin?.campus;
       result = result.filter((course) => (course.campuses || []).some((campus) => String(campus?._id || campus) === String(campusId)));
@@ -66,12 +71,13 @@ const CourseList = () => {
       const campusId = campusObj?._id || campusObj;
       const campus = campuses.find((c) => c.id === campusId);
       return (
-        <span
+        <Badge
           key={campusId}
-          className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-college-navy/5 text-college-navy dark:text-college-gold dark:bg-college-gold/10 border border-college-navy/10 dark:border-college-gold/20"
+          variant="subtle"
+          className="font-bold"
         >
           {campus?.code || campusObj?.code || campusId}
-        </span>
+        </Badge>
       );
     });
   };
@@ -79,35 +85,22 @@ const CourseList = () => {
   const columns = [
     {
       key: "title",
-      label: "Course Details",
+      label: "Course Name",
       render: (row) => (
         <div className="flex items-start gap-3">
-          <div className="p-2 bg-college-navy/10 text-college-navy dark:bg-college-gold/10 dark:text-college-gold rounded-sm">
-            <BookOpen className="w-5 h-5" />
-          </div>
           <div>
             <span className="font-semibold text-college-navy dark:text-white line-clamp-1">{row.title}</span>
-            <div className="flex items-center gap-2 mt-0.5 text-xs text-gray-500 dark:text-gray-400">
-              <span className="bg-college-navy/5 text-college-navy dark:bg-college-gold/10 dark:text-college-gold px-1.5 py-0.5 rounded text-[10px] font-medium uppercase tracking-wide border border-college-navy/10 dark:border-college-gold/20">
-                Undergraduate
-              </span>
-            </div>
           </div>
         </div>
       )
     },
     {
       key: "duration",
-      label: "Duration & Fee",
+      label: "Duration",
       render: (row) => (
         <div className="space-y-1">
           <div className="flex items-center gap-1.5 text-sm text-gray-700 dark:text-gray-300 font-medium">
-            <Clock className="w-3.5 h-3.5 text-college-navy/40 dark:text-college-gold/60" />
             {row.duration}
-          </div>
-            <div className="flex items-center gap-1.5 text-xs text-gray-500">
-            <DollarSign className="w-3.5 h-3.5 text-gray-400" />
-            {row.fee || "-"}/{row.examSystem || row.type || "semester"}
           </div>
         </div>
       )
@@ -116,9 +109,9 @@ const CourseList = () => {
       key: "examSystem",
       label: "Exam System",
       render: (row) => (
-        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200 capitalize">
+        <Badge variant="outline" className="font-bold">
           {row.examSystem || row.type || "semester"}
-        </span>
+        </Badge>
       )
     },
     {
@@ -126,7 +119,6 @@ const CourseList = () => {
       label: "Eligibility",
       render: (row) => (
         <div className="flex items-center gap-2">
-          <GraduationCap className="w-4 h-4 text-college-navy/40 dark:text-college-gold/60" />
           <span className="text-sm text-gray-600 dark:text-gray-400">{row.eligibility}</span>
         </div>
       )
@@ -170,7 +162,7 @@ const CourseList = () => {
       {/* Filters & Actions */}
       <div className="bg-white/80 dark:bg-college-navy backdrop-blur-xl border border-white/20 dark:border-college-gold/20 p-4 rounded-sm shadow-sm flex flex-col md:flex-row gap-4 justify-between">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-college-gold/60 w-4 h-4" />
           <input
             type="text"
             placeholder="Search courses by name..."
@@ -201,10 +193,11 @@ const CourseList = () => {
       </div>
 
       {/* Table Section */}
-      {filteredData.length > 0 ? (
+      {isLoading || filteredData.length > 0 ? (
         <Table
           columns={columns}
           data={filteredData}
+          isLoading={isLoading}
           actionButtons={isSuperAdmin ? undefined : (row) => [
             {
               label: "Edit",

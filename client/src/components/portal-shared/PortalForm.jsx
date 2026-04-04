@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import PublicButton from "../shared/PublicButton";
 import FormInput from "../shared/FormInput";
+import FormSelect from "../shared/FormSelect";
 
 /**
  * PortalForm - A unified wrapper for forms across Admin and Faculty portals.
@@ -29,7 +30,7 @@ const PortalForm = ({
           <div className="flex items-start sm:items-center gap-2 sm:gap-4 min-w-0 flex-1">
             <Link
               to={backPath}
-              className="p-1 sm:p-2 rounded-sm hover:bg-white hover:shadow-sm text-gray-500 hover:text-gray-700 transition-all dark:hover:bg-college-navy/50 dark:text-gray-400 dark:hover:text-gray-200 flex-shrink-0"
+              className="p-1 sm:p-2 rounded-sm hover:bg-college-navy/5 text-college-navy/40 hover:text-college-navy transition-all dark:hover:bg-college-gold/10 dark:text-college-gold/50 dark:hover:text-college-gold flex-shrink-0"
             >
               <ArrowLeft size={20} className="w-5 h-5" />
             </Link>
@@ -38,7 +39,7 @@ const PortalForm = ({
                 {title}
               </h1>
               {subtitle && (
-                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 pr-2">
+                <p className="text-xs sm:text-sm font-bold text-college-navy/40 dark:text-college-gold/60 pr-2 uppercase tracking-tight">
                   {subtitle}
                 </p>
               )}
@@ -91,11 +92,11 @@ const PortalForm = ({
  */
 PortalForm.Section = ({ title, children, className = "" }) => (
   <section
-    className={`bg-white/80 dark:bg-college-navy backdrop-blur-xl border border-white/20 dark:border-college-gold/20 p-6 md:p-8 rounded-sm shadow-sm space-y-6 ${className}`}
+    className={`bg-white dark:bg-college-navy border border-college-navy/10 dark:border-college-gold/20 p-6 md:p-8 rounded-sm shadow-xl space-y-6 ${className}`}
   >
     {title && (
-      <div className="flex items-center gap-2 mb-2 pb-2 border-b border-gray-100 dark:border-college-gold/20">
-        <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+      <div className="flex items-center gap-2 mb-2 pb-2 border-b border-college-navy/10 dark:border-college-gold/20">
+        <h2 className="text-lg font-black text-college-navy dark:text-college-gold uppercase tracking-tight">
           {title}
         </h2>
       </div>
@@ -106,6 +107,7 @@ PortalForm.Section = ({ title, children, className = "" }) => (
 
 // Alias to FormInput to allow neat imports like <PortalForm.Input />
 PortalForm.Input = FormInput;
+PortalForm.Select = FormSelect;
 PortalForm.Section.displayName = "PortalFormSection";
 
 export default PortalForm;

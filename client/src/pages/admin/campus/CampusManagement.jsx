@@ -17,10 +17,27 @@ import { adminApi } from "../../../services/api";
 
 const CampusManagement = () => {
   const navigate = useNavigate();
-  const { campuses, isSuperAdmin, isDarkMode, deleteCampus: deleteCampusState } = useAdminContext();
+  const { campuses: contextCampuses, isSuperAdmin, isDarkMode, deleteCampus: deleteCampusState } = useAdminContext();
   const toast = useToast();
   const confirmDialog = useConfirm();
   const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [campuses, setCampuses] = useState([]);
+
+  React.useEffect(() => {
+    const loadCampuses = async () => {
+      setIsLoading(true);
+      try {
+        const { data } = await adminApi.campuses();
+        setCampuses(data.data.map(c => ({ ...c, id: c._id })) || []);
+      } catch {
+        setCampuses(contextCampuses || []);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadCampuses();
+  }, [contextCampuses]);
 
   if (!isSuperAdmin) {
     return (
@@ -154,10 +171,11 @@ const CampusManagement = () => {
       </div>
 
       {/* Campus Table */}
-      {filteredCampuses.length > 0 ? (
+      {isLoading || filteredCampuses.length > 0 ? (
         <Table
           data={filteredCampuses}
           columns={columns}
+          isLoading={isLoading}
           actionButtons={actionButtons}
         />
       ) : (

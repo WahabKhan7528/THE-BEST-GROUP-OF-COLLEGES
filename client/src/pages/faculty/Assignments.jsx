@@ -8,6 +8,7 @@ import FormInput from "../../components/shared/FormInput";
 import Card from "../../components/shared/Card";
 import PublicButton from "../../components/shared/PublicButton";
 import { portalApi } from "../../services/api";
+import SkeletonLoading from "../../components/shared/SkeletonLoading";
 
 const campusNames = {
   main: "Main Campus",
@@ -20,6 +21,7 @@ const Assignments = () => {
   const campus = getCurrentCampus();
   const [searchTerm, setSearchTerm] = useState("");
   const [assignments, setAssignments] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadAssignments = async () => {
@@ -37,6 +39,8 @@ const Assignments = () => {
         })));
       } catch {
         setAssignments([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -95,7 +99,13 @@ const Assignments = () => {
         </div>
       </div>
 
-      {filteredAssignments.length > 0 ? (
+      {isLoading ? (
+        <div className="grid grid-cols-1 gap-4">
+          {Array.from({ length: 3 }).map((_, idx) => (
+            <SkeletonLoading key={idx} variant="card" className="h-44" />
+          ))}
+        </div>
+      ) : filteredAssignments.length > 0 ? (
         <div className="grid grid-cols-1 gap-4">
           {filteredAssignments.map((assignment) => (
             <AssignmentCard

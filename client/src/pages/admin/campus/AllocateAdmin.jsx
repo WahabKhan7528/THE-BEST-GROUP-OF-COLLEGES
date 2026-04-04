@@ -106,7 +106,7 @@ const AllocateAdmin = () => {
 
       {/* Current Allocations Summary */}
       <div className="bg-college-gold/5 dark:bg-college-gold/10 border border-college-gold/20 rounded-sm p-4 mb-6">
-        <h3 className="font-semibold text-college-navy dark:text-college-gold mb-2">
+        <h3 className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] mb-4">
           Currently Allocated Sub-Admins
         </h3>
         {currentAllocatedAdmins.length > 0 ? (
@@ -125,7 +125,7 @@ const AllocateAdmin = () => {
 
       {/* Admin Selection */}
       <div className="mb-6">
-        <h3 className="text-lg font-semibold text-college-navy dark:text-white mb-4">
+        <h3 className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] mb-4">
           Available Sub-Admins
         </h3>
         <div className="space-y-3">

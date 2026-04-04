@@ -16,6 +16,7 @@ import {
   getGradeDetails,
   calculateWeightedGpa,
 } from "../../utils/academicCalculations";
+import SkeletonLoading from "../../components/shared/SkeletonLoading";
 
 const getUniquePlanSubjects = (subjects = []) => {
   const seen = new Set();
@@ -39,7 +40,7 @@ const calculateSGPA = (subjects) => {
 };
 
 const StudentResults = () => {
-  const { getDetailedResultsByCurrentCampus, getCurrentCampus, isDarkMode } =
+  const { getDetailedResultsByCurrentCampus, getCurrentCampus, isDarkMode, loading } =
     useStudentContext();
   const campus = getCurrentCampus();
   const resultData = getDetailedResultsByCurrentCampus(); // { semesters: [] }
@@ -56,6 +57,24 @@ const StudentResults = () => {
     selectedSemesterId === "all"
       ? null
       : semesters.find((s) => s.id.toString() === selectedSemesterId);
+
+  if (loading) {
+    return (
+      <div className="space-y-6 pb-10 animate-pulse">
+        <div className="space-y-2">
+          <SkeletonLoading variant="textLine" className="w-24 h-5" />
+          <SkeletonLoading variant="textLine" className="w-1/3 h-8" />
+          <SkeletonLoading variant="textLine" className="w-1/2 h-4" />
+        </div>
+        <SkeletonLoading variant="panel" className="h-48" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {[1, 2, 3, 4].map((i) => (
+            <SkeletonLoading key={i} variant="panel" className="h-56" />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 pb-10">

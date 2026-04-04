@@ -26,15 +26,19 @@ const CampusAdminsList = () => {
     const confirmDialog = useConfirm();
     const [searchTerm, setSearchTerm] = useState("");
     const [adminUsers, setAdminUsers] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const campus = campuses.find(c => c.id === id);
 
     useEffect(() => {
         const loadAdmins = async () => {
+            setIsLoading(true);
             try {
                 const { data } = await adminApi.users({ role: "admin" });
                 setAdminUsers(data.data || []);
             } catch {
                 setAdminUsers([]);
+            } finally {
+                setIsLoading(false);
             }
         };
 
@@ -141,10 +145,11 @@ const CampusAdminsList = () => {
             </div>
 
             {/* Table */}
-            {filteredData.length > 0 ? (
+            {isLoading || filteredData.length > 0 ? (
                 <Table
                     columns={columns}
                     data={filteredData}
+                    isLoading={isLoading}
                     actionButtons={actionButtons}
                 />
             ) : (

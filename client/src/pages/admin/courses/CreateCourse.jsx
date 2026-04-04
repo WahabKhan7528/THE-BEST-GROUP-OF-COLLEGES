@@ -118,17 +118,16 @@ const CreateCourse = () => {
         </div>
 
         <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 flex items-center gap-2">
-            Exam System
-          </label>
-          <select
-            {...register("examSystem")}
-            className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all appearance-none text-gray-900 dark:text-white"
-          >
-            <option value="semester">Semester</option>
-            <option value="annual">Annual</option>
-            <option value="other">Other</option>
-          </select>
+          <PortalForm.Select
+            label="Exam System"
+            registration={register("examSystem")}
+            options={[
+              { id: "semester", label: "Semester" },
+              { id: "annual", label: "Annual" },
+              { id: "other", label: "Other" },
+            ]}
+            placeholder="Select exam system..."
+          />
         </div>
 
         {examSystem === "semester" && (
@@ -163,7 +162,7 @@ const CreateCourse = () => {
         </div>
 
         <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Description</label>
+          <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-1.5">Description</label>
           <textarea
             {...register("description")}
             rows={4}

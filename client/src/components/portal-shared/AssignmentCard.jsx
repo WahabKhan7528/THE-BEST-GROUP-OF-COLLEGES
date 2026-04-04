@@ -67,22 +67,22 @@ const AssignmentCard = ({ assignment, role = 'faculty', onDeleted }) => {
             }
         };
         return (
-            <Card hover={false} className="p-4 md:p-5 border border-gray-200 dark:border-college-gold/50 shadow-sm hover:shadow-md transition-all duration-300 space-y-4">
+            <Card hover={false} className="p-4 md:p-5 border border-college-navy/10 dark:border-college-gold/30 shadow-2xl bg-white dark:bg-college-navy hover:shadow-2xl transition-all duration-300 space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                     <div className="flex-1">
-                        <p className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                        <p className="text-[10px] md:text-xs text-college-navy/40 dark:text-white/40 uppercase tracking-[0.2em] font-black">
                             {assignment.subject}
                         </p>
-                        <h3 className="text-base md:text-lg font-semibold text-college-navy dark:text-white">
+                        <h3 className="text-base md:text-lg font-black text-college-navy dark:text-white uppercase tracking-tight">
                             {assignment.title}
                         </h3>
-                        <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mt-1">{assignment.description}</p>
-                        <div className="flex flex-wrap items-center gap-2 md:gap-3 mt-3 text-xs md:text-sm text-gray-600 dark:text-gray-400">
-                            <span className="font-semibold text-college-navy dark:text-college-gold">
+                        <p className="text-xs md:text-sm font-bold text-college-navy/60 dark:text-white/60 mt-2">{assignment.description}</p>
+                        <div className="flex flex-wrap items-center gap-2 md:gap-3 mt-4 text-xs md:text-sm">
+                            <span className="font-black text-college-navy dark:text-college-gold uppercase tracking-tight">
                                 Due {assignment.dueDate}
                             </span>
-                            <span className="text-gray-400 dark:text-gray-600">â€¢</span>
-                            <a href={assignment.attachment} target="_blank" rel="noopener noreferrer" className="text-college-navy dark:text-college-gold hover:text-primary-800 font-medium">
+                            <span className="text-college-navy/10 dark:text-white/10">â€¢</span>
+                            <a href={assignment.attachment} target="_blank" rel="noopener noreferrer" className="text-college-navy/80 dark:text-college-gold/80 hover:text-college-gold font-black uppercase tracking-tight underline-offset-4 hover:underline">
                                 Attached file
                             </a>
                         </div>
@@ -176,7 +176,7 @@ const AssignmentCard = ({ assignment, role = 'faculty', onDeleted }) => {
 
     // faculty variant (default)
     return (
-        <Card hover={false} className="p-4 md:p-5 border border-gray-200 dark:border-college-gold/50 shadow-sm hover:shadow-md transition-all duration-300">
+        <Card hover={false} className="p-4 md:p-5 border border-college-navy/10 dark:border-college-gold/30 shadow-2xl bg-white dark:bg-college-navy hover:shadow-2xl transition-all duration-300">
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                 <div className="flex-1">
                     <p className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">

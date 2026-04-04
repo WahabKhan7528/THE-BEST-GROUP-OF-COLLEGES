@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,6 +11,7 @@ import PublicButton from "../../../components/shared/PublicButton";
 import PortalForm from "../../../components/portal-shared/PortalForm";
 import { Save, Trash2 } from "lucide-react";
 import { adminApi } from "../../../services/api";
+import SkeletonLoading from "../../../components/shared/SkeletonLoading";
 
 const EditCampus = () => {
   const { id } = useParams();
@@ -20,6 +21,7 @@ const EditCampus = () => {
   const toast = useToast();
   const confirmDialog = useConfirm();
   const submitLockRef = useRef(false);
+  const [loading, setLoading] = useState(true);
 
   const {
     register,
@@ -54,6 +56,10 @@ const EditCampus = () => {
           website: campus.contact?.website || "",
         },
       });
+      setLoading(false);
+    } else if (campuses.length > 0) {
+      // If campuses are loaded but this one isn't found
+      setLoading(false);
     }
   }, [id, location.state, campuses, reset]);
 
@@ -111,6 +117,33 @@ const EditCampus = () => {
       }
     }
   };
+
+  if (loading) {
+    return (
+      <div className="max-w-5xl mx-auto p-4 md:p-6 lg:p-8 space-y-8 animate-pulse">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 dark:border-college-gold/10 pb-8">
+          <div className="space-y-3">
+            <SkeletonLoading variant="textLine" className="h-4 w-24" />
+            <SkeletonLoading variant="textLine" className="h-10 w-64" />
+            <SkeletonLoading variant="textLine" className="h-5 w-48" />
+          </div>
+          <div className="flex gap-3">
+            <SkeletonLoading variant="textLine" className="h-10 w-24 rounded-sm" />
+            <SkeletonLoading variant="textLine" className="h-10 w-32 rounded-sm" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-6">
+            <SkeletonLoading variant="panel" className="h-64" />
+          </div>
+          <div className="space-y-6">
+            <SkeletonLoading variant="panel" className="h-[400px]" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <PortalForm
@@ -199,16 +232,11 @@ const EditCampus = () => {
           />
         </div>
 
-        <div className="col-span-1 md:col-span-2">
-          <label className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
-            Description
-          </label>
-          <textarea
-            {...register("description")}
-            rows="4"
-            className="w-full px-3 md:px-4 py-2 md:py-3 text-sm md:text-base border border-gray-300 dark:border-college-gold/20 dark:bg-college-navy/50 dark:text-white rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy dark:focus:ring-college-gold"
-          />
-        </div>
+        <PortalForm.Input
+          label="Description"
+          type="textarea"
+          registration={register("description")}
+        />
       </PortalForm.Section>
     </PortalForm>
   );

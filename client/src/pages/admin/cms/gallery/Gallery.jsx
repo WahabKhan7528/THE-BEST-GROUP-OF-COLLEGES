@@ -12,8 +12,7 @@ import {
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { adminApi } from '../../../../services/api';
-
-
+import SkeletonLoading from '../../../../components/shared/SkeletonLoading';
 
 const Gallery = () => {
   const navigate = useNavigate();
@@ -29,9 +28,11 @@ const Gallery = () => {
   const [activeFilter, setActiveFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [images, setImages] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadGallery = async () => {
+      setIsLoading(true);
       try {
         const { data } = await adminApi.galleryItems();
         const mapped = (data.data || []).map((item) => ({
@@ -44,6 +45,8 @@ const Gallery = () => {
         setImages(mapped);
       } catch {
         setImages([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -114,7 +117,13 @@ const Gallery = () => {
       </div>
 
       {/* Gallery Grid */}
-      {filteredImages.length === 0 && (
+      {isLoading ? (
+        <SkeletonLoading 
+          count={8} 
+          variant="card" 
+          containerClassName="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-12" 
+        />
+      ) : filteredImages.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 rounded-sm border border-dashed border-gray-300 dark:border-college-gold/20 mb-6">
           <h3 className="text-lg font-medium text-college-navy dark:text-white">No images found</h3>
           <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 mb-4 max-w-sm text-center">
@@ -131,80 +140,79 @@ const Gallery = () => {
             </button>
           )}
         </div>
-      )}
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {filteredImages.map((img) => (
+            <div
+              key={img.id}
+              className="group relative bg-white dark:bg-college-navy border border-gray-100 dark:border-college-gold/20 rounded-sm shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden"
+            >
+              {/* Image Container */}
+              <div className="aspect-[4/3] bg-gray-100 relative overflow-hidden">
+                <img
+                  src={img.url}
+                  alt={img.title}
+                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredImages.map((img) => (
-          <div
-            key={img.id}
-            className="group relative bg-white dark:bg-college-navy border border-gray-100 dark:border-college-gold/20 rounded-sm shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden"
+                {/* Overlay Actions */}
+                <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
+                  <button
+                    onClick={() => navigate(`/admin/cms/gallery/edit/${img.id}`)}
+                    className="p-2 bg-white/90 backdrop-blur-sm rounded-full text-gray-700 hover:text-college-gold hover:bg-white transition-colors shadow-sm"
+                    title="Edit"
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={async () => {
+                      const confirmed = await confirmDialog({ title: "Delete Image", message: `Delete image "${img.title}"?`, confirmText: "Delete", variant: "danger" });
+                      if (confirmed) {
+                        await adminApi.deleteGalleryItem(img.id);
+                        setImages((prev) => prev.filter((item) => item.id !== img.id));
+                        toast.success("Image deleted");
+                      }
+                    }}
+                    className="p-2 bg-white/90 backdrop-blur-sm rounded-full text-gray-700 hover:text-rose-600 hover:bg-white transition-colors shadow-sm"
+                    title="Delete"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {/* Category Badge */}
+                <div className="absolute top-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <span className="px-2.5 py-1 bg-black/50 backdrop-blur-md text-white text-xs font-medium rounded-sm border border-white/20">
+                    {img.category}
+                  </span>
+                </div>
+              </div>
+
+              {/* Info */}
+              <div className="p-4">
+                <h3 className="font-semibold text-college-navy dark:text-white truncate group-hover:text-college-gold transition-colors">
+                  {img.title}
+                </h3>
+                <div className="flex items-center gap-2 mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  <Calendar className="w-3 h-3" />
+                  <span>{img.date}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          <Link
+            to="/admin/cms/gallery/upload"
+            className="flex flex-col items-center justify-center aspect-[4/3] border-2 border-dashed border-gray-200 dark:border-college-gold/20 rounded-sm hover:bg-college-navy/5 dark:hover:bg-college-gold/10 hover:border-college-navy/30 dark:hover:border-college-gold/30 transition-all duration-300 group cursor-pointer dark:bg-college-navy/30 shadow-sm"
           >
-            {/* Image Container */}
-            <div className="aspect-[4/3] bg-gray-100 relative overflow-hidden">
-              <img
-                src={img.url}
-                alt={img.title}
-                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-              {/* Overlay Actions */}
-              <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
-                <button
-                  onClick={() => navigate(`/admin/cms/gallery/edit/${img.id}`)}
-                  className="p-2 bg-white/90 backdrop-blur-sm rounded-full text-gray-700 hover:text-college-gold hover:bg-white transition-colors shadow-sm"
-                  title="Edit"
-                >
-                  <Pencil className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={async () => {
-                    const confirmed = await confirmDialog({ title: "Delete Image", message: `Delete image "${img.title}"?`, confirmText: "Delete", variant: "danger" });
-                    if (confirmed) {
-                      await adminApi.deleteGalleryItem(img.id);
-                      setImages((prev) => prev.filter((item) => item.id !== img.id));
-                      toast.success("Image deleted");
-                    }
-                  }}
-                  className="p-2 bg-white/90 backdrop-blur-sm rounded-full text-gray-700 hover:text-rose-600 hover:bg-white transition-colors shadow-sm"
-                  title="Delete"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Category Badge */}
-              <div className="absolute top-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <span className="px-2.5 py-1 bg-black/50 backdrop-blur-md text-white text-xs font-medium rounded-sm border border-white/20">
-                  {img.category}
-                </span>
-              </div>
+            <div className="w-14 h-14 bg-college-navy/5 dark:bg-college-gold/10 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-inner">
+              <Plus className="w-7 h-7 text-college-navy/40 dark:text-college-gold group-hover:text-college-navy dark:group-hover:text-college-gold transition-colors" />
             </div>
-
-            {/* Info */}
-            <div className="p-4">
-              <h3 className="font-semibold text-college-navy dark:text-white truncate group-hover:text-college-gold transition-colors">
-                {img.title}
-              </h3>
-              <div className="flex items-center gap-2 mt-1 text-xs text-gray-500 dark:text-gray-400">
-                <Calendar className="w-3 h-3" />
-                <span>{img.date}</span>
-              </div>
-            </div>
-          </div>
-        ))}
-
-
-        <Link
-          to="/admin/cms/gallery/upload"
-          className="flex flex-col items-center justify-center aspect-[4/3] border-2 border-dashed border-gray-200 dark:border-college-gold/20 rounded-sm hover:bg-college-navy/5 dark:hover:bg-college-gold/10 hover:border-college-navy/30 dark:hover:border-college-gold/30 transition-all duration-300 group cursor-pointer dark:bg-college-navy/30 shadow-sm"
-        >
-          <div className="w-14 h-14 bg-college-navy/5 dark:bg-college-gold/10 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-inner">
-            <Plus className="w-7 h-7 text-college-navy/40 dark:text-college-gold group-hover:text-college-navy dark:group-hover:text-college-gold transition-colors" />
-          </div>
-          <span className="mt-4 text-sm font-bold text-gray-400 group-hover:text-college-navy dark:group-hover:text-college-gold uppercase tracking-wider transition-colors text-center px-4">Add New Image</span>
-        </Link>
-      </div>
+            <span className="mt-4 text-sm font-bold text-gray-400 group-hover:text-college-navy dark:group-hover:text-college-gold uppercase tracking-wider transition-colors text-center px-4">Add New Image</span>
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

@@ -11,7 +11,7 @@ import React from "react";
  */
 const PortalStatsCard = ({ title, value, hint }) => {
   return (
-    <div className="relative overflow-hidden bg-white dark:bg-college-navy border-[1.5px] border-gray-200 dark:border-college-gold/40 rounded-sm p-4 sm:p-5 md:p-6 shadow-xl transition-all duration-300 hover:border-college-navy dark:hover:border-college-gold hover:scale-[1.01]">
+    <div className="relative overflow-hidden bg-white dark:bg-college-navy border-[1.5px] border-college-navy/10 dark:border-college-gold/40 rounded-sm p-4 sm:p-5 md:p-6 shadow-2xl transition-all duration-300 hover:border-college-navy dark:hover:border-college-gold hover:scale-[1.01]">
       <div className="flex flex-col gap-4">
         {/* Title */}
         <h3 className="text-college-navy/60 dark:text-college-gold text-xs font-bold uppercase tracking-[0.25em] leading-none opacity-80">
@@ -25,7 +25,7 @@ const PortalStatsCard = ({ title, value, hint }) => {
           </span>
         </div>
         {hint ? (
-          <p className="text-xs text-gray-500 dark:text-gray-300 font-medium">{hint}</p>
+          <p className="text-[10px] font-black text-college-navy/40 dark:text-college-gold/60 uppercase tracking-widest">{hint}</p>
         ) : null}
       </div>
 

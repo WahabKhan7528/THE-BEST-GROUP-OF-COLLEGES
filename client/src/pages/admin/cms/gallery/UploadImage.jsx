@@ -175,19 +175,19 @@ const UploadImage = () => {
             </div>
 
             <div className="col-span-1 md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Category <span className="text-red-500">*</span></label>
-              <select
-                {...register("category")}
-                className="w-full px-4 py-2 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 dark:bg-college-navy text-gray-900 dark:text-white"
+              <PortalForm.Select
+                label="Category"
+                registration={register("category")}
                 required
-              >
-                <option value="" disabled>Select category</option>
-                <option value="Campus Life">Campus Life</option>
-                <option value="Events">Events</option>
-                <option value="Facilities">Facilities</option>
-                <option value="Academic">Academic</option>
-                <option value="Sports">Sports</option>
-              </select>
+                options={[
+                  { id: "Campus Life", label: "Campus Life" },
+                  { id: "Events", label: "Events" },
+                  { id: "Facilities", label: "Facilities" },
+                  { id: "Academic", label: "Academic" },
+                  { id: "Sports", label: "Sports" },
+                ]}
+                placeholder="Select category"
+              />
             </div>
 
             <div className="col-span-1 md:col-span-2">

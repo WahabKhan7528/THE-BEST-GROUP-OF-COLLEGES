@@ -4,6 +4,7 @@ import { useAdminContext } from "../../../store/hooks/useAdminReduxContext";
 import { useToast } from "../../../context/ToastContext";
 import { useConfirm } from "../../../context/ConfirmContext";
 import Table from "../../../components/portal-shared/Table";
+import Badge from "../../../components/shared/Badge";
 import PublicButton from "../../../components/shared/PublicButton";
 import {
   Plus,
@@ -24,14 +25,18 @@ const ClassesList = () => {
   const [selectedCampus, setSelectedCampus] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [classes, setClasses] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadClasses = async () => {
+      setIsLoading(true);
       try {
         const { data } = await adminApi.classes();
         setClasses(data.data || []);
       } catch {
         setClasses([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -83,9 +88,9 @@ const ClassesList = () => {
       label: "Class Info",
       render: (row) => (
         <div className="flex flex-col">
-          <span className="font-semibold text-college-navy">{row.name}</span>
-          <span className="text-xs text-gray-500 flex items-center gap-1">
-            <Users className="w-3 h-3" /> {row.studentsCount} Students
+          <span className="font-semibold text-college-navy dark:text-white group-hover:text-college-gold transition-colors">{row.name}</span>
+          <span className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold tracking-tight">
+            {row.studentsCount} Registered Students
           </span>
         </div>
       )
@@ -95,10 +100,10 @@ const ClassesList = () => {
       label: "Current Term",
       render: (row) => (
         <div className="flex flex-col gap-1">
-          <span className="bg-college-navy/5 text-college-navy px-2 py-0.5 rounded text-xs font-medium border border-college-navy/10 w-fit">
+          <Badge variant="subtle" className="w-fit font-bold">
             {row.currentTerm}
-          </span>
-          <span className="text-xs text-gray-500 dark:text-gray-400">Section {row.section || "A"}</span>
+          </Badge>
+          <span className="text-[10px] text-gray-400 uppercase font-black tracking-widest pl-0.5">Section {row.section || "A"}</span>
         </div>
       )
     },
@@ -106,29 +111,27 @@ const ClassesList = () => {
       key: "studentsCount",
       label: "Students",
       render: (row) => (
-        <div className="flex items-center gap-2">
-          <Users className="w-4 h-4 text-college-navy/60 dark:text-college-gold/60" />
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{row.studentsCount}</span>
-        </div>
+        <span className="text-sm font-bold text-college-navy dark:text-college-gold">
+          {row.studentsCount}
+        </span>
       )
     },
     {
       key: "lockedSemesters",
       label: "Locked Semesters",
       render: (row) => (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">
+        <Badge variant="outline" className="font-bold">
           {row.lockedSemesters}/{row.totalSemesters}
-        </span>
+        </Badge>
       )
     },
     ...(isSuperAdmin ? [{
       key: "campus",
       label: "Campus",
       render: (row) => (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200">
-          <Building2 className="w-3 h-3" />
+        <Badge variant="subtle" className="font-bold">
           {getCampusName(row.campus?._id || row.campus)}
-        </span>
+        </Badge>
       ),
     }] : []),
   ];
@@ -138,10 +141,10 @@ const ClassesList = () => {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-college-navy">
+          <h1 className="text-2xl font-bold text-college-navy dark:text-white">
             Classes Management
           </h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
             Manage academic classes, sections, and subject allocations
           </p>
         </div>
@@ -164,7 +167,7 @@ const ClassesList = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Search Input */}
           <div className="relative col-span-1 lg:col-span-2">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-college-gold/60 w-4 h-4" />
             <input
               type="text"
               placeholder="Search classes, subjects, or faculty..."
@@ -177,7 +180,7 @@ const ClassesList = () => {
           {/* Campus Filter (Super Admin) */}
           {isSuperAdmin && (
             <div className="relative">
-              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-college-gold/60 w-4 h-4" />
               <select
                 value={selectedCampus}
                 onChange={(e) => setSelectedCampus(e.target.value)}
@@ -196,10 +199,11 @@ const ClassesList = () => {
       </div>
 
       {/* Table Section */}
-      {filteredData.length > 0 ? (
+      {isLoading || filteredData.length > 0 ? (
         <Table
           columns={columns}
           data={filteredData}
+          isLoading={isLoading}
           actionButtons={isSuperAdmin ? undefined : (row) => [
             {
               label: "Edit",
@@ -230,10 +234,10 @@ const ClassesList = () => {
           </p>
           {(searchQuery || selectedCampus) && (
             <button
-               onClick={() => { setSearchQuery(""); setSelectedCampus(""); }}
-               className="text-college-navy dark:text-college-gold text-sm font-medium hover:underline"
+              onClick={() => { setSearchQuery(""); setSelectedCampus(""); }}
+              className="text-college-navy dark:text-college-gold text-sm font-medium hover:underline"
             >
-               Clear all filters
+              Clear all filters
             </button>
           )}
         </div>

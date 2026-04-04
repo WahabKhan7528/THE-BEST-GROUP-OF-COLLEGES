@@ -10,6 +10,7 @@ import PortalForm from "../../../components/portal-shared/PortalForm";
 import PublicButton from "../../../components/shared/PublicButton";
 import { classSchema } from "../../../schemas/classSchema";
 import { adminApi } from "../../../services/api";
+import SkeletonLoading from "../../../components/shared/SkeletonLoading";
 
 const TERM_SUBJECT_LIMIT = 6;
 
@@ -109,6 +110,7 @@ const EditClass = () => {
   const [classCode, setClassCode] = useState("");
   const [classCourseId, setClassCourseId] = useState("");
   const [assignmentDialog, setAssignmentDialog] = useState({ open: false, semesterNumber: null, subject: "", faculty: "" });
+  const [loading, setLoading] = useState(true);
 
   const {
     register,
@@ -213,6 +215,8 @@ const EditClass = () => {
       } catch {
         toast.error("Failed to load class");
         navigate("/admin/classes", { replace: true });
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -380,282 +384,296 @@ const EditClass = () => {
         </PublicButton>
       }
     >
-      <PortalForm.Section title="Campus Allocation" className="!space-y-4">
-        <div className="col-span-1 md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Select Campus *</label>
-          {isSuperAdmin ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-              {campuses.map((campus) => {
-                const isSelected = (watch("campus") || selectedCampuses[0]) === campus.id;
+      {loading ? (
+        <div className="space-y-8 animate-pulse">
+          <PortalForm.Section title="Campus Allocation" className="!space-y-4">
+            <div className="col-span-1 md:col-span-2 space-y-4">
+              <SkeletonLoading variant="textLine" className="h-4 w-32" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                {[1, 2, 3].map((i) => (
+                  <SkeletonLoading key={i} variant="panel" className="h-24" />
+                ))}
+              </div>
+            </div>
+          </PortalForm.Section>
+
+          <PortalForm.Section title="Academic Details">
+            <div className="col-span-1 md:col-span-2">
+              <SkeletonLoading variant="panel" className="h-16" />
+            </div>
+            <div className="md:col-span-1">
+              <SkeletonLoading variant="panel" className="h-16" />
+            </div>
+            <div className="md:col-span-1">
+              <SkeletonLoading variant="panel" className="h-16" />
+            </div>
+          </PortalForm.Section>
+
+          <PortalForm.Section title="Subject Allocation">
+            <div className="col-span-1 md:col-span-2 space-y-6">
+              {[1, 2].map((i) => (
+                <SkeletonLoading key={i} variant="panel" className="h-48" />
+              ))}
+            </div>
+          </PortalForm.Section>
+        </div>
+      ) : (
+        <>
+          <PortalForm.Section title="Campus Allocation" className="!space-y-4">
+            <div className="col-span-1 md:col-span-2">
+              <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-2">Select Campus *</label>
+              {isSuperAdmin ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                  {campuses.map((campus) => {
+                    const isSelected = (watch("campus") || selectedCampuses[0]) === campus.id;
+                    return (
+                      <label
+                        key={campus.id}
+                        className={`relative flex flex-col items-center justify-center p-4 rounded-sm border-2 cursor-pointer transition-all duration-200 ${isSelected ? "bg-college-navy/5 border-college-navy dark:bg-college-gold/10 dark:border-college-gold shadow-sm" : "bg-white border-gray-100 hover:bg-gray-50 dark:bg-college-navy/50 dark:border-college-gold/20 dark:hover:bg-college-navy/80"}`}
+                      >
+                        <input type="radio" value={campus.id} {...register("campus")} checked={isSelected} onChange={() => handleCampusToggle(campus.id)} className="sr-only" />
+                        <Building2 className={`w-6 h-6 mb-2 ${isSelected ? "text-college-navy dark:text-college-gold" : "text-gray-400"}`} />
+                        <span className={`text-sm font-bold text-center ${isSelected ? "text-college-navy dark:text-college-gold" : "text-gray-600 dark:text-gray-400"}`}>{campus.name}</span>
+                        {isSelected && <CheckCircle2 className="absolute top-2 right-2 w-4 h-4 text-college-navy dark:text-college-gold" />}
+                      </label>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="flex items-center gap-3 p-4 bg-gray-50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm text-gray-700 dark:text-gray-200">
+                  <Building2 className="w-5 h-5 text-gray-400" />
+                  <span className="font-medium">{getCampusLabel()}</span>
+                  <span className="ml-auto text-xs bg-college-gold/10 text-college-navy dark:text-college-gold px-2 py-1 rounded-full">Fixed Campus</span>
+                </div>
+              )}
+              {!isSuperAdmin && <input type="hidden" {...register("campus")} />}
+            </div>
+          </PortalForm.Section>
+
+          <PortalForm.Section title="Academic Details">
+            <div className="col-span-1 md:col-span-2">
+              <PortalForm.Input label="Class Name" registration={register("name")} error={errors.name?.message} placeholder="e.g. BSCS - 5th Semester" required />
+            </div>
+
+            <div className="md:col-span-2 flex justify-end">
+              <span className="px-2.5 py-1 bg-college-navy/10 text-college-navy dark:text-college-gold text-xs font-medium rounded-sm border border-college-gold/20 inline-block w-fit">
+                Code: {classCode || "AUTO"}
+              </span>
+            </div>
+            <div className="md:col-span-2 rounded-sm border border-dashed border-gray-300 dark:border-college-gold/20 bg-gray-50/70 dark:bg-college-navy/40 p-4 text-sm text-gray-600 dark:text-gray-300 -mt-2">
+              Class code is locked after creation.
+            </div>
+
+            <PortalForm.Input label="Section" registration={register("section")} placeholder="e.g. A" />
+
+            <PortalForm.Select
+              label="Course"
+              registration={register("course")}
+              options={visibleCourses.map((course) => ({ id: course._id, label: `${course.title} (${course.code})` }))}
+              placeholder="Select course..."
+            />
+
+            {(isSemesterSystem || !selectedCourse) && (
+              <PortalForm.Select
+                label="Current Semester"
+                registration={register("semester")}
+                options={Array.from({ length: isSemesterSystem ? termCount : 8 }, (_, index) => ({
+                  id: `SEM-${index + 1}`,
+                  label: `Semester ${index + 1}`,
+                }))}
+                placeholder="Select current semester..."
+              />
+            )}
+
+            {(isAnnualSystem || !selectedCourse) && (
+              <PortalForm.Select
+                label="Annual Year"
+                registration={register("annualYear")}
+                options={Array.from({ length: isAnnualSystem ? termCount : 5 }, (_, index) => ({
+                  id: `Y${index + 1}`,
+                  label: `Year ${index + 1}`,
+                }))}
+                placeholder="Select year..."
+              />
+            )}
+          </PortalForm.Section>
+
+          <PortalForm.Section title="Class Summary">
+            <div className="col-span-1 md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="rounded-sm border border-gray-200 bg-gray-50 p-4 dark:border-college-gold/20 dark:bg-college-navy/40">
+                <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Students</p>
+                <p className="mt-1 text-2xl font-bold text-college-navy dark:text-college-gold">{totalStudents}</p>
+              </div>
+              <div className="rounded-sm border border-gray-200 bg-gray-50 p-4 dark:border-college-gold/20 dark:bg-college-navy/40">
+                <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Current Term</p>
+                <p className="mt-1 text-2xl font-bold text-college-navy dark:text-college-gold">{selectedTermValue || "Not set"}</p>
+              </div>
+              <div className="rounded-sm border border-gray-200 bg-gray-50 p-4 dark:border-college-gold/20 dark:bg-college-navy/40">
+                <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Completed / Locked</p>
+                <p className="mt-1 text-2xl font-bold text-college-navy dark:text-college-gold">{lockedSemesterCount}/{semesterRows.length || 0}</p>
+              </div>
+            </div>
+          </PortalForm.Section>
+
+          {selectedCourse && selectedCourse.examSystem !== "other" && (
+            <PortalForm.Section title={`${isAnnualSystem ? "Year" : "Semester"} Subject Allocation`}>
+              <div className="col-span-1 md:col-span-2 rounded-sm border border-dashed border-gray-300 dark:border-college-gold/20 bg-gray-50/70 dark:bg-college-navy/40 p-4 text-sm text-gray-600 dark:text-gray-300">
+                Subjects, teachers, dates, and lock state are managed per term. Completed terms stay locked.
+              </div>
+
+              {semesterRows.map((row) => {
+                const locked = currentSemesterNumber > 0 && row.semesterNumber < currentSemesterNumber || row.status === "locked" || row.status === "completed" || row.resultPublished;
+
                 return (
-                  <label
-                    key={campus.id}
-                    className={`relative flex flex-col items-center justify-center p-4 rounded-sm border-2 cursor-pointer transition-all duration-200 ${isSelected ? "bg-college-navy/5 border-college-navy dark:bg-college-gold/10 dark:border-college-gold shadow-sm" : "bg-white border-gray-100 hover:bg-gray-50 dark:bg-college-navy/50 dark:border-college-gold/20 dark:hover:bg-college-navy/80"}`}
-                  >
-                    <input type="radio" value={campus.id} {...register("campus")} checked={isSelected} onChange={() => handleCampusToggle(campus.id)} className="sr-only" />
-                    <Building2 className={`w-6 h-6 mb-2 ${isSelected ? "text-college-navy dark:text-college-gold" : "text-gray-400"}`} />
-                    <span className={`text-sm font-bold text-center ${isSelected ? "text-college-navy dark:text-college-gold" : "text-gray-600 dark:text-gray-400"}`}>{campus.name}</span>
-                    {isSelected && <CheckCircle2 className="absolute top-2 right-2 w-4 h-4 text-college-navy dark:text-college-gold" />}
-                  </label>
+                  <div key={row.semesterNumber} className={`col-span-1 md:col-span-2 rounded-sm border p-4 ${locked ? "border-gray-200 bg-gray-50/70 dark:border-gray-700 dark:bg-college-navy/30" : "border-gray-200 bg-white dark:border-college-gold/20 dark:bg-college-navy/40"}`}>
+                    <div className="flex items-center justify-between gap-3 mb-4">
+                      <div>
+                        <h3 className="text-sm font-semibold text-gray-800 dark:text-white">{isAnnualSystem ? "Year" : "Semester"} {row.semesterNumber}</h3>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">{locked ? "Locked because this term is already completed or published" : "Optional term setup"}</p>
+                      </div>
+                      <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-college-navy/10 text-college-navy dark:text-college-gold">{(row.subjectAssignments || []).length} subjects</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-1.5 focus:text-college-navy dark:focus:text-college-gold transition-colors">Start Date</label>
+                        <input
+                          type="date"
+                          min={formatDateInput(new Date())}
+                          disabled={locked}
+                          value={row.startDate}
+                          onChange={(event) => updateSemesterRow(row.semesterNumber, "startDate", event.target.value)}
+                          className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm text-gray-900 dark:text-white disabled:opacity-60"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-1.5 focus:text-college-navy dark:focus:text-college-gold transition-colors">End Date</label>
+                        <input
+                          type="date"
+                          min={row.startDate || formatDateInput(new Date())}
+                          disabled={locked}
+                          value={row.endDate}
+                          onChange={(event) => updateSemesterRow(row.semesterNumber, "endDate", event.target.value)}
+                          className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm text-gray-900 dark:text-white disabled:opacity-60"
+                        />
+                      </div>
+
+                      <PortalForm.Select
+                        label="Status"
+                        disabled={locked}
+                        value={row.status}
+                        onChange={(event) => updateSemesterRow(row.semesterNumber, "status", event.target.value)}
+                        options={[
+                          { id: "planned", label: "Planned" },
+                          { id: "active", label: "Active" },
+                          { id: "completed", label: "Completed" },
+                          { id: "locked", label: "Locked" },
+                        ]}
+                      />
+
+                      <div className="md:col-span-2 space-y-3">
+                        <div className="flex items-center justify-between gap-3">
+                          <div>
+                            <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-1.5 focus:text-college-navy dark:focus:text-college-gold transition-colors">Subject Assignments</label>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">Add one subject at a time and choose the teacher for it.</p>
+                          </div>
+                          <button
+                            type="button"
+                            disabled={locked || (row.subjectAssignments || []).length >= TERM_SUBJECT_LIMIT}
+                            onClick={() => openAssignmentDialog(row.semesterNumber)}
+                            className="inline-flex items-center gap-2 px-3 py-2 rounded-sm bg-college-navy text-white text-sm font-medium disabled:opacity-60"
+                          >
+                            <Plus className="w-4 h-4" />
+                            Add Subject
+                          </button>
+                        </div>
+
+                        <div className="space-y-2">
+                          {(row.subjectAssignments || []).length === 0 ? (
+                            <div className="rounded-sm border border-dashed border-gray-300 dark:border-college-gold/20 px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+                              No subject assignments added yet.
+                            </div>
+                          ) : (
+                            (row.subjectAssignments || []).map((assignment, assignmentIndex) => {
+                              const subject = visibleSubjects.find((item) => item._id === assignment.subject);
+                              const faculty = visibleFacultyUsers.find((user) => user._id === assignment.faculty);
+                              return (
+                                <div key={`${assignment.subject}-${assignmentIndex}`} className="flex items-center justify-between gap-3 rounded-sm border border-gray-200 dark:border-college-gold/20 bg-white dark:bg-college-navy/50 px-4 py-3">
+                                  <div>
+                                    <p className="text-sm font-semibold text-gray-800 dark:text-white">{subject?.name || "Subject"}</p>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">{subject?.code || ""} {faculty ? `• ${faculty.name}` : ""}</p>
+                                  </div>
+                                  {!locked && (
+                                    <button
+                                      type="button"
+                                      onClick={() => removeSubjectAssignment(row.semesterNumber, assignment.subject)}
+                                      className="text-xs font-medium text-red-600 hover:text-red-700"
+                                    >
+                                      Remove
+                                    </button>
+                                  )}
+                                </div>
+                              );
+                            })
+                          )}
+                        </div>
+
+                        <p className="text-xs text-gray-500 dark:text-gray-400">Subjects selected in other terms are hidden here. Maximum {TERM_SUBJECT_LIMIT} subjects.</p>
+                      </div>
+                    </div>
+                  </div>
                 );
               })}
-            </div>
-          ) : (
-            <div className="flex items-center gap-3 p-4 bg-gray-50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm text-gray-700 dark:text-gray-200">
-              <Building2 className="w-5 h-5 text-gray-400" />
-              <span className="font-medium">{getCampusLabel()}</span>
-              <span className="ml-auto text-xs bg-college-gold/10 text-college-navy dark:text-college-gold px-2 py-1 rounded-full">Fixed Campus</span>
+            </PortalForm.Section>
+          )}
+
+          {assignmentDialog.open && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+              <div className="w-full max-w-lg rounded-sm bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/20 shadow-xl p-5 space-y-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Add Subject Assignment</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Pick a subject and the teacher responsible for it.</p>
+                </div>
+                <div className="space-y-4">
+                  <PortalForm.Select
+                    label="Subject"
+                    value={assignmentDialog.subject}
+                    onChange={(event) => setAssignmentDialog((prev) => ({ ...prev, subject: event.target.value }))}
+                    options={subjectOptionsForSemester(
+                      assignmentDialog.semesterNumber,
+                      (semesterRows.find((row) => row.semesterNumber === assignmentDialog.semesterNumber)?.subjectAssignments || []).map((assignment) => assignment.subject),
+                    ).map((subject) => ({
+                      id: subject._id,
+                      label: `${subject.name} (${subject.code})`,
+                      disabled: selectedSubjectIds.has(subject._id),
+                    }))}
+                    placeholder="Select subject..."
+                  />
+                  <PortalForm.Select
+                    label="Faculty"
+                    value={assignmentDialog.faculty}
+                    onChange={(event) => setAssignmentDialog((prev) => ({ ...prev, faculty: event.target.value }))}
+                    options={visibleFacultyUsers.map((user) => ({
+                      id: user._id,
+                      label: `${user.name} (${user.portalId})`,
+                    }))}
+                    placeholder="Select faculty..."
+                  />
+                </div>
+                <div className="flex justify-end gap-3 pt-2">
+                  <button type="button" onClick={closeAssignmentDialog} className="px-4 py-2 rounded-sm border border-gray-200 dark:border-college-gold/20 text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Cancel
+                  </button>
+                  <button type="button" onClick={addSubjectAssignment} className="inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-college-navy text-white text-sm font-medium">
+                    <Plus className="w-4 h-4" />
+                    Add
+                  </button>
+                </div>
+              </div>
             </div>
           )}
-          {!isSuperAdmin && <input type="hidden" {...register("campus")} />}
-        </div>
-      </PortalForm.Section>
-
-      <PortalForm.Section title="Academic Details">
-        <div className="col-span-1 md:col-span-2">
-          <PortalForm.Input label="Class Name" registration={register("name")} error={errors.name?.message} placeholder="e.g. BSCS - 5th Semester" required />
-        </div>
-
-        <div className="md:col-span-2 flex justify-end">
-          <span className="px-2.5 py-1 bg-college-navy/10 text-college-navy dark:text-college-gold text-xs font-medium rounded-sm border border-college-gold/20 inline-block w-fit">
-            Code: {classCode || "AUTO"}
-          </span>
-        </div>
-        <div className="md:col-span-2 rounded-sm border border-dashed border-gray-300 dark:border-college-gold/20 bg-gray-50/70 dark:bg-college-navy/40 p-4 text-sm text-gray-600 dark:text-gray-300 -mt-2">
-          Class code is locked after creation.
-        </div>
-
-        <PortalForm.Input label="Section" registration={register("section")} placeholder="e.g. A" />
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Course</label>
-          <select {...register("course")} className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm text-gray-900 dark:text-white">
-            <option value="">Select course...</option>
-            {visibleCourses.map((course) => <option key={course._id} value={course._id}>{course.title} ({course.code})</option>)}
-          </select>
-        </div>
-
-        {(isSemesterSystem || !selectedCourse) && (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Current Semester</label>
-            <select {...register("semester")} className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm text-gray-900 dark:text-white">
-              <option value="">Select current semester...</option>
-              {Array.from({ length: isSemesterSystem ? termCount : 8 }, (_, index) => {
-                const semesterNumber = index + 1;
-                return (
-                  <option key={semesterNumber} value={`SEM-${semesterNumber}`}>
-                    Semester {semesterNumber}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-        )}
-
-        {(isAnnualSystem || !selectedCourse) && (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Annual Year</label>
-            <select {...register("annualYear")} className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm text-gray-900 dark:text-white">
-              <option value="">Select year...</option>
-              {Array.from({ length: isAnnualSystem ? termCount : 5 }, (_, index) => {
-                const yearNumber = index + 1;
-                return (
-                  <option key={yearNumber} value={`Y${yearNumber}`}>
-                    Year {yearNumber}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-        )}
-      </PortalForm.Section>
-
-      <PortalForm.Section title="Class Summary">
-        <div className="col-span-1 md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="rounded-sm border border-gray-200 bg-gray-50 p-4 dark:border-college-gold/20 dark:bg-college-navy/40">
-            <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Students</p>
-            <p className="mt-1 text-2xl font-bold text-college-navy dark:text-college-gold">{totalStudents}</p>
-          </div>
-          <div className="rounded-sm border border-gray-200 bg-gray-50 p-4 dark:border-college-gold/20 dark:bg-college-navy/40">
-            <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Current Term</p>
-            <p className="mt-1 text-2xl font-bold text-college-navy dark:text-college-gold">{selectedTermValue || "Not set"}</p>
-          </div>
-          <div className="rounded-sm border border-gray-200 bg-gray-50 p-4 dark:border-college-gold/20 dark:bg-college-navy/40">
-            <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Completed / Locked</p>
-            <p className="mt-1 text-2xl font-bold text-college-navy dark:text-college-gold">{lockedSemesterCount}/{semesterRows.length || 0}</p>
-          </div>
-        </div>
-      </PortalForm.Section>
-
-      {selectedCourse && selectedCourse.examSystem !== "other" && (
-        <PortalForm.Section title={`${isAnnualSystem ? "Year" : "Semester"} Subject Allocation`}>
-          <div className="col-span-1 md:col-span-2 rounded-sm border border-dashed border-gray-300 dark:border-college-gold/20 bg-gray-50/70 dark:bg-college-navy/40 p-4 text-sm text-gray-600 dark:text-gray-300">
-            Subjects, teachers, dates, and lock state are managed per term. Completed terms stay locked.
-          </div>
-
-          {semesterRows.map((row) => {
-            const locked = currentSemesterNumber > 0 && row.semesterNumber < currentSemesterNumber || row.status === "locked" || row.status === "completed" || row.resultPublished;
-
-            return (
-              <div key={row.semesterNumber} className={`col-span-1 md:col-span-2 rounded-sm border p-4 ${locked ? "border-gray-200 bg-gray-50/70 dark:border-gray-700 dark:bg-college-navy/30" : "border-gray-200 bg-white dark:border-college-gold/20 dark:bg-college-navy/40"}`}>
-                <div className="flex items-center justify-between gap-3 mb-4">
-                  <div>
-                    <h3 className="text-sm font-semibold text-gray-800 dark:text-white">{isAnnualSystem ? "Year" : "Semester"} {row.semesterNumber}</h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">{locked ? "Locked because this term is already completed or published" : "Optional term setup"}</p>
-                  </div>
-                  <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-college-navy/10 text-college-navy dark:text-college-gold">{(row.subjectAssignments || []).length} subjects</span>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Start Date</label>
-                    <input
-                      type="date"
-                      min={formatDateInput(new Date())}
-                      disabled={locked}
-                      value={row.startDate}
-                      onChange={(event) => updateSemesterRow(row.semesterNumber, "startDate", event.target.value)}
-                      className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm text-gray-900 dark:text-white disabled:opacity-60"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">End Date</label>
-                    <input
-                      type="date"
-                      min={row.startDate || formatDateInput(new Date())}
-                      disabled={locked}
-                      value={row.endDate}
-                      onChange={(event) => updateSemesterRow(row.semesterNumber, "endDate", event.target.value)}
-                      className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm text-gray-900 dark:text-white disabled:opacity-60"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Status</label>
-                    <select
-                      disabled={locked}
-                      value={row.status}
-                      onChange={(event) => updateSemesterRow(row.semesterNumber, "status", event.target.value)}
-                      className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm text-gray-900 dark:text-white disabled:opacity-60"
-                    >
-                      <option value="planned">Planned</option>
-                      <option value="active">Active</option>
-                      <option value="completed">Completed</option>
-                      <option value="locked">Locked</option>
-                    </select>
-                  </div>
-
-                  <div className="md:col-span-2 space-y-3">
-                    <div className="flex items-center justify-between gap-3">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Subject Assignments</label>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">Add one subject at a time and choose the teacher for it.</p>
-                      </div>
-                      <button
-                        type="button"
-                        disabled={locked || (row.subjectAssignments || []).length >= TERM_SUBJECT_LIMIT}
-                        onClick={() => openAssignmentDialog(row.semesterNumber)}
-                        className="inline-flex items-center gap-2 px-3 py-2 rounded-sm bg-college-navy text-white text-sm font-medium disabled:opacity-60"
-                      >
-                        <Plus className="w-4 h-4" />
-                        Add Subject
-                      </button>
-                    </div>
-
-                    <div className="space-y-2">
-                      {(row.subjectAssignments || []).length === 0 ? (
-                        <div className="rounded-sm border border-dashed border-gray-300 dark:border-college-gold/20 px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
-                          No subject assignments added yet.
-                        </div>
-                      ) : (
-                        (row.subjectAssignments || []).map((assignment, assignmentIndex) => {
-                          const subject = visibleSubjects.find((item) => item._id === assignment.subject);
-                          const faculty = visibleFacultyUsers.find((user) => user._id === assignment.faculty);
-                          return (
-                            <div key={`${assignment.subject}-${assignmentIndex}`} className="flex items-center justify-between gap-3 rounded-sm border border-gray-200 dark:border-college-gold/20 bg-white dark:bg-college-navy/50 px-4 py-3">
-                              <div>
-                                <p className="text-sm font-semibold text-gray-800 dark:text-white">{subject?.name || "Subject"}</p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">{subject?.code || ""} {faculty ? `• ${faculty.name}` : ""}</p>
-                              </div>
-                              {!locked && (
-                                <button
-                                  type="button"
-                                  onClick={() => removeSubjectAssignment(row.semesterNumber, assignment.subject)}
-                                  className="text-xs font-medium text-red-600 hover:text-red-700"
-                                >
-                                  Remove
-                                </button>
-                              )}
-                            </div>
-                          );
-                        })
-                      )}
-                    </div>
-
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Subjects selected in other terms are hidden here. Maximum {TERM_SUBJECT_LIMIT} subjects.</p>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </PortalForm.Section>
-      )}
-
-      {assignmentDialog.open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
-          <div className="w-full max-w-lg rounded-sm bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/20 shadow-xl p-5 space-y-4">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Add Subject Assignment</h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Pick a subject and the teacher responsible for it.</p>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Subject</label>
-                <select
-                  value={assignmentDialog.subject}
-                  onChange={(event) => setAssignmentDialog((prev) => ({ ...prev, subject: event.target.value }))}
-                  className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm text-gray-900 dark:text-white"
-                >
-                  <option value="">Select subject...</option>
-                  {subjectOptionsForSemester(
-                    assignmentDialog.semesterNumber,
-                    (semesterRows.find((row) => row.semesterNumber === assignmentDialog.semesterNumber)?.subjectAssignments || []).map((assignment) => assignment.subject),
-                  ).map((subject) => (
-                    <option key={subject._id} value={subject._id} disabled={selectedSubjectIds.has(subject._id)}>
-                      {subject.name} ({subject.code})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Faculty</label>
-                <select
-                  value={assignmentDialog.faculty}
-                  onChange={(event) => setAssignmentDialog((prev) => ({ ...prev, faculty: event.target.value }))}
-                  className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm text-gray-900 dark:text-white"
-                >
-                  <option value="">Select faculty...</option>
-                  {visibleFacultyUsers.map((user) => (
-                    <option key={user._id} value={user._id}>
-                      {user.name} ({user.portalId})
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            <div className="flex justify-end gap-3 pt-2">
-              <button type="button" onClick={closeAssignmentDialog} className="px-4 py-2 rounded-sm border border-gray-200 dark:border-college-gold/20 text-sm font-medium text-gray-700 dark:text-gray-300">
-                Cancel
-              </button>
-              <button type="button" onClick={addSubjectAssignment} className="inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-college-navy text-white text-sm font-medium">
-                <Plus className="w-4 h-4" />
-                Add
-              </button>
-            </div>
-          </div>
-        </div>
+        </>
       )}
     </PortalForm>
   );

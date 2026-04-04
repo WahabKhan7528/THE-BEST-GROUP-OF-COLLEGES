@@ -9,6 +9,7 @@ import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
 import PortalStatsCard from "../../components/portal-shared/PortalStatsCard";
 import { portalApi } from "../../services/api";
+import SkeletonLoading from "../../components/shared/SkeletonLoading";
 
 const quickActions = [
   { title: "Create Assignment", path: "/faculty/assignments/create" },
@@ -26,8 +27,10 @@ const Dashboard = () => {
     getAssignedSubjectsCount,
     getCurrentCampus,
     isDarkMode,
+    loading: isContextLoading,
   } = useFacultyContext();
   const [recentAnnouncements, setRecentAnnouncements] = useState([]);
+  const [isAnnouncementsLoading, setIsAnnouncementsLoading] = useState(true);
 
   useEffect(() => {
     const loadAnnouncements = async () => {
@@ -40,6 +43,8 @@ const Dashboard = () => {
         setRecentAnnouncements(items);
       } catch {
         setRecentAnnouncements([]);
+      } finally {
+        setIsAnnouncementsLoading(false);
       }
     };
 
@@ -92,9 +97,13 @@ const Dashboard = () => {
 
       {/* Main Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5 lg:gap-6">
-        {stats.map((item) => (
-          <PortalStatsCard key={item.title} {...item} />
-        ))}
+        {isContextLoading
+          ? Array.from({ length: 4 }).map((_, idx) => (
+              <SkeletonLoading key={idx} variant="panel" className="h-32" />
+            ))
+          : stats.map((item) => (
+              <PortalStatsCard key={item.title} {...item} />
+            ))}
       </div>
 
       {/* Quick Actions */}
@@ -170,40 +179,52 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {recentAnnouncements.map((item, idx) => (
-            <div
-              key={idx}
-              className="group relative bg-white dark:bg-college-navy border border-gray-100 dark:border-college-gold/20 rounded-sm shadow-sm hover:shadow-xl hover:-translate-y-1 hover:bg-college-navy dark:hover:bg-white/5 transition-all duration-300 flex overflow-hidden"
-            >
-              {/* Vertical Accent Bar */}
-              <div className="w-1 bg-college-navy dark:bg-college-gold opacity-20 dark:opacity-30 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+          {isAnnouncementsLoading ? (
+            Array.from({ length: 3 }).map((_, idx) => (
+              <SkeletonLoading key={idx} variant="card" className="h-40" />
+            ))
+          ) : recentAnnouncements.length > 0 ? (
+            recentAnnouncements.map((item, idx) => (
+              <div
+                key={idx}
+                className="group relative bg-white dark:bg-college-navy border border-gray-100 dark:border-college-gold/20 rounded-sm shadow-sm hover:shadow-xl hover:-translate-y-1 hover:bg-college-navy dark:hover:bg-white/5 transition-all duration-300 flex overflow-hidden"
+              >
+                {/* Vertical Accent Bar */}
+                <div className="w-1 bg-college-navy dark:bg-college-gold opacity-20 dark:opacity-30 group-hover:opacity-100 transition-opacity flex-shrink-0" />
 
-              <div className="p-5 flex flex-col justify-between w-full">
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] font-bold tracking-wider text-college-navy dark:text-college-gold group-hover:text-white/70 transition-colors uppercase">
-                      RECENT
-                    </span>
-                    <ArrowRight
-                      size={14}
-                      className="text-college-navy dark:text-college-gold opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:text-white transition-all duration-300"
-                    />
+                <div className="p-5 flex flex-col justify-between w-full">
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-[10px] font-bold tracking-wider text-college-navy dark:text-college-gold group-hover:text-white/70 transition-colors uppercase">
+                        RECENT
+                      </span>
+                      <ArrowRight
+                        size={14}
+                        className="text-college-navy dark:text-college-gold opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:text-white transition-all duration-300"
+                      />
+                    </div>
+                    <h3 className="text-sm font-bold text-college-navy dark:text-white leading-tight mb-2 group-hover:text-white transition-colors line-clamp-2">
+                      {item.title}
+                    </h3>
                   </div>
-                  <h3 className="text-sm font-bold text-college-navy dark:text-white leading-tight mb-2 group-hover:text-white transition-colors line-clamp-2">
-                    {item.title}
-                  </h3>
+                  <p className="text-[10px] text-gray-400 dark:text-gray-500 font-semibold tracking-widest uppercase mt-4 transition-colors group-hover:text-white/50">
+                    {item.date}
+                  </p>
                 </div>
-                <p className="text-[10px] text-gray-400 dark:text-gray-500 font-semibold tracking-widest uppercase mt-4 transition-colors group-hover:text-white/50">
-                  {item.date}
-                </p>
               </div>
+            ))
+          ) : (
+            <div className="col-span-full py-10 text-center border-2 border-dashed border-gray-200 dark:border-college-gold/10 rounded-sm">
+                <p className="text-sm text-gray-500 dark:text-gray-400">No recent announcements</p>
             </div>
-          ))}
+          )}
 
-          <button className="group relative flex flex-col items-center justify-center gap-2 p-5 rounded-sm border-2 border-dashed border-gray-200 dark:border-college-gold/20 bg-gray-50/50 dark:bg-white/5 text-sm font-bold text-gray-400 dark:text-gray-500 hover:border-college-navy dark:hover:border-college-gold hover:text-white dark:hover:text-college-gold hover:bg-college-navy dark:hover:bg-college-gold/5 transition-all duration-300 min-h-[120px]">
-            <span className="text-2xl font-light group-hover:scale-125 transition-transform">+</span>
-            <span className="tracking-widest uppercase text-[11px]">New Broadcast</span>
-          </button>
+          {!isAnnouncementsLoading && (
+            <button className="group relative flex flex-col items-center justify-center gap-2 p-5 rounded-sm border-2 border-dashed border-gray-200 dark:border-college-gold/20 bg-gray-50/50 dark:bg-white/5 text-sm font-bold text-gray-400 dark:text-gray-500 hover:border-college-navy dark:hover:border-college-gold hover:text-white dark:hover:text-college-gold hover:bg-college-navy dark:hover:bg-college-gold/5 transition-all duration-300 min-h-[120px]">
+              <span className="text-2xl font-light group-hover:scale-125 transition-transform">+</span>
+              <span className="tracking-widest uppercase text-[11px]">New Broadcast</span>
+            </button>
+          )}
         </div>
       </section>
     </div>

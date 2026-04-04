@@ -26,19 +26,19 @@ const AnnouncementCard = ({ announcement, role = "faculty", onDelete }) => {
   return (
     <Card
       hover={false}
-      className="p-5 border border-gray-200 dark:border-college-gold/50 shadow-sm"
+      className="p-5 border border-college-navy/10 dark:border-college-gold/30 shadow-2xl bg-white dark:bg-college-navy"
     >
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
           {/* Unified Header: Class Section â€¢ Date */}
           <div className="flex flex-wrap items-center gap-2 mb-2">
-            <span className="text-[10px] font-bold text-college-navy dark:text-college-gold uppercase tracking-wider">
+            <span className="text-[10px] font-black text-college-navy/80 dark:text-college-gold uppercase tracking-[0.2em]">
               {classSection}
             </span>
-            <span className="text-[10px] text-gray-300 dark:text-white/20">
+            <span className="text-[10px] text-college-navy/20 dark:text-white/20">
               â€¢
             </span>
-            <p className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">
+            <p className="text-[10px] text-college-navy/40 dark:text-white/40 font-black uppercase tracking-tight">
               {date}
             </p>
           </div>
@@ -47,7 +47,7 @@ const AnnouncementCard = ({ announcement, role = "faculty", onDelete }) => {
             {title}
           </h3>
 
-          <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 leading-relaxed">
+          <p className="text-sm font-bold text-college-navy/60 dark:text-white/60 mt-3 leading-relaxed">
             {description}
           </p>
 

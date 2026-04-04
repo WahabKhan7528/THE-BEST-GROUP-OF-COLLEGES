@@ -4,6 +4,7 @@ import { ArrowRight, BookOpen, CalendarDays, Lock, Layers3 } from "lucide-react"
 import { useFacultyContext } from "../../store/hooks/useFacultyReduxContext";
 import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
+import SkeletonLoading from "../../components/shared/SkeletonLoading";
 
 const campusNames = {
   main: "Main Campus",
@@ -58,7 +59,7 @@ const getTermSummary = (cls, facultyId) => {
 
 const Results = () => {
   const navigate = useNavigate();
-  const { currentFaculty, getCurrentCampus, getClassesByCurrentCampus, isDarkMode } = useFacultyContext();
+  const { currentFaculty, getCurrentCampus, getClassesByCurrentCampus, isDarkMode, loading: isContextLoading } = useFacultyContext();
   const campus = getCurrentCampus();
   const classes = getClassesByCurrentCampus();
   const [activeTab, setActiveTab] = useState("new");
@@ -97,21 +98,33 @@ const Results = () => {
     <div className="space-y-6 pb-10">
       <PortalPageHeader
         badge={
-          <Badge variant={isDarkMode ? "gold" : "navy"}>
-            {getCampusLabel(campus)}
-          </Badge>
+          isContextLoading ? (
+            <SkeletonLoading variant="textLine" className="h-6 w-24" />
+          ) : (
+            <Badge variant={isDarkMode ? "gold" : "navy"}>
+              {getCampusLabel(campus)}
+            </Badge>
+          )
         }
         title="Results Management"
         subtitle="Choose a class and semester. New terms can be graded, old terms are read-only."
         action={
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
-            <div className="bg-white dark:bg-college-navy/80 border border-college-navy/10 dark:border-college-gold/20 rounded-sm px-4 py-3 shadow-lg">
+            <div className="bg-white dark:bg-college-navy/80 border border-college-navy/10 dark:border-college-gold/20 rounded-sm px-4 py-3 shadow-lg min-w-[120px]">
               <p className="text-[10px] uppercase tracking-[0.18em] text-college-navy/60 dark:text-college-gold font-bold">New Terms</p>
-              <p className="text-2xl font-black text-college-navy dark:text-white">{counts.newCount}</p>
+              {isContextLoading ? (
+                <SkeletonLoading variant="textLine" className="h-8 w-12 mt-1" />
+              ) : (
+                <p className="text-2xl font-black text-college-navy dark:text-white">{counts.newCount}</p>
+              )}
             </div>
-            <div className="bg-white dark:bg-college-navy/80 border border-college-navy/10 dark:border-college-gold/20 rounded-sm px-4 py-3 shadow-lg">
+            <div className="bg-white dark:bg-college-navy/80 border border-college-navy/10 dark:border-college-gold/20 rounded-sm px-4 py-3 shadow-lg min-w-[120px]">
               <p className="text-[10px] uppercase tracking-[0.18em] text-college-navy/60 dark:text-college-gold font-bold">Old Terms</p>
-              <p className="text-2xl font-black text-college-navy dark:text-white">{counts.oldCount}</p>
+              {isContextLoading ? (
+                <SkeletonLoading variant="textLine" className="h-8 w-12 mt-1" />
+              ) : (
+                <p className="text-2xl font-black text-college-navy dark:text-white">{counts.oldCount}</p>
+              )}
             </div>
           </div>
         }
@@ -121,16 +134,18 @@ const Results = () => {
         <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
+            disabled={isContextLoading}
             onClick={() => setActiveTab("new")}
-            className={`flex items-center justify-center gap-2 rounded-sm px-4 py-3 text-sm font-bold transition-all ${activeTab === "new" ? "bg-college-navy text-white dark:bg-college-gold dark:text-college-navy" : "bg-slate-50 text-slate-600 dark:bg-white/5 dark:text-slate-300"}`}
+            className={`flex items-center justify-center gap-2 rounded-sm px-4 py-3 text-sm font-bold transition-all ${activeTab === "new" ? "bg-college-navy text-white dark:bg-college-gold dark:text-college-navy" : "bg-slate-50 text-slate-600 dark:bg-white/5 dark:text-slate-300"} ${isContextLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             <BookOpen className="h-4 w-4" />
             New
           </button>
           <button
             type="button"
+            disabled={isContextLoading}
             onClick={() => setActiveTab("old")}
-            className={`flex items-center justify-center gap-2 rounded-sm px-4 py-3 text-sm font-bold transition-all ${activeTab === "old" ? "bg-college-navy text-white dark:bg-college-gold dark:text-college-navy" : "bg-slate-50 text-slate-600 dark:bg-white/5 dark:text-slate-300"}`}
+            className={`flex items-center justify-center gap-2 rounded-sm px-4 py-3 text-sm font-bold transition-all ${activeTab === "old" ? "bg-college-navy text-white dark:bg-college-gold dark:text-college-navy" : "bg-slate-50 text-slate-600 dark:bg-white/5 dark:text-slate-300"} ${isContextLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             <Lock className="h-4 w-4" />
             Old
@@ -138,7 +153,31 @@ const Results = () => {
         </div>
       </div>
 
-      {classCards.length > 0 ? (
+      {isContextLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          {Array.from({ length: 6 }).map((_, idx) => (
+            <div key={idx} className="bg-white dark:bg-college-navy border border-college-navy/10 dark:border-college-gold/20 rounded-sm p-5 space-y-4 animate-pulse">
+                <div className="flex items-start justify-between gap-3">
+                    <div className="space-y-2">
+                        <SkeletonLoading variant="textLine" className="h-5 w-24 rounded-full" />
+                        <SkeletonLoading variant="textLine" className="h-7 w-48" />
+                    </div>
+                    <SkeletonLoading variant="textLine" className="h-5 w-12 rounded-full" />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                    <SkeletonLoading variant="panel" className="h-16" />
+                    <SkeletonLoading variant="panel" className="h-16" />
+                    <SkeletonLoading variant="panel" className="h-16" />
+                    <SkeletonLoading variant="panel" className="h-16" />
+                </div>
+                <div className="flex justify-between items-center pt-2">
+                    <SkeletonLoading variant="textLine" className="h-4 w-20" />
+                    <SkeletonLoading variant="textLine" className="h-4 w-16" />
+                </div>
+            </div>
+          ))}
+        </div>
+      ) : classCards.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {classCards.map((cls) => (
             <button

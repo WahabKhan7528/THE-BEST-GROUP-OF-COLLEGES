@@ -5,6 +5,7 @@ import { useStudentContext } from "../../store/hooks/useStudentReduxContext";
 import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
 import PortalStatsCard from "../../components/portal-shared/PortalStatsCard";
+import SkeletonLoading from "../../components/shared/SkeletonLoading";
 
 const quickLinks = [
   { title: "Assignments", description: "View and submit coursework", path: "/student/assignments" },
@@ -24,6 +25,7 @@ const Dashboard = () => {
     getCurrentCampus,
     getCurrentAcademicProfile,
     isDarkMode,
+    loading,
   } = useStudentContext();
 
   const campus = getCurrentCampus();
@@ -59,6 +61,50 @@ const Dashboard = () => {
       hint: "Completed",
     }
   ];
+  if (loading) {
+    return (
+      <div className="space-y-8 pb-10 animate-pulse">
+        {/* Header Skeleton */}
+        <div className="space-y-2">
+          <SkeletonLoading variant="textLine" className="w-20 h-5" />
+          <SkeletonLoading variant="textLine" className="w-1/2 h-10" />
+          <SkeletonLoading variant="textLine" className="w-1/3 h-4" />
+        </div>
+
+        {/* Stats Grid Skeleton */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5 lg:gap-6">
+          {[1, 2, 3, 4].map((i) => (
+            <SkeletonLoading key={i} variant="panel" className="h-32" />
+          ))}
+        </div>
+
+        {/* Quick Links Skeleton */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          {[1, 2, 3, 4].map((i) => (
+            <SkeletonLoading key={i} variant="panel" className="h-32" />
+          ))}
+        </div>
+
+        {/* Main Sections Skeleton */}
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {[1, 2].map((i) => (
+            <div key={i} className="bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/30 rounded-sm p-6 space-y-4">
+              <div className="flex justify-between items-center mb-4">
+                <div className="space-y-2">
+                  <SkeletonLoading variant="textLine" className="w-32 h-6" />
+                  <SkeletonLoading variant="textLine" className="w-24 h-4" />
+                </div>
+                <SkeletonLoading variant="textLine" className="w-16 h-8" />
+              </div>
+              {[1, 2, 3].map((j) => (
+                <SkeletonLoading key={j} variant="panel" className="h-20" />
+              ))}
+            </div>
+          ))}
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 pb-10">

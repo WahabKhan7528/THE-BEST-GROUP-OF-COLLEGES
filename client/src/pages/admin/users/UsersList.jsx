@@ -5,6 +5,7 @@ import { useToast } from "../../../context/ToastContext";
 import { useConfirm } from "../../../context/ConfirmContext";
 import PublicButton from "../../../components/shared/PublicButton";
 import Table from "../../../components/portal-shared/Table";
+import Badge from "../../../components/shared/Badge";
 import SkeletonLoading from "../../../components/shared/SkeletonLoading";
 import {
   Plus,
@@ -87,25 +88,29 @@ const UsersList = () => {
       label: "User Details",
       render: (row) => (
         <div className="flex flex-col">
-          <span className="font-semibold text-college-navy">
+          <span className="font-semibold dark:text-white text-college-navy">
             {row.name || row.fullName || row.studentName || row.displayName || row.portalId || "Unnamed User"}
           </span>
-          <span className="text-xs text-gray-500">{row.email}</span>
+          <span className="text-xs text-gray-500 dark:text-gray-400">{row.email}</span>
         </div>
       )
     },
     {
       key: "role",
       label: "Role",
-      render: (row) => (
-        <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${row.role === 'super_admin' ? 'bg-college-navy/10 text-college-navy dark:text-college-gold' :
-          row.role === 'admin' ? 'bg-college-gold/10 text-college-navy dark:text-college-gold' :
-            row.role === 'faculty' ? 'bg-white dark:bg-college-navy/50 border border-college-gold/20 text-college-navy dark:text-college-gold' :
-              'bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-400'
-          }`}>
-          {row.role?.replace("_", " ")}
-        </span>
-      )
+      render: (row) => {
+        const getRoleVariant = (role) => {
+          if (role === 'super_admin') return 'navy';
+          if (role === 'admin') return 'gold';
+          if (role === 'faculty') return 'outline';
+          return 'subtle';
+        };
+        return (
+          <Badge variant={getRoleVariant(row.role)}>
+            {row.role?.replace("_", " ")}
+          </Badge>
+        );
+      }
     },
     { key: "portalId", label: "ID" },
     { key: "department", label: "Department / Subject / Course" },
@@ -113,9 +118,9 @@ const UsersList = () => {
       key: "campus",
       label: "Campuses",
       render: (row) => (
-        <span className="text-sm bg-gray-50 px-2 py-1 rounded border border-gray-100 font-medium text-gray-600">
+        <Badge variant="subtle" className="font-bold">
           {getCampusesDisplay(row.campus)}
-        </span>
+        </Badge>
       ),
     },
   ];
@@ -173,7 +178,7 @@ const UsersList = () => {
           {/* Search */}
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-4 w-4 text-gray-400" />
+              <Search className="h-4 w-4 text-gray-400 dark:text-college-gold/60" />
             </div>
             <input
               type="text"
@@ -187,7 +192,7 @@ const UsersList = () => {
           {/* Role Filter */}
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Shield className="h-4 w-4 text-gray-400" />
+              <Shield className="h-4 w-4 text-gray-400 dark:text-college-gold/60" />
             </div>
             <select
               value={selectedRole}
@@ -206,7 +211,7 @@ const UsersList = () => {
           {isSuperAdmin && (
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Building2 className="h-4 w-4 text-gray-400" />
+                <Building2 className="h-4 w-4 text-gray-400 dark:text-college-gold/60" />
               </div>
               <select
                 value={selectedCampus}
@@ -247,18 +252,13 @@ const UsersList = () => {
         </div>
       </div>
 
-      {/* Table */}
-      {isLoading ? (
-        <div className="bg-white dark:bg-college-navy border border-gray-200 dark:border-dark-border rounded-sm shadow-sm overflow-hidden">
-          <div className="p-5 space-y-4">
-            <SkeletonLoading count={6} variant="tableRow" containerClassName="space-y-4" />
-          </div>
-        </div>
-      ) : filteredData.length > 0 ? (
+      {/* Table Section */}
+      {isLoading || filteredData.length > 0 ? (
         <Table
           columns={columns}
           data={filteredData}
           actionButtons={actionButtons}
+          isLoading={isLoading}
         />
       ) : (
         <div className="flex flex-col items-center justify-center py-12 rounded-sm border border-dashed border-gray-300 dark:border-college-gold/20">

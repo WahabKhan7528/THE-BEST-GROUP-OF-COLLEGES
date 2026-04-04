@@ -207,21 +207,19 @@ const EditGalleryImage = () => {
                         </div>
 
                         <div className="col-span-1 md:col-span-2">
-                            <label className="text-xs md:text-sm font-medium text-college-navy dark:text-gray-200">
-                                Image Category <span className="text-red-500">*</span>
-                            </label>
-                            <select
-                                {...register("category")}
-                                className="w-full px-4 py-2.5 rounded-sm border border-gray-200 dark:border-college-gold/20 bg-white dark:bg-college-navy/50 dark:text-white focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm md:text-base mt-2"
+                            <PortalForm.Select
+                                label="Image Category"
+                                registration={register("category")}
                                 required
-                            >
-                                <option value="" disabled>Select category</option>
-                                <option value="Campus Life">Campus Life</option>
-                                <option value="Events">Events</option>
-                                <option value="Facilities">Facilities</option>
-                                <option value="Academic">Academic</option>
-                                <option value="Sports">Sports</option>
-                            </select>
+                                options={[
+                                    { id: "Campus Life", label: "Campus Life" },
+                                    { id: "Events", label: "Events" },
+                                    { id: "Facilities", label: "Facilities" },
+                                    { id: "Academic", label: "Academic" },
+                                    { id: "Sports", label: "Sports" },
+                                ]}
+                                placeholder="Select category"
+                            />
                         </div>
 
                         <div className="col-span-1 md:col-span-2">
@@ -233,7 +231,7 @@ const EditGalleryImage = () => {
                         </div>
 
                         <div className="space-y-1.5 col-span-1 md:col-span-2">
-                            <label className="text-xs md:text-sm font-medium text-college-navy dark:text-gray-200">
+                            <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-1.5 focus:text-college-navy dark:focus:text-college-gold transition-colors">
                                 Description
                             </label>
                             <textarea
