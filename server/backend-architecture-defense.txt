@@ -1,0 +1,606 @@
+THE BEST GROUP OF COLLEGES - BACKEND ARCHITECTURE DEFENSE GUIDE
+Version date: 2026-04-08
+Scope: server folder only (excluding third-party node_modules source)
+
+============================================================
+1) HIGH-LEVEL BACKEND ARCHITECTURE
+============================================================
+
+Backend stack:
+- Runtime: Node.js (ES modules)
+- Framework: Express
+- Database: MongoDB with Mongoose
+- Auth: JWT access + refresh token strategy with cookie-based sessions
+- Storage: Cloudinary (primary) with local uploads fallback
+- Security: Helmet, CORS, rate limiting, Mongo sanitize, role-based access control
+
+Layered structure in this project:
+- Entry/Application: server.js, app.js
+- Routing layer: routes/*.js
+- Controller layer: controllers/*.js
+- Service layer: services/authService.js
+- Data layer: models/*.js + database/db.js
+- Middleware layer: middlewares/*.js
+- Shared utility layer: utils/*.js + config/constants.js
+
+Why this structure exists:
+- Keeps responsibilities separated for maintainability and easier debugging.
+- Lets each layer be defended clearly in FYP viva:
+  - Routes = endpoint map
+  - Controllers = business orchestration
+  - Models = data contracts and constraints
+  - Services/utils = reusable logic
+  - Middleware = cross-cutting concerns (auth, errors, uploads)
+
+============================================================
+2) STARTUP AND REQUEST FLOW
+============================================================
+
+Startup flow:
+1. server/server.js starts process.
+2. Loads environment via utils/loadEnv.js import side effect.
+3. connectDB() from database/db.js connects to MongoDB.
+4. configureCloudinary() prepares media integration.
+5. app.listen() starts HTTP server.
+
+Express app flow (app.js):
+1. Security and parsing middlewares:
+   - helmet, cors, cookieParser, json/urlencoded parsers, mongoSanitize, morgan.
+2. Static serving for local uploaded files under /uploads.
+3. Login rate limiter on /api/v1/auth/login.
+4. Route mounting:
+   - /api/v1/auth
+   - /api/v1/public
+   - /api/v1/admin
+   - /api/v1/portal
+5. notFound middleware for unmatched routes.
+6. Central errorHandler middleware returns consistent API error payload.
+
+Protected request lifecycle:
+1. Browser sends cookies (access token).
+2. protect middleware verifies token and loads user with population.
+3. authorize middleware checks allowed roles.
+4. Controller executes business logic.
+5. Mongoose models read/write MongoDB.
+6. Response sent as structured JSON.
+
+============================================================
+3) AUTHENTICATION AND SESSION MODEL
+============================================================
+
+Access token:
+- Short-lived JWT for API authorization.
+- Read from HTTP-only cookie.
+
+Refresh token:
+- Longer-lived JWT for session renewal.
+- Stored as hash in RefreshToken model (not plain token), enabling secure revocation.
+
+Important security behavior:
+- Login issues both tokens and sets cookies.
+- Refresh endpoint rotates refresh tokens (old token revoked).
+- Logout revokes refresh token and clears auth cookies.
+- Change password revokes all active refresh tokens for the user.
+
+Why this design exists:
+- Better security than long-lived access token.
+- Supports session invalidation (logout everywhere / credential rotation).
+
+============================================================
+4) MEDIA/FILE UPLOAD DESIGN
+============================================================
+
+Upload middleware:
+- multer with memory storage, file size and MIME validation.
+
+Upload utility behavior:
+- Primary path: upload buffer to Cloudinary.
+- Fallback path: if cloud config unavailable, write to local server/uploads.
+
+Why this design exists:
+- Production-friendly cloud storage plus local dev resilience.
+- Keeps controllers simple by centralizing upload behavior in utility functions.
+
+============================================================
+5) DATA MODEL STRATEGY (CONCEPTUAL)
+============================================================
+
+Core academic domain chain:
+- Campus -> Course -> ClassRoom -> Subject -> Assignment/Material/Announcement
+- StudentEnrollment connects Student to class/course/term context.
+- Submission links student work to assignment.
+- Result stores evaluation output and academic performance.
+
+Identity and access domain:
+- User model contains roles and role-specific academic links.
+- RefreshToken supports secure persistent session lifecycle.
+
+Administration and CMS domain:
+- NewsEvent and GalleryItem power public website dynamic content.
+- Mapping models (CourseSemesterMapping, AnnualYearMapping, ClassSubject) support structured academic configuration.
+
+============================================================
+6) COMPLETE BACKEND FILE CATALOG
+(what each file does, why it exists, who uses it, impact if removed)
+============================================================
+
+NOTE:
+- This catalog includes all files currently inside server/ except node_modules internals.
+- Status legend:
+  - RUNTIME-CRITICAL = required for live API behavior
+  - SUPPORT/SETUP = operational/developer workflow support
+  - RUNTIME-DATA = generated content artifacts
+
+------------------------------------------------------------
+6.1 ROOT FILES
+------------------------------------------------------------
+
+1) server/.env
+- Status: SUPPORT/SETUP (sensitive config)
+- Purpose: environment variables (DB URI, JWT secrets, Cloudinary keys, etc.).
+- Used by: utils/loadEnv.js, process.env reads across app.
+- Why present: externalized configuration for security and environment portability.
+- If removed: app boot fails or runs with missing config.
+
+2) server/app.js
+- Status: RUNTIME-CRITICAL
+- Purpose: constructs Express app, middleware chain, route mounting, error pipeline.
+- Used by: server/server.js imports and starts it.
+- Why present: central HTTP app composition file.
+- If removed: backend cannot serve API routes.
+
+3) server/package.json
+- Status: RUNTIME-CRITICAL
+- Purpose: dependencies and scripts (dev/start/seed/db clear).
+- Used by: npm/node runtime tooling.
+- Why present: package manager manifest.
+- If removed: dependencies/scripts cannot be managed.
+
+4) server/package-lock.json
+- Status: SUPPORT/SETUP
+- Purpose: deterministic dependency versions.
+- Used by: npm install reproducibility.
+- Why present: consistent environments across machines.
+- If removed: installs may drift by version.
+
+5) server/README.md
+- Status: SUPPORT/SETUP
+- Purpose: backend usage/setup/API notes.
+- Used by: developers and exam explanation context.
+- Why present: documentation.
+- If removed: no direct runtime break, but maintainability suffers.
+
+6) server/server.js
+- Status: RUNTIME-CRITICAL
+- Purpose: process entry point, DB connect, cloud setup, listen.
+- Used by: npm start/dev scripts.
+- Why present: explicit backend bootstrap.
+- If removed: server process cannot start.
+
+------------------------------------------------------------
+6.2 CONFIG
+------------------------------------------------------------
+
+7) server/config/constants.js
+- Status: RUNTIME-CRITICAL
+- Purpose: shared constants for roles, news types, file types.
+- Used by: routes/controllers/validation logic.
+- Why present: avoids magic strings and keeps enums centralized.
+- If removed: role checks and validation references break.
+
+------------------------------------------------------------
+6.3 CONTROLLERS
+------------------------------------------------------------
+
+8) server/controllers/adminController.js
+- Status: RUNTIME-CRITICAL
+- Purpose: admin CRUD and academic structure management.
+- Used by: routes/adminRoutes.js.
+- Why present: central orchestration for admin portal operations.
+- If removed: admin endpoints fail.
+
+9) server/controllers/authController.js
+- Status: RUNTIME-CRITICAL
+- Purpose: register/login/refresh/logout/me/change-password flows.
+- Used by: routes/authRoutes.js.
+- Why present: authentication and session control.
+- If removed: login/session APIs fail.
+
+10) server/controllers/portalController.js
+- Status: RUNTIME-CRITICAL
+- Purpose: faculty/student portal workflows (announcements, assignments, materials, submissions, results).
+- Used by: routes/portalRoutes.js.
+- Why present: academic interaction business logic.
+- If removed: portal APIs fail.
+
+11) server/controllers/publicController.js
+- Status: RUNTIME-CRITICAL
+- Purpose: public site data endpoints (campuses, courses, faculty directory, gallery, news/events).
+- Used by: routes/publicRoutes.js.
+- Why present: supports frontend public pages.
+- If removed: public website API content fails.
+
+------------------------------------------------------------
+6.4 DATABASE
+------------------------------------------------------------
+
+12) server/database/db.js
+- Status: RUNTIME-CRITICAL
+- Purpose: MongoDB connection function.
+- Used by: server/server.js.
+- Why present: isolates DB boot logic.
+- If removed: app cannot connect to database.
+
+------------------------------------------------------------
+6.5 MIDDLEWARES
+------------------------------------------------------------
+
+13) server/middlewares/authMiddleware.js
+- Status: RUNTIME-CRITICAL
+- Purpose: protect + authorize middleware for authentication and RBAC.
+- Used by: adminRoutes.js and portalRoutes.js.
+- Why present: secure access boundaries.
+- If removed: protected routes become insecure or broken.
+
+14) server/middlewares/errorMiddleware.js
+- Status: RUNTIME-CRITICAL
+- Purpose: 404 and centralized error shaping.
+- Used by: app.js end-of-pipeline handlers.
+- Why present: consistent API error contract.
+- If removed: unstable/unstructured error handling.
+
+15) server/middlewares/uploadMiddleware.js
+- Status: RUNTIME-CRITICAL
+- Purpose: upload constraints and multipart parsing.
+- Used by: routes requiring file input (admin + portal routes).
+- Why present: safe upload processing.
+- If removed: upload endpoints fail.
+
+------------------------------------------------------------
+6.6 MODELS
+------------------------------------------------------------
+
+16) server/models/Announcement.js
+- Status: RUNTIME-CRITICAL
+- Purpose: class-targeted announcements.
+- Used by: portalController.
+- Why present: faculty/admin communication to classes.
+- If removed: announcement feature fails.
+
+17) server/models/AnnualYear.js
+- Status: RUNTIME-CRITICAL
+- Purpose: annual-system term definitions.
+- Used by: adminController, Subject/User enrollment context.
+- Why present: supports annual exam structures.
+- If removed: annual term mapping breaks.
+
+18) server/models/AnnualYearMapping.js
+- Status: RUNTIME-CRITICAL
+- Purpose: maps courses to annual years and order metadata.
+- Used by: adminController.
+- Why present: formal academic plan mapping.
+- If removed: year mapping APIs fail.
+
+19) server/models/Assignment.js
+- Status: RUNTIME-CRITICAL
+- Purpose: assignments created for classes/subjects.
+- Used by: portalController, Submission relations.
+- Why present: assignment lifecycle backbone.
+- If removed: assignment/submission workflow fails.
+
+20) server/models/Campus.js
+- Status: RUNTIME-CRITICAL
+- Purpose: campus entities and media.
+- Used by: admin/public controllers, User/Course refs.
+- Why present: multi-campus architecture core.
+- If removed: campus-linked features fail.
+
+21) server/models/ClassRoom.js
+- Status: RUNTIME-CRITICAL
+- Purpose: class entities, subjects, faculty/student associations.
+- Used by: admin/portal controllers and many refs.
+- Why present: central academic execution unit.
+- If removed: almost all academic operations fail.
+
+22) server/models/ClassSubject.js
+- Status: RUNTIME-CRITICAL
+- Purpose: class-subject-faculty assignment mapping.
+- Used by: admin academic setup flows.
+- Why present: assignment normalization and tracking.
+- If removed: structured allocations degrade/break.
+
+23) server/models/Course.js
+- Status: RUNTIME-CRITICAL
+- Purpose: course metadata and campus offerings.
+- Used by: admin/public controllers and references.
+- Why present: course-level academic organization.
+- If removed: course features fail.
+
+24) server/models/CourseSemesterMapping.js
+- Status: RUNTIME-CRITICAL
+- Purpose: semester mapping per course.
+- Used by: adminController.
+- Why present: curriculum structuring across terms.
+- If removed: semester planning APIs fail.
+
+25) server/models/GalleryItem.js
+- Status: RUNTIME-CRITICAL
+- Purpose: public gallery CMS entries.
+- Used by: admin/public controllers.
+- Why present: dynamic gallery content for website.
+- If removed: gallery CMS/public endpoints fail.
+
+26) server/models/Material.js
+- Status: RUNTIME-CRITICAL
+- Purpose: faculty-uploaded study materials.
+- Used by: portalController.
+- Why present: course resource distribution.
+- If removed: materials feature fails.
+
+27) server/models/NewsEvent.js
+- Status: RUNTIME-CRITICAL
+- Purpose: news/events CMS with publish states.
+- Used by: admin/public controllers.
+- Why present: website news and events module.
+- If removed: news/events endpoints fail.
+
+28) server/models/RefreshToken.js
+- Status: RUNTIME-CRITICAL
+- Purpose: persistent refresh token records with revocation.
+- Used by: authController, authService.
+- Why present: secure session lifecycle.
+- If removed: refresh/logout/session invalidation breaks.
+
+29) server/models/Result.js
+- Status: RUNTIME-CRITICAL
+- Purpose: student assessment outcomes.
+- Used by: portalController and result views.
+- Why present: grading and transcript-like data.
+- If removed: result workflow fails.
+
+30) server/models/ResultCalculationLog.js
+- Status: RUNTIME-CRITICAL
+- Purpose: audit/logging of result calculations.
+- Used by: portal result publishing logic.
+- Why present: traceability for grading computations.
+- If removed: calculation audit capability lost.
+
+31) server/models/Semester.js
+- Status: RUNTIME-CRITICAL
+- Purpose: semester term definitions.
+- Used by: adminController and linked entities.
+- Why present: semester-based academic structure.
+- If removed: semester-linked flows break.
+
+32) server/models/StudentEnrollment.js
+- Status: RUNTIME-CRITICAL
+- Purpose: links student to class/course/term and progression status.
+- Used by: admin and portal logic.
+- Why present: enrollment and progression tracking.
+- If removed: student academic state model collapses.
+
+33) server/models/Subject.js
+- Status: RUNTIME-CRITICAL
+- Purpose: subject definitions with credits and relationships.
+- Used by: admin/portal logic.
+- Why present: subject-level planning and grading.
+- If removed: subject-based operations fail.
+
+34) server/models/Submission.js
+- Status: RUNTIME-CRITICAL
+- Purpose: assignment submissions and grading feedback records.
+- Used by: portalController.
+- Why present: student work lifecycle.
+- If removed: submission and grading fail.
+
+35) server/models/User.js
+- Status: RUNTIME-CRITICAL
+- Purpose: identity, role, credential, and profile model.
+- Used by: all protected flows and many references.
+- Why present: principal entity for auth and RBAC.
+- If removed: backend unusable.
+
+------------------------------------------------------------
+6.7 ROUTES
+------------------------------------------------------------
+
+36) server/routes/adminRoutes.js
+- Status: RUNTIME-CRITICAL
+- Purpose: binds admin endpoints to adminController with RBAC/upload middleware.
+- Used by: app.js route mounting.
+- Why present: admin API surface definition.
+- If removed: /api/v1/admin APIs unavailable.
+
+37) server/routes/authRoutes.js
+- Status: RUNTIME-CRITICAL
+- Purpose: auth endpoint map.
+- Used by: app.js.
+- Why present: authentication API contract.
+- If removed: /api/v1/auth APIs unavailable.
+
+38) server/routes/portalRoutes.js
+- Status: RUNTIME-CRITICAL
+- Purpose: faculty/student portal endpoint map.
+- Used by: app.js.
+- Why present: portal API contract.
+- If removed: /api/v1/portal APIs unavailable.
+
+39) server/routes/publicRoutes.js
+- Status: RUNTIME-CRITICAL
+- Purpose: public endpoint map.
+- Used by: app.js.
+- Why present: website data API contract.
+- If removed: /api/v1/public APIs unavailable.
+
+------------------------------------------------------------
+6.8 SERVICES
+------------------------------------------------------------
+
+40) server/services/authService.js
+- Status: RUNTIME-CRITICAL
+- Purpose: token issuance and cookie helper abstraction.
+- Used by: authController.
+- Why present: keeps auth concerns reusable and cleaner than controller-only implementation.
+- If removed: authController logic breaks or becomes duplicated.
+
+------------------------------------------------------------
+6.9 UTILS
+------------------------------------------------------------
+
+41) server/utils/ApiError.js
+- Status: RUNTIME-CRITICAL
+- Purpose: standardized operational error class.
+- Used by: controllers and middleware.
+- Why present: consistent status/message error semantics.
+- If removed: error consistency degrades.
+
+42) server/utils/asyncHandler.js
+- Status: RUNTIME-CRITICAL
+- Purpose: wraps async controllers to forward promise errors to middleware.
+- Used by: routes/controllers.
+- Why present: avoids repetitive try/catch boilerplate.
+- If removed: unhandled promise risks and noisy controller code.
+
+43) server/utils/clearDatabase.js
+- Status: SUPPORT/SETUP
+- Purpose: utility script to clear collections.
+- Used by: package script db:clear.
+- Why present: maintenance/reset workflow for dev/testing.
+- If removed: runtime unaffected, but reset tooling lost.
+
+44) server/utils/cloudinary.js
+- Status: RUNTIME-CRITICAL
+- Purpose: Cloudinary config, upload, delete, and local fallback behavior.
+- Used by: controllers + server bootstrap.
+- Why present: unified media storage abstraction.
+- If removed: file media flows fail.
+
+45) server/utils/generatedId.js
+- Status: RUNTIME-CRITICAL
+- Purpose: standardized generated IDs and schema plugin helper.
+- Used by: multiple model schemas and generation logic.
+- Why present: consistent human-readable IDs across entities.
+- If removed: IDs and related expectations break.
+
+46) server/utils/identifier.js
+- Status: RUNTIME-CRITICAL
+- Purpose: helper functions for portal/code prefixes and normalization.
+- Used by: generatedId and identifier creation flows.
+- Why present: reusable identifier conventions.
+- If removed: ID generation helpers break.
+
+47) server/utils/loadEnv.js
+- Status: RUNTIME-CRITICAL
+- Purpose: centralized env loading bootstrap.
+- Used by: server.js and utility scripts.
+- Why present: guarantees env variables available before app logic.
+- If removed: env-dependent startup can fail.
+
+48) server/utils/seedDemoData.js
+- Status: SUPPORT/SETUP
+- Purpose: populate demo data set.
+- Used by: package scripts seed:demo/seed:reset.
+- Why present: fast demo/test environment preparation.
+- If removed: runtime unaffected, but demo setup lost.
+
+49) server/utils/seedSuperAdmin.js
+- Status: SUPPORT/SETUP
+- Purpose: create bootstrap super admin account.
+- Used by: package script seed:admin.
+- Why present: initial admin provisioning workflow.
+- If removed: runtime unaffected, onboarding flow harder.
+
+50) server/utils/token.js
+- Status: RUNTIME-CRITICAL
+- Purpose: JWT sign/verify and token hashing helpers.
+- Used by: authService, authController, authMiddleware.
+- Why present: shared auth cryptographic logic.
+- If removed: auth/session functions break.
+
+------------------------------------------------------------
+6.10 RUNTIME-DATA FILES (UPLOAD ARTIFACTS)
+------------------------------------------------------------
+
+51) server/uploads/the-best-college/assignments/1774761393287-43828de1-b1f7-4ce4-8817-3c6e63fe82e0-project_proposal.pdf
+52) server/uploads/the-best-college/assignments/1774764589002-7f5e3581-9481-4646-b243-fd29ecb50c4b-project_proposal.pdf
+53) server/uploads/the-best-college/gallery/1774702375482-dfdca0d6-4816-4d24-b8ed-4bf0ff3f7733-cover_pages_assigment_2_.jpg
+54) server/uploads/the-best-college/gallery/1775037178034-162810d4-0d02-42ee-95e9-b163e2b4940b-screencapture-127-0-0-1-8000-2026-03-31-09_09_43.png
+55) server/uploads/the-best-college/materials/1774764546122-3fb01a4a-1020-4738-a2d5-af4d4af1a905-project_proposal.pdf
+56) server/uploads/the-best-college/news/1775036949916-9240c61d-4476-4d39-948c-89e1e282fdb4-screencapture-127-0-0-1-8000-2026-03-31-09_09_43.png
+57) server/uploads/the-best-college/submissions/1774765351927-3f27035a-3d08-4946-ae33-b7e05b1d193c-project_proposal.pdf
+58) server/uploads/the-best-college/submissions/1775213609382-921e7018-e6d9-4892-9051-85ef78590981-IR_Activity_-_Text_Preprocessing_Competition_Part_II.docx
+59) server/uploads/the-best-college/submissions/1775213690023-523102ca-01b7-49fe-9056-18b8d962c57f-IR_Activity_-_Text_Preprocessing_Competition_Part_II_1_.docx
+
+- Status: RUNTIME-DATA
+- Purpose: locally stored user-uploaded media/documents when Cloudinary fallback/local serving is used.
+- Used by: controllers through file URLs, served via app.js static /uploads route.
+- Why present: generated by actual API usage, not source code.
+- If removed: related uploaded files become unavailable, but backend code still runs.
+
+============================================================
+7) DEFENSE-READY REQUEST SCENARIOS
+============================================================
+
+Scenario A: Login and protected request
+1. POST /api/v1/auth/login -> authController validates credentials.
+2. authService issues access+refresh tokens and sets HTTP-only cookies.
+3. Later GET /api/v1/portal/... -> authMiddleware protect verifies access token.
+4. authorize enforces role if needed.
+5. Controller returns domain data.
+
+Defense point:
+- This design supports stateless access checks with controlled session continuity via refresh token storage.
+
+Scenario B: Faculty creates assignment with attachment
+1. faculty calls POST /api/v1/portal/assignments with multipart file.
+2. uploadMiddleware validates file.
+3. portalController orchestrates create and calls cloudinary utility.
+4. Assignment model stores metadata + file reference.
+
+Defense point:
+- Upload concerns are abstracted; business controllers stay focused.
+
+Scenario C: Student submission and grading
+1. student POST /portal/submissions creates Submission linked to Assignment.
+2. faculty PUT /portal/submissions/:id/grade updates marks/remarks.
+3. results endpoint can reflect assessed state.
+
+Defense point:
+- Clean entity boundaries: Assignment (task), Submission (student work), Result (formal academic outcome).
+
+============================================================
+8) WHY THIS BACKEND IS DEFENSIBLE IN FYP
+============================================================
+
+Strengths:
+- Clear modular architecture with separated layers.
+- Strong RBAC model through middleware.
+- Token rotation and revocation-aware session design.
+- Rich academic schema with explicit relationship models.
+- CMS + academic workflow handled in same backend with route segregation.
+
+Trade-offs and honest limitations (good for viva transparency):
+- Controller files, especially admin/portal, are large and can be further split into domain services.
+- Local upload artifacts can grow and need retention policy.
+- Operational scripts are in same repo tree; useful, but require process discipline.
+
+============================================================
+9) QUICK VIVA Q&A CUES
+============================================================
+
+Q: Why separate routes and controllers?
+A: Routes define API contract; controllers keep business logic testable and maintainable.
+
+Q: Why store refresh token hash in DB?
+A: Prevents plaintext token persistence and enables revocation checks.
+
+Q: Why both Cloudinary and local uploads?
+A: Cloud-first for production, local fallback for dev reliability when cloud config is unavailable.
+
+Q: Why so many mapping models?
+A: Academic systems need explicit term/course/class/subject relationships to enforce consistency and reporting.
+
+Q: What happens if token expires during active session?
+A: Refresh endpoint rotates refresh token and issues new access token without forcing login.
+
+END OF DOCUMENT
