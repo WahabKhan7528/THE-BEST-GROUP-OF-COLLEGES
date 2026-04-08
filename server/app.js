@@ -15,8 +15,6 @@ import { errorHandler, notFound } from "./middlewares/errorMiddleware.js";
 
 const app = express();
 
-const normalizeOrigin = (origin) => origin.trim().replace(/\/$/, "");
-
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 40,
@@ -29,7 +27,7 @@ app.use(helmet({ crossOriginResourcePolicy: false }));
 
 const allowedOrigins = [
   ...(process.env.FRONTEND_URL
-    ? process.env.FRONTEND_URL.split(",").map((origin) => normalizeOrigin(origin))
+    ? process.env.FRONTEND_URL.split(",").map((origin) => origin.trim())
     : []),
   "http://localhost:5173",
 ].filter(Boolean);
@@ -38,7 +36,7 @@ app.use(
   cors({
     origin: (origin, callback) => {
       // Allow non-browser requests and approved browser origins.
-      if (!origin || allowedOrigins.includes(normalizeOrigin(origin))) {
+      if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
         return;
       }
