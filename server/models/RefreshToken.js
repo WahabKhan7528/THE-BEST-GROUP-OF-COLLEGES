@@ -24,7 +24,6 @@ const refreshTokenSchema = new mongoose.Schema(
     expiresAt: {
       type: Date,
       required: true,
-      index: true,
     },
     revokedAt: Date,
     userAgent: String,
@@ -32,6 +31,8 @@ const refreshTokenSchema = new mongoose.Schema(
   },
   { timestamps: true, id: false },
 );
+
+refreshTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 attachGeneratedId(refreshTokenSchema, { modelName: "RefreshToken", sourceField: "tokenHash", prefix: "RTK" });
 

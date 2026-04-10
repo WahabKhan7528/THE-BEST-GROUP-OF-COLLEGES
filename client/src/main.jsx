@@ -6,13 +6,16 @@ import store from "./store/store";
 import { ToastProvider } from "./context/ToastContext";
 import { ConfirmProvider } from "./context/ConfirmContext";
 import "./index.css";
+import { AuthProvider } from "./context/AuthContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
       <ToastProvider>
         <ConfirmProvider>
-          <App />
+          <AuthProvider>
+            <App />
+          </AuthProvider>
         </ConfirmProvider>
       </ToastProvider>
     </Provider>
