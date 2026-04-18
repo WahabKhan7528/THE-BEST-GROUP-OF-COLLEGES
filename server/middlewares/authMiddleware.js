@@ -34,9 +34,11 @@ export const protect = asyncHandler(async (req, res, next) => {
   next();
 });
 
-export const authorize = (...roles) => (req, res, next) => {
-  if (!roles.includes(req.user.role)) {
-    throw new ApiError(403, "You are not authorized for this action");
-  }
-  next();
-};
+export const authorize =
+  (...roles) =>
+  (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      throw new ApiError(403, "You are not authorized for this action");
+    }
+    next();
+  };
