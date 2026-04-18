@@ -10,7 +10,7 @@ const variants = {
         "bg-college-navy/5 dark:bg-college-gold/5 border border-college-navy/10 dark:border-college-gold/20 rounded-sm shadow-lg",
 };
 
-export default function Card({ variant = "default", hover = true, className, children }) {
+export default function Card({ variant = "default", hover = true, className, children, ...props }) {
     return (
         <div
             className={twMerge(
@@ -21,6 +21,7 @@ export default function Card({ variant = "default", hover = true, className, chi
                     className
                 )
             )}
+            {...props}
         >
             {children}
         </div>

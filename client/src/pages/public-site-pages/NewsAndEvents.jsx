@@ -92,12 +92,12 @@ const NewsAndEvents = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Left Column - Campus News */}
-          <div className="lg:col-span-2 flex flex-col h-full min-h-[700px]">
+          <div className="lg:col-span-2 space-y-8">
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-college-navy">Campus News</h2>
             </div>
 
-            <div className="space-y-8 flex-1">
+            <div className="space-y-8">
               {isLoadingItems
                 ? <SkeletonLoading count={3} variant="card" className="h-48" containerClassName="space-y-8" />
                 : currentNewsItems.map((news) => (
@@ -153,9 +153,7 @@ const NewsAndEvents = () => {
           to="/campuses/main/student-life"
           variant="outline"
           size="md"
-          icon={User}
           className="border-2 border-white/10"
-          shape="slanted"
         >
           Explore Student Life
         </PublicButton>

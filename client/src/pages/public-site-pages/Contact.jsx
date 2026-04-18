@@ -100,7 +100,7 @@ const Contact = () => {
                 
                 {/* Action Link */}
                 <a className="relative z-10 inline-flex items-center justify-center w-full text-college-gold font-semibold hover:text-white transition-colors duration-300 group/link" href="mailto:thebestcollege2008@gmail.com">
-                  <span className="break-all line-clamp-1 group-hover/link:line-clamp-none transition-all duration-300">thebestcollege2008@gmail.com</span>
+                  <span className="break-words select-all">thebestcollege2008@gmail.com</span>
                   <ArrowRight className="w-4 h-4 ml-1 flex-shrink-0 opacity-0 -translate-x-2 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all duration-300" />
                 </a>
               </Card>

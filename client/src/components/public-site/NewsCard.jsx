@@ -55,7 +55,7 @@ export default function NewsCard({ news, className }) {
             >
                 <div className="space-y-6">
                     {news.image && (
-                        <div className="aspect-video w-full overflow-hidden rounded-xl">
+                        <div className="aspect-video w-full overflow-hidden rounded-none border-b border-white/10">
                             <img src={news.image} alt={news.title} className="w-full h-full object-cover" />
                         </div>
                     )}

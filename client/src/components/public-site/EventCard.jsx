@@ -60,15 +60,15 @@ export default function EventCard({ event, className }) {
                 <div className="space-y-6">
                     {/* Event Banner/Image */}
                     {event.image && (
-                        <div className="aspect-video w-full overflow-hidden rounded-xl">
+                        <div className="aspect-video w-full overflow-hidden rounded-none border-b border-white/10">
                             <img src={event.image} alt={event.title} className="w-full h-full object-cover" />
                         </div>
                     )}
 
                     {/* Event Meta Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white/5 p-4 rounded-xl border border-white/10">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white/5 p-4 rounded-none border border-white/10">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shadow-sm">
+                            <div className="w-10 h-10 rounded-none bg-white/10 flex items-center justify-center shadow-sm">
                                 <Calendar className="w-5 h-5 text-college-gold" />
                             </div>
                             <div>
@@ -78,7 +78,7 @@ export default function EventCard({ event, className }) {
                         </div>
 
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shadow-sm">
+                            <div className="w-10 h-10 rounded-none bg-white/10 flex items-center justify-center shadow-sm">
                                 <Clock className="w-5 h-5 text-college-gold" />
                             </div>
                             <div>
@@ -88,7 +88,7 @@ export default function EventCard({ event, className }) {
                         </div>
 
                         <div className="flex items-center gap-3 sm:col-span-2">
-                            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shadow-sm">
+                            <div className="w-10 h-10 rounded-none bg-white/10 flex items-center justify-center shadow-sm">
                                 <MapPin className="w-5 h-5 text-college-gold" />
                             </div>
                             <div>

@@ -18,10 +18,10 @@ export default function NewsEventPopover({ isOpen, onClose, children, title }) {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             {/* Backdrop */}
             <div
-                className="absolute inset-0 bg-college-navy/60 backdrop-blur-sm transition-opacity duration-300 pointer-events-auto"
+                className="fixed inset-0 bg-college-navy/80 backdrop-blur-md transition-opacity duration-300 pointer-events-auto"
                 onClick={onClose}
             />
 
@@ -29,8 +29,8 @@ export default function NewsEventPopover({ isOpen, onClose, children, title }) {
             <div
                 className={clsx(
                     "relative bg-college-navy w-full sm:max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl transition-all duration-300 transform border border-white/10",
-                    "rounded-t-3xl sm:rounded-2xl", // Bottom sheet style on mobile
-                    isOpen ? "translate-y-0 opacity-100" : "translate-y-full sm:translate-y-4 opacity-0"
+                    "rounded-none", // Sharp corners as requested
+                    isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
                 )}
             >
                 {/* Header */}

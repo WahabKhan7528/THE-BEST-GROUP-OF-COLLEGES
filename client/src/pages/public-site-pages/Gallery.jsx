@@ -6,7 +6,7 @@ import Badge from "../../components/shared/Badge";
 import CTASection from "../../components/public-site/CTASection";
 import SkeletonLoading from "../../components/shared/SkeletonLoading";
 
-import { Calendar, Tag } from "lucide-react";
+import { Calendar, Tag, X } from "lucide-react";
 
 import { publicApi } from "../../services/api";
 
@@ -152,14 +152,78 @@ const Gallery = () => {
               </div>
             </div>
           ))}
-              {/* Fullscreen Popover */}
+              {/* Fullscreen Popover / Modal */}
               {popoverImage && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm transition-all" onClick={() => setPopoverImage(null)}>
-                  <img
-                    src={popoverImage.src}
-                    alt={popoverImage.title}
-                    className="w-auto max-w-full max-h-full object-contain"
-                  />
+                <div 
+                  className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-md p-4 sm:p-6 md:p-10 animate-in fade-in duration-300"
+                  onClick={() => setPopoverImage(null)}
+                >
+                  <div 
+                    className="relative w-full max-w-6xl bg-college-navy border border-white/10 rounded-sm shadow-2xl overflow-hidden flex flex-col lg:flex-row max-h-[90vh] lg:max-h-[80vh] animate-in zoom-in-95 duration-300"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {/* Close Button */}
+                    <button 
+                      className="absolute top-4 right-4 z-20 p-2 bg-black/40 hover:bg-college-gold text-white rounded-full transition-colors"
+                      onClick={() => setPopoverImage(null)}
+                      aria-label="Close modal"
+                    >
+                      <X size={20} />
+                    </button>
+
+                    {/* Left/Top: Image Section */}
+                    <div className="w-full lg:w-2/3 h-[40vh] sm:h-[50vh] lg:h-auto bg-black/50 flex items-center justify-center overflow-hidden border-b lg:border-b-0 lg:border-r border-white/5">
+                      <img
+                        src={popoverImage.src}
+                        alt={popoverImage.title}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+
+                    {/* Right/Bottom: Details Section */}
+                    <div className="w-full lg:w-1/3 p-6 sm:p-8 md:p-10 overflow-y-auto flex flex-col bg-college-navy">
+                      <div className="mb-6">
+                        <Badge variant="gold" className="mb-4">
+                          {popoverImage.category}
+                        </Badge>
+                        <h2 className="text-2xl sm:text-3xl font-serif font-black text-white leading-tight uppercase tracking-tight">
+                          {popoverImage.title}
+                        </h2>
+                      </div>
+
+                      <div className="space-y-6 flex-1">
+                        <div>
+                          <h4 className="text-[10px] font-black text-college-gold/60 uppercase tracking-[0.2em] mb-2">Description</h4>
+                          <p className="text-sm md:text-base text-white/70 leading-relaxed font-light">
+                            {popoverImage.description}
+                          </p>
+                        </div>
+
+                        {popoverImage.tags && (
+                          <div>
+                            <h4 className="text-[10px] font-black text-college-gold/60 uppercase tracking-[0.2em] mb-2">Tags / Keywords</h4>
+                            <div className="flex flex-wrap gap-2">
+                              {popoverImage.tags.split(',').map((tag) => (
+                                <span key={tag} className="flex items-center gap-1.5 text-[11px] bg-white/5 text-college-gold/90 px-3 py-1 rounded-sm border border-college-gold/20 uppercase tracking-widest font-bold">
+                                  <Tag className="w-3 h-3" />
+                                  {tag.trim()}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Footer Info */}
+                      <div className="mt-10 pt-6 border-t border-white/5 flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-white/30">
+                          <Calendar className="w-4 h-4 text-college-gold/50" />
+                          <span className="text-xs font-bold uppercase tracking-widest">{popoverImage.date}</span>
+                        </div>
+                        <span className="text-[10px] font-black text-white/10 uppercase tracking-[0.3em]">Institutional Gallery</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
         </div>
@@ -194,9 +258,6 @@ const Gallery = () => {
       >
         <PublicButton to="/contact" variant="secondary" size="lg" shape="slanted">
           Book a Campus Tour
-        </PublicButton>
-        <PublicButton to="/admissions" variant="primary" size="lg" className="border-2 border-white/10" shape="slanted">
-          Download Prospectus
         </PublicButton>
       </CTASection>
     </div>

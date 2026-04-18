@@ -208,12 +208,18 @@ const Admissions = () => {
         highlightedWord="Application"
         description="Our dedicated admissions team is available to assist you with any questions about programs, requirements, or the application process."
       >
-        <PublicButton to="tel:+92511234567" variant="primary" size="md" className="border-2 border-white/10">
-          Email: thebestcollege2008@gmail.com
-        </PublicButton>
-        <PublicButton to="mailto:admissions@bestcolleges.edu.pk" variant="secondary" size="md" className="border-2 border-white/20" shape="slanted">
-          Call: +92 51 1234 567
-        </PublicButton>
+      
+        <div className="w-full flex flex-col items-center gap-6">
+          <div className="flex items-center gap-3 bg-white/5 px-6 py-3 rounded-sm border border-white/10">
+            <Mail className="w-5 h-5 text-college-gold" />
+            <span className="text-base md:text-lg font-medium text-white/90 select-all">
+              thebestcollege2008@gmail.com
+            </span>
+          </div>
+          <PublicButton to="tel:+92511234567" variant="secondary" size="md" className="border-2 border-white/20" shape="slanted">
+            Call Admissions: +92 51 1234 567
+          </PublicButton>
+        </div>
       </CTASection>
     </div>
   );
