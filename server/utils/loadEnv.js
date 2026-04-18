@@ -12,7 +12,6 @@ const loadEnv = () => {
   const envCandidates = [
     path.join(rootDir, ".env"),
     path.join(rootDir, "config", "config.env"),
-    path.join(rootDir, ".env.example"),
   ];
 
   for (const envPath of envCandidates) {

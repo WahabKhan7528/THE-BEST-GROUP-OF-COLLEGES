@@ -8,7 +8,11 @@ import streamifier from "streamifier";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const uploadsRoot = path.join(__dirname, "..", "uploads");
-const localBaseUrl = `http://localhost:${process.env.PORT || 5000}`;
+
+const getPublicBaseUrl = () => {
+  const fallbackPort = Number(process.env.PORT) || 5000;
+  return process.env.SERVER_PUBLIC_URL || process.env.RENDER_EXTERNAL_URL || `http://localhost:${fallbackPort}`;
+};
 
 const isPlaceholderValue = (value) => {
   if (!value) return true;
@@ -47,7 +51,7 @@ const buildLocalUploadResult = async (buffer, folder, resourceType, metadata = {
 
   return {
     public_id: `local:${relativePath}`,
-    secure_url: new URL(`/uploads/${relativePath}`, localBaseUrl).toString(),
+    secure_url: new URL(`/uploads/${relativePath}`, getPublicBaseUrl()).toString(),
     resource_type: resourceType,
   };
 };

@@ -31,11 +31,23 @@ const allowedOrigins = [
   "http://localhost:5173",
 ].filter(Boolean);
 
+const allowedOriginRegexes = (process.env.FRONTEND_URL_REGEX || "")
+  .split(",")
+  .map((pattern) => pattern.trim())
+  .filter(Boolean)
+  .flatMap((pattern) => {
+    try {
+      return [new RegExp(pattern)];
+    } catch {
+      return [];
+    }
+  });
+
 app.use(
   cors({
     origin: (origin, callback) => {
       // Allow non-browser requests and approved browser origins.
-      if (origin && allowedOrigins.includes(origin)) {
+      if (!origin || allowedOrigins.includes(origin) || allowedOriginRegexes.some((pattern) => pattern.test(origin))) {
         callback(null, true);
         return;
       }
@@ -45,6 +57,9 @@ app.use(
     credentials: true,
   }),
 );
+
+// Render/Vercel run behind proxies, so trust forwarded headers.
+app.set("trust proxy", 1);
 
 app.use(cookieParser());
 app.use(express.json({ limit: "1mb" }));

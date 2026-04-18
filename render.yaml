@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: the-best-college-backend
+    runtime: node
+    rootDir: server
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    autoDeploy: true

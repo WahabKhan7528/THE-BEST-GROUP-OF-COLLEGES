@@ -106,3 +106,32 @@ Optional env overrides:
 - Role-based route authorization for admin/faculty/student workflows
 - Cloudinary stores all large media/documents to keep app servers stateless
 - Mongoose relational refs ensure clean linkages across portals and CMS modules
+
+## 8) Render Deployment
+
+Service settings:
+
+- Root directory: `server`
+- Build command: `npm install`
+- Start command: `npm start`
+
+Required environment variables in Render:
+
+- `NODE_ENV=production`
+- `PORT` (Render provides this automatically)
+- `MONGO_URI`
+- `JWT_ACCESS_SECRET`
+- `JWT_REFRESH_SECRET`
+- `ACCESS_TOKEN_EXPIRE` (example: `15m`)
+- `REFRESH_TOKEN_EXPIRE_DAYS` (example: `7`)
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
+- `FRONTEND_URL` (comma-separated allowed origins, include your Vercel domain)
+- `FRONTEND_URL_REGEX` (optional; useful for Vercel preview deployments)
+- `SERVER_PUBLIC_URL` (optional; Render also injects `RENDER_EXTERNAL_URL`)
+
+Example production CORS values:
+
+- `FRONTEND_URL=https://your-frontend.vercel.app,https://www.yourcustomdomain.com`
+- `FRONTEND_URL_REGEX=^https://your-project-name-.*\.vercel\.app$`
