@@ -62,13 +62,13 @@ const Table = ({ columns, data, actionButtons, isLoading = false, skeletonCount 
 
                 {/* Action Buttons Cell (if they exist) */}
                 {actionButtons && (
-                  <td className={`${cellPadding} whitespace-nowrap text-right`}>
-                    <div className="flex flex-wrap items-center justify-end gap-2 md:gap-3 min-w-[140px]">
+                  <td className={`${cellPadding} whitespace-nowrap sm:text-right align-middle`}>
+                    <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center sm:justify-end gap-2 md:gap-3 min-w-[140px]">
                       {actionButtons(row).map((btn, i) => (
                         <button
                           key={i}
                           onClick={btn.onClick}
-                          className={`${btn.className} px-4 py-1.5 text-xs md:text-sm rounded-sm hover:shadow-md transition-all duration-200 whitespace-nowrap font-bold border border-transparent`}
+                          className={`${btn.className} w-full sm:w-24 lg:w-28 h-8 md:h-9 flex items-center justify-center text-[11px] sm:text-xs md:text-sm rounded-sm hover:shadow-md transition-all duration-200 whitespace-nowrap font-bold border border-transparent`}
                           title={btn.label}
                         >
                           {btn.label}
