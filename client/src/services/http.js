@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const ACCESS_TOKEN_KEY = "tbc_access_token";
+
 const rawBaseURL =
   import.meta.env.VITE_BACKEND_API ||
   (import.meta.env.DEV ? "http://localhost:5000" : "");
@@ -15,6 +17,26 @@ const http = axios.create({
   withCredentials: true,
 });
 
+let accessToken =
+  typeof window !== "undefined"
+    ? window.localStorage.getItem(ACCESS_TOKEN_KEY)
+    : null;
+
+export const setAccessToken = (token) => {
+  accessToken = token || null;
+  if (typeof window !== "undefined") {
+    if (accessToken) {
+      window.localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+    } else {
+      window.localStorage.removeItem(ACCESS_TOKEN_KEY);
+    }
+  }
+};
+
+export const clearAccessToken = () => {
+  setAccessToken(null);
+};
+
 let isRefreshing = false;
 let pendingQueue = [];
 
@@ -23,8 +45,35 @@ const processQueue = () => {
   pendingQueue = [];
 };
 
+http.interceptors.request.use((config) => {
+  if (accessToken) {
+    config.headers = config.headers || {};
+    if (!config.headers.Authorization) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+  }
+
+  return config;
+});
+
 http.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    const url = response?.config?.url || "";
+    const tokenFromResponse = response?.data?.accessToken;
+
+    if (
+      tokenFromResponse &&
+      (url.includes("/auth/login") || url.includes("/auth/refresh"))
+    ) {
+      setAccessToken(tokenFromResponse);
+    }
+
+    if (url.includes("/auth/logout")) {
+      clearAccessToken();
+    }
+
+    return response;
+  },
   async (error) => {
     const originalRequest = error.config;
     const status = error?.response?.status;
@@ -49,15 +98,20 @@ http.interceptors.response.use(
       isRefreshing = true;
       originalRequest._retry = true;
 
-      await axios.post(
+      const { data } = await axios.post(
         `${baseURL}/auth/refresh`,
         {},
         { withCredentials: true },
       );
 
+      if (data?.accessToken) {
+        setAccessToken(data.accessToken);
+      }
+
       processQueue();
       return http(originalRequest);
     } catch (refreshError) {
+      clearAccessToken();
       if (typeof window !== "undefined") {
         window.dispatchEvent(new Event("auth:unauthorized"));
       }

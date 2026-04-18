@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { authApi } from "../../services/api";
+import { clearAccessToken } from "../../services/http";
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
@@ -26,6 +27,7 @@ export const loginUser = createAsyncThunk(
 
       return user;
     } catch (error) {
+      clearAccessToken();
       return rejectWithValue({
         message: error.response?.data?.message || "Login failed",
         status: error.response?.status || null,
@@ -39,8 +41,10 @@ export const logoutUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await authApi.logout();
+      clearAccessToken();
       return null;
     } catch (error) {
+      clearAccessToken();
       return rejectWithValue(error.response?.data?.message || "Logout failed");
     }
   },

@@ -77,6 +77,7 @@ export const login = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Login successful",
+    accessToken: tokens.accessToken,
     user: {
       id: user._id,
       portalId: user.portalId,
@@ -117,6 +118,7 @@ export const refreshSession = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Session refreshed",
+    accessToken: tokens.accessToken,
   });
 });
 

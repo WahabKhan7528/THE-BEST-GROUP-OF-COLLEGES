@@ -3,7 +3,17 @@ import ApiError from "../utils/ApiError.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import { verifyAccessToken } from "../utils/token.js";
 
-const parseToken = (req) => req.cookies?.accessToken || null;
+const parseToken = (req) => {
+  const cookieToken = req.cookies?.accessToken;
+  if (cookieToken) return cookieToken;
+
+  const authHeader = req.headers?.authorization || "";
+  if (authHeader.toLowerCase().startsWith("bearer ")) {
+    return authHeader.slice(7).trim();
+  }
+
+  return null;
+};
 
 export const protect = asyncHandler(async (req, res, next) => {
   const token = parseToken(req);
