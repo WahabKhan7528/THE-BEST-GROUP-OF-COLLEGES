@@ -1,9 +1,12 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
 import { authApi } from "../services/api";
+import { clearAuthState } from "../store/slices/authSlice";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const dispatch = useDispatch();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -34,7 +37,10 @@ export const AuthProvider = ({ children }) => {
 
     boot();
 
-    const onUnauthorized = () => setUser(null);
+    const onUnauthorized = () => {
+      setUser(null);
+      dispatch(clearAuthState());
+    };
     window.addEventListener("auth:unauthorized", onUnauthorized);
 
     return () => {

@@ -7,6 +7,8 @@ import CourseSemesterMapping from "../models/CourseSemesterMapping.js";
 import ClassSubject from "../models/ClassSubject.js";
 import GalleryItem from "../models/GalleryItem.js";
 import NewsEvent from "../models/NewsEvent.js";
+import RefreshToken from "../models/RefreshToken.js";
+import mongoose from "mongoose";
 import ResultCalculationLog from "../models/ResultCalculationLog.js";
 import Semester from "../models/Semester.js";
 import Subject from "../models/Subject.js";
@@ -15,9 +17,21 @@ import User from "../models/User.js";
 import { ROLES } from "../config/constants.js";
 import ApiError from "../utils/ApiError.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import { deleteFromCloudinary, uploadBufferToCloudinary } from "../utils/cloudinary.js";
+import {
+  deleteFromCloudinary,
+  uploadBufferToCloudinary,
+} from "../utils/cloudinary.js";
 
-const uniqueIds = (items = []) => [...new Set(items.map((item) => String(item?._id || item || "")).filter(Boolean))];
+const uniqueIds = (items = []) => [
+  ...new Set(
+    items.map((item) => String(item?._id || item || "")).filter(Boolean),
+  ),
+];
+const assertValidObjectId = (value, fieldName) => {
+  if (!mongoose.isValidObjectId(value)) {
+    throw new ApiError(400, `Invalid ${fieldName}`);
+  }
+};
 const getIdValue = (value) => {
   const rawValue = value?._id || value?.id || value;
   return rawValue ? String(rawValue) : null;
@@ -44,7 +58,19 @@ const applyRoleScopedFields = (payload, role) => {
     payload.currentClassRoom = null;
     payload.classSection = null;
     payload.currentSemester = null;
-    payload.currentAnnualYear = null;
+    res.status(201).json({
+      success: true,
+      data: {
+        id: user._id,
+        portalId: user.portalId,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        campus: user.campus,
+        currentCourse: user.currentCourse,
+        currentClassRoom: user.currentClassRoom,
+      },
+    });
     payload.semester = null;
     payload.enrollmentYear = null;
     payload.cgpa = null;
@@ -56,7 +82,11 @@ const applyRoleScopedFields = (payload, role) => {
   }
 };
 
-const syncStudentClassMembership = async ({ studentId, previousClassRoom, nextClassRoom }) => {
+const syncStudentClassMembership = async ({
+  studentId,
+  previousClassRoom,
+  nextClassRoom,
+}) => {
   const previousId = getIdValue(previousClassRoom);
   const nextId = getIdValue(nextClassRoom);
 
@@ -73,7 +103,11 @@ const syncStudentClassMembership = async ({ studentId, previousClassRoom, nextCl
   }
 };
 
-const validateAndHydrateStudentClass = async ({ payload, actingUser, fallbackCampus }) => {
+const validateAndHydrateStudentClass = async ({
+  payload,
+  actingUser,
+  fallbackCampus,
+}) => {
   const classRoomId = getIdValue(payload.currentClassRoom);
   if (!classRoomId) {
     payload.currentClassRoom = null;
@@ -81,16 +115,24 @@ const validateAndHydrateStudentClass = async ({ payload, actingUser, fallbackCam
     return;
   }
 
-  const classRoom = await ClassRoom.findById(classRoomId).select("_id section campus");
+  const classRoom =
+    await ClassRoom.findById(classRoomId).select("_id section campus");
   if (!classRoom) {
     throw new ApiError(400, "Assigned class was not found");
   }
 
-  if (actingUser.role === ROLES.ADMIN && isCampusMismatch(classRoom.campus, actingUser.campus)) {
-    throw new ApiError(403, "You can only assign students to classes in your campus");
+  if (
+    actingUser.role === ROLES.ADMIN &&
+    isCampusMismatch(classRoom.campus, actingUser.campus)
+  ) {
+    throw new ApiError(
+      403,
+      "You can only assign students to classes in your campus",
+    );
   }
 
-  const payloadCampus = getIdValue(payload.campus) || getIdValue(fallbackCampus);
+  const payloadCampus =
+    getIdValue(payload.campus) || getIdValue(fallbackCampus);
   if (payloadCampus && isCampusMismatch(classRoom.campus, payloadCampus)) {
     throw new ApiError(400, "Student campus and class campus must match");
   }
@@ -115,21 +157,36 @@ const normalizeSemesterSubjects = (semesterSubjects = []) => {
       subjectAssignments: Array.isArray(entry?.subjectAssignments)
         ? entry.subjectAssignments
             .map((assignment) => ({
-              subject: String(assignment?.subject?._id || assignment?.subject || assignment?.subjectId || ""),
-              faculty: String(assignment?.faculty?._id || assignment?.faculty || assignment?.facultyId || ""),
+              subject: String(
+                assignment?.subject?._id ||
+                  assignment?.subject ||
+                  assignment?.subjectId ||
+                  "",
+              ),
+              faculty: String(
+                assignment?.faculty?._id ||
+                  assignment?.faculty ||
+                  assignment?.facultyId ||
+                  "",
+              ),
             }))
             .filter((assignment) => assignment.subject && assignment.faculty)
         : [],
       subjects: uniqueIds(entry?.subjects || []),
       faculty: uniqueIds(entry?.faculty || []),
     }))
-    .filter((entry) => Number.isFinite(entry.semesterNumber) && entry.semesterNumber > 0)
+    .filter(
+      (entry) =>
+        Number.isFinite(entry.semesterNumber) && entry.semesterNumber > 0,
+    )
     .map((entry) => {
       if (entry.subjectAssignments.length > 6 || entry.subjects.length > 6) {
         throw new ApiError(400, "Each semester can have at most 6 subjects");
       }
 
-      const subjectIds = entry.subjectAssignments.length ? entry.subjectAssignments.map((assignment) => assignment.subject) : entry.subjects;
+      const subjectIds = entry.subjectAssignments.length
+        ? entry.subjectAssignments.map((assignment) => assignment.subject)
+        : entry.subjects;
 
       for (const subjectId of subjectIds) {
         if (seenSubjects.has(subjectId)) {
@@ -143,12 +200,22 @@ const normalizeSemesterSubjects = (semesterSubjects = []) => {
 };
 
 const getSemesterClassPayload = (body) => {
-  const semesterSubjects = normalizeSemesterSubjects(body.semesterSubjects || []);
+  const semesterSubjects = normalizeSemesterSubjects(
+    body.semesterSubjects || [],
+  );
   const subjects = semesterSubjects.length
-    ? uniqueIds(semesterSubjects.flatMap((entry) => entry.subjectAssignments.map((assignment) => assignment.subject)))
+    ? uniqueIds(
+        semesterSubjects.flatMap((entry) =>
+          entry.subjectAssignments.map((assignment) => assignment.subject),
+        ),
+      )
     : uniqueIds(body.subjects || []);
   const faculty = semesterSubjects.length
-    ? uniqueIds(semesterSubjects.flatMap((entry) => entry.subjectAssignments.map((assignment) => assignment.faculty)))
+    ? uniqueIds(
+        semesterSubjects.flatMap((entry) =>
+          entry.subjectAssignments.map((assignment) => assignment.faculty),
+        ),
+      )
     : uniqueIds(body.faculty || []);
 
   return {
@@ -164,7 +231,10 @@ export const createUser = asyncHandler(async (req, res) => {
 
   if (req.user.role === ROLES.ADMIN) {
     if (!ALLOWED_ADMIN_MANAGED_ROLES.includes(payload.role)) {
-      throw new ApiError(403, "Sub-admin can only create faculty and student accounts");
+      throw new ApiError(
+        403,
+        "Sub-admin can only create faculty and student accounts",
+      );
     }
     payload.campus = req.user.campus?._id || req.user.campus || null;
   }
@@ -185,7 +255,19 @@ export const createUser = asyncHandler(async (req, res) => {
     });
   }
 
-  res.status(201).json({ success: true, data: user });
+  res.status(201).json({
+    success: true,
+    data: {
+      id: user._id,
+      portalId: user.portalId,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      campus: user.campus,
+      currentCourse: user.currentCourse,
+      currentClassRoom: user.currentClassRoom,
+    },
+  });
 });
 
 export const listUsers = asyncHandler(async (req, res) => {
@@ -194,7 +276,10 @@ export const listUsers = asyncHandler(async (req, res) => {
   if (req.query.campus) filter.campus = req.query.campus;
   if (req.user.role === ROLES.ADMIN) {
     filter.campus = req.user.campus?._id || req.user.campus;
-    if (req.query.role && ALLOWED_ADMIN_MANAGED_ROLES.includes(req.query.role)) {
+    if (
+      req.query.role &&
+      ALLOWED_ADMIN_MANAGED_ROLES.includes(req.query.role)
+    ) {
       filter.role = req.query.role;
     } else {
       filter.role = { $in: ALLOWED_ADMIN_MANAGED_ROLES };
@@ -205,30 +290,52 @@ export const listUsers = asyncHandler(async (req, res) => {
     delete filter.status;
   }
 
-  const users = await User.find(filter).populate("campus", "name code slug").sort("name");
+  const users = await User.find(filter)
+    .populate("campus", "name code slug")
+    .sort("name");
   res.status(200).json({ success: true, count: users.length, data: users });
 });
 
 export const updateUser = asyncHandler(async (req, res) => {
-  if (req.body.password) delete req.body.password;
-  delete req.body.portalId;
-
-  const existingUser = await User.findById(req.params.id).select("role campus currentClassRoom");
-  if (!existingUser) throw new ApiError(404, "User not found");
+  assertValidObjectId(req.params.id, "user id");
 
   const payload = { ...req.body };
+  delete payload.portalId;
+
+  if (payload.password !== undefined) {
+    payload.password =
+      typeof payload.password === "string"
+        ? payload.password.trim()
+        : payload.password;
+    if (typeof payload.password !== "string" || payload.password.length < 8) {
+      throw new ApiError(400, "Password must be at least 8 characters long");
+    }
+  }
+
+  const existingUser = await User.findById(req.params.id).select(
+    "role campus currentClassRoom",
+  );
+  if (!existingUser) throw new ApiError(404, "User not found");
+
   const targetRole = payload.role || existingUser.role;
 
   if (req.user.role === ROLES.ADMIN) {
     if (!ALLOWED_ADMIN_MANAGED_ROLES.includes(existingUser.role)) {
-      throw new ApiError(403, "Sub-admin cannot edit admin or super admin accounts");
+      throw new ApiError(
+        403,
+        "Sub-admin cannot edit admin or super admin accounts",
+      );
     }
 
     if (!ALLOWED_ADMIN_MANAGED_ROLES.includes(targetRole)) {
-      throw new ApiError(403, "Sub-admin can only assign faculty or student roles");
+      throw new ApiError(
+        403,
+        "Sub-admin can only assign faculty or student roles",
+      );
     }
 
-    payload.campus = req.user.campus?._id || req.user.campus || existingUser.campus || null;
+    payload.campus =
+      req.user.campus?._id || req.user.campus || existingUser.campus || null;
   }
 
   applyRoleScopedFields(payload, targetRole);
@@ -245,8 +352,25 @@ export const updateUser = asyncHandler(async (req, res) => {
     });
   }
 
-  const user = await User.findByIdAndUpdate(req.params.id, payload, { new: true, runValidators: true });
-  if (!user) throw new ApiError(404, "User not found");
+  let user = null;
+  if (payload.password !== undefined) {
+    user = await User.findById(req.params.id);
+    if (!user) throw new ApiError(404, "User not found");
+
+    Object.assign(user, payload);
+    await user.save();
+
+    await RefreshToken.updateMany(
+      { user: user._id, revokedAt: { $exists: false } },
+      { revokedAt: new Date() },
+    );
+  } else {
+    user = await User.findByIdAndUpdate(req.params.id, payload, {
+      new: true,
+      runValidators: true,
+    });
+    if (!user) throw new ApiError(404, "User not found");
+  }
 
   if (user.role === ROLES.STUDENT) {
     await syncStudentClassMembership({
@@ -266,14 +390,28 @@ export const updateUser = asyncHandler(async (req, res) => {
 });
 
 export const deactivateUser = asyncHandler(async (req, res) => {
-  const existingUser = await User.findById(req.params.id).select("role currentClassRoom");
+  assertValidObjectId(req.params.id, "user id");
+
+  const existingUser = await User.findById(req.params.id).select(
+    "role currentClassRoom",
+  );
   if (!existingUser) throw new ApiError(404, "User not found");
 
-  if (req.user.role === ROLES.ADMIN && !ALLOWED_ADMIN_MANAGED_ROLES.includes(existingUser.role)) {
-    throw new ApiError(403, "Sub-admin cannot deactivate admin or super admin accounts");
+  if (
+    req.user.role === ROLES.ADMIN &&
+    !ALLOWED_ADMIN_MANAGED_ROLES.includes(existingUser.role)
+  ) {
+    throw new ApiError(
+      403,
+      "Sub-admin cannot deactivate admin or super admin accounts",
+    );
   }
 
-  const user = await User.findByIdAndUpdate(req.params.id, { isActive: false, status: "Inactive" }, { new: true });
+  const user = await User.findByIdAndUpdate(
+    req.params.id,
+    { isActive: false, status: "Inactive" },
+    { new: true },
+  );
   if (!user) throw new ApiError(404, "User not found");
 
   if (existingUser.role === ROLES.STUDENT && existingUser.currentClassRoom) {
@@ -284,7 +422,9 @@ export const deactivateUser = asyncHandler(async (req, res) => {
     });
   }
 
-  res.status(200).json({ success: true, message: "User deactivated", data: user });
+  res
+    .status(200)
+    .json({ success: true, message: "User deactivated", data: user });
 });
 
 export const createCampus = asyncHandler(async (req, res) => {
@@ -305,10 +445,15 @@ export const createCampus = asyncHandler(async (req, res) => {
   };
 
   if (req.file) {
-    const uploaded = await uploadBufferToCloudinary(req.file.buffer, "the-best-college/campuses", "image", {
-      originalName: req.file.originalname,
-      mimeType: req.file.mimetype,
-    });
+    const uploaded = await uploadBufferToCloudinary(
+      req.file.buffer,
+      "the-best-college/campuses",
+      "image",
+      {
+        originalName: req.file.originalname,
+        mimeType: req.file.mimetype,
+      },
+    );
     payload.image = { publicId: uploaded.public_id, url: uploaded.secure_url };
   }
 
@@ -322,6 +467,8 @@ export const listCampuses = asyncHandler(async (req, res) => {
 });
 
 export const updateCampus = asyncHandler(async (req, res) => {
+  assertValidObjectId(req.params.id, "campus id");
+
   const campus = await Campus.findById(req.params.id);
   if (!campus) throw new ApiError(404, "Campus not found");
 
@@ -329,11 +476,19 @@ export const updateCampus = asyncHandler(async (req, res) => {
 
   if (req.file) {
     await deleteFromCloudinary(campus.image?.publicId, "image");
-    const uploaded = await uploadBufferToCloudinary(req.file.buffer, "the-best-college/campuses", "image", {
-      originalName: req.file.originalname,
-      mimeType: req.file.mimetype,
-    });
-    updatePayload.image = { publicId: uploaded.public_id, url: uploaded.secure_url };
+    const uploaded = await uploadBufferToCloudinary(
+      req.file.buffer,
+      "the-best-college/campuses",
+      "image",
+      {
+        originalName: req.file.originalname,
+        mimeType: req.file.mimetype,
+      },
+    );
+    updatePayload.image = {
+      publicId: uploaded.public_id,
+      url: uploaded.secure_url,
+    };
   }
 
   const updated = await Campus.findByIdAndUpdate(req.params.id, updatePayload, {
@@ -345,6 +500,8 @@ export const updateCampus = asyncHandler(async (req, res) => {
 });
 
 export const deleteCampus = asyncHandler(async (req, res) => {
+  assertValidObjectId(req.params.id, "campus id");
+
   const campus = await Campus.findById(req.params.id);
   if (!campus) throw new ApiError(404, "Campus not found");
 
@@ -361,19 +518,28 @@ export const createCourse = asyncHandler(async (req, res) => {
 });
 
 export const listCourses = asyncHandler(async (req, res) => {
-  const courses = await Course.find().populate("campuses", "name code slug").sort("title");
+  const courses = await Course.find()
+    .populate("campuses", "name code slug")
+    .sort("title");
   res.status(200).json({ success: true, data: courses });
 });
 
 export const updateCourse = asyncHandler(async (req, res) => {
+  assertValidObjectId(req.params.id, "course id");
+
   const payload = { ...req.body };
   delete payload.code;
-  const course = await Course.findByIdAndUpdate(req.params.id, payload, { new: true, runValidators: true });
+  const course = await Course.findByIdAndUpdate(req.params.id, payload, {
+    new: true,
+    runValidators: true,
+  });
   if (!course) throw new ApiError(404, "Course not found");
   res.status(200).json({ success: true, data: course });
 });
 
 export const deleteCourse = asyncHandler(async (req, res) => {
+  assertValidObjectId(req.params.id, "course id");
+
   const course = await Course.findByIdAndDelete(req.params.id);
   if (!course) throw new ApiError(404, "Course not found");
   res.status(200).json({ success: true, message: "Course deleted" });
@@ -431,15 +597,22 @@ export const listClassRooms = asyncHandler(async (req, res) => {
 });
 
 export const updateClassRoom = asyncHandler(async (req, res) => {
+  assertValidObjectId(req.params.id, "class id");
+
   const payload = getSemesterClassPayload(req.body);
   delete payload.classCode;
   delete payload.academicSession;
-  const classRoom = await ClassRoom.findByIdAndUpdate(req.params.id, payload, { new: true, runValidators: true });
+  const classRoom = await ClassRoom.findByIdAndUpdate(req.params.id, payload, {
+    new: true,
+    runValidators: true,
+  });
   if (!classRoom) throw new ApiError(404, "Class not found");
   res.status(200).json({ success: true, data: classRoom });
 });
 
 export const deleteClassRoom = asyncHandler(async (req, res) => {
+  assertValidObjectId(req.params.id, "class id");
+
   const classRoom = await ClassRoom.findByIdAndDelete(req.params.id);
   if (!classRoom) throw new ApiError(404, "Class not found");
   res.status(200).json({ success: true, message: "Class deleted" });
@@ -456,7 +629,9 @@ export const createSubject = asyncHandler(async (req, res) => {
     ? await Course.findById(payload.course).select("campuses")
     : null;
   const selectedCourseCampuses = selectedCourse?.campuses || [];
-  const requestCampuses = Array.isArray(payload.campuses) ? payload.campuses : [];
+  const requestCampuses = Array.isArray(payload.campuses)
+    ? payload.campuses
+    : [];
 
   if (req.user.role === "admin") {
     payload.campuses = req.user.campus ? [req.user.campus] : [];
@@ -521,7 +696,9 @@ export const listSubjects = asyncHandler(async (req, res) => {
   };
 
   classRooms.forEach((classRoom) => {
-    const classCampusId = String(classRoom?.campus?._id || classRoom?.campus || "");
+    const classCampusId = String(
+      classRoom?.campus?._id || classRoom?.campus || "",
+    );
     const classFaculty = classRoom.faculty || [];
 
     (classRoom.subjects || []).forEach((subject) => {
@@ -535,7 +712,9 @@ export const listSubjects = asyncHandler(async (req, res) => {
       const assignments = term.subjectAssignments || [];
 
       assignments.forEach((assignment) => {
-        const subjectId = String(assignment?.subject?._id || assignment?.subject || "");
+        const subjectId = String(
+          assignment?.subject?._id || assignment?.subject || "",
+        );
         addCampus(subjectId, classCampusId);
         addFaculty(subjectId, assignment.faculty);
       });
@@ -556,7 +735,10 @@ export const listSubjects = asyncHandler(async (req, res) => {
       }
 
       const subjectId = String(subject._id);
-      if ((!Array.isArray(data.campuses) || data.campuses.length === 0) && campusesBySubjectId.has(subjectId)) {
+      if (
+        (!Array.isArray(data.campuses) || data.campuses.length === 0) &&
+        campusesBySubjectId.has(subjectId)
+      ) {
         data.campuses = Array.from(campusesBySubjectId.get(subjectId));
       }
 
@@ -569,15 +751,21 @@ export const listSubjects = asyncHandler(async (req, res) => {
     })
     .filter((subject) => {
       if (req.user.role !== "admin") return true;
-      const adminCampusId = String(req.user.campus?._id || req.user.campus || "");
+      const adminCampusId = String(
+        req.user.campus?._id || req.user.campus || "",
+      );
       if (!adminCampusId) return false;
-      return (subject.campuses || []).some((campus) => String(campus?._id || campus) === adminCampusId);
+      return (subject.campuses || []).some(
+        (campus) => String(campus?._id || campus) === adminCampusId,
+      );
     });
 
   res.status(200).json({ success: true, data: hydratedSubjects });
 });
 
 export const updateSubject = asyncHandler(async (req, res) => {
+  assertValidObjectId(req.params.id, "subject id");
+
   const payload = { ...req.body };
   delete payload.code;
   payload.semester = null;
@@ -588,7 +776,9 @@ export const updateSubject = asyncHandler(async (req, res) => {
     ? await Course.findById(payload.course).select("campuses")
     : null;
   const selectedCourseCampuses = selectedCourse?.campuses || [];
-  const requestCampuses = Array.isArray(payload.campuses) ? payload.campuses : [];
+  const requestCampuses = Array.isArray(payload.campuses)
+    ? payload.campuses
+    : [];
 
   if (req.user.role === "admin") {
     payload.campuses = req.user.campus ? [req.user.campus] : [];
@@ -598,25 +788,39 @@ export const updateSubject = asyncHandler(async (req, res) => {
     payload.campuses = selectedCourseCampuses;
   }
 
-  const subject = await Subject.findByIdAndUpdate(req.params.id, payload, { new: true, runValidators: true });
+  const subject = await Subject.findByIdAndUpdate(req.params.id, payload, {
+    new: true,
+    runValidators: true,
+  });
   if (!subject) throw new ApiError(404, "Subject not found");
   res.status(200).json({ success: true, data: subject });
 });
 
 export const deleteSubject = asyncHandler(async (req, res) => {
+  assertValidObjectId(req.params.id, "subject id");
+
   const subject = await Subject.findByIdAndDelete(req.params.id);
   if (!subject) throw new ApiError(404, "Subject not found");
   res.status(200).json({ success: true, message: "Subject deleted" });
 });
 
 export const createNewsEvent = asyncHandler(async (req, res) => {
-  const payload = { ...req.body, createdBy: req.user._id, status: String(req.body.status || "published").toLowerCase() };
+  const payload = {
+    ...req.body,
+    createdBy: req.user._id,
+    status: String(req.body.status || "published").toLowerCase(),
+  };
 
   if (req.file) {
-    const uploaded = await uploadBufferToCloudinary(req.file.buffer, "the-best-college/news", "image", {
-      originalName: req.file.originalname,
-      mimeType: req.file.mimetype,
-    });
+    const uploaded = await uploadBufferToCloudinary(
+      req.file.buffer,
+      "the-best-college/news",
+      "image",
+      {
+        originalName: req.file.originalname,
+        mimeType: req.file.mimetype,
+      },
+    );
     payload.image = { publicId: uploaded.public_id, url: uploaded.secure_url };
   }
 
@@ -632,24 +836,39 @@ export const listNewsEvents = asyncHandler(async (req, res) => {
 });
 
 export const updateNewsEvent = asyncHandler(async (req, res) => {
+  assertValidObjectId(req.params.id, "news/event id");
+
   const item = await NewsEvent.findById(req.params.id);
   if (!item) throw new ApiError(404, "News/Event not found");
 
-  const payload = { ...req.body, status: String(req.body.status || item.status || "published").toLowerCase() };
+  const payload = {
+    ...req.body,
+    status: String(req.body.status || item.status || "published").toLowerCase(),
+  };
   if (req.file) {
     await deleteFromCloudinary(item.image?.publicId, "image");
-    const uploaded = await uploadBufferToCloudinary(req.file.buffer, "the-best-college/news", "image", {
-      originalName: req.file.originalname,
-      mimeType: req.file.mimetype,
-    });
+    const uploaded = await uploadBufferToCloudinary(
+      req.file.buffer,
+      "the-best-college/news",
+      "image",
+      {
+        originalName: req.file.originalname,
+        mimeType: req.file.mimetype,
+      },
+    );
     payload.image = { publicId: uploaded.public_id, url: uploaded.secure_url };
   }
 
-  const updated = await NewsEvent.findByIdAndUpdate(req.params.id, payload, { new: true, runValidators: true });
+  const updated = await NewsEvent.findByIdAndUpdate(req.params.id, payload, {
+    new: true,
+    runValidators: true,
+  });
   res.status(200).json({ success: true, data: updated });
 });
 
 export const deleteNewsEvent = asyncHandler(async (req, res) => {
+  assertValidObjectId(req.params.id, "news/event id");
+
   const item = await NewsEvent.findById(req.params.id);
   if (!item) throw new ApiError(404, "News/Event not found");
 
@@ -661,15 +880,25 @@ export const deleteNewsEvent = asyncHandler(async (req, res) => {
 export const uploadGalleryItem = asyncHandler(async (req, res) => {
   if (!req.file) throw new ApiError(400, "Image is required");
 
-  const uploaded = await uploadBufferToCloudinary(req.file.buffer, "the-best-college/gallery", "image", {
-    originalName: req.file.originalname,
-    mimeType: req.file.mimetype,
-  });
+  const uploaded = await uploadBufferToCloudinary(
+    req.file.buffer,
+    "the-best-college/gallery",
+    "image",
+    {
+      originalName: req.file.originalname,
+      mimeType: req.file.mimetype,
+    },
+  );
 
   const item = await GalleryItem.create({
     title: req.body.title,
     category: req.body.category,
-    tags: req.body.tags ? String(req.body.tags).split(",").map((tag) => tag.trim()).filter(Boolean) : [],
+    tags: req.body.tags
+      ? String(req.body.tags)
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter(Boolean)
+      : [],
     description: req.body.description,
     image: { publicId: uploaded.public_id, url: uploaded.secure_url },
     uploadedBy: req.user._id,
@@ -686,6 +915,8 @@ export const listGalleryItems = asyncHandler(async (req, res) => {
 });
 
 export const updateGalleryItem = asyncHandler(async (req, res) => {
+  assertValidObjectId(req.params.id, "gallery item id");
+
   const item = await GalleryItem.findById(req.params.id);
   if (!item) throw new ApiError(404, "Gallery item not found");
 
@@ -696,23 +927,36 @@ export const updateGalleryItem = asyncHandler(async (req, res) => {
   };
 
   if (req.body.tags) {
-    payload.tags = String(req.body.tags).split(",").map((tag) => tag.trim()).filter(Boolean);
+    payload.tags = String(req.body.tags)
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter(Boolean);
   }
 
   if (req.file) {
     await deleteFromCloudinary(item.image?.publicId, "image");
-    const uploaded = await uploadBufferToCloudinary(req.file.buffer, "the-best-college/gallery", "image", {
-      originalName: req.file.originalname,
-      mimeType: req.file.mimetype,
-    });
+    const uploaded = await uploadBufferToCloudinary(
+      req.file.buffer,
+      "the-best-college/gallery",
+      "image",
+      {
+        originalName: req.file.originalname,
+        mimeType: req.file.mimetype,
+      },
+    );
     payload.image = { publicId: uploaded.public_id, url: uploaded.secure_url };
   }
 
-  const updated = await GalleryItem.findByIdAndUpdate(req.params.id, payload, { new: true, runValidators: true });
+  const updated = await GalleryItem.findByIdAndUpdate(req.params.id, payload, {
+    new: true,
+    runValidators: true,
+  });
   res.status(200).json({ success: true, data: updated });
 });
 
 export const deleteGalleryItem = asyncHandler(async (req, res) => {
+  assertValidObjectId(req.params.id, "gallery item id");
+
   const item = await GalleryItem.findById(req.params.id);
   if (!item) throw new ApiError(404, "Gallery item not found");
 
@@ -817,4 +1061,3 @@ export const listResultCalculationLogs = asyncHandler(async (req, res) => {
 
   res.status(200).json({ success: true, data: logs });
 });
-

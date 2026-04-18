@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
-import {
-  ArrowRight,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 import { useFacultyContext } from "../../store/hooks/useFacultyReduxContext";
 import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
@@ -25,6 +23,7 @@ const Dashboard = () => {
     getAssignmentStatsByCurrentCampus,
     getTotalStudents,
     getAssignedSubjectsCount,
+    getAssignedSubjectsByCurrentCampus,
     getCurrentCampus,
     isDarkMode,
     loading: isContextLoading,
@@ -36,7 +35,7 @@ const Dashboard = () => {
     const loadAnnouncements = async () => {
       try {
         const { data } = await portalApi.announcements();
-        const items = (data.data || []).slice(0, 3).map((item) => ({
+        const items = (data.data || []).map((item) => ({
           title: item.title,
           date: new Date(item.createdAt).toLocaleDateString(),
         }));
@@ -56,31 +55,33 @@ const Dashboard = () => {
   const assignmentStats = getAssignmentStatsByCurrentCampus();
   const totalStudents = getTotalStudents();
   const assignedSubjectsCount = getAssignedSubjectsCount();
+  const assignedSubjects = getAssignedSubjectsByCurrentCampus();
 
-  const stats = useMemo(() => [
-    {
-      title: "Total Students",
-      value: totalStudents,
-      hint: "Active",
-    },
-    {
-      title: "Active Classes",
-      value: classes.length,
-      hint: "Assigned",
-    },
-    {
-      title: "Assigned Subjects",
-      value: assignedSubjectsCount,
-      hint: "Across active classes",
-    },
-    {
-      title: "Assignments",
-      value: assignmentStats?.totalAssignments || 0,
-      hint: "Across all classes",
-    }
-  ], [totalStudents, classes.length, assignedSubjectsCount, assignmentStats]);
-
-
+  const stats = useMemo(
+    () => [
+      {
+        title: "Total Students",
+        value: totalStudents,
+        hint: "Active",
+      },
+      {
+        title: "Active Classes",
+        value: classes.length,
+        hint: "Assigned",
+      },
+      {
+        title: "Assigned Subjects",
+        value: assignedSubjectsCount,
+        hint: "Across active classes",
+      },
+      {
+        title: "Assignments",
+        value: assignmentStats?.totalAssignments || 0,
+        hint: "Across all classes",
+      },
+    ],
+    [totalStudents, classes.length, assignedSubjectsCount, assignmentStats],
+  );
 
   return (
     <div className="space-y-8 pb-10">
@@ -99,21 +100,21 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5 lg:gap-6">
         {isContextLoading
           ? Array.from({ length: 4 }).map((_, idx) => (
-              <SkeletonLoading key={idx} variant="panel" className="h-32" />
-            ))
-          : stats.map((item) => (
-              <PortalStatsCard key={item.title} {...item} />
-            ))}
+            <SkeletonLoading key={idx} variant="panel" className="h-32" />
+          ))
+          : stats.map((item) => <PortalStatsCard key={item.title} {...item} />)}
       </div>
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
         {quickActions.map((action) => {
           const descriptions = {
-            "Create Assignment": "Post new tasks and deadlines for your students.",
-            "Upload Material": "Share lecture notes, slides, and reference files.",
+            "Create Assignment":
+              "Post new tasks and deadlines for your students.",
+            "Upload Material":
+              "Share lecture notes, slides, and reference files.",
             "View Submissions": "Review and grade student work submissions.",
-            "Announcements": "Broadcast important updates to all your classes."
+            Announcements: "Broadcast important updates to all your classes.",
           };
 
           return (
@@ -142,7 +143,8 @@ const Dashboard = () => {
                   </h3>
 
                   <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-[90%] group-hover:text-white/70 transition-colors">
-                    {descriptions[action.title] || "Access your faculty tools and management options."}
+                    {descriptions[action.title] ||
+                      "Access your faculty tools and management options."}
                   </p>
                 </div>
 
@@ -152,78 +154,136 @@ const Dashboard = () => {
                   </span>
                 </div>
               </div>
-
             </Link>
           );
         })}
       </div>
 
-      {/* Announcements Section */}
-      <section className="bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/30 rounded-sm shadow-sm p-6 md:p-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
-          <div>
-            <h2 className="text-xl font-bold text-college-navy dark:text-white">
-              Recent Announcements
-            </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              Updates for your students and classes
-            </p>
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Assigned Subjects (Left) */}
+        <div className="bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/30 rounded-sm shadow-sm p-6 flex flex-col overflow-hidden">
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <h2 className="text-xl font-serif font-bold text-college-navy dark:text-white">
+                Assigned Subjects
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                {campus?.toUpperCase() || "CAMPUS"}
+              </p>
+            </div>
+            <Link
+              to="/faculty/materials"
+              className="px-4 py-2 bg-college-navy/5 dark:bg-college-gold/10 text-college-navy dark:text-college-gold rounded-sm text-[10px] font-bold tracking-widest hover:bg-college-navy dark:hover:bg-college-gold hover:text-white dark:hover:text-college-navy transition-all duration-300"
+            >
+              VIEW ALL
+            </Link>
           </div>
-          <Link
-            to="/faculty/announcements"
-            className="flex items-center justify-center gap-2 text-sm font-semibold text-college-navy dark:text-college-gold hover:text-white dark:hover:text-white hover:bg-college-navy dark:hover:bg-white/5 px-4 py-2 rounded-sm transition-all border border-transparent hover:border-college-navy/10 dark:hover:border-college-gold/30"
-          >
-            View All
-            <ArrowRight size={16} />
-          </Link>
+
+          {isContextLoading ? (
+            <div className="space-y-3">
+              {[1, 2, 3].map((i) => (
+                <SkeletonLoading key={i} variant="panel" className="h-20" />
+              ))}
+            </div>
+          ) : assignedSubjects.length > 0 ? (
+            <div className="space-y-3 max-h-[360px] overflow-y-auto overflow-x-hidden pr-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+              {assignedSubjects.map((subject) => (
+                <div
+                  key={subject._id}
+                  className="group relative overflow-hidden bg-white dark:bg-white/5 border border-gray-200 dark:border-college-gold/10 rounded-sm flex text-college-navy hover:shadow-xl hover:-translate-y-0.5 hover:bg-college-navy/10 dark:hover:bg-white/10 hover:text-college-navy transition-all duration-300 cursor-default"
+                >
+                  <div className="w-1.5 bg-college-navy dark:bg-college-gold opacity-10 dark:opacity-20 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+
+                  <div className="p-4 md:p-5 flex items-center justify-between w-full relative z-10">
+                    <div>
+                      <h4 className="font-bold text-college-navy dark:text-white transition-colors group-hover:text-navy text-base">
+                        {subject.name}
+                      </h4>
+                      <div className="flex items-center gap-3 mt-1">
+                        <span className="text-[10px] font-bold text-college-navy/40 dark:text-college-gold/50 group-hover:text-navy/50 uppercase tracking-widest">
+                          {subject.code}
+                        </span>
+                        <span className="text-[10px] font-medium text-gray-400 dark:text-gray-500 group-hover:text-navy/40">
+                          {subject.classLabel}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-[10px] font-bold text-college-navy dark:text-college-gold bg-college-navy/5 dark:bg-college-gold/10 px-2.5 py-1.5 rounded-sm border border-college-navy/10 dark:border-college-gold/20 group-hover:bg-college-navy dark:group-hover:bg-college-gold group-hover:text-white dark:group-hover:text-college-navy group-hover:border-college-navy dark:group-hover:border-college-gold transition-all">
+                        {subject.credits ?? "-"} Cr
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center text-center p-6 border-2 border-dashed border-gray-100 dark:border-college-gold/10 rounded-sm min-h-[112px]">
+              <p className="text-gray-400 dark:text-gray-500 font-medium text-sm">
+                No subjects assigned for your current campus
+              </p>
+            </div>
+          )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {isAnnouncementsLoading ? (
-            Array.from({ length: 3 }).map((_, idx) => (
-              <SkeletonLoading key={idx} variant="card" className="h-40" />
-            ))
-          ) : recentAnnouncements.length > 0 ? (
-            recentAnnouncements.map((item, idx) => (
-              <div
-                key={idx}
-                className="group relative bg-white dark:bg-college-navy border border-gray-100 dark:border-college-gold/20 rounded-sm shadow-sm hover:shadow-xl hover:-translate-y-1 hover:bg-college-navy dark:hover:bg-white/5 transition-all duration-300 flex overflow-hidden"
-              >
-                {/* Vertical Accent Bar */}
-                <div className="w-1 bg-college-navy dark:bg-college-gold opacity-20 dark:opacity-30 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+        {/* Recent Announcements (Right) */}
+        <div className="bg-white dark:bg-college-navy border border-gray-200 dark:border-college-gold/30 rounded-sm shadow-sm p-6 flex flex-col h-full overflow-hidden">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-xl font-serif font-bold text-college-navy dark:text-white">
+                Recent Announcements
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Updates for your students and classes
+              </p>
+            </div>
+            <Link
+              to="/faculty/announcements"
+              className="px-4 py-2 bg-college-navy/5 dark:bg-college-gold/10 text-college-navy dark:text-college-gold rounded-sm text-[10px] font-bold tracking-widest hover:bg-college-navy dark:hover:bg-college-gold hover:text-white dark:hover:text-college-navy transition-all duration-300"
+            >
+              SEE ALL
+            </Link>
+          </div>
 
-                <div className="p-5 flex flex-col justify-between w-full">
-                  <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-[10px] font-bold tracking-wider text-college-navy dark:text-college-gold group-hover:text-white/70 transition-colors uppercase">
-                        RECENT
+          {isAnnouncementsLoading ? (
+            <div className="space-y-3 max-h-[360px] overflow-y-auto overflow-x-hidden pr-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+              {[1, 2, 3].map((i) => (
+                <SkeletonLoading key={i} variant="panel" className="h-20" />
+              ))}
+            </div>
+          ) : recentAnnouncements.length > 0 ? (
+            <div className="space-y-3 max-h-[360px] overflow-y-auto overflow-x-hidden pr-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+              {recentAnnouncements.map((item, index) => (
+                <Link
+                  key={index}
+                  to="/faculty/announcements"
+                  className="group relative overflow-hidden bg-white dark:bg-white/5 border border-gray-200 dark:border-college-gold/10 rounded-sm flex hover:shadow-xl hover:-translate-y-0.5 hover:bg-college-navy dark:hover:bg-white/10 transition-all duration-300"
+                >
+                  <div className="w-1.5 bg-college-navy dark:bg-college-gold opacity-10 dark:opacity-20 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+
+                  <div className="p-4 md:p-5 flex flex-col justify-between w-full relative z-10">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[10px] font-bold tracking-widest text-college-navy/40 dark:text-college-gold/50 transition-colors group-hover:text-white/50 uppercase">
+                        {item.date}
                       </span>
                       <ArrowRight
                         size={14}
-                        className="text-college-navy dark:text-college-gold opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:text-white transition-all duration-300"
+                        className="text-white opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all"
                       />
                     </div>
-                    <h3 className="text-sm font-bold text-college-navy dark:text-white leading-tight mb-2 group-hover:text-white transition-colors line-clamp-2">
+                    <h4 className="font-bold text-college-navy dark:text-white text-base mb-1.5 transition-colors group-hover:text-white leading-tight">
                       {item.title}
-                    </h3>
+                    </h4>
                   </div>
-                  <p className="text-[10px] text-gray-400 dark:text-gray-500 font-semibold tracking-widest uppercase mt-4 transition-colors group-hover:text-white/50">
-                    {item.date}
-                  </p>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="col-span-full py-10 text-center border-2 border-dashed border-gray-200 dark:border-college-gold/10 rounded-sm">
-                <p className="text-sm text-gray-500 dark:text-gray-400">No recent announcements</p>
+                </Link>
+              ))}
             </div>
-          )}
-
-          {!isAnnouncementsLoading && (
-            <button className="group relative flex flex-col items-center justify-center gap-2 p-5 rounded-sm border-2 border-dashed border-gray-200 dark:border-college-gold/20 bg-gray-50/50 dark:bg-white/5 text-sm font-bold text-gray-400 dark:text-gray-500 hover:border-college-navy dark:hover:border-college-gold hover:text-white dark:hover:text-college-gold hover:bg-college-navy dark:hover:bg-college-gold/5 transition-all duration-300 min-h-[120px]">
-              <span className="text-2xl font-light group-hover:scale-125 transition-transform">+</span>
-              <span className="tracking-widest uppercase text-[11px]">New Broadcast</span>
-            </button>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-12 border-2 border-dashed border-gray-100 dark:border-college-gold/10 rounded-sm">
+              <p className="text-gray-400 dark:text-gray-500 font-medium text-sm">
+                No recent announcements
+              </p>
+            </div>
           )}
         </div>
       </section>
@@ -232,4 +292,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-

@@ -49,8 +49,8 @@ const Assignments = () => {
 
   const filteredAssignments = useMemo(() => {
     if (!searchTerm.trim()) return assignments;
-    
-    return assignments.filter((a) => 
+
+    return assignments.filter((a) =>
       a.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       a.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
       a.classSection.toLowerCase().includes(searchTerm.toLowerCase())

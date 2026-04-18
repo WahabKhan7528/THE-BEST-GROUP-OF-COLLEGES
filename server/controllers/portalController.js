@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Announcement from "../models/Announcement.js";
 import Assignment from "../models/Assignment.js";
 import ClassRoom from "../models/ClassRoom.js";
@@ -8,21 +9,142 @@ import User from "../models/User.js";
 import ApiError from "../utils/ApiError.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import { buildGeneratedId } from "../utils/generatedId.js";
-import { deleteFromCloudinary, uploadBufferToCloudinary } from "../utils/cloudinary.js";
+import {
+  deleteFromCloudinary,
+  uploadBufferToCloudinary,
+} from "../utils/cloudinary.js";
 
 const getIdValue = (value) => {
   const rawValue = value?._id || value?.id || value;
   return rawValue ? String(rawValue) : null;
 };
 
-const isLockedSemester = (term) => Boolean(
-  term?.status === "completed" || term?.status === "locked" || term?.resultPublished,
-);
+const isLockedSemester = (term) =>
+  Boolean(
+    term?.status === "completed" ||
+    term?.status === "locked" ||
+    term?.resultPublished,
+  );
 
 const getSemesterLabel = (term) => {
   if (!term) return "Term";
   if (term.semesterNumber) return `Term ${term.semesterNumber}`;
   return term.annualYear || "Term";
+};
+
+const isValidObjectId = (value) => mongoose.isValidObjectId(value);
+
+const assertValidObjectId = (value, fieldName) => {
+  if (!isValidObjectId(value)) {
+    throw new ApiError(400, `Invalid ${fieldName}`);
+  }
+};
+
+const cleanupUploadedAsset = async (asset) => {
+  if (!asset?.publicId) return;
+  await deleteFromCloudinary(asset.publicId, asset.resourceType || "auto");
+};
+
+const getClassFacultyIds = (classRoom) => {
+  const facultyIds = new Set();
+  (Array.isArray(classRoom?.faculty) ? classRoom.faculty : []).forEach(
+    (item) => {
+      const facultyId = getIdValue(item);
+      if (facultyId) facultyIds.add(facultyId);
+    },
+  );
+
+  (Array.isArray(classRoom?.semesterSubjects)
+    ? classRoom.semesterSubjects
+    : []
+  ).forEach((term) => {
+    (Array.isArray(term?.faculty) ? term.faculty : []).forEach((item) => {
+      const facultyId = getIdValue(item);
+      if (facultyId) facultyIds.add(facultyId);
+    });
+
+    (Array.isArray(term?.subjectAssignments)
+      ? term.subjectAssignments
+      : []
+    ).forEach((assignment) => {
+      const facultyId = getIdValue(assignment?.faculty);
+      if (facultyId) facultyIds.add(facultyId);
+    });
+  });
+
+  return facultyIds;
+};
+
+const facultyCanManageClass = (classRoom, facultyId) => {
+  if (!classRoom || !facultyId) return false;
+  return getClassFacultyIds(classRoom).has(String(facultyId));
+};
+
+const facultyCanManageSubject = (classRoom, subjectId, facultyId) => {
+  if (!classRoom || !facultyId || !subjectId) return false;
+
+  const normalizedFacultyId = String(facultyId);
+  const normalizedSubjectId = String(subjectId);
+
+  if (
+    Array.isArray(classRoom.subjects) &&
+    classRoom.subjects.some(
+      (subject) => String(subject?._id || subject) === normalizedSubjectId,
+    )
+  ) {
+    if (facultyCanManageClass(classRoom, normalizedFacultyId)) {
+      return true;
+    }
+  }
+
+  return (
+    Array.isArray(classRoom.semesterSubjects) ? classRoom.semesterSubjects : []
+  ).some(
+    (term) =>
+      Array.isArray(term?.subjectAssignments) &&
+      term.subjectAssignments.some(
+        (assignment) =>
+          String(assignment?.subject?._id || assignment?.subject) ===
+            normalizedSubjectId &&
+          String(assignment?.faculty?._id || assignment?.faculty) ===
+            normalizedFacultyId,
+      ),
+  );
+};
+
+const ensureFacultyClassAccess = async (classRoomId, facultyId) => {
+  assertValidObjectId(classRoomId, "classRoom");
+  const classRoom = await ClassRoom.findById(classRoomId)
+    .select("faculty semesterSubjects subjects")
+    .populate("faculty", "_id")
+    .populate("semesterSubjects.faculty", "_id")
+    .populate("semesterSubjects.subjectAssignments.faculty", "_id")
+    .populate("subjects", "_id");
+
+  if (!classRoom) {
+    throw new ApiError(404, "Class not found");
+  }
+
+  if (!facultyCanManageClass(classRoom, facultyId)) {
+    throw new ApiError(403, "You are not authorized for this class");
+  }
+
+  return classRoom;
+};
+
+const ensureFacultyClassSubjectAccess = async (
+  classRoomId,
+  subjectId,
+  facultyId,
+) => {
+  const classRoom = await ensureFacultyClassAccess(classRoomId, facultyId);
+  assertValidObjectId(subjectId, "subject");
+
+  if (!facultyCanManageSubject(classRoom, subjectId, facultyId)) {
+    throw new ApiError(403, "You are not authorized for this subject");
+  }
+
+  return classRoom;
 };
 
 const getStudentClassIds = async (user) => {
@@ -53,7 +175,9 @@ const normalizeFacultySubjects = (classes, facultyId) => {
       campus: classRoom?.campus || null,
     };
 
-    const semesterSubjects = Array.isArray(classRoom?.semesterSubjects) ? classRoom.semesterSubjects : [];
+    const semesterSubjects = Array.isArray(classRoom?.semesterSubjects)
+      ? classRoom.semesterSubjects
+      : [];
 
     semesterSubjects.forEach((term) => {
       const isOld = isLockedSemester(term);
@@ -66,7 +190,9 @@ const normalizeFacultySubjects = (classes, facultyId) => {
         label: getSemesterLabel(term),
       };
 
-      const hasSpecificAssignments = Array.isArray(term?.subjectAssignments) && term.subjectAssignments.length > 0;
+      const hasSpecificAssignments =
+        Array.isArray(term?.subjectAssignments) &&
+        term.subjectAssignments.length > 0;
       const assignments = hasSpecificAssignments
         ? term.subjectAssignments
         : (term?.subjects || []).map((subject) => ({ subject }));
@@ -74,14 +200,19 @@ const normalizeFacultySubjects = (classes, facultyId) => {
       if (hasSpecificAssignments) {
         assignments.forEach((assignment) => {
           const assignedFacultyId = getIdValue(assignment?.faculty);
-          if (facultyId && assignedFacultyId && assignedFacultyId !== facultyId) return;
+          if (facultyId && assignedFacultyId && assignedFacultyId !== facultyId)
+            return;
           if (facultyId && !assignedFacultyId) return;
 
           const subject = assignment?.subject;
           const subjectId = getIdValue(subject);
           if (!subjectId) return;
 
-          const key = [classRoomId, termInfo.semesterNumber || termInfo.label, subjectId].join("::");
+          const key = [
+            classRoomId,
+            termInfo.semesterNumber || termInfo.label,
+            subjectId,
+          ].join("::");
           uniqueItems.set(key, {
             id: key,
             classRoom: classInfo,
@@ -100,8 +231,14 @@ const normalizeFacultySubjects = (classes, facultyId) => {
         return;
       }
 
-      const classFacultyIds = (classRoom?.faculty || []).map((item) => getIdValue(item)).filter(Boolean);
-      if (facultyId && classFacultyIds.length > 0 && !classFacultyIds.includes(facultyId)) {
+      const classFacultyIds = (classRoom?.faculty || [])
+        .map((item) => getIdValue(item))
+        .filter(Boolean);
+      if (
+        facultyId &&
+        classFacultyIds.length > 0 &&
+        !classFacultyIds.includes(facultyId)
+      ) {
         return;
       }
 
@@ -110,7 +247,11 @@ const normalizeFacultySubjects = (classes, facultyId) => {
         const subjectId = getIdValue(subject);
         if (!subjectId) return;
 
-        const key = [classRoomId, termInfo.semesterNumber || termInfo.label, subjectId].join("::");
+        const key = [
+          classRoomId,
+          termInfo.semesterNumber || termInfo.label,
+          subjectId,
+        ].join("::");
         uniqueItems.set(key, {
           id: key,
           classRoom: classInfo,
@@ -129,8 +270,14 @@ const normalizeFacultySubjects = (classes, facultyId) => {
     });
 
     if (semesterSubjects.length === 0) {
-      const classFacultyIds = (classRoom?.faculty || []).map((item) => getIdValue(item)).filter(Boolean);
-      if (facultyId && classFacultyIds.length > 0 && !classFacultyIds.includes(facultyId)) {
+      const classFacultyIds = (classRoom?.faculty || [])
+        .map((item) => getIdValue(item))
+        .filter(Boolean);
+      if (
+        facultyId &&
+        classFacultyIds.length > 0 &&
+        !classFacultyIds.includes(facultyId)
+      ) {
         return;
       }
 
@@ -173,11 +320,29 @@ export const createAnnouncement = asyncHandler(async (req, res) => {
     createdBy: req.user._id,
   };
 
+  if (req.user.role === "faculty") {
+    const targetClassIds = Array.isArray(payload.targetClasses)
+      ? payload.targetClasses
+      : [];
+    if (targetClassIds.length === 0) {
+      throw new ApiError(400, "At least one target class is required");
+    }
+
+    for (const classRoomId of targetClassIds) {
+      await ensureFacultyClassAccess(classRoomId, req.user._id);
+    }
+  }
+
   if (req.file) {
-    const uploaded = await uploadBufferToCloudinary(req.file.buffer, "the-best-college/announcements", "auto", {
-      originalName: req.file.originalname,
-      mimeType: req.file.mimetype,
-    });
+    const uploaded = await uploadBufferToCloudinary(
+      req.file.buffer,
+      "the-best-college/announcements",
+      "auto",
+      {
+        originalName: req.file.originalname,
+        mimeType: req.file.mimetype,
+      },
+    );
     payload.attachment = {
       publicId: uploaded.public_id,
       url: uploaded.secure_url,
@@ -185,19 +350,30 @@ export const createAnnouncement = asyncHandler(async (req, res) => {
     };
   }
 
-  const item = await Announcement.create(payload);
-  res.status(201).json({ success: true, data: item });
+  try {
+    const item = await Announcement.create(payload);
+    res.status(201).json({ success: true, data: item });
+  } catch (error) {
+    await cleanupUploadedAsset(payload.attachment);
+    throw error;
+  }
 });
 
 export const deleteAnnouncement = asyncHandler(async (req, res) => {
   const item = await Announcement.findById(req.params.id);
   if (!item) throw new ApiError(404, "Announcement not found");
 
-  if (req.user.role === "faculty" && String(item.createdBy) !== String(req.user._id)) {
+  if (
+    req.user.role === "faculty" &&
+    String(item.createdBy) !== String(req.user._id)
+  ) {
     throw new ApiError(403, "You can only delete your own announcements");
   }
 
-  await deleteFromCloudinary(item.attachment?.publicId, item.attachment?.resourceType || "auto");
+  await deleteFromCloudinary(
+    item.attachment?.publicId,
+    item.attachment?.resourceType || "auto",
+  );
   await item.deleteOne();
   res.status(200).json({ success: true, message: "Announcement deleted" });
 });
@@ -229,11 +405,24 @@ export const createAssignment = asyncHandler(async (req, res) => {
     createdBy: req.user._id,
   };
 
+  if (req.user.role === "faculty") {
+    await ensureFacultyClassSubjectAccess(
+      payload.classRoom,
+      payload.subject,
+      req.user._id,
+    );
+  }
+
   if (req.file) {
-    const uploaded = await uploadBufferToCloudinary(req.file.buffer, "the-best-college/assignments", "auto", {
-      originalName: req.file.originalname,
-      mimeType: req.file.mimetype,
-    });
+    const uploaded = await uploadBufferToCloudinary(
+      req.file.buffer,
+      "the-best-college/assignments",
+      "auto",
+      {
+        originalName: req.file.originalname,
+        mimeType: req.file.mimetype,
+      },
+    );
     payload.attachment = {
       publicId: uploaded.public_id,
       url: uploaded.secure_url,
@@ -241,8 +430,13 @@ export const createAssignment = asyncHandler(async (req, res) => {
     };
   }
 
-  const assignment = await Assignment.create(payload);
-  res.status(201).json({ success: true, data: assignment });
+  try {
+    const assignment = await Assignment.create(payload);
+    res.status(201).json({ success: true, data: assignment });
+  } catch (error) {
+    await cleanupUploadedAsset(payload.attachment);
+    throw error;
+  }
 });
 
 export const listAssignments = asyncHandler(async (req, res) => {
@@ -270,26 +464,65 @@ export const updateAssignment = asyncHandler(async (req, res) => {
   const assignment = await Assignment.findById(req.params.id);
   if (!assignment) throw new ApiError(404, "Assignment not found");
 
-  if (req.user.role === "faculty" && String(assignment.createdBy) !== String(req.user._id)) {
+  if (
+    req.user.role === "faculty" &&
+    String(assignment.createdBy) !== String(req.user._id)
+  ) {
     throw new ApiError(403, "You can only edit your own assignments");
+  }
+
+  const nextClassRoomId =
+    req.body.classRoom || req.body.classSection || assignment.classRoom;
+  const nextSubjectId = req.body.subject || assignment.subject;
+
+  if (req.user.role === "faculty") {
+    await ensureFacultyClassSubjectAccess(
+      nextClassRoomId,
+      nextSubjectId,
+      req.user._id,
+    );
   }
 
   const payload = { ...req.body };
 
   if (req.file) {
-    await deleteFromCloudinary(assignment.attachment?.publicId, assignment.attachment?.resourceType || "auto");
-    const uploaded = await uploadBufferToCloudinary(req.file.buffer, "the-best-college/assignments", "auto", {
-      originalName: req.file.originalname,
-      mimeType: req.file.mimetype,
-    });
+    const uploaded = await uploadBufferToCloudinary(
+      req.file.buffer,
+      "the-best-college/assignments",
+      "auto",
+      {
+        originalName: req.file.originalname,
+        mimeType: req.file.mimetype,
+      },
+    );
     payload.attachment = {
       publicId: uploaded.public_id,
       url: uploaded.secure_url,
       resourceType: uploaded.resource_type,
     };
+
+    try {
+      const updated = await Assignment.findByIdAndUpdate(
+        req.params.id,
+        payload,
+        { new: true, runValidators: true },
+      );
+      await deleteFromCloudinary(
+        assignment.attachment?.publicId,
+        assignment.attachment?.resourceType || "auto",
+      );
+      res.status(200).json({ success: true, data: updated });
+      return;
+    } catch (error) {
+      await cleanupUploadedAsset(payload.attachment);
+      throw error;
+    }
   }
 
-  const updated = await Assignment.findByIdAndUpdate(req.params.id, payload, { new: true, runValidators: true });
+  const updated = await Assignment.findByIdAndUpdate(req.params.id, payload, {
+    new: true,
+    runValidators: true,
+  });
   res.status(200).json({ success: true, data: updated });
 });
 
@@ -297,11 +530,17 @@ export const deleteAssignment = asyncHandler(async (req, res) => {
   const assignment = await Assignment.findById(req.params.id);
   if (!assignment) throw new ApiError(404, "Assignment not found");
 
-  if (req.user.role === "faculty" && String(assignment.createdBy) !== String(req.user._id)) {
+  if (
+    req.user.role === "faculty" &&
+    String(assignment.createdBy) !== String(req.user._id)
+  ) {
     throw new ApiError(403, "You can only delete your own assignments");
   }
 
-  await deleteFromCloudinary(assignment.attachment?.publicId, assignment.attachment?.resourceType || "auto");
+  await deleteFromCloudinary(
+    assignment.attachment?.publicId,
+    assignment.attachment?.resourceType || "auto",
+  );
   await assignment.deleteOne();
   res.status(200).json({ success: true, message: "Assignment deleted" });
 });
@@ -316,11 +555,24 @@ export const createMaterial = asyncHandler(async (req, res) => {
     uploadedBy: req.user._id,
   };
 
+  if (req.user.role === "faculty") {
+    await ensureFacultyClassSubjectAccess(
+      payload.classRoom,
+      payload.subject,
+      req.user._id,
+    );
+  }
+
   if (req.file) {
-    const uploaded = await uploadBufferToCloudinary(req.file.buffer, "the-best-college/materials", "auto", {
-      originalName: req.file.originalname,
-      mimeType: req.file.mimetype,
-    });
+    const uploaded = await uploadBufferToCloudinary(
+      req.file.buffer,
+      "the-best-college/materials",
+      "auto",
+      {
+        originalName: req.file.originalname,
+        mimeType: req.file.mimetype,
+      },
+    );
     payload.file = {
       publicId: uploaded.public_id,
       url: uploaded.secure_url,
@@ -328,8 +580,13 @@ export const createMaterial = asyncHandler(async (req, res) => {
     };
   }
 
-  const material = await Material.create(payload);
-  res.status(201).json({ success: true, data: material });
+  try {
+    const material = await Material.create(payload);
+    res.status(201).json({ success: true, data: material });
+  } catch (error) {
+    await cleanupUploadedAsset(payload.file);
+    throw error;
+  }
 });
 
 export const listMaterials = asyncHandler(async (req, res) => {
@@ -357,8 +614,23 @@ export const updateMaterial = asyncHandler(async (req, res) => {
   const material = await Material.findById(req.params.id);
   if (!material) throw new ApiError(404, "Material not found");
 
-  if (req.user.role === "faculty" && String(material.uploadedBy) !== String(req.user._id)) {
+  if (
+    req.user.role === "faculty" &&
+    String(material.uploadedBy) !== String(req.user._id)
+  ) {
     throw new ApiError(403, "You can only edit your own materials");
+  }
+
+  const nextClassRoomId =
+    req.body.classRoom || req.body.classSection || material.classRoom;
+  const nextSubjectId = req.body.subject || material.subject;
+
+  if (req.user.role === "faculty") {
+    await ensureFacultyClassSubjectAccess(
+      nextClassRoomId,
+      nextSubjectId,
+      req.user._id,
+    );
   }
 
   const payload = {
@@ -367,19 +639,42 @@ export const updateMaterial = asyncHandler(async (req, res) => {
   };
 
   if (req.file) {
-    await deleteFromCloudinary(material.file?.publicId, material.file?.resourceType || "auto");
-    const uploaded = await uploadBufferToCloudinary(req.file.buffer, "the-best-college/materials", "auto", {
-      originalName: req.file.originalname,
-      mimeType: req.file.mimetype,
-    });
+    const uploaded = await uploadBufferToCloudinary(
+      req.file.buffer,
+      "the-best-college/materials",
+      "auto",
+      {
+        originalName: req.file.originalname,
+        mimeType: req.file.mimetype,
+      },
+    );
     payload.file = {
       publicId: uploaded.public_id,
       url: uploaded.secure_url,
       resourceType: uploaded.resource_type,
     };
+
+    try {
+      const updated = await Material.findByIdAndUpdate(req.params.id, payload, {
+        new: true,
+        runValidators: true,
+      });
+      await deleteFromCloudinary(
+        material.file?.publicId,
+        material.file?.resourceType || "auto",
+      );
+      res.status(200).json({ success: true, data: updated });
+      return;
+    } catch (error) {
+      await cleanupUploadedAsset(payload.file);
+      throw error;
+    }
   }
 
-  const updated = await Material.findByIdAndUpdate(req.params.id, payload, { new: true, runValidators: true });
+  const updated = await Material.findByIdAndUpdate(req.params.id, payload, {
+    new: true,
+    runValidators: true,
+  });
   res.status(200).json({ success: true, data: updated });
 });
 
@@ -387,11 +682,17 @@ export const deleteMaterial = asyncHandler(async (req, res) => {
   const material = await Material.findById(req.params.id);
   if (!material) throw new ApiError(404, "Material not found");
 
-  if (req.user.role === "faculty" && String(material.uploadedBy) !== String(req.user._id)) {
+  if (
+    req.user.role === "faculty" &&
+    String(material.uploadedBy) !== String(req.user._id)
+  ) {
     throw new ApiError(403, "You can only delete your own materials");
   }
 
-  await deleteFromCloudinary(material.file?.publicId, material.file?.resourceType || "auto");
+  await deleteFromCloudinary(
+    material.file?.publicId,
+    material.file?.resourceType || "auto",
+  );
   await material.deleteOne();
   res.status(200).json({ success: true, message: "Material deleted" });
 });
@@ -399,33 +700,57 @@ export const deleteMaterial = asyncHandler(async (req, res) => {
 export const submitAssignment = asyncHandler(async (req, res) => {
   if (!req.file) throw new ApiError(400, "Submission file is required");
 
-  const assignment = await Assignment.findById(req.body.assignmentId || req.params.assignmentId);
+  const assignment = await Assignment.findById(
+    req.body.assignmentId || req.params.assignmentId,
+  );
   if (!assignment) throw new ApiError(404, "Assignment not found");
 
-  const uploaded = await uploadBufferToCloudinary(req.file.buffer, "the-best-college/submissions", "auto", {
-    originalName: req.file.originalname,
-    mimeType: req.file.mimetype,
+  const existingSubmission = await Submission.findOne({
+    assignment: assignment._id,
+    student: req.user._id,
   });
+
+  const uploaded = await uploadBufferToCloudinary(
+    req.file.buffer,
+    "the-best-college/submissions",
+    "auto",
+    {
+      originalName: req.file.originalname,
+      mimeType: req.file.mimetype,
+    },
+  );
 
   const isLate = new Date() > new Date(assignment.dueDate);
 
-  const submission = await Submission.findOneAndUpdate(
-    { assignment: assignment._id, student: req.user._id },
-    {
-      assignment: assignment._id,
-      student: req.user._id,
-      file: {
-        publicId: uploaded.public_id,
-        url: uploaded.secure_url,
-        resourceType: uploaded.resource_type,
+  try {
+    const submission = await Submission.findOneAndUpdate(
+      { assignment: assignment._id, student: req.user._id },
+      {
+        assignment: assignment._id,
+        student: req.user._id,
+        file: {
+          publicId: uploaded.public_id,
+          url: uploaded.secure_url,
+          resourceType: uploaded.resource_type,
+        },
+        submittedAt: new Date(),
+        status: isLate ? "late" : "on_time",
       },
-      submittedAt: new Date(),
-      status: isLate ? "late" : "on_time",
-    },
-    { upsert: true, new: true, runValidators: true },
-  );
+      { upsert: true, new: true, runValidators: true },
+    );
 
-  res.status(201).json({ success: true, data: submission });
+    await deleteFromCloudinary(
+      existingSubmission?.file?.publicId,
+      existingSubmission?.file?.resourceType || "auto",
+    );
+    res.status(201).json({ success: true, data: submission });
+  } catch (error) {
+    await cleanupUploadedAsset({
+      publicId: uploaded.public_id,
+      resourceType: uploaded.resource_type,
+    });
+    throw error;
+  }
 });
 
 export const listSubmissions = asyncHandler(async (req, res) => {
@@ -435,7 +760,7 @@ export const listSubmissions = asyncHandler(async (req, res) => {
     filter.student = req.user._id;
   }
 
-   if (req.user.role === "faculty") {
+  if (req.user.role === "faculty") {
     const classes = await ClassRoom.find({
       $or: [
         { faculty: req.user._id },
@@ -450,12 +775,16 @@ export const listSubmissions = asyncHandler(async (req, res) => {
       assignmentFilter._id = req.params.assignmentId;
     }
 
-    const assignments = classIds.length > 0
-      ? await Assignment.find(assignmentFilter).select("_id")
-      : [];
+    const assignments =
+      classIds.length > 0
+        ? await Assignment.find(assignmentFilter).select("_id")
+        : [];
 
     if (req.params.assignmentId && assignments.length === 0) {
-      throw new ApiError(403, "You are not authorized to view submissions for this assignment");
+      throw new ApiError(
+        403,
+        "You are not authorized to view submissions for this assignment",
+      );
     }
 
     filter.assignment = { $in: assignments.map((item) => item._id) };
@@ -475,12 +804,32 @@ export const listSubmissions = asyncHandler(async (req, res) => {
 });
 
 export const gradeSubmission = asyncHandler(async (req, res) => {
-  const submission = await Submission.findById(req.params.id).populate("assignment", "maxMarks");
+  assertValidObjectId(req.params.id, "submission id");
+
+  const submission = await Submission.findById(req.params.id).populate(
+    "assignment",
+    "maxMarks classRoom subject",
+  );
   if (!submission) throw new ApiError(404, "Submission not found");
 
+  if (req.user.role === "faculty") {
+    await ensureFacultyClassSubjectAccess(
+      submission.assignment.classRoom,
+      submission.assignment.subject,
+      req.user._id,
+    );
+  }
+
   const marks = Number(req.body.marks);
-  if (Number.isNaN(marks) || marks < 0 || marks > submission.assignment.maxMarks) {
-    throw new ApiError(400, `Marks must be between 0 and ${submission.assignment.maxMarks}`);
+  if (
+    Number.isNaN(marks) ||
+    marks < 0 ||
+    marks > submission.assignment.maxMarks
+  ) {
+    throw new ApiError(
+      400,
+      `Marks must be between 0 and ${submission.assignment.maxMarks}`,
+    );
   }
 
   const updated = await Submission.findByIdAndUpdate(
@@ -514,16 +863,49 @@ export const publishResult = asyncHandler(async (req, res) => {
     publishedBy: req.user._id,
   };
 
-  if (!payload.student || !payload.classRoom || !payload.subject || !payload.semester) {
-    throw new ApiError(400, "student, classRoom, subject, and semester are required");
+  if (
+    !payload.student ||
+    !payload.classRoom ||
+    !payload.subject ||
+    !payload.semester
+  ) {
+    throw new ApiError(
+      400,
+      "student, classRoom, subject, and semester are required",
+    );
   }
 
+  assertValidObjectId(payload.student, "student");
+  assertValidObjectId(payload.classRoom, "classRoom");
+  assertValidObjectId(payload.subject, "subject");
+
   const student = await User.findById(payload.student).select("name portalId");
+  const classRoom = await ClassRoom.findById(payload.classRoom)
+    .select("faculty semesterSubjects subjects")
+    .populate("faculty", "_id")
+    .populate("semesterSubjects.faculty", "_id")
+    .populate("semesterSubjects.subjectAssignments.faculty", "_id")
+    .populate("subjects", "_id");
+
+  if (!classRoom) {
+    throw new ApiError(404, "Class not found");
+  }
+
+  if (
+    req.user.role === "faculty" &&
+    !facultyCanManageSubject(classRoom, payload.subject, req.user._id)
+  ) {
+    throw new ApiError(403, "You are not authorized to publish this result");
+  }
+
   const marksObtained = Number(payload.marksObtained);
   const totalMarks = Number(payload.totalMarks);
-  const gradePoint = Number.isFinite(marksObtained) && Number.isFinite(totalMarks) && totalMarks > 0
-    ? Number((marksObtained / totalMarks * 4).toFixed(2))
-    : null;
+  const gradePoint =
+    Number.isFinite(marksObtained) &&
+    Number.isFinite(totalMarks) &&
+    totalMarks > 0
+      ? Number(((marksObtained / totalMarks) * 4).toFixed(2))
+      : null;
   const status = payload.grade === "F" ? "Fail" : "Pass";
 
   console.log("[portal/results] updating result", {
@@ -591,7 +973,9 @@ export const listResults = asyncHandler(async (req, res) => {
   }
 
   if (req.user.role === "faculty") {
-    const classes = await ClassRoom.find({ faculty: req.user._id }).select("_id");
+    const classes = await ClassRoom.find({ faculty: req.user._id }).select(
+      "_id",
+    );
     filter.classRoom = { $in: classes.map((c) => c._id) };
   }
 
@@ -634,9 +1018,18 @@ export const listPortalClasses = asyncHandler(async (req, res) => {
     .populate("students", "name portalId")
     .populate("faculty", "name portalId email department designation")
     .populate("semesterSubjects.subjects", "name code creditHours")
-    .populate("semesterSubjects.faculty", "name portalId email department designation")
-    .populate("semesterSubjects.subjectAssignments.subject", "name code creditHours")
-    .populate("semesterSubjects.subjectAssignments.faculty", "name portalId email department designation")
+    .populate(
+      "semesterSubjects.faculty",
+      "name portalId email department designation",
+    )
+    .populate(
+      "semesterSubjects.subjectAssignments.subject",
+      "name code creditHours",
+    )
+    .populate(
+      "semesterSubjects.subjectAssignments.faculty",
+      "name portalId email department designation",
+    )
     .sort("name");
 
   const classIds = classes.map((item) => item._id);
@@ -684,8 +1077,14 @@ export const listFacultySubjects = asyncHandler(async (req, res) => {
     .populate("campus", "name code slug")
     .populate("course", "title code")
     .populate("subjects", "name code creditHours")
-    .populate("semesterSubjects.subjectAssignments.subject", "name code creditHours")
-    .populate("semesterSubjects.subjectAssignments.faculty", "name portalId email department designation")
+    .populate(
+      "semesterSubjects.subjectAssignments.subject",
+      "name code creditHours",
+    )
+    .populate(
+      "semesterSubjects.subjectAssignments.faculty",
+      "name portalId email department designation",
+    )
     .sort("name");
 
   const allSubjects = normalizeFacultySubjects(classes, String(req.user._id));

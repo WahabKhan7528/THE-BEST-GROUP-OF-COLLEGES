@@ -107,7 +107,7 @@ const Submissions = () => {
       {isLoading ? (
         <div className="space-y-4">
           {Array.from({ length: 3 }).map((_, idx) => (
-             <SkeletonLoading key={idx} variant="card" className="h-32" />
+            <SkeletonLoading key={idx} variant="card" className="h-32" />
           ))}
         </div>
       ) : submissions.length > 0 ? (
@@ -118,13 +118,13 @@ const Submissions = () => {
         </div>
       ) : (
         <div className="bg-white/60 dark:bg-college-navy/40 backdrop-blur-sm border border-dashed border-gray-300 dark:border-college-gold/30 rounded-sm p-12 text-center">
-           <div className="w-16 h-16 bg-college-navy/5 dark:bg-college-gold/10 rounded-full flex items-center justify-center mx-auto mb-4 text-college-navy dark:text-college-gold">
-             <CheckCircle size={30} />
-           </div>
-           <h3 className="text-lg font-semibold text-college-navy dark:text-white">No submissions found</h3>
-           <p className="text-gray-500 dark:text-gray-400 mt-2 max-w-sm mx-auto">
-             Students haven't submitted any work for this assignment yet.
-           </p>
+          <div className="w-16 h-16 bg-college-navy/5 dark:bg-college-gold/10 rounded-full flex items-center justify-center mx-auto mb-4 text-college-navy dark:text-college-gold">
+            <CheckCircle size={30} />
+          </div>
+          <h3 className="text-lg font-semibold text-college-navy dark:text-white">No submissions found</h3>
+          <p className="text-gray-500 dark:text-gray-400 mt-2 max-w-sm mx-auto">
+            Students haven't submitted any work for this assignment yet.
+          </p>
         </div>
       )}
     </div>

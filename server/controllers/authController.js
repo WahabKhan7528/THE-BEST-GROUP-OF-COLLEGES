@@ -3,18 +3,26 @@ import User from "../models/User.js";
 import ApiError from "../utils/ApiError.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import { hashToken, verifyRefreshToken } from "../utils/token.js";
-import { clearAuthCookies, issueTokens, setAuthCookies } from "../services/authService.js";
+import {
+  clearAuthCookies,
+  issueTokens,
+  setAuthCookies,
+} from "../services/authService.js";
 
 export const register = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
-  const portalId = typeof req.body.portalId === "string" ? req.body.portalId.trim() : "";
+  const portalId =
+    typeof req.body.portalId === "string" ? req.body.portalId.trim() : "";
 
   if (!name || !email || !password) {
     throw new ApiError(400, "name, email and password are required");
   }
 
-  const exists = await User.findOne({ $or: [{ email }, ...(portalId ? [{ portalId }] : [])] });
-  if (exists) throw new ApiError(409, "User with this portalId or email already exists");
+  const exists = await User.findOne({
+    $or: [{ email }, ...(portalId ? [{ portalId }] : [])],
+  });
+  if (exists)
+    throw new ApiError(409, "User with this portalId or email already exists");
 
   const user = await User.create({
     ...(portalId ? { portalId } : {}),
@@ -27,12 +35,20 @@ export const register = asyncHandler(async (req, res) => {
   res.status(201).json({
     success: true,
     message: "Registration successful",
-    user,
+    user: {
+      id: user._id,
+      portalId: user.portalId,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      campus: user.campus,
+    },
   });
 });
 
 export const login = asyncHandler(async (req, res) => {
-  const rawLoginId = req.body.loginId || req.body.id || req.body.portalId || req.body.email;
+  const rawLoginId =
+    req.body.loginId || req.body.id || req.body.portalId || req.body.email;
   const loginId = typeof rawLoginId === "string" ? rawLoginId.trim() : "";
   const { password } = req.body;
 
@@ -41,7 +57,10 @@ export const login = asyncHandler(async (req, res) => {
   }
 
   const user = await User.findOne({
-    $or: [{ portalId: loginId.toUpperCase() }, { email: loginId.toLowerCase() }],
+    $or: [
+      { portalId: loginId.toUpperCase() },
+      { email: loginId.toLowerCase() },
+    ],
   }).select("+password");
 
   if (!user || !user.isActive) throw new ApiError(401, "Invalid credentials");
@@ -74,9 +93,15 @@ export const refreshSession = asyncHandler(async (req, res) => {
   if (!refreshToken) throw new ApiError(401, "refreshToken is required");
 
   const decoded = verifyRefreshToken(refreshToken);
-  const storedToken = await RefreshToken.findOne({ tokenHash: hashToken(refreshToken) });
+  const storedToken = await RefreshToken.findOne({
+    tokenHash: hashToken(refreshToken),
+  });
 
-  if (!storedToken || storedToken.revokedAt || storedToken.expiresAt < new Date()) {
+  if (
+    !storedToken ||
+    storedToken.revokedAt ||
+    storedToken.expiresAt < new Date()
+  ) {
     throw new ApiError(401, "Refresh token is invalid or expired");
   }
 
@@ -126,7 +151,12 @@ export const changePassword = asyncHandler(async (req, res) => {
   user.password = newPassword;
   await user.save();
 
-  await RefreshToken.updateMany({ user: user._id, revokedAt: { $exists: false } }, { revokedAt: new Date() });
+  await RefreshToken.updateMany(
+    { user: user._id, revokedAt: { $exists: false } },
+    { revokedAt: new Date() },
+  );
 
-  res.status(200).json({ success: true, message: "Password changed. Please login again." });
+  res
+    .status(200)
+    .json({ success: true, message: "Password changed. Please login again." });
 });

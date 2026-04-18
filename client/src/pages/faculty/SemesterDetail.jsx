@@ -59,9 +59,9 @@ const getSubjectOptions = (term, facultyId, selectedClass) => {
     return assignments
       .filter((assignment) => matchesFaculty(assignment.faculty, facultyId))
       .map((assignment) => ({
-      id: getRefId(assignment.subject),
-      label: assignment.subject?.name || assignment.subject?.code || "Subject",
-      subject: assignment.subject,
+        id: getRefId(assignment.subject),
+        label: assignment.subject?.name || assignment.subject?.code || "Subject",
+        subject: assignment.subject,
       }));
   }
 
@@ -276,9 +276,9 @@ const SemesterDetail = () => {
             <SkeletonLoading variant="textLine" className="h-6 w-20 rounded-full" />
           </div>
           <div className="space-y-3">
-             {Array.from({ length: 5 }).map((_, idx) => (
-               <SkeletonLoading key={idx} variant="tableRow" className="h-16" />
-             ))}
+            {Array.from({ length: 5 }).map((_, idx) => (
+              <SkeletonLoading key={idx} variant="tableRow" className="h-16" />
+            ))}
           </div>
         </div>
       </div>
@@ -366,7 +366,7 @@ const SemesterDetail = () => {
         </div>
       </div>
 
-      
+
 
       <div className="bg-white dark:bg-college-navy border border-gray-100 dark:border-college-navy/20 rounded-sm shadow-sm p-5">
         <div className="flex items-center justify-between mb-4">

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useParams } from "react-router-dom";
-import { Save, Trash2 } from "lucide-react";
+import { Eye, EyeOff, Save, Trash2 } from "lucide-react";
 import PortalForm from "../../../components/portal-shared/PortalForm";
 import PublicButton from "../../../components/shared/PublicButton";
 import { useToast } from "../../../context/ToastContext";
@@ -31,6 +31,8 @@ const EditUser = () => {
   const [portalId, setPortalId] = useState("");
   const [role, setRole] = useState("student");
   const [loading, setLoading] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const currentCampusId = getSubAdminCampus();
   const visibleRoles = isSuperAdmin ? roleOptions : roleOptions.filter((option) => option.value === "faculty" || option.value === "student");
 
@@ -49,7 +51,13 @@ const EditUser = () => {
       currentCourse: "",
       currentClassRoom: "",
       classSection: "",
+      phoneNumber: "",
+      education: "",
+      subjectSpecialization: "",
+      experienceYears: "",
       subjects: [],
+      password: "",
+      confirmPassword: "",
     },
   });
 
@@ -96,7 +104,13 @@ const EditUser = () => {
           classSection: currentUser.classSection || "",
           department: currentUser.department || "",
           designation: currentUser.designation || "",
+          education: currentUser.education || "",
+          subjectSpecialization: currentUser.subjectSpecialization || "",
+          experienceYears: currentUser.experienceYears ?? "",
+          phoneNumber: currentUser.phoneNumber || "",
           subjects: (currentUser.subjects || []).map((subject) => subject._id || subject),
+          password: "",
+          confirmPassword: "",
         });
       } catch {
         navigate("/admin/users", { replace: true });
@@ -160,6 +174,10 @@ const EditUser = () => {
               campus: values.campus || null,
               department: values.department,
               designation: values.designation,
+              education: values.education || null,
+              subjectSpecialization: values.subjectSpecialization || null,
+              experienceYears: values.experienceYears !== "" && values.experienceYears !== undefined ? Number(values.experienceYears) : null,
+              phoneNumber: values.phoneNumber || null,
               subjects: values.subjects || [],
             }
           : role === "student"
@@ -172,21 +190,34 @@ const EditUser = () => {
                 currentAnnualYear: null,
                 semester: null,
                 enrollmentYear: null,
+                phoneNumber: values.phoneNumber || null,
+                education: null,
+                subjectSpecialization: null,
+                experienceYears: null,
                 subjects: [],
               }
             : role === "admin"
               ? {
                   campus: values.campus || null,
+                  phoneNumber: values.phoneNumber || null,
+                  education: null,
+                  subjectSpecialization: null,
+                  experienceYears: null,
                   subjects: [],
                 }
               : {
                   campus: null,
+                  phoneNumber: null,
+                  education: null,
+                  subjectSpecialization: null,
+                  experienceYears: null,
                   subjects: [],
                 };
 
       await adminApi.updateUser(id, {
         ...basePayload,
         ...rolePayload,
+        ...(values.password?.trim() ? { password: values.password.trim() } : {}),
       });
 
       toast.success("User updated successfully");
@@ -289,10 +320,58 @@ const EditUser = () => {
         </div>
       </PortalForm.Section>
 
+      <PortalForm.Section title="Account Security">
+        <div className="space-y-1.5">
+          <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block">New Password (Optional)</label>
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              {...register("password")}
+              className="w-full px-4 py-3 pr-12 bg-white dark:bg-college-navy/50 border border-college-navy/10 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/10 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold transition-all dark:text-white font-bold"
+              placeholder="Leave blank to keep current password"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-college-navy/40 hover:text-college-navy dark:text-college-gold/50 dark:hover:text-college-gold transition-colors"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
+          {errors.password && <p className="text-xs text-red-500 dark:text-red-400">{errors.password.message}</p>}
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block">Confirm New Password</label>
+          <div className="relative">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              {...register("confirmPassword")}
+              className="w-full px-4 py-3 pr-12 bg-white dark:bg-college-navy/50 border border-college-navy/10 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/10 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold transition-all dark:text-white font-bold"
+              placeholder="Re-enter new password"
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword((prev) => !prev)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-college-navy/40 hover:text-college-navy dark:text-college-gold/50 dark:hover:text-college-gold transition-colors"
+              aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+            >
+              {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
+          {errors.confirmPassword && <p className="text-xs text-red-500 dark:text-red-400">{errors.confirmPassword.message}</p>}
+        </div>
+      </PortalForm.Section>
+
       {showFacultyFields && (
         <PortalForm.Section title="Faculty Details">
           <PortalForm.Input label="Department" registration={register("department")} placeholder="e.g. Computer Science" />
           <PortalForm.Input label="Designation" registration={register("designation")} placeholder="e.g. Lecturer, Assistant Professor" />
+          <PortalForm.Input label="Education" registration={register("education")} placeholder="e.g. MS Computer Science" />
+          <PortalForm.Input label="Subject Specialization" registration={register("subjectSpecialization")} placeholder="e.g. Artificial Intelligence" />
+          <PortalForm.Input label="Experience (Years)" type="number" registration={register("experienceYears")} placeholder="e.g. 5" />
+          <PortalForm.Input label="Phone Number" registration={register("phoneNumber")} placeholder="e.g. +8801XXXXXXXXX" />
           <div className="col-span-1 md:col-span-2">
             {isSuperAdmin ? (
               <PortalForm.Select
@@ -329,6 +408,7 @@ const EditUser = () => {
 
       {showStudentFields && (
         <PortalForm.Section title="Student Details">
+          <PortalForm.Input label="Phone Number" registration={register("phoneNumber")} placeholder="e.g. +8801XXXXXXXXX" />
           <div className="col-span-1 md:col-span-2">
             {isSuperAdmin ? (
               <PortalForm.Select
@@ -378,6 +458,7 @@ const EditUser = () => {
 
       {showAdminFields && (
         <PortalForm.Section title="Campus Allocation">
+          <PortalForm.Input label="Phone Number" registration={register("phoneNumber")} placeholder="e.g. +8801XXXXXXXXX" />
           <PortalForm.Select
             label="Campus"
             registration={register("campus")}

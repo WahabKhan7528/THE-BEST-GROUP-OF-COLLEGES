@@ -178,7 +178,7 @@ const PostAnnouncementForm = ({ classes, onClose, onPost }) => {
                     onChange={() => toggleClass(cls.id || cls._id)}
                   />
                   <span className="ml-2 text-sm font-medium">
-                      {(cls.code || cls.name)}{" "}
+                    {(cls.code || cls.name)}{" "}
                     <span className="text-xs opacity-70">({cls.section})</span>
                   </span>
                 </label>

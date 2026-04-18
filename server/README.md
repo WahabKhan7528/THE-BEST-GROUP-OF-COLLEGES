@@ -1,6 +1,7 @@
 # The Best College Server
 
 Complete backend for the `client` frontend using:
+
 - Node.js + Express.js
 - MongoDB Atlas (Mongoose)
 - JWT access/refresh tokens
@@ -23,6 +24,7 @@ npm run dev
 ```
 
 Health check:
+
 - `GET /api/v1/health`
 
 ## 3) Seed First Super Admin
@@ -32,6 +34,7 @@ node utils/seedSuperAdmin.js
 ```
 
 Optional env overrides:
+
 - `SEED_SUPER_ADMIN_ID`
 - `SEED_SUPER_ADMIN_EMAIL`
 - `SEED_SUPER_ADMIN_PASSWORD`
@@ -49,6 +52,7 @@ Optional env overrides:
 ## 5) Core API Modules
 
 ### Public
+
 - `GET /api/v1/public/campuses`
 - `GET /api/v1/public/courses`
 - `GET /api/v1/public/faculty?q=&page=&limit=`
@@ -56,7 +60,7 @@ Optional env overrides:
 - `GET /api/v1/public/gallery?category=`
 
 ### Auth
-- `POST /api/v1/auth/register` (student self-register)
+
 - `POST /api/v1/auth/login`
 - `POST /api/v1/auth/refresh`
 - `POST /api/v1/auth/logout`
@@ -64,6 +68,7 @@ Optional env overrides:
 - `PUT /api/v1/auth/change-password`
 
 ### Admin (super_admin/admin)
+
 - Users: `POST/GET /api/v1/admin/users`, `PUT/DELETE /api/v1/admin/users/:id`
 - Campuses: `POST/GET /api/v1/admin/campuses`, `PUT/DELETE /api/v1/admin/campuses/:id`
 - Courses: `POST/GET /api/v1/admin/courses`, `PUT/DELETE /api/v1/admin/courses/:id`
@@ -73,6 +78,7 @@ Optional env overrides:
 - Gallery: `POST /api/v1/admin/gallery`, `PUT/DELETE /api/v1/admin/gallery/:id`
 
 ### Portal (faculty/student/admin)
+
 - Announcements: `POST/GET /api/v1/portal/announcements`
 - Assignments: `POST/GET /api/v1/portal/assignments`, `PUT /api/v1/portal/assignments/:id`
 - Materials: `POST/GET /api/v1/portal/materials`, `PUT /api/v1/portal/materials/:id`

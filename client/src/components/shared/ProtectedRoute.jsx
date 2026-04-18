@@ -6,11 +6,24 @@ const ProtectedRoute = ({ allowedRoles = [], redirectTo = "/", children }) => {
   const { user, loading } = useSelector((state) => state.auth);
   const location = useLocation();
 
+  const loginPortalByRole = {
+    super_admin: "admin",
+    admin: "admin",
+    faculty: "faculty",
+    student: "student",
+  };
+
   if (loading) return <PageLoader />;
 
   if (!user) {
-    const fallbackRole = allowedRoles[0] || "student";
-    return <Navigate to={`/login/${fallbackRole}`} replace state={{ from: location }} />;
+    const fallbackRole = loginPortalByRole[allowedRoles[0]] || "student";
+    return (
+      <Navigate
+        to={`/login/${fallbackRole}`}
+        replace
+        state={{ from: location }}
+      />
+    );
   }
 
   if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {

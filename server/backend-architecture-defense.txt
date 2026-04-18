@@ -201,7 +201,7 @@ NOTE:
 
 9) server/controllers/authController.js
 - Status: RUNTIME-CRITICAL
-- Purpose: register/login/refresh/logout/me/change-password flows.
+- Purpose: login/refresh/logout/me/change-password flows.
 - Used by: routes/authRoutes.js.
 - Why present: authentication and session control.
 - If removed: login/session APIs fail.

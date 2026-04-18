@@ -20,7 +20,10 @@ const addMonths = (date, months) => {
 };
 
 const buildTermWindow = (index, examSystem) => {
-  const startDate = addMonths(new Date(), index * (examSystem === "annual" ? 12 : 6));
+  const startDate = addMonths(
+    new Date(),
+    index * (examSystem === "annual" ? 12 : 6),
+  );
   const endDate = addMonths(startDate, examSystem === "annual" ? 12 : 6);
   endDate.setDate(endDate.getDate() - 1);
 
@@ -33,21 +36,43 @@ const buildTermWindow = (index, examSystem) => {
 const emptySemesterRows = (count, sourceRows = [], examSystem = "semester") =>
   Array.from({ length: count }, (_, index) => {
     const semesterNumber = index + 1;
-    const source = sourceRows.find((row) => Number(row.semesterNumber) === semesterNumber);
+    const source = sourceRows.find(
+      (row) => Number(row.semesterNumber) === semesterNumber,
+    );
     const fallbackWindow = buildTermWindow(index, examSystem);
 
     return {
       semesterNumber,
-      startDate: source?.startDate ? formatDateInput(source.startDate) : source?.startDate || fallbackWindow.startDate,
-      endDate: source?.endDate ? formatDateInput(source.endDate) : source?.endDate || fallbackWindow.endDate,
+      startDate: source?.startDate
+        ? formatDateInput(source.startDate)
+        : source?.startDate || fallbackWindow.startDate,
+      endDate: source?.endDate
+        ? formatDateInput(source.endDate)
+        : source?.endDate || fallbackWindow.endDate,
       status: source?.status || "planned",
       resultPublished: Boolean(source?.resultPublished),
-      lockedAt: source?.lockedAt ? formatDateInput(source.lockedAt) : source?.lockedAt || "",
-      completedAt: source?.completedAt ? formatDateInput(source.completedAt) : source?.completedAt || "",
-      subjectAssignments: (source?.subjectAssignments || []).map((assignment) => ({
-        subject: String(assignment?.subject?._id || assignment?.subject || assignment?.subjectId || ""),
-        faculty: String(assignment?.faculty?._id || assignment?.faculty || assignment?.facultyId || ""),
-      })).filter((assignment) => assignment.subject && assignment.faculty),
+      lockedAt: source?.lockedAt
+        ? formatDateInput(source.lockedAt)
+        : source?.lockedAt || "",
+      completedAt: source?.completedAt
+        ? formatDateInput(source.completedAt)
+        : source?.completedAt || "",
+      subjectAssignments: (source?.subjectAssignments || [])
+        .map((assignment) => ({
+          subject: String(
+            assignment?.subject?._id ||
+              assignment?.subject ||
+              assignment?.subjectId ||
+              "",
+          ),
+          faculty: String(
+            assignment?.faculty?._id ||
+              assignment?.faculty ||
+              assignment?.facultyId ||
+              "",
+          ),
+        }))
+        .filter((assignment) => assignment.subject && assignment.faculty),
     };
   });
 
@@ -65,7 +90,9 @@ const filterByCampus = (items, campusId, campusField) => {
   return (items || []).filter((item) => {
     const campusValue = campusField ? item?.[campusField] : item?.campuses;
     if (Array.isArray(campusValue)) {
-      return campusValue.some((campus) => getCampusId(campus) === normalizedCampusId);
+      return campusValue.some(
+        (campus) => getCampusId(campus) === normalizedCampusId,
+      );
     }
 
     return getCampusId(campusValue) === normalizedCampusId;
@@ -80,7 +107,12 @@ const CreateClass = () => {
   const [facultyUsers, setFacultyUsers] = useState([]);
   const [selectedCampuses, setSelectedCampuses] = useState([]);
   const [semesterRows, setSemesterRows] = useState([]);
-  const [assignmentDialog, setAssignmentDialog] = useState({ open: false, semesterNumber: null, subject: "", faculty: "" });
+  const [assignmentDialog, setAssignmentDialog] = useState({
+    open: false,
+    semesterNumber: null,
+    subject: "",
+    faculty: "",
+  });
 
   const {
     register,
@@ -92,19 +124,33 @@ const CreateClass = () => {
   } = useForm({
     resolver: zodResolver(classSchema),
     defaultValues: {
-      campus: isSuperAdmin ? "" : currentAdmin?.campus?._id || currentAdmin?.campus || "",
+      campus: isSuperAdmin
+        ? ""
+        : currentAdmin?.campus?._id || currentAdmin?.campus || "",
       name: "",
       section: "",
+      session: "",
       course: "",
       semester: "",
       annualYear: "",
     },
   });
 
-  const activeCampusId = isSuperAdmin ? selectedCampuses[0] || "" : getCampusId(currentAdmin?.campus);
-  const visibleCourses = useMemo(() => filterByCampus(courses, activeCampusId), [activeCampusId, courses]);
-  const visibleSubjects = useMemo(() => filterByCampus(subjects, activeCampusId), [activeCampusId, subjects]);
-  const visibleFacultyUsers = useMemo(() => filterByCampus(facultyUsers, activeCampusId, "campus"), [activeCampusId, facultyUsers]);
+  const activeCampusId = isSuperAdmin
+    ? selectedCampuses[0] || ""
+    : getCampusId(currentAdmin?.campus);
+  const visibleCourses = useMemo(
+    () => filterByCampus(courses, activeCampusId),
+    [activeCampusId, courses],
+  );
+  const visibleSubjects = useMemo(
+    () => filterByCampus(subjects, activeCampusId),
+    [activeCampusId, subjects],
+  );
+  const visibleFacultyUsers = useMemo(
+    () => filterByCampus(facultyUsers, activeCampusId, "campus"),
+    [activeCampusId, facultyUsers],
+  );
   const selectedCourseId = watch("course");
   const selectedCourse = useMemo(
     () => visibleCourses.find((course) => course._id === selectedCourseId),
@@ -117,7 +163,9 @@ const CreateClass = () => {
     ? Number(selectedCourse?.totalYears || 0) || 4
     : Number(selectedCourse?.totalSemesters || 0) || 8;
   const selectedTermField = isAnnualSystem ? "annualYear" : "semester";
-  const currentSemesterNumber = semesterNumberFromValue(watch(selectedTermField));
+  const currentSemesterNumber = semesterNumberFromValue(
+    watch(selectedTermField),
+  );
 
   useEffect(() => {
     if (isSuperAdmin) return;
@@ -157,7 +205,9 @@ const CreateClass = () => {
     }
 
     if (usesTermAllocation) {
-      setSemesterRows((prev) => emptySemesterRows(termCount, prev, selectedCourse.examSystem));
+      setSemesterRows((prev) =>
+        emptySemesterRows(termCount, prev, selectedCourse.examSystem),
+      );
       return;
     }
 
@@ -166,63 +216,101 @@ const CreateClass = () => {
 
   const handleCampusToggle = (campusId) => {
     setSelectedCampuses((prev) => {
-      const next = prev.includes(campusId) ? prev.filter((id) => id !== campusId) : [campusId];
-      setValue("campus", next[0] || "", { shouldValidate: true, shouldDirty: true });
+      const next = prev.includes(campusId)
+        ? prev.filter((id) => id !== campusId)
+        : [campusId];
+      setValue("campus", next[0] || "", {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
       return next;
     });
   };
 
   const updateSemesterRow = (semesterNumber, key, value) => {
-    setSemesterRows((prev) => prev.map((row) => (row.semesterNumber === semesterNumber ? { ...row, [key]: value } : row)));
+    setSemesterRows((prev) =>
+      prev.map((row) =>
+        row.semesterNumber === semesterNumber ? { ...row, [key]: value } : row,
+      ),
+    );
   };
 
   const subjectOptionsForSemester = (semesterNumber) =>
     visibleSubjects.filter((subject) => {
       const subjectId = subject._id;
       return !semesterRows.some(
-        (row) => row.semesterNumber !== semesterNumber
-          && (row.subjectAssignments || []).some((assignment) => assignment.subject === subjectId),
+        (row) =>
+          row.semesterNumber !== semesterNumber &&
+          (row.subjectAssignments || []).some(
+            (assignment) => assignment.subject === subjectId,
+          ),
       );
     });
 
   const openAssignmentDialog = (semesterNumber) => {
-    setAssignmentDialog({ open: true, semesterNumber, subject: "", faculty: "" });
+    setAssignmentDialog({
+      open: true,
+      semesterNumber,
+      subject: "",
+      faculty: "",
+    });
   };
 
   const closeAssignmentDialog = () => {
-    setAssignmentDialog({ open: false, semesterNumber: null, subject: "", faculty: "" });
+    setAssignmentDialog({
+      open: false,
+      semesterNumber: null,
+      subject: "",
+      faculty: "",
+    });
   };
 
   const addSubjectAssignment = () => {
     const { semesterNumber, subject, faculty } = assignmentDialog;
     if (!semesterNumber || !subject || !faculty) return;
 
-    setSemesterRows((prev) => prev.map((row) => {
-      if (row.semesterNumber !== semesterNumber) return row;
-      const subjectAssignments = row.subjectAssignments || [];
-      if (subjectAssignments.length >= TERM_SUBJECT_LIMIT) return row;
-      if (subjectAssignments.some((assignment) => assignment.subject === subject)) return row;
+    setSemesterRows((prev) =>
+      prev.map((row) => {
+        if (row.semesterNumber !== semesterNumber) return row;
+        const subjectAssignments = row.subjectAssignments || [];
+        if (subjectAssignments.length >= TERM_SUBJECT_LIMIT) return row;
+        if (
+          subjectAssignments.some(
+            (assignment) => assignment.subject === subject,
+          )
+        )
+          return row;
 
-      return { ...row, subjectAssignments: [...subjectAssignments, { subject, faculty }] };
-    }));
+        return {
+          ...row,
+          subjectAssignments: [...subjectAssignments, { subject, faculty }],
+        };
+      }),
+    );
 
     closeAssignmentDialog();
   };
 
   const removeSubjectAssignment = (semesterNumber, subjectId) => {
-    setSemesterRows((prev) => prev.map((row) => {
-      if (row.semesterNumber !== semesterNumber) return row;
-      return {
-        ...row,
-        subjectAssignments: (row.subjectAssignments || []).filter((assignment) => assignment.subject !== subjectId),
-      };
-    }));
+    setSemesterRows((prev) =>
+      prev.map((row) => {
+        if (row.semesterNumber !== semesterNumber) return row;
+        return {
+          ...row,
+          subjectAssignments: (row.subjectAssignments || []).filter(
+            (assignment) => assignment.subject !== subjectId,
+          ),
+        };
+      }),
+    );
   };
 
   const onSubmit = async (values) => {
     const campusesToUse = isSuperAdmin
       ? selectedCampuses
-      : [values.campus || currentAdmin?.campus?._id || currentAdmin?.campus].filter(Boolean);
+      : [
+          values.campus || currentAdmin?.campus?._id || currentAdmin?.campus,
+        ].filter(Boolean);
 
     if (campusesToUse.length === 0) return;
 
@@ -241,13 +329,18 @@ const CreateClass = () => {
           }))
       : [];
 
-    const subjectIds = semesterSubjects.flatMap((row) => row.subjectAssignments.map((assignment) => assignment.subject));
-    const facultyIds = semesterSubjects.flatMap((row) => row.subjectAssignments.map((assignment) => assignment.faculty));
+    const subjectIds = semesterSubjects.flatMap((row) =>
+      row.subjectAssignments.map((assignment) => assignment.subject),
+    );
+    const facultyIds = semesterSubjects.flatMap((row) =>
+      row.subjectAssignments.map((assignment) => assignment.faculty),
+    );
 
     try {
       await adminApi.createClass({
         name: values.name,
         section: values.section,
+        session: values.session || null,
         course: values.course || null,
         semester: isAnnualSystem ? null : values.semester || null,
         annualYear: isAnnualSystem ? values.annualYear || null : null,
@@ -258,9 +351,12 @@ const CreateClass = () => {
       });
 
       reset({
-        campus: isSuperAdmin ? "" : currentAdmin?.campus?._id || currentAdmin?.campus || "",
+        campus: isSuperAdmin
+          ? ""
+          : currentAdmin?.campus?._id || currentAdmin?.campus || "",
         name: "",
         section: "",
+        session: "",
         course: "",
         semester: "",
         annualYear: "",
@@ -279,7 +375,14 @@ const CreateClass = () => {
 
   const getCampusLabel = () => {
     if (!isSuperAdmin) {
-      return currentAdmin?.campus?.name || campuses.find((campus) => campus.id === (currentAdmin?.campus?._id || currentAdmin?.campus))?.name || "Campus";
+      return (
+        currentAdmin?.campus?.name ||
+        campuses.find(
+          (campus) =>
+            campus.id === (currentAdmin?.campus?._id || currentAdmin?.campus),
+        )?.name ||
+        "Campus"
+      );
     }
 
     return null;
@@ -298,7 +401,9 @@ const CreateClass = () => {
     >
       <PortalForm.Section title="Campus Allocation" className="!space-y-4">
         <div className="col-span-1 md:col-span-2">
-          <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-2">Select Campus *</label>
+          <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-2">
+            Select Campus *
+          </label>
           {isSuperAdmin ? (
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
               {campuses.map((campus) => {
@@ -308,10 +413,24 @@ const CreateClass = () => {
                     key={campus.id}
                     className={`relative flex cursor-pointer flex-col items-center justify-center rounded-sm border-2 p-4 transition-all duration-200 ${isSelected ? "border-college-navy bg-college-navy/5 shadow-sm dark:border-college-gold dark:bg-college-gold/10" : "border-gray-100 bg-white hover:bg-gray-50 dark:border-college-gold/20 dark:bg-college-navy/50 dark:hover:bg-college-navy/80"}`}
                   >
-                    <input type="radio" value={campus.id} checked={isSelected} onChange={() => handleCampusToggle(campus.id)} className="sr-only" />
-                    <Building2 className={`mb-2 h-6 w-6 ${isSelected ? "text-college-navy dark:text-college-gold" : "text-gray-400"}`} />
-                    <span className={`text-center text-sm font-bold ${isSelected ? "text-college-navy dark:text-college-gold" : "text-gray-600 dark:text-gray-400"}`}>{campus.name}</span>
-                    {isSelected && <CheckCircle2 className="absolute right-2 top-2 h-4 w-4 text-college-navy dark:text-college-gold" />}
+                    <input
+                      type="radio"
+                      value={campus.id}
+                      checked={isSelected}
+                      onChange={() => handleCampusToggle(campus.id)}
+                      className="sr-only"
+                    />
+                    <Building2
+                      className={`mb-2 h-6 w-6 ${isSelected ? "text-college-navy dark:text-college-gold" : "text-gray-400"}`}
+                    />
+                    <span
+                      className={`text-center text-sm font-bold ${isSelected ? "text-college-navy dark:text-college-gold" : "text-gray-600 dark:text-gray-400"}`}
+                    >
+                      {campus.name}
+                    </span>
+                    {isSelected && (
+                      <CheckCircle2 className="absolute right-2 top-2 h-4 w-4 text-college-navy dark:text-college-gold" />
+                    )}
                   </label>
                 );
               })}
@@ -328,19 +447,38 @@ const CreateClass = () => {
 
       <PortalForm.Section title="Academic Details">
         <div className="col-span-1 md:col-span-2">
-          <PortalForm.Input label="Class Name" registration={register("name")} error={errors.name?.message} placeholder="e.g. BSCS - 5th Semester" required />
+          <PortalForm.Input
+            label="Class Name"
+            registration={register("name")}
+            error={errors.name?.message}
+            placeholder="e.g. BSCS - 5th Semester"
+            required
+          />
         </div>
 
         <div className="md:col-span-2 rounded-sm border border-dashed border-gray-300 bg-gray-50/70 p-4 text-sm text-gray-600 dark:border-college-gold/20 dark:bg-college-navy/40 dark:text-gray-300">
           Class code is generated automatically from the class name after save.
         </div>
 
-        <PortalForm.Input label="Section" registration={register("section")} placeholder="e.g. A" />
+        <PortalForm.Input
+          label="Section"
+          registration={register("section")}
+          placeholder="e.g. A"
+        />
+
+        <PortalForm.Input
+          label="Session"
+          registration={register("session")}
+          placeholder="e.g. 2025-2026"
+        />
 
         <PortalForm.Select
           label="Course"
           registration={register("course")}
-          options={visibleCourses.map((course) => ({ id: course._id, label: `${course.title} (${course.code})` }))}
+          options={visibleCourses.map((course) => ({
+            id: course._id,
+            label: `${course.title} (${course.code})`,
+          }))}
           placeholder="Select course..."
         />
 
@@ -348,7 +486,13 @@ const CreateClass = () => {
           <PortalForm.Select
             label="Current Semester"
             registration={register("semester")}
-            options={Array.from({ length: isSemesterSystem ? termCount : 8 }, (_, index) => ({ id: `SEM-${index + 1}`, label: `Semester ${index + 1}` }))}
+            options={Array.from(
+              { length: isSemesterSystem ? termCount : 8 },
+              (_, index) => ({
+                id: `SEM-${index + 1}`,
+                label: `Semester ${index + 1}`,
+              }),
+            )}
             placeholder="Select current semester..."
           />
         )}
@@ -357,7 +501,13 @@ const CreateClass = () => {
           <PortalForm.Select
             label="Annual Year"
             registration={register("annualYear")}
-            options={Array.from({ length: isAnnualSystem ? termCount : 5 }, (_, index) => ({ id: `Y${index + 1}`, label: `Year ${index + 1}` }))}
+            options={Array.from(
+              { length: isAnnualSystem ? termCount : 5 },
+              (_, index) => ({
+                id: `Y${index + 1}`,
+                label: `Year ${index + 1}`,
+              }),
+            )}
             placeholder="Select year..."
           />
         )}
@@ -366,71 +516,119 @@ const CreateClass = () => {
       {selectedCourse && selectedCourse.examSystem !== "other" ? (
         <PortalForm.Section title={`${termLabel} Subject Allocation`}>
           <div className="col-span-1 md:col-span-2 rounded-sm border border-dashed border-gray-300 bg-gray-50/70 p-4 text-sm text-gray-600 dark:border-college-gold/20 dark:bg-college-navy/40 dark:text-gray-300">
-            Assign subjects one by one and pick a faculty member for each subject. Up to {TERM_SUBJECT_LIMIT} subjects per {termLabel.toLowerCase()}.
+            Assign subjects one by one and pick a faculty member for each
+            subject. Up to {TERM_SUBJECT_LIMIT} subjects per{" "}
+            {termLabel.toLowerCase()}.
           </div>
 
           {semesterRows.map((row) => {
-            const locked = (currentSemesterNumber > 0 && row.semesterNumber < currentSemesterNumber) || row.status === "locked" || row.status === "completed" || row.resultPublished;
+            const locked =
+              (currentSemesterNumber > 0 &&
+                row.semesterNumber < currentSemesterNumber) ||
+              row.status === "locked" ||
+              row.status === "completed" ||
+              row.resultPublished;
             const subjectAssignments = row.subjectAssignments || [];
 
             return (
-              <div key={row.semesterNumber} className={`col-span-1 md:col-span-2 rounded-sm border p-4 ${locked ? "border-gray-200 bg-gray-50/70 dark:border-gray-700 dark:bg-college-navy/30" : "border-gray-200 bg-white dark:border-college-gold/20 dark:bg-college-navy/40"}`}>
+              <div
+                key={row.semesterNumber}
+                className={`col-span-1 md:col-span-2 rounded-sm border p-4 ${locked ? "border-gray-200 bg-gray-50/70 dark:border-gray-700 dark:bg-college-navy/30" : "border-gray-200 bg-white dark:border-college-gold/20 dark:bg-college-navy/40"}`}
+              >
                 <div className="mb-4 flex items-center justify-between gap-3">
                   <div>
-                    <h3 className="text-sm font-semibold text-gray-800 dark:text-white">{termLabel} {row.semesterNumber}</h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">{locked ? "Locked because this term is completed or published" : "Optional term setup"}</p>
+                    <h3 className="text-sm font-semibold text-gray-800 dark:text-white">
+                      {termLabel} {row.semesterNumber}
+                    </h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      {locked
+                        ? "Locked because this term is completed or published"
+                        : "Optional term setup"}
+                    </p>
                   </div>
-                  <span className="rounded-full bg-college-navy/10 px-2.5 py-1 text-xs font-medium text-college-navy dark:text-college-gold">{subjectAssignments.length} subjects</span>
+                  <span className="rounded-full bg-college-navy/10 px-2.5 py-1 text-xs font-medium text-college-navy dark:text-college-gold">
+                    {subjectAssignments.length} subjects
+                  </span>
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div>
-                    <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-1.5 focus:text-college-navy dark:focus:text-college-gold transition-colors">Start Date</label>
+                    <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-1.5 focus:text-college-navy dark:focus:text-college-gold transition-colors">
+                      Start Date
+                    </label>
                     <input
                       type="date"
                       min={formatDateInput(new Date())}
                       disabled={locked}
                       value={row.startDate}
-                      onChange={(event) => updateSemesterRow(row.semesterNumber, "startDate", event.target.value)}
+                      onChange={(event) =>
+                        updateSemesterRow(
+                          row.semesterNumber,
+                          "startDate",
+                          event.target.value,
+                        )
+                      }
                       className="w-full rounded-sm border border-gray-200 bg-gray-50/50 px-4 py-2.5 text-gray-900 disabled:opacity-60 dark:border-college-gold/20 dark:bg-college-navy/50 dark:text-white"
                     />
                   </div>
 
                   <div>
-                    <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-1.5 focus:text-college-navy dark:focus:text-college-gold transition-colors">End Date</label>
+                    <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-1.5 focus:text-college-navy dark:focus:text-college-gold transition-colors">
+                      End Date
+                    </label>
                     <input
                       type="date"
                       min={row.startDate || formatDateInput(new Date())}
                       disabled={locked}
                       value={row.endDate}
-                      onChange={(event) => updateSemesterRow(row.semesterNumber, "endDate", event.target.value)}
+                      onChange={(event) =>
+                        updateSemesterRow(
+                          row.semesterNumber,
+                          "endDate",
+                          event.target.value,
+                        )
+                      }
                       className="w-full rounded-sm border border-gray-200 bg-gray-50/50 px-4 py-2.5 text-gray-900 disabled:opacity-60 dark:border-college-gold/20 dark:bg-college-navy/50 dark:text-white"
                     />
                   </div>
 
                   <FormSelect
-                      label="Status"
-                      disabled={locked}
-                      value={row.status}
-                      onChange={(event) => updateSemesterRow(row.semesterNumber, "status", event.target.value)}
-                      options={[
-                        { id: "planned", label: "Planned" },
-                        { id: "active", label: "Active" },
-                        { id: "completed", label: "Completed" },
-                        { id: "locked", label: "Locked" },
-                      ]}
-                      placeholder="Select status..."
-                    />
+                    label="Status"
+                    disabled={locked}
+                    value={row.status}
+                    onChange={(event) =>
+                      updateSemesterRow(
+                        row.semesterNumber,
+                        "status",
+                        event.target.value,
+                      )
+                    }
+                    options={[
+                      { id: "planned", label: "Planned" },
+                      { id: "active", label: "Active" },
+                      { id: "completed", label: "Completed" },
+                      { id: "locked", label: "Locked" },
+                    ]}
+                    placeholder="Select status..."
+                  />
 
                   <div className="md:col-span-2 space-y-3">
                     <div className="flex items-center justify-between gap-3">
                       <div>
-                        <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-1.5 focus:text-college-navy dark:focus:text-college-gold transition-colors">Subject Assignments</label>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">Add one subject at a time and choose the teacher for it.</p>
+                        <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-1.5 focus:text-college-navy dark:focus:text-college-gold transition-colors">
+                          Subject Assignments
+                        </label>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Add one subject at a time and choose the teacher for
+                          it.
+                        </p>
                       </div>
                       <button
                         type="button"
-                        disabled={locked || subjectAssignments.length >= TERM_SUBJECT_LIMIT}
+                        disabled={
+                          locked ||
+                          subjectAssignments.length >= TERM_SUBJECT_LIMIT
+                        }
                         onClick={() => openAssignmentDialog(row.semesterNumber)}
                         className="inline-flex items-center gap-2 rounded-sm bg-college-navy px-3 py-2 text-sm font-medium text-white disabled:opacity-60"
                       >
@@ -445,32 +643,54 @@ const CreateClass = () => {
                           No subject assignments added yet.
                         </div>
                       ) : (
-                        subjectAssignments.map((assignment, assignmentIndex) => {
-                          const subject = subjects.find((item) => item._id === assignment.subject);
-                          const faculty = facultyUsers.find((user) => user._id === assignment.faculty);
+                        subjectAssignments.map(
+                          (assignment, assignmentIndex) => {
+                            const subject = subjects.find(
+                              (item) => item._id === assignment.subject,
+                            );
+                            const faculty = facultyUsers.find(
+                              (user) => user._id === assignment.faculty,
+                            );
 
-                          return (
-                            <div key={`${assignment.subject}-${assignmentIndex}`} className="flex items-center justify-between gap-3 rounded-sm border border-gray-200 bg-white px-4 py-3 dark:border-college-gold/20 dark:bg-college-navy/50">
-                              <div>
-                                <p className="text-sm font-semibold text-gray-800 dark:text-white">{subject?.name || "Subject"}</p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">{subject?.code || ""}{faculty ? ` • ${faculty.name}` : ""}</p>
+                            return (
+                              <div
+                                key={`${assignment.subject}-${assignmentIndex}`}
+                                className="flex items-center justify-between gap-3 rounded-sm border border-gray-200 bg-white px-4 py-3 dark:border-college-gold/20 dark:bg-college-navy/50"
+                              >
+                                <div>
+                                  <p className="text-sm font-semibold text-gray-800 dark:text-white">
+                                    {subject?.name || "Subject"}
+                                  </p>
+                                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                                    {subject?.code || ""}
+                                    {faculty ? ` • ${faculty.name}` : ""}
+                                  </p>
+                                </div>
+                                {!locked && (
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      removeSubjectAssignment(
+                                        row.semesterNumber,
+                                        assignment.subject,
+                                      )
+                                    }
+                                    className="text-xs font-medium text-red-600 hover:text-red-700"
+                                  >
+                                    Remove
+                                  </button>
+                                )}
                               </div>
-                              {!locked && (
-                                <button
-                                  type="button"
-                                  onClick={() => removeSubjectAssignment(row.semesterNumber, assignment.subject)}
-                                  className="text-xs font-medium text-red-600 hover:text-red-700"
-                                >
-                                  Remove
-                                </button>
-                              )}
-                            </div>
-                          );
-                        })
+                            );
+                          },
+                        )
                       )}
                     </div>
 
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Subjects selected in other terms are hidden here. Maximum {TERM_SUBJECT_LIMIT} subjects.</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Subjects selected in other terms are hidden here. Maximum{" "}
+                      {TERM_SUBJECT_LIMIT} subjects.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -480,7 +700,8 @@ const CreateClass = () => {
       ) : (
         <PortalForm.Section title="Academic Allocation">
           <div className="col-span-1 md:col-span-2 rounded-sm border border-dashed border-gray-300 bg-gray-50/70 p-4 text-sm text-gray-600 dark:border-college-gold/20 dark:bg-college-navy/40 dark:text-gray-300">
-            Select a semester or annual course to assign subjects and teachers per term.
+            Select a semester or annual course to assign subjects and teachers
+            per term.
           </div>
         </PortalForm.Section>
       )}
@@ -489,31 +710,63 @@ const CreateClass = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
           <div className="w-full max-w-lg rounded-sm border border-gray-200 bg-white p-5 shadow-xl dark:border-college-gold/20 dark:bg-college-navy">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Add Subject Assignment</h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Pick a subject and the teacher responsible for it.</p>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                Add Subject Assignment
+              </h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Pick a subject and the teacher responsible for it.
+              </p>
             </div>
 
             <div className="mt-4 space-y-4">
               <FormSelect
                 label="Subject"
                 value={assignmentDialog.subject}
-                onChange={(event) => setAssignmentDialog((prev) => ({ ...prev, subject: event.target.value }))}
-                options={subjectOptionsForSemester(assignmentDialog.semesterNumber || 0).map((subject) => ({ id: subject._id, label: `${subject.name} (${subject.code})` }))}
+                onChange={(event) =>
+                  setAssignmentDialog((prev) => ({
+                    ...prev,
+                    subject: event.target.value,
+                  }))
+                }
+                options={subjectOptionsForSemester(
+                  assignmentDialog.semesterNumber || 0,
+                ).map((subject) => ({
+                  id: subject._id,
+                  label: `${subject.name} (${subject.code})`,
+                }))}
                 placeholder="Select subject..."
               />
 
               <FormSelect
                 label="Faculty"
                 value={assignmentDialog.faculty}
-                onChange={(event) => setAssignmentDialog((prev) => ({ ...prev, faculty: event.target.value }))}
-                options={visibleFacultyUsers.map((user) => ({ id: user._id, label: `${user.name} (${user.portalId})` }))}
+                onChange={(event) =>
+                  setAssignmentDialog((prev) => ({
+                    ...prev,
+                    faculty: event.target.value,
+                  }))
+                }
+                options={visibleFacultyUsers.map((user) => ({
+                  id: user._id,
+                  label: `${user.name} (${user.portalId})`,
+                }))}
                 placeholder="Select faculty..."
               />
             </div>
 
             <div className="mt-5 flex justify-end gap-3">
-              <button type="button" onClick={closeAssignmentDialog} className="rounded-sm border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 dark:border-college-gold/20 dark:text-gray-300">Cancel</button>
-              <button type="button" onClick={addSubjectAssignment} className="inline-flex items-center gap-2 rounded-sm bg-college-navy px-4 py-2 text-sm font-medium text-white">
+              <button
+                type="button"
+                onClick={closeAssignmentDialog}
+                className="rounded-sm border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 dark:border-college-gold/20 dark:text-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={addSubjectAssignment}
+                className="inline-flex items-center gap-2 rounded-sm bg-college-navy px-4 py-2 text-sm font-medium text-white"
+              >
                 <Plus className="h-4 w-4" />
                 Add
               </button>

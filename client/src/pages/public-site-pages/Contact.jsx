@@ -63,22 +63,46 @@ const Contact = () => {
           <div className="space-y-12">
             {/* Contact Info Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card variant="navy" hover className="p-6 md:p-8 flex flex-col items-center text-center">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center mb-4 text-white">
-                  <Phone className="w-5 h-5" />
+              <Card variant="navy" hover className="group p-8 flex flex-col items-center text-center relative overflow-hidden border border-white/5">
+                {/* Decorative Background Glows */}
+                <div className="absolute top-0 right-0 -mt-8 -mr-8 w-32 h-32 bg-college-gold/20 rounded-full blur-3xl group-hover:bg-college-gold/30 transition-all duration-700"></div>
+                <div className="absolute bottom-0 left-0 -mb-8 -ml-8 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-all duration-700"></div>
+                
+                {/* Icon Container */}
+                <div className="relative z-10 w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-6 text-college-gold group-hover:scale-110 group-hover:bg-college-gold group-hover:text-college-navy transition-all duration-500 shadow-lg">
+                  <Phone className="w-7 h-7" />
                 </div>
-                <h3 className="font-serif font-bold text-lg mb-2 text-white">Phone</h3>
-                <p className="text-sm text-white/70 mb-2">Mon-Fri from 8am to 5pm</p>
-                <a className="text-college-gold font-medium hover:underline" href="tel:+13032254880">(303) 225-4880</a>
+                
+                {/* Content */}
+                <h3 className="relative z-10 font-serif font-bold text-xl mb-2 text-white group-hover:text-college-gold transition-colors duration-300">Phone</h3>
+                <p className="relative z-10 text-sm text-white/70 mb-5 flex-grow">Mon-Fri from 8am to 5pm</p>
+                
+                {/* Action Link */}
+                <a className="relative z-10 inline-flex items-center justify-center w-full text-college-gold font-semibold hover:text-white transition-colors duration-300 group/link" href="tel:+13032254880">
+                  <span className="break-words"> (303) 225-4880 </span>
+                  <ArrowRight className="w-4 h-4 ml-1 flex-shrink-0 opacity-0 -translate-x-2 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all duration-300" />
+                </a>
               </Card>
 
-              <Card variant="navy" hover className="p-6 md:p-8 flex flex-col items-center text-center">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center mb-4 text-white">
-                  <Mail className="w-5 h-5" />
+              <Card variant="navy" hover className="group p-8 flex flex-col items-center text-center relative overflow-hidden border border-white/5">
+                {/* Decorative Background Glows */}
+                <div className="absolute top-0 right-0 -mt-8 -mr-8 w-32 h-32 bg-college-gold/20 rounded-full blur-3xl group-hover:bg-college-gold/30 transition-all duration-700"></div>
+                <div className="absolute bottom-0 left-0 -mb-8 -ml-8 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-all duration-700"></div>
+
+                {/* Icon Container */}
+                <div className="relative z-10 w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-6 text-college-gold group-hover:scale-110 group-hover:bg-college-gold group-hover:text-college-navy transition-all duration-500 shadow-lg">
+                  <Mail className="w-7 h-7" />
                 </div>
-                <h3 className="font-serif font-bold text-lg mb-2 text-white">Email</h3>
-                <p className="text-sm text-white/70 mb-2">Our friendly team is here to help.</p>
-                <a className="text-college-gold font-medium hover:underline" href="mailto:thebestcollege2008@gmail.com">thebestcollege2008@gmail.com</a>
+                
+                {/* Content */}
+                <h3 className="relative z-10 font-serif font-bold text-xl mb-2 text-white group-hover:text-college-gold transition-colors duration-300">Email</h3>
+                <p className="relative z-10 text-sm text-white/70 mb-5 flex-grow">Our friendly team is here to help.</p>
+                
+                {/* Action Link */}
+                <a className="relative z-10 inline-flex items-center justify-center w-full text-college-gold font-semibold hover:text-white transition-colors duration-300 group/link" href="mailto:thebestcollege2008@gmail.com">
+                  <span className="break-all line-clamp-1 group-hover/link:line-clamp-none transition-all duration-300">thebestcollege2008@gmail.com</span>
+                  <ArrowRight className="w-4 h-4 ml-1 flex-shrink-0 opacity-0 -translate-x-2 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all duration-300" />
+                </a>
               </Card>
             </div>
 

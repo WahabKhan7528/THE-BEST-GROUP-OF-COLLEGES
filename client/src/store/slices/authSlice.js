@@ -1,17 +1,25 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { authApi } from '../../services/api';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { authApi } from "../../services/api";
 
 export const loginUser = createAsyncThunk(
-  'auth/loginUser',
+  "auth/loginUser",
   async ({ loginId, password, allowedRoles = [] }, { rejectWithValue }) => {
     try {
-      const normalizedLoginId = typeof loginId === 'string' ? loginId.trim() : loginId;
-      const { data } = await authApi.login({ loginId: normalizedLoginId, password });
+      const normalizedLoginId =
+        typeof loginId === "string" ? loginId.trim() : loginId;
+      const { data } = await authApi.login({
+        loginId: normalizedLoginId,
+        password,
+      });
       const user = data.user;
 
-      if (Array.isArray(allowedRoles) && allowedRoles.length > 0 && !allowedRoles.includes(user?.role)) {
+      if (
+        Array.isArray(allowedRoles) &&
+        allowedRoles.length > 0 &&
+        !allowedRoles.includes(user?.role)
+      ) {
         return rejectWithValue({
-          message: `This portal does not accept ${user?.role || 'this'} accounts.`,
+          message: `This portal does not accept ${user?.role || "this"} accounts.`,
           status: 403,
         });
       }
@@ -19,27 +27,27 @@ export const loginUser = createAsyncThunk(
       return user;
     } catch (error) {
       return rejectWithValue({
-        message: error.response?.data?.message || 'Login failed',
+        message: error.response?.data?.message || "Login failed",
         status: error.response?.status || null,
       });
     }
-  }
+  },
 );
 
 export const logoutUser = createAsyncThunk(
-  'auth/logoutUser',
+  "auth/logoutUser",
   async (_, { rejectWithValue }) => {
     try {
       await authApi.logout();
       return null;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || 'Logout failed');
+      return rejectWithValue(error.response?.data?.message || "Logout failed");
     }
-  }
+  },
 );
 
 export const fetchUser = createAsyncThunk(
-  'auth/fetchUser',
+  "auth/fetchUser",
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await authApi.me();
@@ -47,11 +55,11 @@ export const fetchUser = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(null);
     }
-  }
+  },
 );
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState: {
     user: null,
     loading: true,
@@ -61,6 +69,12 @@ const authSlice = createSlice({
   reducers: {
     clearError: (state) => {
       state.error = null;
+    },
+    clearAuthState: (state) => {
+      state.user = null;
+      state.loading = false;
+      state.error = null;
+      state.isAuthenticated = false;
     },
   },
   extraReducers: (builder) => {
@@ -108,5 +122,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearError } = authSlice.actions;
+export const { clearError, clearAuthState } = authSlice.actions;
 export default authSlice.reducer;

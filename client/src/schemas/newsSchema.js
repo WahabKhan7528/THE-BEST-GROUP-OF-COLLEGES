@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const newsSchema = z.object({
+  type: z.enum(["news", "event"]).optional(),
   title: z.string().min(3, "Title must be at least 3 characters"),
   category: z.string().min(1, "Please select a category"),
   status: z.preprocess(

@@ -284,7 +284,7 @@ const StudentResults = () => {
           {/* Detailed Table */}
           {selectedSemester && selectedSemester.subjects && (
             <div className="mt-6 border border-college-navy/10 dark:border-college-gold/20 rounded-sm overflow-hidden shadow-xl">
-              <Table 
+              <Table
                 columns={[
                   { key: "code", label: "Subject Code" },
                   { key: "title", label: "Subject Title" },
@@ -302,9 +302,9 @@ const StudentResults = () => {
                     credits: <span className="font-bold">{sub.credits}</span>,
                     marks: <span className="font-black text-college-navy dark:text-white">{sub.marks}</span>,
                     grade: (
-                        <span className="inline-flex items-center justify-center w-8 h-8 rounded-sm text-sm font-black bg-college-navy dark:bg-college-gold text-white dark:text-college-navy">
-                          {grade}
-                        </span>
+                      <span className="inline-flex items-center justify-center w-8 h-8 rounded-sm text-sm font-black bg-college-navy dark:bg-college-gold text-white dark:text-college-navy">
+                        {grade}
+                      </span>
                     ),
                     points: <span className="font-black text-college-navy dark:text-college-gold">{(qp * sub.credits).toFixed(1)}</span>,
                   };

@@ -1,0 +1,688 @@
+================================================================================
+                    COLLEGE MANAGEMENT SYSTEM - DATA MODELS
+                         Models & Relationships Guide
+================================================================================
+
+This document provides a comprehensive overview of all database models in the
+college management system, their structure, and their relationships with other models.
+
+================================================================================
+                            CORE MODELS
+================================================================================
+
+1. USER MODEL
+   Location: server/models/User.js
+   Purpose: Represents all users in the system (students, faculty, admins)
+   
+   Key Fields:
+   - id, portalId (unique identifiers)
+   - name, email, password, role
+   - campus (ObjectId -> Campus)
+   - currentCourse (ObjectId -> Course)
+   - currentClassRoom (ObjectId -> ClassRoom)
+   - currentSemester (ObjectId -> Semester)
+   - currentAnnualYear (ObjectId -> AnnualYear)
+   - subjects (Array of ObjectIds -> Subject)
+   
+   Role Types: student, faculty, admin, super_admin
+   
+   Relationships:
+   └─ Campus (many users belong to one campus)
+   └─ Course (student enrolled in a course)
+   └─ ClassRoom (student assigned to a class)
+   └─ Semester (current semester enrollment)
+   └─ AnnualYear (current annual year enrollment)
+   └─ Subject (faculty teaches multiple subjects)
+   └─ RefreshToken (user has multiple refresh tokens)
+   └─ StudentEnrollment (student has multiple enrollments)
+   └─ Assignment (faculty creates assignments)
+   └─ Submission (student makes submissions)
+   └─ Announcement (faculty/admin creates announcements)
+   └─ Material (faculty uploads materials)
+   └─ Result (student receives grades)
+   └─ ResultCalculationLog (system logs CGPA changes)
+   └─ GalleryItem (admin uploads gallery items)
+
+================================================================================
+
+2. CAMPUS MODEL
+   Location: server/models/Campus.js
+   Purpose: Represents physical or virtual campus locations
+   
+   Key Fields:
+   - id, campusId (unique identifiers)
+   - name, code
+   - location, address, phoneNumber, email, website
+   
+   Relationships:
+   ├─ User (many users belong to one campus)
+   └─ Course (course can be offered at multiple campuses)
+
+================================================================================
+
+3. COURSE MODEL
+   Location: server/models/Course.js
+   Purpose: Represents academic courses/programs (e.g., BS Computer Science)
+   
+   Key Fields:
+   - id, title, code (unique)
+   - duration, eligibility
+   - examSystem (semester or annual)
+   - totalSemesters, totalYears, totalCreditHours
+   - campuses (Array of ObjectIds -> Campus)
+   
+   Relationships:
+   ├─ Campus (one course offered at multiple campuses)
+   ├─ User (students enrolled in a course)
+   ├─ Subject (course has multiple subjects)
+   ├─ Semester (linked via CourseSemesterMapping)
+   ├─ AnnualYear (linked via AnnualYearMapping)
+   ├─ StudentEnrollment (students enrolled in course)
+   └─ ClassRoom (course has multiple class sections)
+
+================================================================================
+
+4. SEMESTER MODEL
+   Location: server/models/Semester.js
+   Purpose: Represents academic semesters (Semester 1, 2, 3, etc.)
+   
+   Key Fields:
+   - id, semesterId, number (1-8)
+   - title
+   - examSystem (semester-based)
+   
+   Relationships:
+   ├─ Course (linked via CourseSemesterMapping)
+   ├─ User (user's current semester)
+   ├─ Subject (subjects offered in semester)
+   ├─ ClassRoom (semesters contain semester structures)
+   ├─ StudentEnrollment (enrollment in a semester)
+   └─ ResultCalculationLog (results recorded per semester)
+
+================================================================================
+
+5. ANNUAL YEAR MODEL
+   Location: server/models/AnnualYear.js
+   Purpose: Represents academic years for annual-system courses (Year 1, 2, 3)
+   
+   Key Fields:
+   - id, annualYearId, number (1-5)
+   - title
+   - examSystem (annual-based)
+   
+   Relationships:
+   ├─ Course (linked via AnnualYearMapping)
+   ├─ User (user's current annual year)
+   ├─ Subject (subjects offered in year)
+   ├─ ClassRoom (years contain year structures)
+   ├─ StudentEnrollment (enrollment in an annual year)
+   └─ ResultCalculationLog (results recorded per year)
+
+================================================================================
+
+6. CLASSROOM MODEL
+   Location: server/models/ClassRoom.js
+   Purpose: Represents a class section (e.g., BS CS Semester 1 - Section A)
+   
+   Key Fields:
+   - id, classCode (unique)
+   - name
+   - course (ObjectId -> Course)
+   - section, capacity
+   - academicYear
+   - semesters (Array of semester structures with subjects & faculty)
+   
+   Relationships:
+   ├─ Course (class is for one course)
+   ├─ User (students assigned to class)
+   ├─ Subject (classes study subjects)
+   ├─ ClassSubject (maps subjects and faculty to class)
+   ├─ Assignment (assignments for class)
+   ├─ Announcement (announcements target classes)
+   ├─ Material (materials for class)
+   ├─ StudentEnrollment (students enrolled in class)
+   └─ Result (results recorded for students in class)
+
+================================================================================
+
+7. SUBJECT MODEL
+   Location: server/models/Subject.js
+   Purpose: Represents academic subjects/courses (e.g., Data Structures, OOP)
+   
+   Key Fields:
+   - id, name, code (unique)
+   - description
+   - course (ObjectId -> Course)
+   - semester (ObjectId -> Semester)
+   - annualYear (ObjectId -> AnnualYear)
+   - creditHours, isElective
+   - faculty (Array of ObjectIds -> User)
+   
+   Relationships:
+   ├─ Course (subject belongs to a course)
+   ├─ Semester (subject offered in semester)
+   ├─ AnnualYear (subject offered in annual year)
+   ├─ User (faculty teaches subject)
+   ├─ ClassSubject (links subject to class & faculty)
+   ├─ Assignment (assignments for subject)
+   ├─ Material (materials for subject)
+   └─ Result (grades recorded per subject)
+
+================================================================================
+
+8. CLASS SUBJECT MODEL
+   Location: server/models/ClassSubject.js
+   Purpose: Maps subjects and faculty to specific classes
+   
+   Key Fields:
+   - id, classRoom (ObjectId -> ClassRoom)
+   - subject (ObjectId -> Subject)
+   - faculty (ObjectId -> User)
+   - isActive
+   
+   Relationships:
+   ├─ ClassRoom (class)
+   ├─ Subject (subject)
+   └─ User (faculty member teaching)
+   
+   Purpose: This junction table links a subject with the faculty member who
+   teaches it in a specific classroom.
+
+================================================================================
+
+                        ACADEMIC TRACKING MODELS
+================================================================================
+
+9. STUDENT ENROLLMENT MODEL
+   Location: server/models/StudentEnrollment.js
+   Purpose: Tracks student enrollment in courses and their progression
+   
+   Key Fields:
+   - id, student (ObjectId -> User)
+   - classRoom (ObjectId -> ClassRoom)
+   - course (ObjectId -> Course)
+   - semester (ObjectId -> Semester)
+   - annualYear (ObjectId -> AnnualYear)
+   - status (Active, Completed, Backlog, Dropped, Graduated)
+   - sgpa (Semester GPA)
+   - promotedTo (ObjectId -> StudentEnrollment for progression)
+   
+   Relationships:
+   ├─ User (student)
+   ├─ ClassRoom (enrolled class)
+   ├─ Course (enrolled course)
+   ├─ Semester (current/enrolled semester)
+   ├─ AnnualYear (current/enrolled annual year)
+   ├─ Result (results in this enrollment)
+   └─ ResultCalculationLog (GPA calculations for enrollment)
+
+================================================================================
+
+10. COURSE SEMESTER MAPPING
+    Location: server/models/CourseSemesterMapping.js
+    Purpose: Defines which semesters belong to which course and their order
+    
+    Key Fields:
+    - id, course (ObjectId -> Course)
+    - semester (ObjectId -> Semester)
+    - order (sequence in course)
+    - requiredSubjects, totalCreditHours
+    - isActive
+    
+    Relationships:
+    ├─ Course
+    └─ Semester
+
+================================================================================
+
+11. ANNUAL YEAR MAPPING
+    Location: server/models/AnnualYearMapping.js
+    Purpose: Defines which annual years belong to which course and their order
+    
+    Key Fields:
+    - id, course (ObjectId -> Course)
+    - annualYear (ObjectId -> AnnualYear)
+    - order (sequence in course)
+    - requiredSubjects, totalCreditHours
+    - isActive
+    
+    Relationships:
+    ├─ Course
+    └─ AnnualYear
+
+================================================================================
+
+                     ACADEMIC CONTENT MODELS
+================================================================================
+
+12. ASSIGNMENT MODEL
+    Location: server/models/Assignment.js
+    Purpose: Represents assignments given to students
+    
+    Key Fields:
+    - id, title, description
+    - classRoom (ObjectId -> ClassRoom)
+    - subject (ObjectId -> Subject)
+    - dueDate, maxMarks
+    - attachment (file: {publicId, url, resourceType})
+    - createdBy (ObjectId -> User/Faculty)
+    
+    Relationships:
+    ├─ ClassRoom (assignment for class)
+    ├─ Subject (assignment for subject)
+    ├─ User (faculty member who created it)
+    └─ Submission (students' submissions to assignment)
+
+================================================================================
+
+13. SUBMISSION MODEL
+    Location: server/models/Submission.js
+    Purpose: Represents student submissions to assignments
+    
+    Key Fields:
+    - id, assignment (ObjectId -> Assignment)
+    - student (ObjectId -> User)
+    - file (attachment: {publicId, url, resourceType})
+    - submittedAt, status (on_time, late, pending)
+    - marks, remarks, gradedBy (ObjectId -> User/Faculty)
+    
+    Relationships:
+    ├─ Assignment (submission to assignment)
+    ├─ User (student who submitted)
+    └─ User (faculty who graded)
+    
+    Unique Index: One submission per student per assignment
+
+================================================================================
+
+14. MATERIAL MODEL
+    Location: server/models/Material.js
+    Purpose: Represents course materials (lecture notes, slides, videos, etc.)
+    
+    Key Fields:
+    - id, title, type (lecture_notes, slides, video, book, other)
+    - classRoom (ObjectId -> ClassRoom)
+    - subject (ObjectId -> Subject)
+    - link (URL to external resource)
+    - file (attachment: {publicId, url, resourceType})
+    - uploadedBy (ObjectId -> User/Faculty)
+    
+    Relationships:
+    ├─ ClassRoom (material for class)
+    ├─ Subject (material for subject)
+    └─ User (faculty who uploaded)
+
+================================================================================
+
+15. ANNOUNCEMENT MODEL
+    Location: server/models/Announcement.js
+    Purpose: Represents announcements from faculty/admin
+    
+    Key Fields:
+    - id, title, description
+    - targetClasses (Array of ObjectIds -> ClassRoom)
+    - attachment (optional file)
+    - createdBy (ObjectId -> User)
+    - isPublished
+    
+    Relationships:
+    ├─ ClassRoom (announcement targets specific classes)
+    └─ User (faculty/admin who created announcement)
+
+================================================================================
+
+                        ASSESSMENT & GRADING MODELS
+================================================================================
+
+16. RESULT MODEL
+    Location: server/models/Result.js
+    Purpose: Represents student grades/results for subjects
+    
+    Key Fields:
+    - id, student (ObjectId -> User)
+    - classRoom (ObjectId -> ClassRoom)
+    - subject (ObjectId -> Subject)
+    - enrollment (ObjectId -> StudentEnrollment)
+    - semester (String), annualYear (String)
+    - marksObtained, totalMarks
+    - gradePoint, status (Pass, Fail, Incomplete)
+    - grade, remarks
+    - publishedBy (ObjectId -> User/Faculty)
+    
+    Relationships:
+    ├─ User (student)
+    ├─ ClassRoom (class context)
+    ├─ Subject (subject being graded)
+    ├─ StudentEnrollment (enrollment context)
+    └─ User (faculty who published results)
+
+================================================================================
+
+17. RESULT CALCULATION LOG
+    Location: server/models/ResultCalculationLog.js
+    Purpose: Audits CGPA changes for students
+    
+    Key Fields:
+    - id, student (ObjectId -> User)
+    - enrollment (ObjectId -> StudentEnrollment)
+    - semester (ObjectId -> Semester)
+    - annualYear (ObjectId -> AnnualYear)
+    - oldCgpa, newCgpa
+    - calculatedAt, calculatedBy
+    
+    Relationships:
+    ├─ User (student)
+    ├─ StudentEnrollment (enrollment affected)
+    ├─ Semester (semester affected)
+    └─ AnnualYear (year affected)
+    
+    Purpose: Creates audit trail of GPA calculations for compliance and dispute resolution
+
+================================================================================
+
+                        CONTENT & MEDIA MODELS
+================================================================================
+
+18. NEWS EVENT MODEL
+    Location: server/models/NewsEvent.js
+    Purpose: Represents news and events published on public site
+    
+    Key Fields:
+    - id, type (news, event), title
+    - category, description
+    - date, time, location
+    - status (draft, published, archived)
+    - image, thumbnail
+    - createdBy, updatedBy
+    
+    Relationships:
+    ├─ User (admin who created)
+    └─ User (admin who updated)
+
+================================================================================
+
+19. GALLERY ITEM MODEL
+    Location: server/models/GalleryItem.js
+    Purpose: Represents images in college gallery
+    
+    Key Fields:
+    - id, title, category
+    - tags (Array of strings)
+    - description
+    - image (required: {publicId, url})
+    - uploadedBy (ObjectId -> User)
+    
+    Relationships:
+    └─ User (admin who uploaded)
+
+================================================================================
+
+                        AUTHENTICATION MODELS
+================================================================================
+
+20. REFRESH TOKEN MODEL
+    Location: server/models/RefreshToken.js
+    Purpose: Stores refresh tokens for JWT authentication
+    
+    Key Fields:
+    - id, user (ObjectId -> User)
+    - tokenHash (hashed token for security)
+    - expiresAt, revokedAt
+    - userAgent, ipAddress (for security tracking)
+    
+    Relationships:
+    └─ User (token belongs to user)
+    
+    Features:
+    - TTL index: Documents auto-delete after expiration
+    - Can be revoked (logout functionality)
+    - Tracks device info for security
+
+================================================================================
+
+                          MAPPING RELATIONSHIPS
+================================================================================
+
+HIERARCHY OVERVIEW:
+
+Institution Structure:
+    Campus
+      └─ Course(s)
+            └─ CourseSemesterMapping / AnnualYearMapping
+                  ├─ Semester / AnnualYear
+                  │     └─ Subject
+                  │           └─ ClassSubject → (ClassRoom + Faculty)
+                  └─ ClassRoom
+                        ├─ StudentEnrollment → User(Student)
+                        └─ Sessions/Materials/Assignments
+
+User Roles:
+    ├─ super_admin (system administrator)
+    ├─ admin (college administrator)
+    ├─ faculty (instructor - creates content, grades)
+    └─ student (learner - submits assignments, receives grades)
+
+Student Academic Path:
+    User(student) → StudentEnrollment → ClassRoom → Subject → Assignment → Submission
+                                                    └─ Material
+                                                    └─ Result
+
+Faculty Responsibilities:
+    User(faculty) → ClassSubject (teaches subject in class)
+                 → Assignment (creates assignments)
+                 → Submission (grades submissions)
+                 → Material (uploads materials)
+                 → Announcement (broadcasts announcements)
+                 → Result (publishes grades)
+
+================================================================================
+
+                          KEY RELATIONSHIPS SUMMARY
+================================================================================
+
+ONE-TO-MANY Relationships:
+
+1. Campus → User               (One campus has many users)
+2. Course → Subject            (One course has many subjects)
+3. Course → ClassRoom          (One course has multiple class sections)
+4. Semester → Subject          (One semester has many subjects)
+5. AnnualYear → Subject        (One year has many subjects)
+6. ClassRoom → StudentEnrollment (Class has many student enrollments)
+7. ClassRoom → Assignment      (Class has many assignments)
+8. ClassRoom → Announcement    (Announcements target multiple classes)
+9. ClassRoom → Material        (Class has many materials)
+10. ClassRoom → Result         (Class has many results)
+11. Subject → User (Faculty)   (Subject has many faculty members)
+12. Subject → Assignment       (Subject has many assignments)
+13. Subject → Material         (Subject has many materials)
+14. Subject → Result           (Subject has many results)
+15. User → StudentEnrollment   (Student has multiple enrollments)
+16. User → Assignment          (Faculty creates many assignments)
+17. User → Submission          (Student makes many submissions)
+18. User → Announcement        (Faculty makes many announcements)
+19. User → Material            (Faculty uploads many materials)
+20. User → RefreshToken        (User has many refresh tokens)
+21. Assignment → Submission    (Assignment has many submissions)
+22. Course → StudentEnrollment (Course has many students)
+
+MANY-TO-MANY Relationships (via Junction Tables):
+
+1. Course ↔ Semester           (via CourseSemesterMapping)
+2. Course ↔ AnnualYear         (via AnnualYearMapping)
+3. Campus ↔ Course             (Array in Course model)
+4. User(Faculty) ↔ Subject     (Array in Subject model)
+5. ClassRoom ↔ Subject ↔ User  (via ClassSubject - 3-way junction)
+
+SELF-REFERENCING:
+
+1. StudentEnrollment → StudentEnrollment (promotedTo field for progression tracking)
+
+AUDIT TRAILS:
+
+1. ResultCalculationLog tracks CGPA changes per student/enrollment/semester
+
+================================================================================
+
+                            INDEXING STRATEGY
+================================================================================
+
+Indexed Fields (for query performance):
+
+1. User: id, email, role, portal ID
+2. Campus: id, campusId
+3. Course: id, code
+4. Subject: id, code
+5. ClassRoom: id, classCode
+6. Semester: id, number
+7. AnnualYear: id, number
+8. StudentEnrollment: id
+9. Assignment: id
+10. Submission: id, assignment+student (unique)
+11. Material: id
+12. Announcement: id
+13. Result: id
+14. RefreshToken: id, user (TTL index)
+15. ClassSubject: id, classRoom+subject+faculty (unique)
+
+Foreign Key Indexes:
+- Most ObjectId references are indexed for JOIN performance
+- Composite indexes on frequently queried field combinations
+
+================================================================================
+
+                          DATA INTEGRITY RULES
+================================================================================
+
+Constraints:
+
+1. Unique Constraints:
+   - User: id, email, portalId
+   - Course: code
+   - Subject: code
+   - Campus: campusId, code
+   - Semester: semesterId
+   - AnnualYear: annualYearId
+   - ClassRoom: classCode
+   - Submission: assignment + student (one submission per student per assignment)
+   - ClassSubject: classRoom + subject + faculty (one assignment per trio)
+   - RefreshToken: tokenHash
+
+2. Required Fields:
+   - User: id, name, email, password, role, portalId
+   - Course: id, title, code
+   - Subject: id, name, code
+   - Campus: id, name
+   - ClassRoom: id, name, course
+   - Assignment: id, classRoom, subject, title, description, dueDate, maxMarks, createdBy
+   - Submission: id, assignment, student
+   - Material: id, classRoom, subject, title, uploadedBy
+   - Announcement: id, title, description, createdBy
+   - Result: id, student, classRoom, subject, semester, marksObtained, totalMarks
+   - RefreshToken: id, user, tokenHash, expiresAt
+
+3. Default Values:
+   - User: role=student, isActive=true
+   - Subject: creditHours=3, isElective=false
+   - Course: examSystem=semester, isActive=true
+   - Submission: status=pending, submittedAt=Date.now()
+   - NewsEvent: status=published
+   - Material: type=other
+
+4. Enum Validations:
+   - User.role: student, faculty, admin, super_admin
+   - User.status: Active, Inactive, Graduated, Suspended
+   - Course.examSystem: semester, annual, other
+   - ClassRoom.status: active, inactive
+   - StudentEnrollment.status: Active, Completed, Backlog, Dropped, Graduated
+   - Submission.status: on_time, late, pending
+   - Result.status: Pass, Fail, Incomplete
+   - NewsEvent.type: news, event
+   - NewsEvent.status: draft, published, archived
+   - Material.type: lecture_notes, slides, video, book, other
+
+================================================================================
+
+                          DELETION CASCADES
+================================================================================
+
+Cascading Behavior (Recommended Approach):
+
+When deleting a record, consider:
+
+1. Delete Campus:
+   - Remove all Users in campus
+   - Remove all Courses offered at campus
+
+2. Delete Course:
+   - Remove all CourseSemesterMappings
+   - Remove all AnnualYearMappings
+   - Remove all ClassRooms for course
+   - Remove all Subjects for course
+   - Remove all StudentEnrollments for course
+
+3. Delete ClassRoom:
+   - Remove all ClassSubjects
+   - Remove all StudentEnrollments
+   - Remove all Assignments
+   - Remove all Materials
+   - Remove all Announcements
+   - Remove all Results for classroom
+
+4. Delete Subject:
+   - Remove all ClassSubjects
+   - Remove all Assignments
+   - Remove all Materials
+   - Remove all Results
+
+5. Delete Assignment:
+   - Remove all Submissions
+
+6. Delete User:
+   - Remove all RefreshTokens
+   - Remove all StudentEnrollments (if student)
+   - Remove all ClassSubjects (if faculty)
+   - Update References (createdBy, uploadedBy fields become null)
+
+7. Delete StudentEnrollment:
+   - Remove all Results for enrollment
+   - Remove all ResultCalculationLogs for enrollment
+
+================================================================================
+
+                          BEST PRACTICES
+================================================================================
+
+1. QUERYING:
+   - Always populate relevant references for frontend display
+   - Use lean() for read-only operations to improve performance
+   - Use pagination for large result sets
+
+2. TRANSACTIONS:
+   - Use MongoDB sessions for operations affecting multiple models
+   - Example: When publishing results, wrap Result and StudentEnrollment updates
+
+3. VALIDATION:
+   - Validate ObjectId references before saving
+   - Use unique indexes to prevent duplicates
+   - Validate enum values on save
+
+4. SECURITY:
+   - Never return password fields (use select: false)
+   - Hash tokens before storing (RefreshToken)
+   - Validate user role before allowing data modification
+   - Use ObjectId validation middleware
+
+5. AUDIT TRAILS:
+   - ResultCalculationLog provides CGPA audit trail
+   - Consider adding createdAt/updatedAt to all models
+   - Track publishedBy and calculatedBy for sensitive operations
+
+6. PERFORMANCE:
+   - Index frequently queried fields
+   - Use composite indexes for field combinations
+   - Denormalize sparingly (e.g., storing semester/annualYear as strings in Result)
+   - Consider pagination for large datasets
+
+================================================================================
+                              END OF DOCUMENT
+================================================================================

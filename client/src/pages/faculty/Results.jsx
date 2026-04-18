@@ -157,23 +157,23 @@ const Results = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {Array.from({ length: 6 }).map((_, idx) => (
             <div key={idx} className="bg-white dark:bg-college-navy border border-college-navy/10 dark:border-college-gold/20 rounded-sm p-5 space-y-4 animate-pulse">
-                <div className="flex items-start justify-between gap-3">
-                    <div className="space-y-2">
-                        <SkeletonLoading variant="textLine" className="h-5 w-24 rounded-full" />
-                        <SkeletonLoading variant="textLine" className="h-7 w-48" />
-                    </div>
-                    <SkeletonLoading variant="textLine" className="h-5 w-12 rounded-full" />
+              <div className="flex items-start justify-between gap-3">
+                <div className="space-y-2">
+                  <SkeletonLoading variant="textLine" className="h-5 w-24 rounded-full" />
+                  <SkeletonLoading variant="textLine" className="h-7 w-48" />
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                    <SkeletonLoading variant="panel" className="h-16" />
-                    <SkeletonLoading variant="panel" className="h-16" />
-                    <SkeletonLoading variant="panel" className="h-16" />
-                    <SkeletonLoading variant="panel" className="h-16" />
-                </div>
-                <div className="flex justify-between items-center pt-2">
-                    <SkeletonLoading variant="textLine" className="h-4 w-20" />
-                    <SkeletonLoading variant="textLine" className="h-4 w-16" />
-                </div>
+                <SkeletonLoading variant="textLine" className="h-5 w-12 rounded-full" />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <SkeletonLoading variant="panel" className="h-16" />
+                <SkeletonLoading variant="panel" className="h-16" />
+                <SkeletonLoading variant="panel" className="h-16" />
+                <SkeletonLoading variant="panel" className="h-16" />
+              </div>
+              <div className="flex justify-between items-center pt-2">
+                <SkeletonLoading variant="textLine" className="h-4 w-20" />
+                <SkeletonLoading variant="textLine" className="h-4 w-16" />
+              </div>
             </div>
           ))}
         </div>

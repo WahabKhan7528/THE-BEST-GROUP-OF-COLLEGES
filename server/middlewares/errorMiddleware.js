@@ -29,6 +29,11 @@ export const errorHandler = (err, req, res, next) => {
       .join(", ");
   }
 
+  if (err.name === "CastError") {
+    message = `Invalid ${err.path || "identifier"}`;
+    statusCode = 400;
+  }
+
   if (err.name === "JsonWebTokenError") message = "Invalid token";
   if (err.name === "TokenExpiredError") message = "Token expired";
 

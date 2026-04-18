@@ -16,7 +16,7 @@ import {
   Save,
   Trash2,
   Upload,
-  MapPin
+  MapPin,
 } from "lucide-react";
 
 const EditNews = () => {
@@ -28,12 +28,22 @@ const EditNews = () => {
   const [image, setImage] = useState(null);
   const fileInputRef = useRef(null);
 
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm({
     resolver: zodResolver(newsSchema),
     defaultValues: {
-      title: "", date: "", time: "", location: "",
-      description: "", category: "", status: "published"
-    }
+      title: "",
+      date: "",
+      time: "",
+      location: "",
+      description: "",
+      category: "",
+      status: "published",
+    },
   });
 
   useEffect(() => {
@@ -50,14 +60,20 @@ const EditNews = () => {
         setType(foundPost.type || "news");
         reset({
           title: foundPost.title || "",
-          date: foundPost.date ? new Date(foundPost.date).toISOString().slice(0, 10) : "",
+          date: foundPost.date
+            ? new Date(foundPost.date).toISOString().slice(0, 10)
+            : "",
           time: foundPost.time || "",
           location: foundPost.location || "",
           description: foundPost.description || "",
           category: foundPost.category || "Academic",
           status: foundPost.status || "published",
         });
-        setImage(foundPost.image?.url ? { name: foundPost.image.url.split("/").pop() || "image" } : null);
+        setImage(
+          foundPost.image?.url
+            ? { name: foundPost.image.url.split("/").pop() || "image" }
+            : null,
+        );
       } catch {
         navigate("/admin/cms/news", { replace: true });
       }
@@ -86,7 +102,9 @@ const EditNews = () => {
       if (file) formData.append("image", file);
 
       await adminApi.updateNewsEvent(id, formData);
-      toast.success(`${type === "news" ? "News" : "Event"} updated successfully`);
+      toast.success(
+        `${type === "news" ? "News" : "Event"} updated successfully`,
+      );
       navigate("/admin/cms/news", { replace: true });
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed to update post");
@@ -94,11 +112,20 @@ const EditNews = () => {
   };
 
   const handleDelete = async () => {
-    const confirmed = await confirmDialog({ title: "Delete Post", message: "Are you sure you want to delete this post?", confirmText: "Delete", variant: "danger" });
-    if (confirmed) {
-      await adminApi.deleteNewsEvent(id);
-      toast.success(`Post ${id} deleted`);
-      navigate("/admin/cms/news", { replace: true });
+    try {
+      const confirmed = await confirmDialog({
+        title: "Delete Post",
+        message: "Are you sure you want to delete this post?",
+        confirmText: "Delete",
+        variant: "danger",
+      });
+      if (confirmed) {
+        await adminApi.deleteNewsEvent(id);
+        toast.success(`Post ${id} deleted`);
+        navigate("/admin/cms/news", { replace: true });
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to delete post");
     }
   };
 
@@ -127,24 +154,62 @@ const EditNews = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Content: Categorization & Content */}
         <div className="lg:col-span-2 space-y-8">
-
           {/* Section 1: Categorization */}
-          <PortalForm.Section title="Categorization" className="!p-6 !space-y-6">
+          <PortalForm.Section
+            title="Categorization"
+            className="!p-6 !space-y-6"
+          >
             <div className="col-span-1 md:col-span-2 space-y-4">
-              <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-2">Content Type</label>
+              <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-2">
+                Content Type
+              </label>
               <div className="grid grid-cols-2 gap-4">
-                <label className={`relative flex flex-col items-center justify-center p-5 rounded-sm border-2 cursor-pointer transition-all duration-300 ${type === "news" ? 'border-college-navy bg-college-navy/10 dark:border-college-gold dark:bg-college-gold/10 shadow-sm' : 'border-gray-100 bg-white dark:bg-college-navy/50 dark:border-college-gold/10 hover:bg-gray-50 dark:hover:bg-college-navy/80'}`}>
-                  <input type="radio" name="type" value="news" checked={type === "news"} onChange={() => setType("news")} className="sr-only" />
-                  <Newspaper className={`w-6 h-6 mb-2 ${type === "news" ? "text-college-navy dark:text-college-gold" : "text-gray-400"}`} />
-                  <span className={`text-sm font-bold ${type === "news" ? "text-college-navy dark:text-college-gold" : "text-gray-600 dark:text-gray-400"}`}>News & Announcement</span>
-                  {type === "news" && <CheckCircle2 className="absolute top-2 right-2 w-4 h-4 text-college-navy dark:text-college-gold" />}
+                <label
+                  className={`relative flex flex-col items-center justify-center p-5 rounded-sm border-2 cursor-pointer transition-all duration-300 ${type === "news" ? "border-college-navy bg-college-navy/10 dark:border-college-gold dark:bg-college-gold/10 shadow-sm" : "border-gray-100 bg-white dark:bg-college-navy/50 dark:border-college-gold/10 hover:bg-gray-50 dark:hover:bg-college-navy/80"}`}
+                >
+                  <input
+                    type="radio"
+                    name="type"
+                    value="news"
+                    checked={type === "news"}
+                    onChange={() => setType("news")}
+                    className="sr-only"
+                  />
+                  <Newspaper
+                    className={`w-6 h-6 mb-2 ${type === "news" ? "text-college-navy dark:text-college-gold" : "text-gray-400"}`}
+                  />
+                  <span
+                    className={`text-sm font-bold ${type === "news" ? "text-college-navy dark:text-college-gold" : "text-gray-600 dark:text-gray-400"}`}
+                  >
+                    News & Announcement
+                  </span>
+                  {type === "news" && (
+                    <CheckCircle2 className="absolute top-2 right-2 w-4 h-4 text-college-navy dark:text-college-gold" />
+                  )}
                 </label>
 
-                <label className={`relative flex flex-col items-center justify-center p-5 rounded-sm border-2 cursor-pointer transition-all duration-300 ${type === "event" ? 'border-college-navy bg-college-navy/10 dark:border-college-gold dark:bg-college-gold/10 shadow-sm' : 'border-gray-100 bg-white dark:bg-college-navy/50 dark:border-college-gold/10 hover:bg-gray-50 dark:hover:bg-college-navy/80'}`}>
-                  <input type="radio" name="type" value="event" checked={type === "event"} onChange={() => setType("event")} className="sr-only" />
-                  <Calendar className={`w-6 h-6 mb-2 ${type === "event" ? "text-college-navy dark:text-college-gold" : "text-gray-400"}`} />
-                  <span className={`text-sm font-bold ${type === "event" ? "text-college-navy dark:text-college-gold" : "text-gray-600 dark:text-gray-400"}`}>Event</span>
-                  {type === "event" && <CheckCircle2 className="absolute top-2 right-2 w-4 h-4 text-college-navy dark:text-college-gold" />}
+                <label
+                  className={`relative flex flex-col items-center justify-center p-5 rounded-sm border-2 cursor-pointer transition-all duration-300 ${type === "event" ? "border-college-navy bg-college-navy/10 dark:border-college-gold dark:bg-college-gold/10 shadow-sm" : "border-gray-100 bg-white dark:bg-college-navy/50 dark:border-college-gold/10 hover:bg-gray-50 dark:hover:bg-college-navy/80"}`}
+                >
+                  <input
+                    type="radio"
+                    name="type"
+                    value="event"
+                    checked={type === "event"}
+                    onChange={() => setType("event")}
+                    className="sr-only"
+                  />
+                  <Calendar
+                    className={`w-6 h-6 mb-2 ${type === "event" ? "text-college-navy dark:text-college-gold" : "text-gray-400"}`}
+                  />
+                  <span
+                    className={`text-sm font-bold ${type === "event" ? "text-college-navy dark:text-college-gold" : "text-gray-600 dark:text-gray-400"}`}
+                  >
+                    Event
+                  </span>
+                  {type === "event" && (
+                    <CheckCircle2 className="absolute top-2 right-2 w-4 h-4 text-college-navy dark:text-college-gold" />
+                  )}
                 </label>
               </div>
             </div>
@@ -163,8 +228,6 @@ const EditNews = () => {
                 placeholder="Select category"
               />
             </div>
-
-
           </PortalForm.Section>
 
           {/* Section 2: Content Details */}
@@ -179,7 +242,10 @@ const EditNews = () => {
               />
             </div>
             <div className="col-span-1 md:col-span-2">
-              <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-2">Main Content <span className="text-red-500 font-bold ml-0.5">*</span></label>
+              <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-2">
+                Main Content{" "}
+                <span className="text-red-500 font-bold ml-0.5">*</span>
+              </label>
               <textarea
                 {...register("description")}
                 rows={8}
@@ -193,9 +259,11 @@ const EditNews = () => {
 
         {/* Sidebar: Logistics & Media */}
         <div className="space-y-8">
-
           {/* Section 3: Logistics (Date/Time/Location) */}
-          <PortalForm.Section title="Logistics" className="!p-6 !flex !flex-col !gap-6">
+          <PortalForm.Section
+            title="Logistics"
+            className="!p-6 !flex !flex-col !gap-6"
+          >
             <div className="col-span-full border-none pb-0">
               <PortalForm.Input
                 label="Date"
@@ -217,7 +285,9 @@ const EditNews = () => {
 
             {type === "event" && (
               <div className="col-span-full border-none pt-0">
-                <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-2">Location</label>
+                <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-2">
+                  Location
+                </label>
                 <div className="relative">
                   <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-college-gold w-4 h-4" />
                   <input
@@ -232,7 +302,10 @@ const EditNews = () => {
           </PortalForm.Section>
 
           {/* Section 4: Media Assets */}
-          <PortalForm.Section title="Media Assets" className="!p-6 !flex !flex-col !gap-6">
+          <PortalForm.Section
+            title="Media Assets"
+            className="!p-6 !flex !flex-col !gap-6"
+          >
             <div className="col-span-full">
               <div className="border-2 border-dashed border-gray-200 dark:border-college-gold/20 rounded-sm p-8 flex flex-col items-center justify-center text-center hover:bg-gray-50 dark:hover:bg-college-navy/40 transition-all duration-300 cursor-pointer group dark:bg-college-navy/30 relative">
                 <input
@@ -242,12 +315,19 @@ const EditNews = () => {
                   id="image-upload"
                   onChange={handleImageChange}
                 />
-                <label htmlFor="image-upload" className="cursor-pointer flex flex-col items-center w-full">
+                <label
+                  htmlFor="image-upload"
+                  className="cursor-pointer flex flex-col items-center w-full"
+                >
                   <div className="w-16 h-16 bg-college-navy/5 text-college-navy dark:bg-college-gold/10 dark:text-college-gold rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-sm">
                     <Upload className="w-6 h-6" />
                   </div>
-                  <span className="text-sm font-bold text-college-navy dark:text-gray-200">Featured Image</span>
-                  <span className="text-[10px] text-gray-400 mt-2 uppercase tracking-widest font-bold">SVG, PNG, JPG (max 2MB)</span>
+                  <span className="text-sm font-bold text-college-navy dark:text-gray-200">
+                    Featured Image
+                  </span>
+                  <span className="text-[10px] text-gray-400 mt-2 uppercase tracking-widest font-bold">
+                    SVG, PNG, JPG (max 2MB)
+                  </span>
                 </label>
               </div>
               {image && (
@@ -255,7 +335,9 @@ const EditNews = () => {
                   <div className="p-1.5 bg-white dark:bg-college-navy rounded-sm shadow-sm">
                     <ImageIcon className="w-3.5 h-3.5" />
                   </div>
-                  <span className="truncate flex-1 font-medium">{image.name}</span>
+                  <span className="truncate flex-1 font-medium">
+                    {image.name}
+                  </span>
                 </div>
               )}
             </div>

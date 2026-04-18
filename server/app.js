@@ -12,7 +12,6 @@ import adminRoutes from "./routes/adminRoutes.js";
 import portalRoutes from "./routes/portalRoutes.js";
 import { errorHandler, notFound } from "./middlewares/errorMiddleware.js";
 
-
 const app = express();
 
 const authLimiter = rateLimit({
@@ -36,7 +35,7 @@ app.use(
   cors({
     origin: (origin, callback) => {
       // Allow non-browser requests and approved browser origins.
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (origin && allowedOrigins.includes(origin)) {
         callback(null, true);
         return;
       }

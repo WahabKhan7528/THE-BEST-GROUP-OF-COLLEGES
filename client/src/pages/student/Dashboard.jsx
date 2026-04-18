@@ -167,7 +167,7 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              
+
             </Link>
           );
         })}
@@ -223,7 +223,7 @@ const Dashboard = () => {
                       </span>
                     </div>
                   </div>
-                  
+
                 </div>
               ))}
             </div>
@@ -279,8 +279,8 @@ const Dashboard = () => {
                       {item.description || "Click to visit institutional announcements page for full details."}
                     </p>
                   </div>
-             
-                  
+
+
                 </Link>
               ))}
             </div>
