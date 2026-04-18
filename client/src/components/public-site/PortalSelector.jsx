@@ -15,7 +15,7 @@ export default function PortalSelector({ isOpen, onClose }) {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
+        <div className="fixed inset-0 z-50 overflow-hidden">
             <div className="flex min-h-screen items-center justify-center p-4 text-center">
                 <div
                     className="fixed inset-0 bg-college-navy/80 backdrop-blur-sm transition-opacity"
@@ -33,37 +33,40 @@ export default function PortalSelector({ isOpen, onClose }) {
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                        {portals.map(({ title, description, path }) => (
-                            <Card
-                                key={title}
-                                variant="navy"
-                                hover={true}
-                                className="border-white/10 bg-white/5 hover:border-college-gold hover:bg-white/10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-college-navy/30 dark:focus:ring-college-gold/30"
-                                as="button"
-                            >
-                                <button
-                                    onClick={() => handleSelect(path)}
-                                    className="p-6 text-left w-full"
+                    {/* Scrollable container for portal options */}
+                    <div className="max-h-[60vh] sm:max-h-none overflow-y-auto no-scrollbar px-1">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pb-2">
+                            {portals.map(({ title, description, path }) => (
+                                <Card
+                                    key={title}
+                                    variant="navy"
+                                    hover={true}
+                                    className="border-white/10 bg-white/5 hover:border-college-gold hover:bg-white/10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-college-navy/30 dark:focus:ring-college-gold/30 h-full"
+                                    as="button"
                                 >
-                                    <div className="space-y-4">
-                                        <div className="space-y-2">
-                                            <h4 className="text-lg font-serif font-bold text-white transition-colors">
-                                                {title}
-                                            </h4>
-                                            <p className="text-sm text-white/50 leading-relaxed font-medium">
-                                                {description}
-                                            </p>
+                                    <button
+                                        onClick={() => handleSelect(path)}
+                                        className="p-6 text-left w-full h-full flex flex-col"
+                                    >
+                                        <div className="space-y-4 flex-1">
+                                            <div className="space-y-2">
+                                                <h4 className="text-lg font-serif font-bold text-white transition-colors">
+                                                    {title}
+                                                </h4>
+                                                <p className="text-sm text-white/50 leading-relaxed font-medium">
+                                                    {description}
+                                                </p>
+                                            </div>
                                         </div>
 
                                         <div className="flex items-center gap-2 text-college-gold font-bold text-sm tracking-wide uppercase group-hover:gap-3 transition-all mt-4 border-t border-white/10 pt-4">
                                             <span>Continue</span>
                                             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                                         </div>
-                                    </div>
-                                </button>
-                            </Card>
-                        ))}
+                                    </button>
+                                </Card>
+                            ))}
+                        </div>
                     </div>
                 </Card>
             </div>
