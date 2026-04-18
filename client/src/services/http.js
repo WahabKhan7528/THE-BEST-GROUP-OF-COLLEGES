@@ -1,9 +1,13 @@
 import axios from "axios";
 
-const rawBaseURL = import.meta.env.VITE_BACKEND_API || (import.meta.env.DEV ? "http://localhost:5000" : "");
+const rawBaseURL =
+  import.meta.env.VITE_BACKEND_API ||
+  (import.meta.env.DEV ? "http://localhost:5000" : "");
 const normalizedBaseURL = rawBaseURL.replace(/\/$/, "");
 const baseURL = normalizedBaseURL
-  ? (normalizedBaseURL.endsWith("/api/v1") ? normalizedBaseURL : `${normalizedBaseURL}/api/v1`)
+  ? normalizedBaseURL.endsWith("/api/v1")
+    ? normalizedBaseURL
+    : `${normalizedBaseURL}/api/v1`
   : "/api/v1";
 
 const http = axios.create({
@@ -26,8 +30,8 @@ http.interceptors.response.use(
     const status = error?.response?.status;
 
     if (
-      originalRequest?.url?.includes("/auth/login")
-      || originalRequest?.url?.includes("/auth/refresh")
+      originalRequest?.url?.includes("/auth/login") ||
+      originalRequest?.url?.includes("/auth/refresh")
     ) {
       return Promise.reject(error);
     }
@@ -45,7 +49,11 @@ http.interceptors.response.use(
       isRefreshing = true;
       originalRequest._retry = true;
 
-      await axios.post(`${baseURL}/auth/refresh`, {}, { withCredentials: true });
+      await axios.post(
+        `${baseURL}/auth/refresh`,
+        {},
+        { withCredentials: true },
+      );
 
       processQueue();
       return http(originalRequest);

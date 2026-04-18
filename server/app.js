@@ -47,7 +47,11 @@ app.use(
   cors({
     origin: (origin, callback) => {
       // Allow non-browser requests and approved browser origins.
-      if (!origin || allowedOrigins.includes(origin) || allowedOriginRegexes.some((pattern) => pattern.test(origin))) {
+      if (
+        !origin ||
+        allowedOrigins.includes(origin) ||
+        allowedOriginRegexes.some((pattern) => pattern.test(origin))
+      ) {
         callback(null, true);
         return;
       }
