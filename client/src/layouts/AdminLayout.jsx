@@ -82,7 +82,6 @@ const AdminLayout = () => {
             badgeLabel={badgeLabel}
             user={user}
             onMenuToggle={() => setIsSidebarOpen((prev) => !prev)}
-            showCampusFilter
           />
           <main className="flex-1 p-3 sm:p-4 md:p-6 lg:p-10">
             <div className="max-w-7xl mx-auto w-full">

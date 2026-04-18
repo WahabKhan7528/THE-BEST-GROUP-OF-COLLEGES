@@ -17,6 +17,7 @@ import PortalPageHeader from "../../components/portal-shared/PortalPageHeader";
 import Badge from "../../components/shared/Badge";
 import SkeletonLoading from "../../components/shared/SkeletonLoading";
 import { adminApi } from "../../services/api";
+import CampusFilter from "../../components/admin/CampusFilter";
 
 const getRefId = (value) => value?._id || value?.id || value || null;
 
@@ -172,6 +173,7 @@ const Dashboard = () => {
         }
         title="Admin Control Center"
         subtitle={isSuperAdmin ? "Campus, news, and gallery control for the system owner" : "Academic operations for admin users"}
+        action={<CampusFilter />}
       />
 
       {/* Main Stats Grid */}

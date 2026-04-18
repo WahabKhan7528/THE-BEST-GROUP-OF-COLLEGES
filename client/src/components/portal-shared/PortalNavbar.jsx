@@ -18,7 +18,6 @@ const PortalNavbar = ({
   badgeLabel,
   user,
   onMenuToggle,
-  showCampusFilter = false,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -94,8 +93,6 @@ const PortalNavbar = ({
 
         {/* Right Section: Actions & Profile */}
         <div className="flex items-center justify-end flex-wrap gap-1.5 sm:gap-3 min-w-0">
-          {showCampusFilter && <CampusFilter />}
-
           <DarkModeToggle />
 
           <button
