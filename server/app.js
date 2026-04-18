@@ -75,6 +75,14 @@ app.use("/uploads", express.static(path.join(import.meta.dirname, "uploads")));
 // Apply rate limit to login only; keep auth session checks like /auth/me unaffected.
 app.use("/api/v1/auth/login", authLimiter);
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "The Best College API is running",
+    health: "/api/v1/health",
+  });
+});
+
 app.get("/api/v1/health", (req, res) => {
   res.status(200).json({ success: true, message: "Server is healthy" });
 });
