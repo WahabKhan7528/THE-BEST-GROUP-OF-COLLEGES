@@ -58,19 +58,6 @@ const applyRoleScopedFields = (payload, role) => {
     payload.currentClassRoom = null;
     payload.classSection = null;
     payload.currentSemester = null;
-    res.status(201).json({
-      success: true,
-      data: {
-        id: user._id,
-        portalId: user.portalId,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        campus: user.campus,
-        currentCourse: user.currentCourse,
-        currentClassRoom: user.currentClassRoom,
-      },
-    });
     payload.semester = null;
     payload.enrollmentYear = null;
     payload.cgpa = null;

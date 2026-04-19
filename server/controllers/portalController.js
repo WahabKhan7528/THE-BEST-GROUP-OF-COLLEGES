@@ -112,6 +112,33 @@ const facultyCanManageSubject = (classRoom, subjectId, facultyId) => {
   );
 };
 
+const classHasSubject = (classRoom, subjectId) => {
+  if (!classRoom || !subjectId) return false;
+  const normalizedSubjectId = String(subjectId);
+
+  if (
+    Array.isArray(classRoom.subjects) &&
+    classRoom.subjects.some(
+      (subject) => String(subject?._id || subject) === normalizedSubjectId,
+    )
+  ) {
+    return true;
+  }
+
+  return (
+    Array.isArray(classRoom.semesterSubjects) ? classRoom.semesterSubjects : []
+  ).some((term) => {
+    const termSubjects = Array.isArray(term?.subjects) ? term.subjects : [];
+    const assignmentSubjects = Array.isArray(term?.subjectAssignments)
+      ? term.subjectAssignments.map((assignment) => assignment?.subject)
+      : [];
+
+    return [...termSubjects, ...assignmentSubjects].some(
+      (subject) => String(subject?._id || subject) === normalizedSubjectId,
+    );
+  });
+};
+
 const ensureFacultyClassAccess = async (classRoomId, facultyId) => {
   assertValidObjectId(classRoomId, "classRoom");
   const classRoom = await ClassRoom.findById(classRoomId)
@@ -705,6 +732,14 @@ export const submitAssignment = asyncHandler(async (req, res) => {
   );
   if (!assignment) throw new ApiError(404, "Assignment not found");
 
+  const studentClassIds = await getStudentClassIds(req.user);
+  if (!studentClassIds.includes(String(assignment.classRoom))) {
+    throw new ApiError(
+      403,
+      "You are not authorized to submit for this assignment",
+    );
+  }
+
   const existingSubmission = await Submission.findOne({
     assignment: assignment._id,
     student: req.user._id,
@@ -766,7 +801,11 @@ export const listSubmissions = asyncHandler(async (req, res) => {
         { faculty: req.user._id },
         { "semesterSubjects.subjectAssignments.faculty": req.user._id },
       ],
-    }).select("_id");
+    }).select("_id faculty subjects semesterSubjects");
+
+    const classesById = new Map(
+      classes.map((classRoom) => [String(classRoom._id), classRoom]),
+    );
 
     const classIds = classes.map((classRoom) => classRoom._id);
     const assignmentFilter = { classRoom: { $in: classIds } };
@@ -777,17 +816,23 @@ export const listSubmissions = asyncHandler(async (req, res) => {
 
     const assignments =
       classIds.length > 0
-        ? await Assignment.find(assignmentFilter).select("_id")
+        ? await Assignment.find(assignmentFilter).select("_id classRoom subject")
         : [];
 
-    if (req.params.assignmentId && assignments.length === 0) {
+    const allowedAssignments = assignments.filter((assignment) => {
+      const classRoom = classesById.get(String(assignment.classRoom));
+      if (!classRoom) return false;
+      return facultyCanManageSubject(classRoom, assignment.subject, req.user._id);
+    });
+
+    if (req.params.assignmentId && allowedAssignments.length === 0) {
       throw new ApiError(
         403,
         "You are not authorized to view submissions for this assignment",
       );
     }
 
-    filter.assignment = { $in: assignments.map((item) => item._id) };
+    filter.assignment = { $in: allowedAssignments.map((item) => item._id) };
   }
 
   if (req.params.assignmentId && req.user.role !== "faculty") {
@@ -879,7 +924,17 @@ export const publishResult = asyncHandler(async (req, res) => {
   assertValidObjectId(payload.classRoom, "classRoom");
   assertValidObjectId(payload.subject, "subject");
 
-  const student = await User.findById(payload.student).select("name portalId");
+  const student = await User.findById(payload.student).select(
+    "name portalId role currentClassRoom",
+  );
+  if (!student) {
+    throw new ApiError(404, "Student not found");
+  }
+
+  if (student.role !== "student") {
+    throw new ApiError(400, "Results can only be published for student accounts");
+  }
+
   const classRoom = await ClassRoom.findById(payload.classRoom)
     .select("faculty semesterSubjects subjects")
     .populate("faculty", "_id")
@@ -889,6 +944,15 @@ export const publishResult = asyncHandler(async (req, res) => {
 
   if (!classRoom) {
     throw new ApiError(404, "Class not found");
+  }
+
+  const studentClassIds = await getStudentClassIds(student);
+  if (!studentClassIds.includes(String(classRoom._id))) {
+    throw new ApiError(400, "Student is not enrolled in the selected class");
+  }
+
+  if (!classHasSubject(classRoom, payload.subject)) {
+    throw new ApiError(400, "Subject is not assigned to the selected class");
   }
 
   if (
