@@ -2,10 +2,8 @@ import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
 
-/**
- * Handles environment variable loading from several candidate locations.
- * This is the central source of truth for .env loading in this project.
- */
+// Handles environment variable loading from several candidate locations.
+
 const loadEnv = () => {
   const rootDir = path.join(import.meta.dirname, "..");
 

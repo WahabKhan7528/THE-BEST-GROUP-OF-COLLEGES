@@ -32,8 +32,7 @@ export const buildSequentialCode = ({ prefix, number, digits = 3 }) => {
 export const buildRolePrefix = (role) => {
   const normalizedRole = String(role || "student").toLowerCase();
 
-  if (normalizedRole === "super_admin") return "SUP";
-  if (normalizedRole === "admin") return "ADM";
+  if (normalizedRole === "super_admin" || normalizedRole === "admin") return "ADM";
   if (normalizedRole === "faculty") return "FAC";
   return "STD";
 };
