@@ -103,6 +103,7 @@ Optional env overrides:
 
 - Layered modular design: models, controllers, routes, middleware, services, utils
 - Refresh tokens are persisted and rotated on refresh
+- Expired refresh tokens are auto-removed by a MongoDB TTL index; revoked refresh tokens are purged by a scheduled cleanup task after a retention window
 - Role-based route authorization for admin/faculty/student workflows
 - Cloudinary stores all large media/documents to keep app servers stateless
 - Mongoose relational refs ensure clean linkages across portals and CMS modules
@@ -124,6 +125,8 @@ Required environment variables in Render:
 - `JWT_REFRESH_SECRET`
 - `ACCESS_TOKEN_EXPIRE` (example: `15m`)
 - `REFRESH_TOKEN_EXPIRE_DAYS` (example: `7`)
+- `REFRESH_TOKEN_REVOKED_RETENTION_DAYS` (example: `30`)
+- `REFRESH_TOKEN_CLEANUP_INTERVAL_HOURS` (example: `24`)
 - `CLOUDINARY_CLOUD_NAME`
 - `CLOUDINARY_API_KEY`
 - `CLOUDINARY_API_SECRET`
