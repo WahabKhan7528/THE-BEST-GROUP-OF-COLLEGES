@@ -65,7 +65,6 @@ Optional env overrides:
 - `POST /api/v1/auth/refresh`
 - `POST /api/v1/auth/logout`
 - `GET /api/v1/auth/me`
-- `PUT /api/v1/auth/change-password`
 
 ### Admin (super_admin/admin)
 

@@ -127,18 +127,33 @@
     cursor: pointer;
   }
 
-  /* Toast slide-in animation */
-  @keyframes slideIn {
+  /* Toast entrance animation */
+  @keyframes slideInDesktop {
     from {
       opacity: 0;
-      transform: translateX(100%);
+      transform: translateX(24px) scale(0.95);
     }
     to {
       opacity: 1;
-      transform: translateX(0);
+      transform: translateX(0) scale(1);
     }
   }
-  .animate-slideIn {
-    animation: slideIn 0.3s ease-out;
+  @keyframes slideInMobile {
+    from {
+      opacity: 0;
+      transform: translateY(-24px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  .animate-toastIn {
+    animation: slideInMobile 0.35s cubic-bezier(0.21, 1.02, 0.73, 1) forwards;
+  }
+  @media (min-width: 640px) {
+    .animate-toastIn {
+      animation: slideInDesktop 0.35s cubic-bezier(0.21, 1.02, 0.73, 1) forwards;
+    }
   }
 }

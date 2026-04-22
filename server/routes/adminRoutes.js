@@ -54,8 +54,8 @@ router.use(protect);
 router.route("/users").get(authorize(ROLES.SUPER_ADMIN, ROLES.ADMIN), listUsers).post(authorize(ROLES.SUPER_ADMIN, ROLES.ADMIN), createUser);
 router.route("/users/:id").put(authorize(ROLES.SUPER_ADMIN, ROLES.ADMIN), updateUser).delete(authorize(ROLES.SUPER_ADMIN, ROLES.ADMIN), deactivateUser);
 
-router.route("/campuses").get(authorize(ROLES.SUPER_ADMIN, ROLES.ADMIN), listCampuses).post(authorize(ROLES.SUPER_ADMIN), upload.single("image"), createCampus);
-router.route("/campuses/:id").put(authorize(ROLES.SUPER_ADMIN), upload.single("image"), updateCampus).delete(authorize(ROLES.SUPER_ADMIN), deleteCampus);
+router.route("/campuses").get(authorize(ROLES.SUPER_ADMIN, ROLES.ADMIN), listCampuses).post(authorize(ROLES.SUPER_ADMIN), createCampus);
+router.route("/campuses/:id").put(authorize(ROLES.SUPER_ADMIN), updateCampus).delete(authorize(ROLES.SUPER_ADMIN), deleteCampus);
 
 router.route("/courses").get(authorize(ROLES.SUPER_ADMIN, ROLES.ADMIN), listCourses).post(authorize(ROLES.ADMIN), createCourse);
 router.route("/courses/:id").put(authorize(ROLES.ADMIN), updateCourse).delete(authorize(ROLES.ADMIN), deleteCourse);

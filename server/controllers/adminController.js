@@ -431,19 +431,6 @@ export const createCampus = asyncHandler(async (req, res) => {
     contact: req.body.contact,
   };
 
-  if (req.file) {
-    const uploaded = await uploadBufferToCloudinary(
-      req.file.buffer,
-      "the-best-college/campuses",
-      "image",
-      {
-        originalName: req.file.originalname,
-        mimeType: req.file.mimetype,
-      },
-    );
-    payload.image = { publicId: uploaded.public_id, url: uploaded.secure_url };
-  }
-
   const campus = await Campus.create(payload);
   res.status(201).json({ success: true, data: campus });
 });
@@ -461,23 +448,6 @@ export const updateCampus = asyncHandler(async (req, res) => {
 
   const updatePayload = { ...req.body };
 
-  if (req.file) {
-    await deleteFromCloudinary(campus.image?.publicId, "image");
-    const uploaded = await uploadBufferToCloudinary(
-      req.file.buffer,
-      "the-best-college/campuses",
-      "image",
-      {
-        originalName: req.file.originalname,
-        mimeType: req.file.mimetype,
-      },
-    );
-    updatePayload.image = {
-      publicId: uploaded.public_id,
-      url: uploaded.secure_url,
-    };
-  }
-
   const updated = await Campus.findByIdAndUpdate(req.params.id, updatePayload, {
     new: true,
     runValidators: true,
@@ -492,7 +462,6 @@ export const deleteCampus = asyncHandler(async (req, res) => {
   const campus = await Campus.findById(req.params.id);
   if (!campus) throw new ApiError(404, "Campus not found");
 
-  await deleteFromCloudinary(campus.image?.publicId, "image");
   await campus.deleteOne();
   res.status(200).json({ success: true, message: "Campus deleted" });
 });

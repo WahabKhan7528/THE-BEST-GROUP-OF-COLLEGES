@@ -70,10 +70,6 @@ const campusSchema = new mongoose.Schema(
       email: String,
       website: String,
     },
-    image: {
-      publicId: String,
-      url: String,
-    },
   },
   { timestamps: true, id: false },
 );

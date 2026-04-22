@@ -47,20 +47,16 @@ export const register = asyncHandler(async (req, res) => {
 });
 
 export const login = asyncHandler(async (req, res) => {
-  const rawLoginId =
-    req.body.loginId || req.body.id || req.body.portalId || req.body.email;
+  const rawLoginId = req.body.id || req.body.portalId;
   const loginId = typeof rawLoginId === "string" ? rawLoginId.trim() : "";
   const { password } = req.body;
 
   if (!loginId || !password) {
-    throw new ApiError(400, "loginId and password are required");
+    throw new ApiError(400, "id and password are required");
   }
 
   const user = await User.findOne({
-    $or: [
-      { portalId: loginId.toUpperCase() },
-      { email: loginId.toLowerCase() },
-    ],
+    portalId: loginId.toUpperCase(),
   }).select("+password");
 
   if (!user || !user.isActive) throw new ApiError(401, "Invalid credentials");
@@ -77,7 +73,6 @@ export const login = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Login successful",
-    accessToken: tokens.accessToken,
     user: {
       id: user._id,
       portalId: user.portalId,
@@ -118,7 +113,6 @@ export const refreshSession = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Session refreshed",
-    accessToken: tokens.accessToken,
   });
 });
 

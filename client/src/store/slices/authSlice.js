@@ -9,7 +9,7 @@ export const loginUser = createAsyncThunk(
       const normalizedLoginId =
         typeof loginId === "string" ? loginId.trim() : loginId;
       const { data } = await authApi.login({
-        loginId: normalizedLoginId,
+        id: normalizedLoginId,
         password,
       });
       const user = data.user;

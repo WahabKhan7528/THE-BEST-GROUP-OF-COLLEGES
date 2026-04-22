@@ -17,16 +17,13 @@ const http = axios.create({
   withCredentials: true,
 });
 
-let accessToken =
-  typeof window !== "undefined"
-    ? window.localStorage.getItem(ACCESS_TOKEN_KEY)
-    : null;
-
 export const setAccessToken = (token) => {
-  accessToken = token || null;
+  // Auth now relies on HTTP-only cookies. Keep this for backward compatibility
+  // with existing imports, but only clear any legacy localStorage token.
+  const nextToken = token || null;
   if (typeof window !== "undefined") {
-    if (accessToken) {
-      window.localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+    if (nextToken) {
+      window.localStorage.setItem(ACCESS_TOKEN_KEY, nextToken);
     } else {
       window.localStorage.removeItem(ACCESS_TOKEN_KEY);
     }
@@ -45,33 +42,12 @@ const processQueue = () => {
   pendingQueue = [];
 };
 
-http.interceptors.request.use((config) => {
-  if (accessToken) {
-    config.headers = config.headers || {};
-    if (!config.headers.Authorization) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    }
-  }
-
-  return config;
-});
-
 http.interceptors.response.use(
   (response) => {
     const url = response?.config?.url || "";
-    const tokenFromResponse = response?.data?.accessToken;
-
-    if (
-      tokenFromResponse &&
-      (url.includes("/auth/login") || url.includes("/auth/refresh"))
-    ) {
-      setAccessToken(tokenFromResponse);
-    }
-
     if (url.includes("/auth/logout")) {
       clearAccessToken();
     }
-
     return response;
   },
   async (error) => {
@@ -104,9 +80,7 @@ http.interceptors.response.use(
         { withCredentials: true },
       );
 
-      if (data?.accessToken) {
-        setAccessToken(data.accessToken);
-      }
+      void data;
 
       processQueue();
       return http(originalRequest);

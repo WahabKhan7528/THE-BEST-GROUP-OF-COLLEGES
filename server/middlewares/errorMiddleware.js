@@ -34,8 +34,15 @@ export const errorHandler = (err, req, res, next) => {
     statusCode = 400;
   }
 
-  if (err.name === "JsonWebTokenError") message = "Invalid token";
-  if (err.name === "TokenExpiredError") message = "Token expired";
+  if (err.name === "JsonWebTokenError") {
+    message = "Invalid token";
+    statusCode = 401;
+  }
+
+  if (err.name === "TokenExpiredError") {
+    message = "Token expired";
+    statusCode = 401;
+  }
 
   res.status(statusCode).json({
     success: false,
