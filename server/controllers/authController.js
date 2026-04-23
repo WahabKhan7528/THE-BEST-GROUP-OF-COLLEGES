@@ -65,7 +65,7 @@ export const login = asyncHandler(async (req, res) => {
   if (!validPassword) throw new ApiError(401, "Invalid credentials");
 
   const tokens = await issueTokens(user, req);
-  setAuthCookies(res, tokens.accessToken, tokens.refreshToken);
+  setAuthCookies(res, tokens.accessToken, tokens.refreshToken, req);
 
   user.lastLoginAt = new Date();
   await user.save();
@@ -108,7 +108,7 @@ export const refreshSession = asyncHandler(async (req, res) => {
   await storedToken.save();
 
   const tokens = await issueTokens(user, req);
-  setAuthCookies(res, tokens.accessToken, tokens.refreshToken);
+  setAuthCookies(res, tokens.accessToken, tokens.refreshToken, req);
 
   res.status(200).json({
     success: true,
@@ -125,7 +125,7 @@ export const logout = asyncHandler(async (req, res) => {
     );
   }
 
-  clearAuthCookies(res);
+  clearAuthCookies(res, req);
 
   res.status(200).json({ success: true, message: "Logged out" });
 });

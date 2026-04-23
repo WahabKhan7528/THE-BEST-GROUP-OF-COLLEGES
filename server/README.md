@@ -131,6 +131,7 @@ Required environment variables in Render:
 - `CLOUDINARY_API_SECRET`
 - `FRONTEND_URL` (comma-separated allowed origins, include your Vercel domain)
 - `FRONTEND_URL_REGEX` (optional; useful for Vercel preview deployments)
+- `COOKIE_SECURE` (optional; set `true` to force `Secure` + `SameSite=None` cookies)
 - `SERVER_PUBLIC_URL` (optional; Render also injects `RENDER_EXTERNAL_URL`)
 
 Example production CORS values:

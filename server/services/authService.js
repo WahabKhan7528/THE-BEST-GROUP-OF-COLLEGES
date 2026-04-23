@@ -1,12 +1,33 @@
 import RefreshToken from "../models/RefreshToken.js";
 import { hashToken, signAccessToken, signRefreshToken } from "../utils/token.js";
 
-const getCookieConfig = () => {
-  const secure = process.env.NODE_ENV === "production";
+const resolveCookieSecurity = (req) => {
+  const explicitSecure = process.env.COOKIE_SECURE?.trim().toLowerCase();
+  if (explicitSecure === "true") {
+    return { secure: true, sameSite: "none" };
+  }
+  if (explicitSecure === "false") {
+    return { secure: false, sameSite: "lax" };
+  }
+
+  const forwardedProto = req?.headers?.["x-forwarded-proto"];
+  const isHttpsViaProxy =
+    typeof forwardedProto === "string" &&
+    forwardedProto.split(",")[0].trim().toLowerCase() === "https";
+  const secure = Boolean(req?.secure) || isHttpsViaProxy;
+
+  return {
+    secure,
+    sameSite: secure ? "none" : "lax",
+  };
+};
+
+const getCookieConfig = (req) => {
+  const { secure, sameSite } = resolveCookieSecurity(req);
   return {
     httpOnly: true,
     secure,
-    sameSite: secure ? "none" : "lax",
+    sameSite,
     path: "/",
   };
 };
@@ -31,8 +52,8 @@ export const issueTokens = async (user, req) => {
   return { accessToken, refreshToken, expiresAt };
 };
 
-export const setAuthCookies = (res, accessToken, refreshToken) => {
-  const cookieConfig = getCookieConfig();
+export const setAuthCookies = (res, accessToken, refreshToken, req) => {
+  const cookieConfig = getCookieConfig(req);
 
   res.cookie("accessToken", accessToken, {
     ...cookieConfig,
@@ -46,7 +67,13 @@ export const setAuthCookies = (res, accessToken, refreshToken) => {
 };
 
 export const clearAuthCookies = (res) => {
-  const cookieConfig = getCookieConfig();
-  res.clearCookie("accessToken", cookieConfig);
-  res.clearCookie("refreshToken", cookieConfig);
+  const clearCandidates = [
+    { path: "/", httpOnly: true, secure: true, sameSite: "none" },
+    { path: "/", httpOnly: true, secure: false, sameSite: "lax" },
+  ];
+
+  for (const cookieConfig of clearCandidates) {
+    res.clearCookie("accessToken", cookieConfig);
+    res.clearCookie("refreshToken", cookieConfig);
+  }
 };
