@@ -20,6 +20,8 @@ import {
 import { adminApi } from "../../../services/api";
 import { createCampusMatcher } from "../../../utils/campusMatch";
 
+const getRefId = (value) => value?._id || value?.id || value || "";
+
 const UsersList = () => {
   const navigate = useNavigate();
   const { campuses, isSuperAdmin, currentAdmin, isDarkMode } = useAdminContext();
@@ -29,16 +31,28 @@ const UsersList = () => {
   const [selectedRole, setSelectedRole] = useState("");
   const [selectedCampus, setSelectedCampus] = useState("");
   const [users, setUsers] = useState([]);
+  const [courses, setCourses] = useState([]);
+  const [subjects, setSubjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadUsers = async () => {
       setIsLoading(true);
       try {
-        const { data } = await adminApi.users();
+        const [usersRes, coursesRes, subjectsRes] = await Promise.all([
+          adminApi.users(),
+          adminApi.courses(),
+          adminApi.subjects(),
+        ]);
+
+        const { data } = usersRes;
         setUsers(data.data || []);
+        setCourses(coursesRes.data.data || []);
+        setSubjects(subjectsRes.data.data || []);
       } catch {
         setUsers([]);
+        setCourses([]);
+        setSubjects([]);
       } finally {
         setIsLoading(false);
       }
@@ -53,9 +67,14 @@ const UsersList = () => {
 
     if (!isSuperAdmin) {
       result = result.filter(
-        (user) => matchesCampus(user.campus, currentAdmin?.campus),
+        (user) =>
+          user.role === "faculty" ||
+          (user.role === "student" &&
+            matchesCampus(user.campus, currentAdmin?.campus)),
       );
-      result = result.filter((user) => user.role === "faculty" || user.role === "student");
+      result = result.filter(
+        (user) => user.role === "faculty" || user.role === "student",
+      );
     }
 
     if (selectedRole) {
@@ -83,6 +102,51 @@ const UsersList = () => {
   const getCampusesDisplay = (campusObjOrId) => {
     const id = campusObjOrId?._id || campusObjOrId;
     return campuses.find((c) => c.id === id)?.code || campusObjOrId?.code || "N/A";
+  };
+
+  const courseById = useMemo(() => {
+    const map = new Map();
+    courses.forEach((course) => {
+      const id = getRefId(course);
+      if (id) map.set(String(id), course);
+    });
+    return map;
+  }, [courses]);
+
+  const subjectById = useMemo(() => {
+    const map = new Map();
+    subjects.forEach((subject) => {
+      const id = getRefId(subject);
+      if (id) map.set(String(id), subject);
+    });
+    return map;
+  }, [subjects]);
+
+  const getCourseLabel = (courseValue) => {
+    const course = courseById.get(String(getRefId(courseValue)));
+    return course?.title || course?.code || courseValue?.title || courseValue?.code || courseValue || "Not assigned";
+  };
+
+  const getSubjectLabel = (subjectValue) => {
+    const subject = subjectById.get(String(getRefId(subjectValue)));
+    return subject?.name || subject?.code || subjectValue?.name || subjectValue?.code || subjectValue || "";
+  };
+
+  const getAcademicDisplay = (row) => {
+    if (row.role === "student") {
+      return getCourseLabel(row.currentCourse) || row.department || "Not assigned";
+    }
+
+    if (row.role === "faculty") {
+      const assignedSubjects = Array.isArray(row.subjects)
+        ? row.subjects.map((subject) => getSubjectLabel(subject)).filter(Boolean)
+        : [];
+      return assignedSubjects.length > 0
+        ? assignedSubjects.join(", ")
+        : row.subjectSpecialization || row.department || "Not assigned";
+    }
+
+    return row.department || row.subjectSpecialization || getCourseLabel(row.currentCourse) || "N/A";
   };
 
   const columns = [
@@ -116,7 +180,15 @@ const UsersList = () => {
       }
     },
     { key: "portalId", label: "ID" },
-    { key: "department", label: "Department / Subject / Course" },
+    {
+      key: "department",
+      label: "Subject / Course",
+      render: (row) => (
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          {getAcademicDisplay(row)}
+        </span>
+      ),
+    },
     {
       key: "campus",
       label: "Campuses",

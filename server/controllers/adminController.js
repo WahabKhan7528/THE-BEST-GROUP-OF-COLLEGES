@@ -27,6 +27,8 @@ const uniqueIds = (items = []) => [
     items.map((item) => String(item?._id || item || "")).filter(Boolean),
   ),
 ];
+const normalizeIdList = (value) =>
+  uniqueIds(Array.isArray(value) ? value : value ? [value] : []);
 const assertValidObjectId = (value, fieldName) => {
   if (!mongoose.isValidObjectId(value)) {
     throw new ApiError(400, `Invalid ${fieldName}`);
@@ -262,14 +264,31 @@ export const listUsers = asyncHandler(async (req, res) => {
   if (req.query.role) filter.role = req.query.role;
   if (req.query.campus) filter.campus = req.query.campus;
   if (req.user.role === ROLES.ADMIN) {
-    filter.campus = req.user.campus?._id || req.user.campus;
+    const adminCampusId = req.user.campus?._id || req.user.campus;
+
     if (
       req.query.role &&
-      ALLOWED_ADMIN_MANAGED_ROLES.includes(req.query.role)
+      !ALLOWED_ADMIN_MANAGED_ROLES.includes(req.query.role)
     ) {
-      filter.role = req.query.role;
+      throw new ApiError(
+        403,
+        "Sub-admin can only view faculty and student accounts",
+      );
+    }
+
+    if (req.query.role === ROLES.FACULTY) {
+      filter.role = ROLES.FACULTY;
+      delete filter.campus;
+    } else if (req.query.role === ROLES.STUDENT) {
+      filter.role = ROLES.STUDENT;
+      filter.campus = adminCampusId;
     } else {
-      filter.role = { $in: ALLOWED_ADMIN_MANAGED_ROLES };
+      delete filter.role;
+      delete filter.campus;
+      filter.$or = [
+        { role: ROLES.FACULTY },
+        { role: ROLES.STUDENT, campus: adminCampusId },
+      ];
     }
   }
   if (req.query.includeInactive === "true") {
@@ -279,6 +298,8 @@ export const listUsers = asyncHandler(async (req, res) => {
 
   const users = await User.find(filter)
     .populate("campus", "name code slug")
+    .populate("currentCourse", "title code")
+    .populate("subjects", "name code")
     .sort("name");
   res.status(200).json({ success: true, count: users.length, data: users });
 });
@@ -579,7 +600,7 @@ export const createSubject = asyncHandler(async (req, res) => {
   delete payload.code;
   payload.semester = null;
   payload.annualYear = null;
-  payload.faculty = [];
+  payload.faculty = normalizeIdList(payload.faculty);
 
   const selectedCourse = payload.course
     ? await Course.findById(payload.course).select("campuses")
@@ -606,6 +627,14 @@ export const listSubjects = asyncHandler(async (req, res) => {
     .populate("course", "title code campuses")
     .populate("faculty", "name portalId")
     .sort("name");
+
+  const facultyUsers = await User.find({
+    role: ROLES.FACULTY,
+    isActive: true,
+  })
+    .select("name portalId subjects campus")
+    .populate("subjects", "name code")
+    .populate("campus", "name code slug");
 
   const subjectIds = subjects.map((subject) => subject._id);
   const classRooms = await ClassRoom.find({
@@ -650,6 +679,18 @@ export const listSubjects = asyncHandler(async (req, res) => {
 
     campusesBySubjectId.get(normalizedSubjectId).add(normalizedCampusId);
   };
+
+  facultyUsers.forEach((facultyUser) => {
+    const faculty = {
+      _id: facultyUser._id,
+      name: facultyUser.name || "Faculty",
+      portalId: facultyUser.portalId || "",
+    };
+
+    (facultyUser.subjects || []).forEach((subject) => {
+      addFaculty(subject?._id || subject, faculty);
+    });
+  });
 
   classRooms.forEach((classRoom) => {
     const classCampusId = String(
@@ -726,7 +767,7 @@ export const updateSubject = asyncHandler(async (req, res) => {
   delete payload.code;
   payload.semester = null;
   payload.annualYear = null;
-  payload.faculty = [];
+  payload.faculty = normalizeIdList(payload.faculty);
 
   const selectedCourse = payload.course
     ? await Course.findById(payload.course).select("campuses")

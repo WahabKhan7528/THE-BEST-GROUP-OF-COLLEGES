@@ -4,6 +4,7 @@ export const subjectSchema = z.object({
   name: z.string().min(2, "Subject name is required"),
   code: z.string().optional(),
   course: z.string().optional(),
+  faculty: z.array(z.string()).optional(),
   campuses: z.array(z.string()).optional(),
   creditHours: z.coerce
     .number()

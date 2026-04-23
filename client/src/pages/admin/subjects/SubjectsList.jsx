@@ -113,7 +113,7 @@ const SubjectsList = () => {
         </Badge>
       )
     },
-    ...(isSuperAdmin ? [{
+    {
       key: "faculty",
       label: "Faculty",
       render: (row) => (
@@ -124,7 +124,8 @@ const SubjectsList = () => {
           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{row.facultyName}</span>
         </div>
       )
-    }, {
+    },
+    ...(isSuperAdmin ? [{
       key: "campuses",
       label: "Campuses",
       render: (row) => (

@@ -20,6 +20,7 @@ const EditSubject = () => {
   const confirmDialog = useConfirm();
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
+  const [facultyUsers, setFacultyUsers] = useState([]);
   const [subjectCode, setSubjectCode] = useState("");
   const [loading, setLoading] = useState(true);
   const currentCampusId =
@@ -41,6 +42,7 @@ const EditSubject = () => {
   } = useForm({
     resolver: zodResolver(subjectSchema),
     defaultValues: {
+      faculty: [],
       campuses: [],
     },
   });
@@ -50,12 +52,14 @@ const EditSubject = () => {
       if (!currentAdmin) return;
 
       try {
-        const [subjectsRes, coursesRes] = await Promise.all([
+        const [subjectsRes, coursesRes, facultyRes] = await Promise.all([
           adminApi.subjects(),
           adminApi.courses(),
+          adminApi.users({ role: "faculty" }),
         ]);
 
         setCourses(coursesRes.data.data || []);
+        setFacultyUsers(facultyRes.data.data || []);
         const currentSubject = (subjectsRes.data.data || []).find(
           (subject) => subject._id === id,
         );
@@ -69,6 +73,9 @@ const EditSubject = () => {
         reset({
           name: currentSubject.name || "",
           course: currentSubject.course?._id || currentSubject.course || "",
+          faculty: (currentSubject.faculty || []).map(
+            (faculty) => faculty?._id || faculty,
+          ),
           campuses: (currentSubject.campuses || []).map(
             (campus) => campus?._id || campus,
           ),
@@ -91,6 +98,7 @@ const EditSubject = () => {
       await adminApi.updateSubject(id, {
         name: values.name,
         course: values.course || null,
+        faculty: values.faculty || [],
         campuses: values.campuses || [],
         creditHours: values.creditHours
           ? Number(values.creditHours)
@@ -198,6 +206,30 @@ const EditSubject = () => {
               }))}
               placeholder="Select course..."
             />
+
+            <div className="col-span-1 md:col-span-2">
+              <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-1.5">
+                Assigned Faculty
+              </label>
+              <select
+                multiple
+                {...register("faculty")}
+                className="w-full px-4 py-2.5 bg-white dark:bg-college-navy/50 border border-college-navy/10 dark:border-college-gold/20 rounded-sm min-h-[140px] focus:outline-none focus:ring-2 focus:ring-college-navy/10 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold transition-all dark:text-white font-bold"
+              >
+                {facultyUsers.map((faculty) => (
+                  <option
+                    key={faculty._id || faculty.id}
+                    value={faculty._id || faculty.id}
+                    className="dark:bg-college-navy dark:text-white font-semibold"
+                  >
+                    {faculty.name} ({faculty.portalId})
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Hold Ctrl or Cmd to select multiple faculty members.
+              </p>
+            </div>
 
             {isSuperAdmin && (
               <div className="col-span-1 md:col-span-2">

@@ -15,6 +15,7 @@ const CreateSubject = () => {
   const toast = useToast();
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
+  const [facultyUsers, setFacultyUsers] = useState([]);
   const currentCampusId =
     currentAdmin?.campus?._id || currentAdmin?.campus || "";
   const visibleCourses = useMemo(() => {
@@ -36,6 +37,7 @@ const CreateSubject = () => {
       name: "",
       creditHours: "",
       course: "",
+        faculty: [],
       campuses: [],
       isElective: false,
       description: "",
@@ -47,10 +49,15 @@ const CreateSubject = () => {
       if (!currentAdmin) return;
 
       try {
-        const { data } = await adminApi.courses();
-        setCourses(data.data || []);
+        const [coursesRes, facultyRes] = await Promise.all([
+          adminApi.courses(),
+          adminApi.users({ role: "faculty" }),
+        ]);
+        setCourses(coursesRes.data.data || []);
+        setFacultyUsers(facultyRes.data.data || []);
       } catch {
         toast.error("Failed to load courses");
+        setFacultyUsers([]);
       }
     };
 
@@ -62,6 +69,7 @@ const CreateSubject = () => {
       await adminApi.createSubject({
         name: values.name,
         course: values.course || null,
+        faculty: values.faculty || [],
         campuses: values.campuses || [],
         creditHours: values.creditHours
           ? Number(values.creditHours)
@@ -180,6 +188,32 @@ const CreateSubject = () => {
             className="w-full px-4 py-2.5 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 resize-none dark:text-white"
             placeholder="Describe the subject..."
           />
+        </div>
+      </PortalForm.Section>
+
+      <PortalForm.Section title="Faculty Assignment">
+        <div className="col-span-1 md:col-span-2">
+          <label className="text-[10px] md:text-xs text-college-navy/60 dark:text-college-gold/80 font-black uppercase tracking-[0.2em] block mb-1.5">
+            Assigned Faculty
+          </label>
+          <select
+            multiple
+            {...register("faculty")}
+            className="w-full px-4 py-2.5 bg-white dark:bg-college-navy/50 border border-college-navy/10 dark:border-college-gold/20 rounded-sm min-h-[140px] focus:outline-none focus:ring-2 focus:ring-college-navy/10 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold transition-all dark:text-white font-bold"
+          >
+            {facultyUsers.map((faculty) => (
+              <option
+                key={faculty._id || faculty.id}
+                value={faculty._id || faculty.id}
+                className="dark:bg-college-navy dark:text-white font-semibold"
+              >
+                {faculty.name} ({faculty.portalId})
+              </option>
+            ))}
+          </select>
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            Hold Ctrl or Cmd to select multiple faculty members.
+          </p>
         </div>
       </PortalForm.Section>
     </PortalForm>
