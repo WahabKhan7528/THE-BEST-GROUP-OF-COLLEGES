@@ -68,7 +68,7 @@ Optional env overrides:
 
 ### Admin (super_admin/admin)
 
-- Users: `POST/GET /api/v1/admin/users`, `PUT/DELETE /api/v1/admin/users/:id`
+- Users: `POST/GET /api/v1/admin/users`, `PUT /api/v1/admin/users/:id`, `DELETE /api/v1/admin/users/:id` (deactivate only)
 - Campuses: `POST/GET /api/v1/admin/campuses`, `PUT/DELETE /api/v1/admin/campuses/:id`
 - Courses: `POST/GET /api/v1/admin/courses`, `PUT/DELETE /api/v1/admin/courses/:id`
 - Classes: `POST/GET /api/v1/admin/classes`, `PUT/DELETE /api/v1/admin/classes/:id`

@@ -207,13 +207,13 @@ const UsersList = () => {
       className: "text-emerald-600 hover:text-emerald-700 font-medium bg-emerald-50 border border-emerald-100 dark:bg-emerald-900 dark:border-transparent dark:text-gray-300 dark:hover:bg-emerald-800",
     },
     {
-      label: "Delete",
+      label: "Deactivate",
       onClick: async () => {
-        const confirmed = await confirm({ title: "Delete User", message: "Are you sure you want to delete this user?", confirmText: "Delete", variant: "danger" });
+        const confirmed = await confirm({ title: "Deactivate User", message: "Are you sure you want to deactivate this user?", confirmText: "Deactivate", variant: "danger" });
         if (confirmed) {
-          await adminApi.disableUser(row._id);
+          await adminApi.deactivateUser(row._id);
           setUsers((prev) => prev.filter((user) => user._id !== row._id));
-          toast.success("User deleted");
+          toast.success("User deactivated");
         }
       },
       className: "text-red-600 hover:text-red-700 font-medium bg-red-50 border border-red-100 dark:bg-red-900 dark:border-transparent dark:text-gray-300 dark:hover:bg-red-800",

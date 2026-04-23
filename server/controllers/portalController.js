@@ -745,6 +745,13 @@ export const submitAssignment = asyncHandler(async (req, res) => {
     student: req.user._id,
   });
 
+  if (existingSubmission) {
+    throw new ApiError(
+      409,
+      "You have already submitted this assignment. Multiple submissions are not allowed",
+    );
+  }
+
   const uploaded = await uploadBufferToCloudinary(
     req.file.buffer,
     "the-best-college/submissions",
@@ -758,26 +765,18 @@ export const submitAssignment = asyncHandler(async (req, res) => {
   const isLate = new Date() > new Date(assignment.dueDate);
 
   try {
-    const submission = await Submission.findOneAndUpdate(
-      { assignment: assignment._id, student: req.user._id },
-      {
-        assignment: assignment._id,
-        student: req.user._id,
-        file: {
-          publicId: uploaded.public_id,
-          url: uploaded.secure_url,
-          resourceType: uploaded.resource_type,
-        },
-        submittedAt: new Date(),
-        status: isLate ? "late" : "on_time",
+    const submission = await Submission.create({
+      assignment: assignment._id,
+      student: req.user._id,
+      file: {
+        publicId: uploaded.public_id,
+        url: uploaded.secure_url,
+        resourceType: uploaded.resource_type,
       },
-      { upsert: true, new: true, runValidators: true },
-    );
+      submittedAt: new Date(),
+      status: isLate ? "late" : "on_time",
+    });
 
-    await deleteFromCloudinary(
-      existingSubmission?.file?.publicId,
-      existingSubmission?.file?.resourceType || "auto",
-    );
     res.status(201).json({ success: true, data: submission });
   } catch (error) {
     await cleanupUploadedAsset({

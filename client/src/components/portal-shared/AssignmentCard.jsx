@@ -19,14 +19,12 @@ const AssignmentCard = ({ assignment, role = 'faculty', onDeleted }) => {
     const [note, setNote] = useState('');
     const [fileName, setFileName] = useState('');
     const [localStatus, setLocalStatus] = useState(assignment.status);
-    const [isEditing, setIsEditing] = useState(false);
     const [submissionFile, setSubmissionFile] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
         setLocalStatus(assignment.status);
-        setIsEditing(false);
         setNote('');
         setFileName('');
         setSubmissionFile(null);
@@ -39,10 +37,10 @@ const AssignmentCard = ({ assignment, role = 'faculty', onDeleted }) => {
     };
 
     if (role === 'student') {
-        const displayStatus = isEditing ? 'Editing' : localStatus;
+        const displayStatus = localStatus;
         const badge = statusStyles[displayStatus] || statusStyles[assignment.status] || 'bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-100 dark:border-gray-700';
         
-        const isSubmitted = localStatus === 'Submitted' && !isEditing;
+        const isSubmitted = localStatus === 'Submitted';
 
         const handleSubmit = async () => {
             if (!submissionFile) {
@@ -58,7 +56,6 @@ const AssignmentCard = ({ assignment, role = 'faculty', onDeleted }) => {
                 setIsSubmitting(true);
                 await portalApi.submitAssignment(formData);
                 setLocalStatus('Submitted');
-                setIsEditing(false);
                 toast.success('Assignment submitted successfully.');
             } catch (error) {
                 toast.error(error?.response?.data?.message || 'Failed to submit assignment.');
@@ -136,13 +133,12 @@ const AssignmentCard = ({ assignment, role = 'faculty', onDeleted }) => {
                         Original status: {assignment.status}
                     </p>
                     {isSubmitted ? (
-                        <PublicButton onClick={() => setIsEditing(true)} variant="outline" size="sm" className="shadow-sm border-gray-300 dark:border-college-gold/30">
-                            <Pencil size={14} className="mr-1.5" />
-                            Edit Assignment
-                        </PublicButton>
+                        <p className="text-[11px] md:text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                            Submission recorded. Resubmission is not allowed.
+                        </p>
                     ) : (
                         <PublicButton onClick={handleSubmit} variant="secondary" shape="slanted" size="sm" className="shadow-md">
-                            {isSubmitting ? 'Submitting...' : localStatus === 'Submitted' ? 'Save Changes' : 'Submit Assignment'}
+                            {isSubmitting ? 'Submitting...' : 'Submit Assignment'}
                         </PublicButton>
                     )}
                 </div>

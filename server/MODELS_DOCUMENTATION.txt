@@ -637,11 +637,11 @@ When deleting a record, consider:
 5. Delete Assignment:
    - Remove all Submissions
 
-6. Delete User:
-   - Remove all RefreshTokens
-   - Remove all StudentEnrollments (if student)
-   - Remove all ClassSubjects (if faculty)
-   - Update References (createdBy, uploadedBy fields become null)
+6. Deactivate User:
+   - Set `isActive = false` and `status = Inactive`
+   - Preserve enrollments, results, submissions, and audit references
+   - Block login/session usage through inactive checks
+   - Keep historical relationships intact for reporting
 
 7. Delete StudentEnrollment:
    - Remove all Results for enrollment

@@ -242,11 +242,13 @@ const EditUser = () => {
     if (!confirmed) return;
 
     try {
-      await adminApi.disableUser(id);
-      toast.success("User disabled");
+      await adminApi.deactivateUser(id);
+      toast.success("User deactivated");
       navigate("/admin/users");
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Failed to disable user");
+      toast.error(
+        error?.response?.data?.message || "Failed to deactivate user",
+      );
     }
   };
 
@@ -262,7 +264,7 @@ const EditUser = () => {
       submitting={isSubmitting}
       headerActions={
         <PublicButton onClick={handleDelete} variant="danger" size="sm" icon={Trash2} type="button">
-          Disable
+          Deactivate
         </PublicButton>
       }
     >

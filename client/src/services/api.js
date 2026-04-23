@@ -23,7 +23,7 @@ export const adminApi = {
   createUser: (payload) => http.post("/admin/users", payload),
   users: (params) => http.get("/admin/users", { params }),
   updateUser: (id, payload) => http.put(`/admin/users/${id}`, payload),
-  disableUser: (id) => http.delete(`/admin/users/${id}`),
+  deactivateUser: (id) => http.delete(`/admin/users/${id}`),
 
   createCourse: (payload) => http.post("/admin/courses", payload),
   courses: () => http.get("/admin/courses"),
