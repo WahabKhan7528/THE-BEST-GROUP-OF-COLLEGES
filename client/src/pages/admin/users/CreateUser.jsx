@@ -378,7 +378,7 @@ const CreateUser = () => {
               className="w-full px-4 py-2.5 bg-white dark:bg-college-navy/50 border border-college-navy/10 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/10 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold transition-all min-h-[140px] text-gray-900 dark:text-white font-bold"
             >
               {filteredSubjects.map((subject) => (
-                <option key={subject._id} value={subject._id}>
+                <option key={subject._id} value={subject._id} className="dark:bg-college-navy dark:text-white font-semibold flex items-center px-2 py-1">
                   {subject.name} ({subject.code})
                 </option>
               ))}

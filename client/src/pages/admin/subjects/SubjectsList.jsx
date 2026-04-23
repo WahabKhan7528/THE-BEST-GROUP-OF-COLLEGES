@@ -13,6 +13,7 @@ import {
   BookOpen,
   Building2,
   Hash,
+  ChevronDown,
 } from "lucide-react";
 import { adminApi } from "../../../services/api";
 import { createCampusMatcher } from "../../../utils/campusMatch";
@@ -187,20 +188,25 @@ const SubjectsList = () => {
 
           {/* Campus Filter (Super Admin) */}
           {isSuperAdmin && (
-            <div className="relative">
-              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10 text-college-navy/40 dark:text-college-gold/50 group-hover:text-college-navy dark:group-hover:text-college-gold transition-colors">
+                <Filter size={18} />
+              </div>
               <select
                 value={selectedCampus}
                 onChange={(e) => setSelectedCampus(e.target.value)}
-                className="w-full pl-10 pr-8 py-2 bg-gray-50/50 dark:bg-college-navy/50 border border-gray-200 dark:border-college-gold/20 rounded-sm focus:outline-none focus:ring-2 focus:ring-college-navy/20 dark:focus:ring-college-gold/20 focus:border-college-navy dark:focus:border-college-gold transition-all text-sm appearance-none cursor-pointer dark:text-gray-300"
+                className="w-full pl-10 pr-10 py-2.5 md:py-3.5 bg-white dark:bg-college-navy/50 border border-college-navy/10 dark:border-college-gold/20 rounded-sm shadow-sm transition-all appearance-none dark:text-white font-bold text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-college-navy/10 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold disabled:opacity-50 disabled:bg-gray-100 dark:disabled:bg-black/20 disabled:cursor-not-allowed cursor-pointer"
               >
-                <option value="">All Campuses</option>
+                <option value="" className="dark:bg-college-navy dark:text-white">All Campuses</option>
                 {campuses.map((campus) => (
-                  <option key={campus.id} value={campus.id}>
+                  <option key={campus.id} value={campus.id} className="dark:bg-college-navy dark:text-white">
                     {campus.name}
                   </option>
                 ))}
               </select>
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-college-navy/40 dark:text-college-gold/50 group-hover:text-college-navy dark:group-hover:text-college-gold transition-colors">
+                <ChevronDown size={18} />
+              </div>
             </div>
           )}
         </div>

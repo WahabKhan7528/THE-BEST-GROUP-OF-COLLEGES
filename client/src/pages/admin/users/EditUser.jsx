@@ -397,7 +397,7 @@ const EditUser = () => {
               className="w-full px-4 py-3 bg-white dark:bg-college-navy/50 border border-college-navy/10 dark:border-college-gold/20 rounded-sm min-h-[140px] focus:outline-none focus:ring-2 focus:ring-college-navy/10 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold transition-all dark:text-white font-bold"
             >
               {filteredSubjects.map((subject) => (
-                <option key={subject._id} value={subject._id} className="py-1">
+                <option key={subject._id} value={subject._id} className="py-1 dark:bg-college-navy dark:text-white font-semibold px-2">
                   {subject.name} ({subject.code})
                 </option>
               ))}

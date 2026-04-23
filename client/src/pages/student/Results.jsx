@@ -93,15 +93,18 @@ const StudentResults = () => {
               <select
                 value={selectedSemesterId}
                 onChange={(e) => setSelectedSemesterId(e.target.value)}
-                className="w-full appearance-none bg-white dark:bg-college-navy text-college-navy dark:text-white border border-college-navy/10 dark:border-college-gold/30 py-3 md:py-4 pl-5 pr-12 text-sm md:text-base rounded-sm focus:outline-none focus:ring-4 focus:ring-college-gold/10 focus:border-college-gold font-bold cursor-pointer transition-all hover:bg-slate-50 dark:hover:bg-college-navy/90"
+                className="w-full px-4 py-2.5 md:py-3.5 bg-white dark:bg-college-navy/50 border border-college-navy/10 dark:border-college-gold/20 rounded-sm shadow-sm transition-all appearance-none dark:text-white font-bold text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-college-navy/10 dark:focus:ring-college-gold/10 focus:border-college-navy dark:focus:border-college-gold disabled:opacity-50 disabled:bg-gray-100 dark:disabled:bg-black/20 disabled:cursor-not-allowed cursor-pointer"
               >
-                <option value="all">All Semesters</option>
+                <option value="all" className="dark:bg-college-navy dark:text-white">All Semesters</option>
                 {semesters.map((sem) => (
-                  <option key={sem.id} value={sem.id}>
+                  <option key={sem.id} value={sem.id} className="dark:bg-college-navy dark:text-white">
                     {sem.name}
                   </option>
                 ))}
               </select>
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-college-navy/40 dark:text-college-gold/50 group-hover:text-college-navy dark:group-hover:text-college-gold transition-colors">
+                <ChevronDown size={18} />
+              </div>
             </div>
 
             {/* CGPA Display - Bottom */}

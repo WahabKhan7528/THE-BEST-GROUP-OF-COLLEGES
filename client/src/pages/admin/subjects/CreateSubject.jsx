@@ -130,6 +130,7 @@ const CreateSubject = () => {
                 <option
                   key={campus._id || campus.id}
                   value={campus._id || campus.id}
+                  className="dark:bg-college-navy dark:text-white font-semibold"
                 >
                   {campus.name} ({campus.code})
                 </option>
