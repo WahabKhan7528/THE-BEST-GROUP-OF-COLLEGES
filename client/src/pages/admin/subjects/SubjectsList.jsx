@@ -15,6 +15,7 @@ import {
   Hash,
 } from "lucide-react";
 import { adminApi } from "../../../services/api";
+import { createCampusMatcher } from "../../../utils/campusMatch";
 
 const SubjectsList = () => {
   const navigate = useNavigate();
@@ -54,6 +55,7 @@ const SubjectsList = () => {
   );
 
   let filteredData = [...normalizedSubjects];
+  const matchesCampus = createCampusMatcher(campuses);
 
   // 1. Filter by Role & Campus
   if (!isSuperAdmin) {
@@ -62,12 +64,12 @@ const SubjectsList = () => {
       filteredData = filteredData.filter((subject) => {
         const campuses = subject.campuses || [];
         if (!campuses.length) return true;
-        return campuses.some((campus) => String(campus?._id || campus) === adminCampusId);
+        return campuses.some((campus) => matchesCampus(campus, adminCampusId));
       });
     }
   } else if (selectedCampus) {
     filteredData = filteredData.filter((subject) =>
-      (subject.campuses || []).some((campus) => String(campus?._id || campus) === selectedCampus),
+      (subject.campuses || []).some((campus) => matchesCampus(campus, selectedCampus)),
     );
   }
 
@@ -84,7 +86,8 @@ const SubjectsList = () => {
   }
 
   const getCampusName = (campusId) => {
-    return campuses.find((c) => c.id === campusId)?.name || campusId;
+    const matchedCampus = campuses.find((c) => matchesCampus(c, campusId));
+    return matchedCampus?.name || campusId;
   };
 
   const columns = [

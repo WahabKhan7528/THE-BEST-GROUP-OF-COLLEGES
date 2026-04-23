@@ -14,6 +14,7 @@ import {
   Building2,
 } from "lucide-react";
 import { adminApi } from "../../../services/api";
+import { createCampusMatcher } from "../../../utils/campusMatch";
 
 
 const ClassesList = () => {
@@ -57,14 +58,15 @@ const ClassesList = () => {
   );
 
   let filteredData = [...normalizedClasses];
+  const matchesCampus = createCampusMatcher(campuses);
 
   // 1. Filter by Role & Campus
   if (!isSuperAdmin) {
     filteredData = filteredData.filter((cls) =>
-      String(cls.campus?._id || cls.campus) === String(currentAdmin?.campus?._id || currentAdmin?.campus),
+      matchesCampus(cls.campus, currentAdmin?.campus),
     );
   } else if (selectedCampus) {
-    filteredData = filteredData.filter((cls) => String(cls.campus?._id || cls.campus) === selectedCampus);
+    filteredData = filteredData.filter((cls) => matchesCampus(cls.campus, selectedCampus));
   }
 
   // 2. Filter by Search Query
@@ -79,7 +81,8 @@ const ClassesList = () => {
   }
 
   const getCampusName = (campusId) => {
-    return campuses.find((c) => c.id === campusId)?.name || campusId;
+    const matchedCampus = campuses.find((c) => matchesCampus(c, campusId));
+    return matchedCampus?.name || campusId;
   };
 
   const columns = [

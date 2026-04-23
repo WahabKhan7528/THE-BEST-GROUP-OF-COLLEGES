@@ -17,6 +17,7 @@ import {
   Building2,
 } from "lucide-react";
 import { adminApi } from "../../../services/api";
+import { createCampusMatcher } from "../../../utils/campusMatch";
 
 const UsersList = () => {
   const navigate = useNavigate();
@@ -47,10 +48,11 @@ const UsersList = () => {
 
   const filteredData = useMemo(() => {
     let result = [...users];
+    const matchesCampus = createCampusMatcher(campuses);
 
     if (!isSuperAdmin) {
       result = result.filter(
-        (user) => String(user.campus?._id || user.campus) === String(currentAdmin?.campus?._id || currentAdmin?.campus),
+        (user) => matchesCampus(user.campus, currentAdmin?.campus),
       );
       result = result.filter((user) => user.role === "faculty" || user.role === "student");
     }
@@ -60,7 +62,7 @@ const UsersList = () => {
     }
 
     if (isSuperAdmin && selectedCampus) {
-      result = result.filter((user) => String(user.campus?._id || user.campus) === selectedCampus);
+      result = result.filter((user) => matchesCampus(user.campus, selectedCampus));
     }
 
     if (searchTerm) {

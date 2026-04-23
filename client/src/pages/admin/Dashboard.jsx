@@ -18,13 +18,7 @@ import Badge from "../../components/shared/Badge";
 import SkeletonLoading from "../../components/shared/SkeletonLoading";
 import { adminApi } from "../../services/api";
 import CampusFilter from "../../components/admin/CampusFilter";
-
-const getRefId = (value) => value?._id || value?.id || value || null;
-
-const matchesCampus = (entityCampus, selectedCampusId) => {
-  if (!selectedCampusId || selectedCampusId === "all") return true;
-  return String(getRefId(entityCampus)) === String(selectedCampusId);
-};
+import { createCampusMatcher } from "../../utils/campusMatch";
 
 const subAdminActions = [
   { title: "Add Classes", desc: "Create new class sections", path: "/admin/classes/create" },
@@ -70,6 +64,7 @@ const Dashboard = () => {
         };
 
         const campuses = getDataAt(0);
+        const matchesCampus = createCampusMatcher(campuses);
         const users = getDataAt(1);
         const classes = getDataAt(2);
         const subjects = getDataAt(3);

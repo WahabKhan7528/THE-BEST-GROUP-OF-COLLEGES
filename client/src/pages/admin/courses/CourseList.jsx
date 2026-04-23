@@ -17,6 +17,7 @@ import {
   ChevronDown
 } from "lucide-react";
 import { adminApi } from "../../../services/api";
+import { createCampusMatcher } from "../../../utils/campusMatch";
 
 const CourseList = () => {
   const navigate = useNavigate();
@@ -47,6 +48,7 @@ const CourseList = () => {
 
   const filteredData = useMemo(() => {
     let result = [...courses];
+    const matchesCampus = createCampusMatcher(campuses);
 
     // Search Filter
     if (searchQuery) {
@@ -58,18 +60,19 @@ const CourseList = () => {
     // If Sub-Admin, only show courses offered at their allocated campuses
     if (!isSuperAdmin) {
       const campusId = currentAdmin?.campus?._id || currentAdmin?.campus;
-      result = result.filter((course) => (course.campuses || []).some((campus) => String(campus?._id || campus) === String(campusId)));
+      result = result.filter((course) => (course.campuses || []).some((campus) => matchesCampus(campus, campusId)));
     } else if (selectedCampus) {
-      result = result.filter((course) => (course.campuses || []).some((campus) => String(campus?._id || campus) === selectedCampus));
+      result = result.filter((course) => (course.campuses || []).some((campus) => matchesCampus(campus, selectedCampus)));
     }
 
     return result;
   }, [courses, searchQuery, isSuperAdmin, currentAdmin, selectedCampus]);
 
   const getCampusesDisplay = (campusObjs) => {
+    const matchesCampus = createCampusMatcher(campuses);
     return (campusObjs || []).map((campusObj) => {
       const campusId = campusObj?._id || campusObj;
-      const campus = campuses.find((c) => c.id === campusId);
+      const campus = campuses.find((c) => matchesCampus(c, campusId));
       return (
         <Badge
           key={campusId}
