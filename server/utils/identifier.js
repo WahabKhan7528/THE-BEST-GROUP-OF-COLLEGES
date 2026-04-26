@@ -23,7 +23,7 @@ export const buildPrefix = (value, size = 3) => {
   return compact.slice(0, size).padEnd(size, "X").slice(0, size);
 };
 
-export const buildSequentialCode = ({ prefix, number, digits = 3 }) => {
+export const buildSequentialCode = ({ prefix, number, digits = 4 }) => {
   const safePrefix = buildPrefix(prefix, 3);
   const nextNumber = String(number).padStart(digits, "0");
   return `${safePrefix}-${nextNumber}`;
