@@ -37,7 +37,7 @@ export default function CampusCard({ college }) {
 
                 {/* Bottom: Buttons */}
                 <div className="grid grid-cols-2 gap-3 mt-auto">
-                    <PublicButton to={college.path} variant="secondary" size="sm" shape="slanted" className="text-[10px] sm:text-xs md:text-sm">
+                    <PublicButton to={college.path} variant="secondary" size="sm" shape="slanted" className="text-[10px] text-white/80 sm:text-xs md:text-sm">
                         Details
                     </PublicButton>
                     <PublicButton to="/admissions" variant="primary" size="sm" shape="slanted" className="text-[10px] sm:text-xs md:text-sm">

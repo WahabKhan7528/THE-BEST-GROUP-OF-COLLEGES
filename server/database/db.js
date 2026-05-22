@@ -10,6 +10,5 @@ export const connectDB = async () => {
   }
 
   await mongoose.connect(mongoUri);
-  // Keep logs minimal but explicit for deployment diagnostics.
   console.log("MongoDB Atlas connected");
 };
