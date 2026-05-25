@@ -1,5 +1,4 @@
-import { Menu, Home, User, GraduationCap, ChevronRight } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { Menu, Home, User, GraduationCap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import DarkModeToggle from "./DarkModeToggle";
@@ -23,20 +22,8 @@ const PortalNavbar = ({
   const dispatch = useDispatch();
   const confirm = useConfirm();
 
-  const [showMobileProfile, setShowMobileProfile] = useState(false);
-  const profileRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (profileRef.current && !profileRef.current.contains(event.target)) {
-        setShowMobileProfile(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   const RoleIcon = ROLE_ICONS[role] || User;
+  const profilePath = `/${role}/profile`;
 
   const initials =
     user?.name
@@ -106,9 +93,16 @@ const PortalNavbar = ({
 
           <div className="hidden sm:block h-8 w-px bg-college-navy/10 dark:bg-college-gold/20 mx-0.5 sm:mx-1" />
 
-          <div 
-            ref={profileRef}
-            onClick={() => setShowMobileProfile(!showMobileProfile)}
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={() => navigate(profilePath)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                navigate(profilePath);
+              }
+            }}
             className="flex items-center gap-2 sm:gap-4 p-1.5 sm:p-2 sm:pl-3 pr-1.5 sm:pr-3 rounded-sm bg-college-navy/[0.02] dark:bg-college-gold/5 border border-college-navy/5 dark:border-college-gold/10 hover:border-college-gold/30 dark:hover:border-college-gold/40 transition-all duration-300 group cursor-pointer shadow-sm min-w-0 w-auto sm:min-w-[200px] max-w-full relative"
           >
             <div className="hidden sm:block text-right flex-grow">
@@ -124,38 +118,6 @@ const PortalNavbar = ({
                 {initials}
               </div>
             </div>
-
-            {/* Mobile User Profile Popover */}
-            {showMobileProfile && (
-              <div className="absolute top-[120%] right-0 w-56 sm:hidden bg-white dark:bg-college-navy border border-college-navy/10 dark:border-college-gold/20 rounded-sm shadow-2xl p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3 pb-2 border-b border-college-navy/10 dark:border-college-gold/10">
-                    <div className="w-10 h-10 rounded-full bg-college-navy dark:bg-college-gold text-white dark:text-college-navy flex items-center justify-center text-sm font-black">
-                      {initials}
-                    </div>
-                    <div>
-                      <p className="text-sm font-black text-college-navy dark:text-white truncate uppercase tracking-tight">
-                        {user?.name || "Portal User"}
-                      </p>
-                      <span className="text-[9px] font-black text-college-gold bg-college-gold/10 px-1.5 py-0.5 rounded-full uppercase tracking-widest border border-college-gold/20">
-                        {badgeLabel}
-                      </span>
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-[9px] font-black text-college-navy/30 dark:text-white/20 uppercase tracking-[0.3em] mb-1.5">
-                      Role Details
-                    </p>
-                    <p className="text-xs font-bold text-college-navy/70 dark:text-gray-300 flex items-center gap-1.5">
-                      <ChevronRight size={12} className="text-college-gold" />
-                      {user?.line2 || "No additional info"}
-                    </p>
-                  </div>
-                </div>
-                {/* Arrow */}
-                <div className="absolute -top-1.5 right-4 w-3 h-3 bg-white dark:bg-college-navy border-t border-l border-college-navy/10 dark:border-college-gold/20 rotate-45" />
-              </div>
-            )}
           </div>
         </div>
       </div>

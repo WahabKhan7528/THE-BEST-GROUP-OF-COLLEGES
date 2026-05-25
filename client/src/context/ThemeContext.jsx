@@ -3,7 +3,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-    // Here lazy state initialization is used to prevent the re-rendering of the component on every render
+
     const [isDarkMode, setIsDarkMode] = useState(() => {
         const saved = localStorage.getItem("portal-theme");
         return saved ? saved === "dark" : true;
@@ -28,6 +28,7 @@ export const ThemeProvider = ({ children }) => {
     );
 };
 
+// Custom hook to use the theme context
 export const useThemeContext = () => {
     const context = useContext(ThemeContext);
     if (!context) {

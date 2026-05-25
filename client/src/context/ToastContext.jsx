@@ -138,6 +138,7 @@ export const ToastProvider = ({ children }) => {
   );
 };
 
+// Custom hook to use the toast context
 export const useToast = () => {
   const context = useContext(ToastContext);
   if (!context) {

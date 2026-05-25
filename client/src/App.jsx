@@ -4,13 +4,13 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { Suspense, lazy, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import {
+  Suspense,
+  lazy,
+} from "react";
 import PageLoader from "./components/shared/PageLoader";
 import ErrorBoundary from "./components/shared/ErrorBoundary";
-import { fetchUser } from "./store/slices/authSlice";
-
-let hasBootstrappedAuth = false;
+import AuthGate from "./components/shared/AuthGate";
 
 // All time neccessary imports
 import RootLayout from "./layouts/RootLayout";
@@ -48,6 +48,7 @@ const FacilitiesPage = lazy(
 
 // Admin pages
 const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
+const PortalProfile = lazy(() => import("./pages/Profile"));
 const UsersList = lazy(() => import("./pages/admin/users/UsersList"));
 const CreateUser = lazy(() => import("./pages/admin/users/CreateUser"));
 const EditUser = lazy(() => import("./pages/admin/users/EditUser"));
@@ -106,21 +107,6 @@ const StudentAnnouncements = lazy(
 const StudentSubmissions = lazy(() => import("./pages/student/Submissions"));
 
 function App() {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (hasBootstrappedAuth) return;
-
-    const isLoginRoute = typeof window !== "undefined" && window.location.pathname.startsWith("/login");
-    if (isLoginRoute) {
-      hasBootstrappedAuth = true;
-      return;
-    }
-
-    hasBootstrappedAuth = true;
-    dispatch(fetchUser());
-  }, [dispatch]);
-
   return (
     <Router
       future={{
@@ -130,95 +116,97 @@ function App() {
     >
       <ErrorBoundary>
         <Suspense fallback={<PageLoader />}>
-          <Routes>
-            {/* Public Website Routes */}
-            <Route path="/" element={<RootLayout />}>
-              <Route index element={<Home />} />
-              <Route path="about" element={<About />} />
-              <Route path="admissions" element={<Admissions />} />
-              <Route path="faculty-info" element={<Faculty />} />
-              <Route path="gallery" element={<Gallery />} />
-              <Route path="news-events" element={<NewsAndEvents />} />
-              <Route path="contact" element={<Contact />} />
+          <AuthGate>
+            <Routes>
+              {/* Public Website Routes */}
+              <Route path="/" element={<RootLayout />}>
+                <Route index element={<Home />} />
+                <Route path="about" element={<About />} />
+                <Route path="admissions" element={<Admissions />} />
+                <Route path="faculty-info" element={<Faculty />} />
+                <Route path="gallery" element={<Gallery />} />
+                <Route path="news-events" element={<NewsAndEvents />} />
+                <Route path="contact" element={<Contact />} />
 
-              {/* Campus Routes */}
-              <Route path="campuses" element={<CampusLayout />}>
-                <Route path=":campus" element={<CampusPage />} />
-                <Route path=":campus/academics" element={<AcademicsPage />} />
-                <Route path=":campus/faculty" element={<FacultyPage />} />
-                <Route
-                  path=":campus/student-life"
-                  element={<StudentLifePage />}
-                />
-                <Route
-                  path=":campus/facilities"
-                  element={<FacilitiesPage />}
-                />
+                {/* Campus Routes */}
+                <Route path="campuses" element={<CampusLayout />}>
+                  <Route path=":campus" element={<CampusPage />} />
+                  <Route path=":campus/academics" element={<AcademicsPage />} />
+                  <Route path=":campus/faculty" element={<FacultyPage />} />
+                  <Route
+                    path=":campus/student-life"
+                    element={<StudentLifePage />}
+                  />
+                  <Route
+                    path=":campus/facilities"
+                    element={<FacilitiesPage />}
+                  />
+                </Route>
               </Route>
-            </Route>
 
-            {/* Login Route (outside RootLayout) */}
-            <Route path="/login/:type" element={<Login />} />
+              {/* Login Route (outside RootLayout) */}
+              <Route path="/login/:type" element={<Login />} />
 
-            {/* Admin Portal Routes */}
-            <Route
-              path="/admin/*"
-              element={
-                <ProtectedRoute allowedRoles={["super_admin", "admin"]}>
-                  <AdminLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<AdminDashboard />} />
-              <Route path="dashboard" element={<AdminDashboard />} />
+              {/* Admin Portal Routes */}
               <Route
-                path="users"
+                path="/admin/*"
                 element={
-                  <ProtectedRoute allowedRoles={["super_admin", "admin"]} redirectTo="/admin/dashboard">
-                    <UsersList />
+                  <ProtectedRoute allowedRoles={["super_admin", "admin"]}>
+                    <AdminLayout />
                   </ProtectedRoute>
                 }
-              />
-              <Route
-                path="users/create"
-                element={
-                  <ProtectedRoute allowedRoles={["super_admin", "admin"]} redirectTo="/admin/dashboard">
-                    <CreateUser />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="users/edit/:id"
-                element={
-                  <ProtectedRoute allowedRoles={["super_admin", "admin"]} redirectTo="/admin/dashboard">
-                    <EditUser />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="courses"
-                element={
-                  <ProtectedRoute allowedRoles={["super_admin", "admin"]} redirectTo="/admin/dashboard">
-                    <CourseList />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="courses/create"
-                element={
-                  <ProtectedRoute allowedRoles={["admin"]} redirectTo="/admin/dashboard">
-                    <CreateCourse />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="courses/edit/:id"
-                element={
-                  <ProtectedRoute allowedRoles={["admin"]} redirectTo="/admin/dashboard">
-                    <EditCourse />
-                  </ProtectedRoute>
-                }
-              />
+              >
+                <Route index element={<AdminDashboard />} />
+                <Route path="dashboard" element={<AdminDashboard />} />
+                <Route path="profile" element={<PortalProfile />} />
+                <Route
+                  path="users"
+                  element={
+                    <ProtectedRoute allowedRoles={["super_admin", "admin"]} redirectTo="/admin/dashboard">
+                      <UsersList />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="users/create"
+                  element={
+                    <ProtectedRoute allowedRoles={["super_admin", "admin"]} redirectTo="/admin/dashboard">
+                      <CreateUser />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="users/edit/:id"
+                  element={
+                    <ProtectedRoute allowedRoles={["super_admin", "admin"]} redirectTo="/admin/dashboard">
+                      <EditUser />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="courses"
+                  element={
+                    <ProtectedRoute allowedRoles={["super_admin", "admin"]} redirectTo="/admin/dashboard">
+                      <CourseList />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="courses/create"
+                  element={
+                    <ProtectedRoute allowedRoles={["admin"]} redirectTo="/admin/dashboard">
+                      <CreateCourse />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="courses/edit/:id"
+                  element={
+                    <ProtectedRoute allowedRoles={["admin"]} redirectTo="/admin/dashboard">
+                      <EditCourse />
+                    </ProtectedRoute>
+                  }
+                />
 
               {/* Campus Management */}
               <Route
@@ -374,6 +362,7 @@ function App() {
             >
               <Route index element={<Navigate to="dashboard" replace />} />
               <Route path="dashboard" element={<FacultyDashboard />} />
+              <Route path="profile" element={<PortalProfile />} />
               <Route path="assignments" element={<FacultyAssignments />} />
               <Route
                 path="assignments/create"
@@ -409,6 +398,7 @@ function App() {
             >
               <Route index element={<Navigate to="dashboard" replace />} />
               <Route path="dashboard" element={<StudentDashboard />} />
+              <Route path="profile" element={<PortalProfile />} />
               <Route path="assignments" element={<StudentAssignments />} />
               <Route path="submissions" element={<StudentSubmissions />} />
               <Route path="materials" element={<StudentMaterials />} />
@@ -422,6 +412,7 @@ function App() {
             {/* 404 Catch-all */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </AuthGate>
         </Suspense>
       </ErrorBoundary>
     </Router>

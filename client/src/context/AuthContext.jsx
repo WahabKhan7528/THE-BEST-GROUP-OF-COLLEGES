@@ -8,7 +8,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const dispatch = useDispatch();
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const refreshUser = async () => {
     try {
@@ -29,25 +29,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    const boot = async () => {
-      await refreshUser();
-      setLoading(false);
-    };
-
-    boot();
-
-    const onUnauthorized = () => {
-      setUser(null);
-      dispatch(clearAuthState());
-    };
-    window.addEventListener("auth:unauthorized", onUnauthorized);
-
-    return () => {
-      window.removeEventListener("auth:unauthorized", onUnauthorized);
-    };
-  }, []);
-
   const value = useMemo(
     () => ({ user, loading, refreshUser, logout, setUser }),
     [user, loading],
@@ -56,6 +37,7 @@ export const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
+// Custom hook to use the auth context
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error("useAuth must be used within AuthProvider");

@@ -85,7 +85,7 @@ const Home = () => {
             alt="THE BEST GROUP OF COLLEGES"
             className="w-full h-full object-cover object-center"
             loading="eager"
-            fetchPriority="high"
+            fetchpriority="high"
           />
         </div>
         <div className="absolute inset-0 z-0 bg-college-navy/70" />

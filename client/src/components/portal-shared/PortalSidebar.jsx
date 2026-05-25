@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { LogOut, X } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import PublicButton from "../shared/PublicButton";
+import { useConfirm } from "../../context/ConfirmContext";
 import { logoutUser } from "../../store/slices/authSlice";
 
 /**
@@ -23,9 +24,20 @@ const PortalSidebar = ({
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const confirm = useConfirm();
   const isDarkMode = useSelector((state) => state.ui.isDarkMode);
 
   const handleLogout = async () => {
+    const shouldLogout = await confirm({
+      title: `Leave ${portalLabel || "Portal"}?`,
+      message: "To continue, you will be logged out first.",
+      confirmText: "Logout and Continue",
+      cancelText: "Stay in Portal",
+      variant: "info",
+    });
+
+    if (!shouldLogout) return;
+
     try {
       await dispatch(logoutUser()).unwrap();
     } catch {

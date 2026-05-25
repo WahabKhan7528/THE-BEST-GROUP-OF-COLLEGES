@@ -1,15 +1,7 @@
 import React from "react";
 import { clsx } from "clsx";
 
-/**
- * PortalPageHeader - Recreated from Scratch (High-Authority Design)
- *
- * Aesthetics:
- * - Solid College Navy background with subtle contrast.
- * - Solid College Gold vertical pillar for structural strength.
- * - Dual-layer prestigious typography.
- * - Clean, heavy, and institutional feel.
- */
+
 export default function PortalPageHeader({
   title,
   subtitle,

@@ -84,8 +84,6 @@ const CampusLayout = () => {
               </div>
             </div>
           </div>
-
-          {/* Spacer to prevent overlap */}
           <div className="h-4 sm:h-6 md:h-8" />
         </div>
       </div>

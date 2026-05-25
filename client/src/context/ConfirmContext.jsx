@@ -116,6 +116,7 @@ export const ConfirmProvider = ({ children }) => {
   );
 };
 
+// Custom hook to use the confirm function
 export const useConfirm = () => {
   const context = useContext(ConfirmContext);
   if (!context) {
