@@ -1,7 +1,5 @@
 import axios from "axios";
 
-const ACCESS_TOKEN_KEY = "tbc_access_token";
-
 const rawBaseURL =
   import.meta.env.VITE_BACKEND_API ||
   (import.meta.env.DEV ? "http://localhost:5000" : "");
@@ -17,23 +15,6 @@ const http = axios.create({
   withCredentials: true,
 });
 
-export const setAccessToken = (token) => {
-  // Auth now relies on HTTP-only cookies. Keep this for backward compatibility
-  // with existing imports, but only clear any legacy localStorage token.
-  const nextToken = token || null;
-  if (typeof window !== "undefined") {
-    if (nextToken) {
-      window.localStorage.setItem(ACCESS_TOKEN_KEY, nextToken);
-    } else {
-      window.localStorage.removeItem(ACCESS_TOKEN_KEY);
-    }
-  }
-};
-
-export const clearAccessToken = () => {
-  setAccessToken(null);
-};
-
 let isRefreshing = false;
 let pendingQueue = [];
 
@@ -45,9 +26,6 @@ const processQueue = () => {
 http.interceptors.response.use(
   (response) => {
     const url = response?.config?.url || "";
-    if (url.includes("/auth/logout")) {
-      clearAccessToken();
-    }
     return response;
   },
   async (error) => {
@@ -85,7 +63,6 @@ http.interceptors.response.use(
       processQueue();
       return http(originalRequest);
     } catch (refreshError) {
-      clearAccessToken();
       if (typeof window !== "undefined") {
         window.dispatchEvent(new Event("auth:unauthorized"));
       }
