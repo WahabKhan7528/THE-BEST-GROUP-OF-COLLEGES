@@ -123,7 +123,7 @@ const Home = () => {
 
             {(isLoadingNews || newsItems.length > 0) && (
               <div className="lg:col-span-5 h-full flex flex-col justify-center lg:items-end w-full">
-                <div className="w-full lg:max-w-lg xl:max-w-xl bg-college-navy shadow-2xl border border-college-gold/30 p-6 rounded-sm">
+                <div className="w-full lg:max-w-lg xl:max-w-xl bg-college-navy/70 shadow-2xl border border-college-gold/30 p-6 rounded-sm">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-10 h-10 rounded-sm bg-college-gold flex items-center justify-center">
                       <Bell className="w-5 h-5 text-college-navy" />
