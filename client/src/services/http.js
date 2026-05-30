@@ -23,11 +23,9 @@ const processQueue = () => {
   pendingQueue = [];
 };
 
+// the refresh logic lies here, we intercept 401 responses and attempt to refresh the token
 http.interceptors.response.use(
-  (response) => {
-    const url = response?.config?.url || "";
-    return response;
-  },
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
     const status = error?.response?.status;
@@ -52,13 +50,11 @@ http.interceptors.response.use(
       isRefreshing = true;
       originalRequest._retry = true;
 
-      const { data } = await axios.post(
+      await axios.post(
         `${baseURL}/auth/refresh`,
         {},
         { withCredentials: true },
       );
-
-      void data;
 
       processQueue();
       return http(originalRequest);
