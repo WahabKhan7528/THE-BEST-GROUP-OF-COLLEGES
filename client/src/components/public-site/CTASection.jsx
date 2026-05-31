@@ -16,7 +16,7 @@ export default function CTASection({
                 className
             )}
         >
-            <div className="relative z-10 text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div data-anim className="relative z-10 text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 {badge && (
                     <Badge variant="gold" className="mb-6">
                         {badge}

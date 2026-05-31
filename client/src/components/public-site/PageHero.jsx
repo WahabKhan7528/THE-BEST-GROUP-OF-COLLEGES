@@ -10,7 +10,7 @@ export default function PageHero({ badge, title, highlightedWord, description, c
             )}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div className="text-center max-w-4xl mx-auto">
+                <div data-anim className="text-center max-w-4xl mx-auto">
                     {badge && (
                         <Badge variant="gold" className="mb-6">
                             {badge}

@@ -12,7 +12,7 @@ export default function SectionHeader({
     const isDark = variant === "dark";
 
     return (
-        <div className={clsx("mb-10", centered && "text-center", className)}>
+        <div data-anim className={clsx("mb-10", centered && "text-center", className)}>
             {badge && (
                 <div className={clsx("mb-4", centered && "flex justify-center")}>
                     <Badge variant={isDark ? "gold" : "outline"}>{badge}</Badge>

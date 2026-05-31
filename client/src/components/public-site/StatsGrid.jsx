@@ -3,6 +3,7 @@ import { clsx } from "clsx";
 export default function StatsGrid({ stats, className }) {
     return (
         <div
+            data-anim
             className={clsx(
                 "grid gap-6 md:gap-8 w-full max-w-6xl mx-auto py-10 sm:py-16 md:py-24 lg:py-32 px-4 sm:px-6 grid-cols-2 lg:grid-cols-4",
                 className

@@ -93,13 +93,25 @@ const Home = () => {
         <div className="container mx-auto px-6 py-20 relative z-10 h-full flex items-center">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 w-full">
             <div className="lg:col-span-7 flex flex-col justify-center space-y-4 md:space-y-6 text-left">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-serif font-bold text-white uppercase leading-tight tracking-wider">
+              <h1
+                data-anim
+                data-anim-delay="0"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-serif font-bold text-white uppercase leading-tight tracking-wider"
+              >
                 THE BEST GROUP OF COLLEGES
               </h1>
-              <p className="text-base md:text-lg lg:text-xl text-white/90 font-sans max-w-2xl">
+              <p
+                data-anim
+                data-anim-delay="0.1"
+                className="text-base md:text-lg lg:text-xl text-white/90 font-sans max-w-2xl"
+              >
                 Empowering Futures Through Quality Education Since 1985.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <div
+                data-anim
+                data-anim-delay="0.2"
+                className="flex flex-col sm:flex-row gap-4 pt-4"
+              >
                 <PublicButton
                   to="/admissions"
                   variant="secondary"
@@ -123,7 +135,11 @@ const Home = () => {
 
             {(isLoadingNews || newsItems.length > 0) && (
               <div className="lg:col-span-5 h-full flex flex-col justify-center lg:items-end w-full">
-                <div className="w-full lg:max-w-lg xl:max-w-xl bg-college-navy/70 shadow-2xl border border-college-gold/30 p-6 rounded-sm">
+                <div
+                  data-anim
+                  data-anim-delay="0.3"
+                  className="w-full lg:max-w-lg xl:max-w-xl bg-college-navy/70 shadow-2xl border border-college-gold/30 p-6 rounded-sm"
+                >
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-10 h-10 rounded-sm bg-college-gold flex items-center justify-center">
                       <Bell className="w-5 h-5 text-college-navy" />
